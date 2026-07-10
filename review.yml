@@ -1,0 +1,140 @@
+aid: antavo
+name: Antavo
+review:
+  question: Does Antavo expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-10'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Antavo's own public interface is a
+    request/response REST API over HTTPS. Its event-driven behavior is delivered
+    through inbound webhooks (external systems POST customer data into Antavo,
+    registered as loyalty events) and outbound Actions/webhooks (Antavo POSTs to
+    a configured HTTP endpoint), plus an Async Events API that queues events and
+    is polled for status by correlation id. None of these are a server-push
+    WebSocket or SSE transport on Antavo's own API, so there is no realtime
+    streaming surface to model in AsyncAPI.
+findings:
+  summary: |
+    Antavo does not publish a documented public WebSocket API. Antavo is an
+    enterprise loyalty management platform (the Antavo AI Loyalty Cloud). Its
+    Loyalty Engine is API-first and headless, exposing a comprehensive REST API
+    over HTTPS that accepts standard HTTP verbs (GET, POST, PUT, DELETE) with
+    URL-encoded and JSON request bodies and JSON responses. The API is served
+    from an environment/stack-specific host of the form
+    https://api.<environment>.antavo.com (referenced generically as
+    https://api.antavo.com). Authentication is via an API key and secret, with
+    optional request signing (HMAC), IP filtering (CIDR), and token-based auth
+    through the /v1/auth/token endpoint (used by the Async Events API). No
+    realtime, bidirectional, or streaming WebSocket (ws:// or wss://) endpoint is
+    documented on Antavo's own API.
+  accessModel: |
+    The developer documentation (developers.antavo.com, apidocs.antavo.com,
+    docs.antavo.com) is fully public and openly browsable. Live API access is
+    provisioned per Antavo environment for enterprise customers - an API key and
+    secret are generated in the platform's API settings, and the secret is shown
+    only once. Antavo is an enterprise-only product (contact-sales pricing); there
+    is no self-service public sandbox, so endpoints below are documented and
+    honestly modeled from Antavo's public reference rather than exercised live
+    against a provisioned account.
+  eventDrivenSurface: |
+    Antavo supports incoming webhooks (external systems transmit customer
+    information that is registered as customer events such as point_add,
+    point_sub, checkout_accept, checkout_accept_item), outbound Actions/webhooks
+    to external endpoints, and an Async Events API for queued processing. These
+    are HTTP request/response and HTTP callback mechanisms, not WebSocket.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.antavo.com
+      documented: true
+      note: Core Loyalty Engine REST API. Actual host is environment-specific, https://api.<environment>.antavo.com.
+    - protocol: Webhook (incoming)
+      scheme: https
+      documented: true
+      note: External systems POST customer data to Antavo, registered as loyalty events. Server-terminated HTTP, not WebSocket.
+    - protocol: Webhook (outgoing) / Actions
+      scheme: https
+      documented: true
+      note: Antavo POSTs event notifications to a configured external HTTP endpoint. HTTP callback, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Antavo's developer or API reference as of the review date.
+  endpointsModeled: true
+  endpointsModeledNote: |
+    Endpoints below are drawn from Antavo's public developer documentation and
+    llms.txt/OpenAPI index. They are documented and real, but access requires a
+    provisioned enterprise environment, so they were not exercised live. Paths
+    are relative to the environment-specific base host https://api.<environment>.antavo.com.
+  endpointsConfirmedRest:
+    - POST   /events
+    - POST   /bulk-events
+    - GET    /customers/{customer_id}/events
+    - GET    /customers/events
+    - POST   /v1/async-events
+    - GET    /v1/async-events/{correlation_id}
+    - GET    /customers
+    - GET    /customers/{customer_id}
+    - POST   /customers/{customer_id}/merge
+    - POST   /customers/login
+    - POST   /customers/{customer_id}/opt-in
+    - GET    /customers/{customer_id}/activities
+    - GET    /customers/{customer_id}/activities/rewards
+    - POST   /customers/{customer_id}/activities/rewards/{reward_id}/claim
+    - POST   /customers/{customer_id}/activities/rewards/{reward_id}/revoke
+    - GET    /customers/{customer_id}/transactions
+    - GET    /customers/{customer_id}/transactions/{transaction_id}
+    - POST   /customers/{customer_id}/transactions/search
+    - GET    /entities/{module}/{entity}
+    - PUT    /entities/{module}/{entity}
+    - GET    /entities/{module}/{entity}/{entity_id}
+    - POST   /entities/{module}/{entity}/{entity_id}
+    - DELETE /entities/{module}/{entity}/{entity_id}
+    - POST   /entities
+    - GET    /coupons
+    - POST   /v1/coupon-pools
+    - POST   /v1/bulk-operation/coupons/{coupon_pool_id}/action
+    - POST   /offers
+    - POST   /extensions/automation/campaign-bonus
+    - GET    /customers/leaderboard
+    - POST   /v1/bulk-operation/reward-claim/{reward_id}
+    - POST   /v1/bulk-operation/customer-list/add/{customer_list_id}
+    - GET    /v1/clubs
+    - POST   /v1/clubs
+    - GET    /v1/promotions
+    - POST   /v1/cart
+    - POST   /v1/cart/finalize
+    - POST   /v1/auth/token
+    - GET    /faq
+sources:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+    note: API overview - modules, JSON request/response, HTTP verbs, base host api.<environment>.antavo.com, rate limits. All REST, no WebSocket.
+  - url: https://developers.antavo.com/docs/getting-started
+    type: Documentation
+    note: Getting started - API security, signing, HMAC, keys. Enterprise account required.
+  - url: https://developers.antavo.com/llms.txt
+    type: Documentation
+    note: Markdown/OpenAPI index of all documented endpoints across the API modules.
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+    note: Antavo developer API reference.
+  - url: https://docs.antavo.com/docs/api-settings
+    type: Documentation
+    note: API key/secret generation, request signing enforcement, IP filtering, token-based auth via /v1/auth/token.
+  - url: https://docs.antavo.com/docs/incoming-webhooks
+    type: Documentation
+    note: Incoming webhooks register external data as customer events (point_add, checkout_accept). HTTP, not WebSocket.
+  - url: https://antavo.com/pricing/
+    type: Pricing
+    note: Enterprise, contact-sales pricing.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Antavo's own public API is
+    request/response REST, complemented by incoming/outgoing HTTP webhooks and a
+    poll-based Async Events API. No AsyncAPI document was created because there is
+    no server-push (WebSocket or SSE) transport on Antavo's own API to model.

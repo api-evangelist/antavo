@@ -1,0 +1,287 @@
+aid: antavo
+url: https://raw.githubusercontent.com/api-evangelist/antavo/refs/heads/main/apis.yml
+name: Antavo
+kind: company
+description: Antavo is an enterprise loyalty management platform - the Antavo AI Loyalty
+  Cloud - that lets brands build and run omnichannel, multi-brand, multi-country
+  loyalty programs. Its API-first, headless Loyalty Engine exposes a comprehensive
+  REST API covering customer events, customer profiles, the headless Display surface
+  for loyalty experiences, configurable entities (rewards, challenges, stores,
+  products, transactions), coupons, offers, leaderboards, clubs, promotions, and
+  bulk operations. Requests use standard HTTP verbs with JSON, secured by API
+  key/secret with optional request signing, IP filtering, and token-based auth.
+  API access is provisioned per Antavo environment for enterprise customers, while
+  the developer documentation is fully public.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Loyalty
+- Customer Loyalty
+- Rewards
+- Enterprise
+- Headless
+- Retail
+- Marketing
+- Engagement
+created: '2026-07-10'
+modified: '2026-07-10'
+specificationVersion: '0.19'
+apis:
+- aid: antavo:antavo-events-api
+  name: Antavo Events API
+  tags:
+  - Events
+  - Ingestion
+  - Interactions
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Records customer interactions from e-commerce, POS, websites, and
+    mobile apps as loyalty events (for example point_add, checkout_accept), driving
+    the rules and workflows of the loyalty program. Supports single and bulk event
+    submission and reading a customer's event history.
+- aid: antavo:antavo-async-events-api
+  name: Antavo Async Events API
+  tags:
+  - Events
+  - Async
+  - Queue
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Queues events for reliable background processing during high-traffic
+    periods, returning a correlation id that can be polled for status. Uses
+    token-based authentication via the /v1/auth/token endpoint.
+- aid: antavo:antavo-customer-api
+  name: Antavo Customer API
+  tags:
+  - Customers
+  - Profiles
+  - Accounts
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Search, retrieve, and manage loyalty member profiles - including
+    login, opt-in registration, password reset, verification, account merging, and
+    active-customer counts - while maintaining member privacy.
+- aid: antavo:antavo-display-api
+  name: Antavo Display API
+  tags:
+  - Headless
+  - Display
+  - Experience
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: The primary headless API for building the member-facing loyalty
+    experience - listing earn and spend activities, challenges, rewards, offers,
+    coupons, transactions, wallet passes, quizzes, contests, prize wheels, and
+    profiling flows, plus claiming and revoking rewards.
+- aid: antavo:antavo-entities-api
+  name: Antavo Entities API
+  tags:
+  - Entities
+  - Configuration
+  - CRUD
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Generic CRUD surface for the foundational building blocks of a
+    program - rewards, challenges, stores, products, transactions, and customer
+    lists - addressed as entities under a module namespace, with list, create,
+    retrieve, update, archive, and bulk submission.
+- aid: antavo:antavo-rewards-api
+  name: Antavo Rewards API
+  tags:
+  - Rewards
+  - Redemption
+  - Claims
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Manage the reward catalog and redemptions - create, list, retrieve,
+    update, and archive rewards via the entities surface, and claim rewards. Legacy
+    /rewards claim endpoints are superseded by the Display API.
+- aid: antavo:antavo-coupons-api
+  name: Antavo Coupons and Coupon Pools API
+  tags:
+  - Coupons
+  - Codes
+  - Pools
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Query coupon usage independent of a customer and create or manage
+    coupon pools - configuring value, expiration, and code patterns - with bulk
+    import of codes and status/error reporting on the batch operations.
+- aid: antavo:antavo-offers-api
+  name: Antavo Offers API
+  tags:
+  - Offers
+  - Promotions
+  - Cart
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Submit a cart and retrieve applicable pre-purchase offers used for
+    customer acquisition and engagement, and list a member's available offers
+    through the Display surface.
+- aid: antavo:antavo-points-preview-api
+  name: Antavo Points Preview API
+  tags:
+  - Points
+  - Preview
+  - Workflows
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Preview the loyalty points a transaction would earn, including bonus
+    points assigned by the Workflows module, before the transaction is committed.
+- aid: antavo:antavo-leaderboard-api
+  name: Antavo Leaderboard API
+  tags:
+  - Leaderboard
+  - Rankings
+  - Gamification
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Retrieve ranked lists of top customers with their scores for display
+    in mobile apps, websites, and CRMs.
+- aid: antavo:antavo-bulk-operations-api
+  name: Antavo Bulk Operations API
+  tags:
+  - Bulk
+  - Batch
+  - Async
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Batch processing for reward claims across many customers and for
+    adding or removing customers from lists, each returning a batch id with status
+    and error reporting endpoints.
+- aid: antavo:antavo-clubs-api
+  name: Antavo Clubs API
+  tags:
+  - Clubs
+  - Communities
+  - Membership
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Create and administer member clubs and communities - templates,
+    membership, invitations, applicants, bans, ownership, point adjustments and
+    donations, history, and disbanding.
+- aid: antavo:antavo-promotion-engine-api
+  name: Antavo Promotion Engine API
+  tags:
+  - Promotions
+  - Cart
+  - Checkout
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: List and manage promotions and apply them at checkout - submit a
+    cart to retrieve applicable promotions and finalize the checkout with the
+    resulting discounts.
+- aid: antavo:antavo-authentication-api
+  name: Antavo Authentication API
+  tags:
+  - Authentication
+  - Tokens
+  - Security
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/docs/api-signing
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/api-signing
+    type: Documentation
+  - url: https://apidocs.antavo.com/api/index.html
+    type: APIReference
+  description: Generate short-lived access tokens for credential clients configured
+    in the Authentication Manager, used for token-based authentication such as the
+    Async Events API.
+common:
+- type: GitHubOrganization
+  url: https://github.com/antavo
+- type: LinkedIn
+  url: https://www.linkedin.com/company/antavo
+- type: Website
+  url: https://antavo.com
+- type: Documentation
+  url: https://developers.antavo.com/docs/antavo-apis
+- type: Plans
+  url: plans/antavo-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/antavo-rate-limits.yml
+- type: FinOps
+  url: finops/antavo-finops.yml
+- type: Blog
+  url: https://antavo.com/blog/
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

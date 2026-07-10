@@ -1,0 +1,61 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Antavo
+providerId: antavo
+created: '2026-07-10'
+modified: '2026-07-10'
+reconciled: false
+tags:
+- Loyalty
+- Enterprise
+- Rate Limiting
+- Quotas
+description: >-
+  Antavo publishes a per-environment API rate limit that depends on the
+  infrastructure tier. Programs on a shared stack are limited to 1,500 requests
+  per minute, while programs on a dedicated stack are limited to 20,000 requests
+  per minute. Access can additionally be constrained by IP filtering (CIDR
+  allow-lists) configured in the platform's API settings. High-volume ingestion is
+  better served through the Async Events API, which queues events for background
+  processing rather than counting against synchronous throughput in the same way.
+notes: >-
+  Limits are stated per Antavo environment. Confirm the exact tier and any
+  endpoint-specific limits with Antavo during reconciliation. Requests exceeding
+  the allowance should expect HTTP 429 responses and should back off.
+sources:
+- https://developers.antavo.com/docs/antavo-apis
+- https://docs.antavo.com/docs/api-settings
+responseCodes:
+  throttled: 429
+limits:
+- name: Shared Stack Requests
+  scope: environment
+  metric: requests
+  limit: 1500 per minute
+  notes: Default rate limit for programs running on Antavo's shared infrastructure.
+- name: Dedicated Stack Requests
+  scope: environment
+  metric: requests
+  limit: 20000 per minute
+  notes: Raised rate limit for programs running on dedicated Antavo infrastructure.
+- name: Async Events Throughput
+  scope: environment
+  metric: events
+  limit: queued
+  notes: The Async Events API queues events for background processing during high-traffic periods.
+- name: IP Filtering
+  scope: environment
+  metric: source ip
+  limit: configurable (CIDR allow-list)
+  notes: Requests from IPs outside the configured allow-list receive a forbidden exception.
+policies:
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After on 429 responses.
+- name: Async Offloading
+  description: Route high-volume or bursty event ingestion through the Async Events API to smooth synchronous throughput.
+- name: Request Signing
+  description: When signature enforcement is enabled, plain API-key requests are rejected; only properly signed requests are accepted.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

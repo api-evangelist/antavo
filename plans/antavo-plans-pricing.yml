@@ -1,0 +1,81 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Antavo
+providerId: antavo
+created: '2026-07-10'
+modified: '2026-07-10'
+reconciled: false
+tags:
+- Loyalty
+- Enterprise
+- Rewards
+- Plans
+description: >-
+  Antavo is an enterprise-only product with custom, contact-sales pricing - there
+  is no self-service or free public tier. Pricing is quoted per customer based on
+  program complexity, customer and transaction volume, the modules required, and
+  integration needs. Third-party listings place typical annual spend roughly in
+  the tens of thousands to low hundreds of thousands of USD range, but exact terms
+  are negotiated directly with Antavo and are not reconciled here. The REST API is
+  included with the platform subject to a per-environment rate limit (shared or
+  dedicated stack) rather than sold as a separately metered API product.
+notes: >-
+  All figures are indicative and drawn from third-party marketplaces; confirm
+  current pricing directly with Antavo sales during reconciliation. Two API
+  service levels are documented - shared stack and dedicated stack - which differ
+  chiefly by throughput allowance (see the rate-limits file).
+sources:
+- https://antavo.com/pricing/
+- https://developers.antavo.com/docs/antavo-apis
+- https://www.trustradius.com/products/antavo/pricing
+plans:
+- id: antavo-enterprise-shared
+  name: Enterprise (Shared Stack)
+  type: enterprise
+  description: >-
+    Enterprise loyalty platform on Antavo's shared infrastructure, including the
+    full headless Loyalty Engine and REST API. API throughput is capped at the
+    shared-stack rate limit. Pricing is custom and negotiated with Antavo.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise_shared
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Headless Loyalty Engine
+  - name: REST API Access
+  - name: Shared Stack Throughput
+  - name: Omnichannel and Multi-Brand Support
+- id: antavo-enterprise-dedicated
+  name: Enterprise (Dedicated Stack)
+  type: enterprise
+  description: >-
+    Enterprise plan on dedicated Antavo infrastructure for higher-volume programs,
+    raising the API throughput allowance substantially over the shared stack.
+    Pricing is custom and negotiated with Antavo.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise_dedicated
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Dedicated Infrastructure
+  - name: Higher API Throughput
+  - name: Multi-Country and Large Data Volumes
+  - name: Enterprise SLAs and Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
