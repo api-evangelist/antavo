@@ -266,6 +266,8 @@ apis:
     in the Authentication Manager, used for token-based authentication such as the
     Async Events API.
 common:
+- type: DomainSecurity
+  url: security/antavo-domain-security.yml
 - type: GitHubOrganization
   url: https://github.com/antavo
 - type: LinkedIn
