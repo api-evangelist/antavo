@@ -2,16 +2,14 @@ aid: antavo
 url: https://raw.githubusercontent.com/api-evangelist/antavo/refs/heads/main/apis.yml
 name: Antavo
 kind: company
-description: Antavo is an enterprise loyalty management platform - the Antavo AI Loyalty
-  Cloud - that lets brands build and run omnichannel, multi-brand, multi-country
-  loyalty programs. Its API-first, headless Loyalty Engine exposes a comprehensive
-  REST API covering customer events, customer profiles, the headless Display surface
-  for loyalty experiences, configurable entities (rewards, challenges, stores,
-  products, transactions), coupons, offers, leaderboards, clubs, promotions, and
-  bulk operations. Requests use standard HTTP verbs with JSON, secured by API
-  key/secret with optional request signing, IP filtering, and token-based auth.
-  API access is provisioned per Antavo environment for enterprise customers, while
-  the developer documentation is fully public.
+description: Antavo is an enterprise loyalty management platform - the Antavo AI Loyalty Cloud -
+  that lets brands build and run omnichannel, multi-brand, multi-country loyalty programs. Its API-first,
+  headless Loyalty Engine exposes a comprehensive REST API covering customer events, customer profiles,
+  the headless Display surface for loyalty experiences, configurable entities (rewards, challenges,
+  stores, products, transactions), coupons, offers, leaderboards, clubs, promotions, and bulk operations.
+  Requests use standard HTTP verbs with JSON, secured by API key/secret with optional request signing,
+  IP filtering, and token-based auth. API access is provisioned per Antavo environment for enterprise
+  customers, while the developer documentation is fully public.
 accessModel:
   pricing: enterprise
   onboarding: unknown
@@ -34,8 +32,15 @@ tags:
 - Retail
 - Marketing
 - Engagement
+- Promotions
+- Gamification
+- Events
+- eCommerce
+- Coupons
+- Points
+- Membership
 created: '2026-07-10'
-modified: '2026-07-10'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 apis:
 - aid: antavo:antavo-events-api
@@ -52,10 +57,15 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Records customer interactions from e-commerce, POS, websites, and
-    mobile apps as loyalty events (for example point_add, checkout_accept), driving
-    the rules and workflows of the loyalty program. Supports single and bulk event
-    submission and reading a customer's event history.
+  - url: openapi/antavo-events-openapi.yml
+    type: OpenAPI
+    name: Antavo Events API OpenAPI
+  - url: overlays/antavo-events-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Events API
+  description: Records customer interactions from e-commerce, POS, websites, and mobile apps as loyalty
+    events (for example point_add, checkout_accept), driving the rules and workflows of the loyalty
+    program. Supports single and bulk event submission and reading a customer's event history.
 - aid: antavo:antavo-async-events-api
   name: Antavo Async Events API
   tags:
@@ -70,9 +80,15 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Queues events for reliable background processing during high-traffic
-    periods, returning a correlation id that can be polled for status. Uses
-    token-based authentication via the /v1/auth/token endpoint.
+  - url: openapi/antavo-async-events-openapi.yml
+    type: OpenAPI
+    name: Antavo Async Events API OpenAPI
+  - url: overlays/antavo-async-events-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Async Events API
+  description: Queues events for reliable background processing during high-traffic periods, returning
+    a correlation id that can be polled for status. Uses token-based authentication via the /v1/auth/token
+    endpoint.
 - aid: antavo:antavo-customer-api
   name: Antavo Customer API
   tags:
@@ -87,9 +103,15 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Search, retrieve, and manage loyalty member profiles - including
-    login, opt-in registration, password reset, verification, account merging, and
-    active-customer counts - while maintaining member privacy.
+  - url: openapi/antavo-customer-openapi.yml
+    type: OpenAPI
+    name: Antavo Customer API OpenAPI
+  - url: overlays/antavo-customer-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Customer API
+  description: Search, retrieve, and manage loyalty member profiles - including login, opt-in registration,
+    password reset, verification, account merging, and active-customer counts - while maintaining
+    member privacy.
 - aid: antavo:antavo-display-api
   name: Antavo Display API
   tags:
@@ -104,10 +126,15 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: The primary headless API for building the member-facing loyalty
-    experience - listing earn and spend activities, challenges, rewards, offers,
-    coupons, transactions, wallet passes, quizzes, contests, prize wheels, and
-    profiling flows, plus claiming and revoking rewards.
+  - url: openapi/antavo-display-openapi.yml
+    type: OpenAPI
+    name: Antavo Display API OpenAPI
+  - url: overlays/antavo-display-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Display API
+  description: The primary headless API for building the member-facing loyalty experience - listing
+    earn and spend activities, challenges, rewards, offers, coupons, transactions, wallet passes,
+    quizzes, contests, prize wheels, and profiling flows, plus claiming and revoking rewards.
 - aid: antavo:antavo-entities-api
   name: Antavo Entities API
   tags:
@@ -122,10 +149,15 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Generic CRUD surface for the foundational building blocks of a
-    program - rewards, challenges, stores, products, transactions, and customer
-    lists - addressed as entities under a module namespace, with list, create,
-    retrieve, update, archive, and bulk submission.
+  - url: openapi/antavo-entities-openapi.yml
+    type: OpenAPI
+    name: Antavo Entities API OpenAPI
+  - url: overlays/antavo-entities-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Entities API
+  description: Generic CRUD surface for the foundational building blocks of a program - rewards,
+    challenges, stores, products, transactions, and customer lists - addressed as entities under
+    a module namespace, with list, create, retrieve, update, archive, and bulk submission.
 - aid: antavo:antavo-rewards-api
   name: Antavo Rewards API
   tags:
@@ -140,9 +172,15 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Manage the reward catalog and redemptions - create, list, retrieve,
-    update, and archive rewards via the entities surface, and claim rewards. Legacy
-    /rewards claim endpoints are superseded by the Display API.
+  - url: openapi/antavo-rewards-openapi.yml
+    type: OpenAPI
+    name: Antavo Rewards API OpenAPI
+  - url: overlays/antavo-rewards-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Rewards API
+  description: Manage the reward catalog and redemptions - create, list, retrieve, update, and archive
+    rewards via the entities surface, and claim rewards. Legacy /rewards claim endpoints are superseded
+    by the Display API.
 - aid: antavo:antavo-coupons-api
   name: Antavo Coupons and Coupon Pools API
   tags:
@@ -157,9 +195,21 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Query coupon usage independent of a customer and create or manage
-    coupon pools - configuring value, expiration, and code patterns - with bulk
-    import of codes and status/error reporting on the batch operations.
+  - url: openapi/antavo-coupons-openapi.yml
+    type: OpenAPI
+    name: Antavo Coupons API OpenAPI
+  - url: overlays/antavo-coupons-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Coupons API
+  - url: openapi/antavo-coupon-pools-openapi.yml
+    type: OpenAPI
+    name: Antavo Coupon Pools API OpenAPI
+  - url: overlays/antavo-coupon-pools-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Coupon Pools API
+  description: Query coupon usage independent of a customer and create or manage coupon pools - configuring
+    value, expiration, and code patterns - with bulk import of codes and status/error reporting on
+    the batch operations.
 - aid: antavo:antavo-offers-api
   name: Antavo Offers API
   tags:
@@ -174,9 +224,14 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Submit a cart and retrieve applicable pre-purchase offers used for
-    customer acquisition and engagement, and list a member's available offers
-    through the Display surface.
+  - url: openapi/antavo-offers-openapi.yml
+    type: OpenAPI
+    name: Antavo Offers API OpenAPI
+  - url: overlays/antavo-offers-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Offers API
+  description: Submit a cart and retrieve applicable pre-purchase offers used for customer acquisition
+    and engagement, and list a member's available offers through the Display surface.
 - aid: antavo:antavo-points-preview-api
   name: Antavo Points Preview API
   tags:
@@ -191,8 +246,14 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Preview the loyalty points a transaction would earn, including bonus
-    points assigned by the Workflows module, before the transaction is committed.
+  - url: openapi/antavo-points-preview-openapi.yml
+    type: OpenAPI
+    name: Antavo Points Preview API OpenAPI
+  - url: overlays/antavo-points-preview-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Points Preview API
+  description: Preview the loyalty points a transaction would earn, including bonus points assigned
+    by the Workflows module, before the transaction is committed.
 - aid: antavo:antavo-leaderboard-api
   name: Antavo Leaderboard API
   tags:
@@ -207,8 +268,14 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Retrieve ranked lists of top customers with their scores for display
-    in mobile apps, websites, and CRMs.
+  - url: openapi/antavo-leaderboard-openapi.yml
+    type: OpenAPI
+    name: Antavo Leaderboard API OpenAPI
+  - url: overlays/antavo-leaderboard-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Leaderboard API
+  description: Retrieve ranked lists of top customers with their scores for display in mobile apps,
+    websites, and CRMs.
 - aid: antavo:antavo-bulk-operations-api
   name: Antavo Bulk Operations API
   tags:
@@ -223,9 +290,14 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Batch processing for reward claims across many customers and for
-    adding or removing customers from lists, each returning a batch id with status
-    and error reporting endpoints.
+  - url: openapi/antavo-bulk-operations-openapi.yml
+    type: OpenAPI
+    name: Antavo Bulk Operations API OpenAPI
+  - url: overlays/antavo-bulk-operations-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Bulk Operations API
+  description: Batch processing for reward claims across many customers and for adding or removing
+    customers from lists, each returning a batch id with status and error reporting endpoints.
 - aid: antavo:antavo-clubs-api
   name: Antavo Clubs API
   tags:
@@ -240,9 +312,14 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Create and administer member clubs and communities - templates,
-    membership, invitations, applicants, bans, ownership, point adjustments and
-    donations, history, and disbanding.
+  - url: openapi/antavo-clubs-openapi.yml
+    type: OpenAPI
+    name: Antavo Clubs API OpenAPI
+  - url: overlays/antavo-clubs-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Clubs API
+  description: Create and administer member clubs and communities - templates, membership, invitations,
+    applicants, bans, ownership, point adjustments and donations, history, and disbanding.
 - aid: antavo:antavo-promotion-engine-api
   name: Antavo Promotion Engine API
   tags:
@@ -257,9 +334,14 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: List and manage promotions and apply them at checkout - submit a
-    cart to retrieve applicable promotions and finalize the checkout with the
-    resulting discounts.
+  - url: openapi/antavo-promotion-engine-openapi.yml
+    type: OpenAPI
+    name: Antavo Promotion Engine API OpenAPI
+  - url: overlays/antavo-promotion-engine-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Promotion Engine API
+  description: List and manage promotions and apply them at checkout - submit a cart to retrieve
+    applicable promotions and finalize the checkout with the resulting discounts.
 - aid: antavo:antavo-authentication-api
   name: Antavo Authentication API
   tags:
@@ -274,10 +356,96 @@ apis:
     type: Documentation
   - url: https://apidocs.antavo.com/api/index.html
     type: APIReference
-  description: Generate short-lived access tokens for credential clients configured
-    in the Authentication Manager, used for token-based authentication such as the
-    Async Events API.
+  - url: openapi/antavo-authentication-openapi.yml
+    type: OpenAPI
+    name: Antavo Authentication API OpenAPI
+  - url: overlays/antavo-authentication-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Authentication API
+  description: Generate short-lived access tokens for credential clients configured in the Authentication
+    Manager, used for token-based authentication such as the Async Events API.
+- aid: antavo:antavo-faq-api
+  name: Antavo FAQ API
+  tags:
+  - FAQ
+  - Content
+  - Support
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/reference/about-faq-api
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://developers.antavo.com/reference/about-faq-api
+    type: APIReference
+  - url: openapi/antavo-faq-openapi.yml
+    type: OpenAPI
+    name: Antavo FAQ API OpenAPI
+  - url: overlays/antavo-faq-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo FAQ API
+  description: Read-only access to the questions and answers configured and managed in the Antavo
+    FAQ module. A valid request returns an array of FAQ entries and, by design, includes no personally
+    identifiable customer data - making it the safest read on the Antavo surface for a public or
+    agent-facing client.
+- aid: antavo:antavo-loyalty-read-api
+  name: Antavo Loyalty Read API
+  tags:
+  - Read
+  - Reporting
+  - Customers
+  - Analytics
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/reference/about-loyalty-read-api
+  baseURL: https://read-api.{environment}.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://developers.antavo.com/reference/about-loyalty-read-api
+    type: APIReference
+  - url: openapi/antavo-loyalty-read-openapi.yml
+    type: OpenAPI
+    name: Antavo Loyalty Read API OpenAPI
+  - url: overlays/antavo-loyalty-read-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Loyalty Read API
+  description: A dedicated read-optimised API served from its own per-environment host (read-api.<environment>.antavo.com)
+    for pulling loyalty data at volume. Returns paginated, filterable and sortable lists of customers,
+    and per customer their coupons, events and transactions - including custom customer attributes
+    configured in the workspace. This is the only Antavo surface whose operations all declare stable
+    operationIds (listCustomers, getCustomer, listCustomerCoupons, listCustomerEvents, listCustomerTransactions).
+  x-base-url-note: Antavo publishes this base as the literal template https://read-api.<environment>.antavo.com
+    in the spec's servers[] block; the customer's assigned environment identifier fills it. read-api.antavo.com
+    does not resolve (verified 2026-08-13), so no concrete host is recorded rather than guessing
+    one.
+- aid: antavo:antavo-social-share-campaigns-api
+  name: Antavo Social Share Campaigns API
+  tags:
+  - Social
+  - Campaigns
+  - Referral
+  - Engagement
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.antavo.com/reference/social-share-campaigns-api
+  baseURL: https://api.antavo.com
+  properties:
+  - url: https://developers.antavo.com/docs/antavo-apis
+    type: Documentation
+  - url: https://developers.antavo.com/reference/social-share-campaigns-api
+    type: APIReference
+  - url: openapi/antavo-social-share-campaigns-openapi.yml
+    type: OpenAPI
+    name: Antavo Social Share Campaigns API OpenAPI
+  - url: overlays/antavo-social-share-campaigns-overlay.yaml
+    type: Overlay
+    name: API Evangelist enhancements for Antavo Social Share Campaigns API
+  description: Registers a customer's intent to share content for an active campaign configured in
+    the Social Share Campaigns module. Called when a member clicks a share button on a content page
+    with the customer ID, target platform and URL to be shared; a campaign match triggers the share_intent_success
+    event and any associated point award.
 common:
+- type: Authentication
+  url: authentication/antavo-authentication.yml
 - type: DomainSecurity
   url: security/antavo-domain-security.yml
 - type: GitHubOrganization
@@ -296,6 +464,76 @@ common:
   url: finops/antavo-finops.yml
 - type: Blog
   url: https://antavo.com/blog/
+- type: DeveloperPortal
+  url: https://developers.antavo.com/
+- type: APIReference
+  url: https://developers.antavo.com/reference
+- type: GettingStarted
+  url: https://developers.antavo.com/docs/getting-started
+- type: Support
+  url: https://antavo.atlassian.net/servicedesk/customer/portals
+- type: HelpCenter
+  url: https://docs.antavo.com/
+- type: Pricing
+  url: https://antavo.com/pricing/
+- type: PrivacyPolicy
+  url: https://antavo.com/legals/privacy/
+- type: Postman
+  url: https://documenter.getpostman.com/view/31303107/2sAYdmkTFm
+  name: Antavo APIs Postman collection
+- type: LLMsTxt
+  url: llms/antavo-llms.txt
+- type: Packages
+  url: packages/antavo-packages.yml
+- type: SDKs
+  url: packages/antavo-packages.yml
+- type: Conventions
+  url: conventions/antavo-conventions.yml
+- type: Lifecycle
+  url: lifecycle/antavo-lifecycle.yml
+- type: StatusPage
+  url: https://antavo.com/status/
+- type: Deprecation
+  url: https://developers.antavo.com/changelog
+- type: ChangeLog
+  url: changelog/antavo-changelog.yml
+- type: OAuthScopes
+  url: scopes/antavo-scopes.yml
+- type: Conformance
+  url: conformance/antavo-conformance.yml
+- type: Compliance
+  url: https://antavo.com/product/loyalty-engine/technology/security/
+- type: TrustCenter
+  url: security/antavo-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/antavo-vulnerability-disclosure.yml
+- type: ErrorCatalog
+  url: errors/antavo-problem-types.yml
+- type: DataModel
+  url: data-model/antavo-data-model.yml
+- type: Sandbox
+  url: sandbox/antavo-sandbox.yml
+- type: Webhooks
+  url: asyncapi/antavo-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgentSkill
+  url: skills/antavo-submit-loyalty-event.md
+  name: Submit a loyalty event to Antavo
+- type: AgentSkill
+  url: skills/antavo-async-event-ingestion.md
+  name: Ingest events asynchronously with an Antavo OAuth token
+- type: AgentSkill
+  url: skills/antavo-member-experience-and-reward-claim.md
+  name: Build a headless member experience and claim a reward
+- type: AgentSkill
+  url: skills/antavo-cart-promotions-and-points-preview.md
+  name: Preview points and apply cart promotions at checkout
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 57
+  pass: local-v1
