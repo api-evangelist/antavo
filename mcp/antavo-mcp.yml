@@ -1,0 +1,217 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: openapi/ (18 harvested OpenAPI documents, 122 operations)
+searched:
+  result: none
+  attempted:
+  - {target: developers.antavo.com + docs.antavo.com, query: mcp / model context protocol, finding: no mention}
+  - {target: llms/antavo-llms.txt, query: mcp, finding: not present in Antavo's own documentation index}
+  - {target: github.com/antavo, query: public repositories, finding: 8 repos, none MCP-related}
+  - {target: npm registry, query: '@antavo scope + text search antavo', finding: 4 packages, all 2020-2021, none MCP}
+  - {target: web search, query: Antavo MCP server model context protocol, finding: no Antavo MCP server exists}
+  note: >-
+    Antavo markets an "AI Loyalty" product line (an AI Loyalty Expert and an AI
+    Analyst, https://antavo.com/product/loyalty-ai/) but ships those as in-product
+    agents, not as an MCP surface a third-party agent can call. No hosted MCP
+    endpoint, no stdio package, and no MCP documentation of any kind was found.
+
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+  note: >-
+    Antavo ships NO MCP server - neither a remote endpoint nor a local stdio
+    package. The tools below are a DERIVED CANDIDATE set proposed from Antavo's
+    own OpenAPI operations; nothing here is reachable today, and no endpoint URL
+    has been guessed or invented.
+
+server:
+  name: antavo
+  transport: null
+  url: null
+  note: candidate only - no server exists to name a transport or URL for
+
+authentication_model_if_built:
+  note: >-
+    A future Antavo MCP server would have to carry the platform's split auth
+    model, which is the hard part of the design rather than an afterthought.
+  constraints:
+  - >-
+    Key-based endpoints require an Escher (AWS SigV4-derived) signature over the
+    canonical request, computed per call from a workspace API secret. An MCP
+    server would have to hold the secret and sign server-side; it cannot be
+    delegated to the calling agent without exposing the secret, and Antavo's own
+    documentation forbids generating signatures in front-end code.
+  - >-
+    Signing becomes mandatory in EVERY environment on 2026-12-31, so a key-only
+    implementation has a fixed expiry date.
+  - >-
+    Only the Async Events API uses OAuth 2.0 client credentials
+    (scope loyalty.async_events), which is the one surface that maps cleanly onto
+    a standard MCP OAuth flow.
+  - >-
+    Every credential is scoped to one workspace in one environment, so a server
+    is inherently single-tenant unless it brokers per-workspace credentials.
+  - >-
+    There is no idempotency key on any write, so an agent retry duplicates the
+    loyalty event. Any write tool needs a confirmation gate.
+
+tools:
+- name: submit_event
+  description: Record a customer interaction as a loyalty event (point_add, checkout, opt_in, ...).
+  source_operation: openapi/antavo-events-openapi.yml#events
+  rest: POST /events
+  mutating: true
+  consequence: write - awards or spends loyalty points and is not reversible by the same call
+- name: submit_events_bulk
+  description: Submit multiple events in a single synchronous request.
+  source_operation: openapi/antavo-events-openapi.yml#bulk
+  rest: POST /events/bulk
+  mutating: true
+- name: submit_event_async
+  description: Queue an event for background processing and receive a correlation id.
+  source_operation: openapi/antavo-async-events-openapi.yml
+  rest: POST /v1/async/events
+  mutating: true
+  auth: oauth2 client_credentials, scope loyalty.async_events
+- name: get_async_event_status
+  description: Poll the processing status of an async event by correlation id.
+  source_operation: openapi/antavo-async-events-openapi.yml
+  rest: GET /v1/async/events/{correlation_id}
+  mutating: false
+- name: search_customers
+  description: Search the Antavo database by customer filters and return Antavo customer IDs.
+  source_operation: openapi/antavo-customer-openapi.yml
+  rest: GET /customers
+  mutating: false
+- name: get_customer
+  description: Retrieve detailed customer data by Antavo customer ID.
+  source_operation: openapi/antavo-customer-openapi.yml
+  rest: GET /customers/{customer_id}
+  mutating: false
+- name: count_active_customers
+  description: Return the number of customers with active status.
+  source_operation: openapi/antavo-customer-openapi.yml
+  rest: GET /customers/-/count
+  mutating: false
+- name: list_customer_activities
+  description: Aggregate every earn and spend option currently available to a customer.
+  source_operation: openapi/antavo-display-openapi.yml
+  rest: GET /customers/{customer_id}/activities
+  mutating: false
+- name: list_available_rewards
+  description: List rewards a specific customer can claim.
+  source_operation: openapi/antavo-display-openapi.yml
+  rest: GET /customers/{customer_id}/activities/rewards
+  mutating: false
+- name: claim_reward
+  description: Claim a reward on behalf of a customer.
+  source_operation: openapi/antavo-display-openapi.yml
+  rest: POST /customers/{customer_id}/activities/rewards/{reward_id}/claim
+  mutating: true
+  consequence: spends the member's points and issues a reward - requires human confirmation
+- name: revoke_reward_claim
+  description: Revoke a previously claimed reward.
+  source_operation: openapi/antavo-display-openapi.yml
+  rest: POST /customers/{customer_id}/activities/rewards/{reward_id}/revoke
+  mutating: true
+- name: list_customer_transactions
+  description: Retrieve a customer's transaction history with items, points and status.
+  source_operation: openapi/antavo-display-openapi.yml
+  rest: GET /customers/{customer_id}/transactions
+  mutating: false
+- name: list_customer_events
+  description: Retrieve a customer's event history, filterable by action and paginated.
+  source_operation: openapi/antavo-display-openapi.yml
+  rest: GET /customers/{customer_id}/events
+  mutating: false
+- name: list_customer_coupons
+  description: List coupons assigned to a customer.
+  source_operation: openapi/antavo-display-openapi.yml
+  rest: GET /customers/{customer_id}/coupons
+  mutating: false
+- name: preview_points
+  description: Preview the points a transaction would earn, including workflow campaign bonuses, before committing it.
+  source_operation: openapi/antavo-points-preview-openapi.yml
+  rest: POST /extensions/automation/campaign-bonus
+  mutating: false
+  note: >-
+    The single most agent-appropriate operation in the whole surface - a
+    read-only simulation of a write.
+- name: get_cart_offers
+  description: Submit a cart and retrieve the pre-purchase offers applicable to it.
+  source_operation: openapi/antavo-offers-openapi.yml
+  rest: POST /offers/
+  mutating: false
+- name: evaluate_cart_promotions
+  description: Submit a cart to calculate applicable promotions, discounts and adjusted pricing.
+  source_operation: openapi/antavo-promotion-engine-openapi.yml
+  rest: POST /v1/cart
+  mutating: true
+  note: >-
+    Marked mutating because a promotion with an application limit takes a
+    RESERVATION when found applicable; the reservation is released only when the
+    locking period expires.
+- name: finalize_cart
+  description: Finalize a checkout with the applied promotions and count usage against application limits.
+  source_operation: openapi/antavo-promotion-engine-openapi.yml
+  rest: POST /v1/cart/finalize
+  mutating: true
+  consequence: commits the discount and consumes promotion usage - the same cartId cannot be resubmitted
+- name: list_entities
+  description: List items of a configurable entity module (rewards, challenges, stores, products, transactions, customer lists).
+  source_operation: openapi/antavo-entities-openapi.yml
+  rest: GET /entities/{module}/{entity}
+  mutating: false
+- name: list_faq
+  description: Retrieve the questions and answers configured in the FAQ module.
+  source_operation: openapi/antavo-faq-openapi.yml
+  rest: GET /faq
+  mutating: false
+  note: contains no personally identifiable customer data - the safest read on the surface
+- name: read_customers
+  description: Paginated, filterable customer list from the Loyalty Read API.
+  source_operation: openapi/antavo-loyalty-read-openapi.yml#listCustomers
+  rest: GET /v1/customers
+  mutating: false
+- name: read_customer
+  description: Retrieve a single customer from the Loyalty Read API.
+  source_operation: openapi/antavo-loyalty-read-openapi.yml#getCustomer
+  rest: GET /v1/customers/{customer_id}
+  mutating: false
+
+coverage:
+  candidate_tools: 22
+  rest_operations_total: 122
+  note: >-
+    22 candidate tools drawn from 122 published operations. The remainder are
+    club administration, bulk operations, coupon-pool management and the
+    gamification long tail (quizzes, contests, prize wheels, treasure hunts,
+    profiling), which are better modelled as parameterised variants than as
+    separate tools.
+
+privacy_warning: >-
+  Almost every read on this surface returns loyalty member PII - names, contact
+  details, purchase history and custom profile attributes. Any Antavo MCP server
+  would be handing member personal data to a model context. Antavo is
+  ISO 27018-certified for personal data in cloud storage and GDPR/UK GDPR
+  compliant (see security/antavo-trust-center.yml); an MCP deployment would need
+  to carry that posture through to the agent boundary.
+
+pointer_decision:
+  emitted: []
+  not_emitted: [MCPServer]
+  reason: >-
+    NO `type: MCPServer` pointer is wired into apis.yml. The scoring checks that
+    read it (mcp_server_present, 4 pts ergonomics; mcp_server, 12 pts agent
+    readiness) measure whether the PROVIDER ships a callable MCP server. Antavo
+    ships none - not a remote endpoint, not a stdio package - and `deployment.mode`
+    above is `none`. Emitting the pointer for a derived candidate would credit
+    Antavo with 16 points of agent surface it does not have. The artifact is kept
+    because the candidate tool design, the auth constraints and the privacy
+    warning are real work product; the pointer is withheld because the server is
+    not real. Wire `type: MCPServer` here only if and when Antavo publishes one.

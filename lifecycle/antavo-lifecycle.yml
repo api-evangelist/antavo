@@ -1,0 +1,163 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developers.antavo.com/changelog,
+  https://developers.antavo.com/changelog/discontinuing-unsigned-api-requests,
+  https://developers.antavo.com/docs/antavo-apis,
+  https://antavo.com/status/, https://status.eu6.antavo.com/,
+  and the 18 OpenAPI documents in openapi/
+
+versioning:
+  scheme: uri-path
+  current: mixed - unversioned, v1 and v2 endpoints coexist
+  docs: https://developers.antavo.com/docs/antavo-apis
+  note: >-
+    There is no single API version. Legacy surfaces are unversioned (/events,
+    /customers, /rewards, /coupons, /offers, /entities), newer surfaces carry
+    /v1 (/v1/auth/token, /v1/async/events, /v1/clubs, /v1/promotions,
+    /v1/bulk-operation, /v1/cart, /v1/coupon-pools, /v1/social-share-campaigns)
+    and the challenge endpoints have a /v2 generation that supersedes the
+    unversioned pair. Antavo publishes no version-negotiation header, no
+    date-pinned versions and no supported-version window.
+
+deprecation:
+  policy_url: https://developers.antavo.com/changelog
+  policy_name: Deprecations
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    Antavo renames the ReadMe changelog module to "Deprecations" and uses it as
+    a dated breaking-change notice board rather than a release feed. It carries
+    an effective date per entry. There is NO RFC 8594 Sunset header, no
+    Deprecation header, and no stated minimum notice period - the guarantee is
+    editorial, not machine-readable.
+  entries:
+  - title: Discontinuing unsigned API requests
+    url: https://developers.antavo.com/changelog/discontinuing-unsigned-api-requests
+    effective: '2026-12-31'
+    breaking: true
+    summary: >-
+      Request signing has so far been mandatory only in production, with staging
+      and other non-production environments accepting a plain API key. After
+      2026-12-31 all API requests must be signed in every environment and
+      key-only requests will be rejected.
+    action_required: >-
+      Update every API client and integration to send Escher-signed requests
+      before the deadline.
+
+deprecated_surfaces:
+- surface: Rewards API
+  status: legacy
+  reference: https://developers.antavo.com/reference/about-rewards-api
+  spec: openapi/antavo-rewards-openapi.yml
+  superseded_by: >-
+    Display API reward endpoints
+    (openapi/antavo-display-openapi.yml - GET/POST /customers/{customer_id}/activities/rewards*)
+  evidence: >-
+    "Rewards API - LEGACY ... The functionality of this endpoint has been
+    replaced by the Reward endpoints of the Display API."
+    (https://developers.antavo.com/docs/antavo-apis)
+- surface: POST /rewards/{reward_id}/claim
+  status: deprecated
+  reference: https://developers.antavo.com/reference/post_rewards-reward-id-claim
+  spec: openapi/antavo-rewards-openapi.yml
+  superseded_by: POST /customers/{customer_id}/activities/rewards/{reward_id}/claim
+  evidence: >-
+    Operation title reads "Claims a specific reward (deprecated)"; the
+    description states "This endpoint is not supported anymore."
+- surface: Leaderboard API
+  status: deprecated
+  reference: https://developers.antavo.com/reference/about-leaderboard-api
+  spec: openapi/antavo-leaderboard-openapi.yml
+  superseded_by: null
+  evidence: >-
+    The API reference index entry is titled "About Leaderboard API (deprecated)".
+    No replacement surface is named.
+- surface: GET /customers/{customer_id}/activities/challenges and GET /customers/{customer_id}/challenges
+  status: superseded
+  spec: openapi/antavo-display-openapi.yml
+  superseded_by: >-
+    /v2/customers/{customer_id}/activities/challenges and
+    /v2/customers/{customer_id}/challenges
+  evidence: >-
+    Both v1 descriptions direct integrators to the v2 endpoint for filtering and
+    a "more complete" view.
+- surface: GET /customers/{customer_id}/history
+  status: renamed
+  spec: openapi/antavo-display-openapi.yml
+  superseded_by: GET /customers/{customer_id}/events
+  evidence: >-
+    "This endpoint was historically known as /customers/{customer_id}/history.
+    This endpoint is still valid." Both paths are served; the /events name is
+    canonical.
+- surface: Webhook message (legacy) workflow node
+  status: legacy
+  reference: https://docs.antavo.com/docs/webhooks-deprecated
+  superseded_by: Webhook message node backed by preconfigured Trusted sites
+  evidence: >-
+    The user manual carries a separate "Webhooks (deprecated)" page and
+    recommends the Trusted-sites-backed node instead.
+- surface: Points Preview API
+  status: renamed
+  spec: openapi/antavo-points-preview-openapi.yml
+  former_name: Workflow Campaigns API
+  evidence: >-
+    Management UI API settings lists it as "Points preview API (formerly known
+    as Workflow Campaigns API)".
+
+deprecated_operations: []
+note_on_deprecated_operations: >-
+  No harvested OpenAPI operation carries the machine-readable `deprecated: true`
+  flag. Every deprecation Antavo publishes is prose in a summary, description or
+  changelog entry - which means an automated client cannot detect any of the
+  surfaces listed above. That gap is the single most actionable lifecycle finding
+  in this profile.
+
+status_page:
+  url: https://antavo.com/status/
+  model: per-environment
+  note: >-
+    Antavo does not run one aggregate status page. https://antavo.com/status/ is
+    an index that links a separate status host per customer stack - each returns
+    its own page (verified: https://status.eu6.antavo.com/ -> "Antavo Stack EU6
+    Status", HTTP 200). A customer must know which stack their workspace runs on
+    to monitor the right one. No status JSON/RSS API and no Statuspage/Instatus
+    vendor endpoint was found on any of them.
+  stacks:
+  - https://status.eu6.antavo.com/
+  - https://status.eu7.antavo.com/
+  - https://status.eu8.antavo.com/
+  - https://status.eu9.antavo.com/
+  - https://status.eu11.antavo.com/
+  - https://status.eu71.antavo.com/
+  - https://status.us.antavo.com/
+  - https://status.us6.antavo.com/
+  - https://status.us7.antavo.com/
+  - https://status.st1.antavo.com/
+  - https://status.st2.antavo.com/
+  - https://status.st3.antavo.com/
+  - https://status.st4.antavo.com/
+  - https://status.st5.antavo.com/
+  - https://status.st9.antavo.com/
+
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No public SLA or uptime commitment is published. Antavo is an enterprise
+    contract-only product (see plans/antavo-plans-pricing.yml); availability
+    terms are negotiated per customer. https://antavo.com/product/loyalty-engine/technology/performance/
+    describes performance posture but states no numeric target.
+
+support:
+  service_desk: https://antavo.atlassian.net/servicedesk/customer/portals
+  note: >-
+    Jira Service Management. Requires a customer login; there is no public
+    support forum, community or issue tracker for the APIs.
+  contact_email: support@antavo.com
+  contact_source: info.contact.email in every harvested OpenAPI document
+
+data_retention:
+- item: outbound webhook logs
+  retention: 90 days (7,776,000 seconds)
+  source: https://docs.antavo.com/docs/webhooks

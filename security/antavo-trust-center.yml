@@ -1,0 +1,86 @@
+generated: '2026-08-13'
+method: searched
+probe: true
+url: https://antavo.com/product/loyalty-engine/technology/security/
+model: security-and-compliance-page
+note: >-
+  Antavo runs no dedicated trust portal - trust.antavo.com does not resolve
+  (DNS NXDOMAIN) and /trust-center/, /compliance/ and /security/ on the
+  corporate site all return 404. What it does publish is a product security and
+  compliance page under the Loyalty Engine technology section, which names its
+  certifications explicitly. That page is the compliance evidence recorded here
+  and is the URL the `Compliance` pointer in apis.yml addresses. No audit report,
+  SOC 2 attestation, sub-processor list or certificate registry number is
+  published, and no automated evidence-sharing portal (Vanta/Drata/SafeBase
+  style) was found.
+certifications:
+- id: iso-27001
+  name: ISO 27001
+  claimed: true
+  evidence: >-
+    "Antavo is proudly compliant with one of the strictest information security
+    standards, ISO 27001."
+  certificate_published: false
+- id: iso-27017
+  name: ISO 27017
+  claimed: true
+  evidence: >-
+    "Antavo also adheres to the ISO 27017 standard, to create and maintain a
+    safe cloud environment."
+  certificate_published: false
+- id: iso-27018
+  name: ISO 27018
+  claimed: true
+  evidence: >-
+    "Antavo is compliant with ISO 27018, an international standard to protect
+    personal data in cloud storage."
+  certificate_published: false
+- id: gdpr
+  name: GDPR / UK GDPR
+  claimed: true
+  evidence: >-
+    "Antavo is compliant with GDPR and the UK version of the GDPR to establish
+    the highest of data privacy standards."
+  certificate_published: false
+not_claimed:
+- SOC 2
+- PCI DSS
+- HIPAA
+- FedRAMP
+- CSA STAR
+- FIPS 140
+security_practices:
+  encryption_in_transit: TLS 1.2 or higher
+  encryption_at_rest: encrypted volumes
+  access_control: [SSO, MFA, RBAC]
+  vulnerability_testing: >-
+    Regular testing of Antavo's own codebase and IT infrastructure for known and
+    0-day vulnerabilities.
+  penetration_testing: >-
+    Completed with independent third parties. No report or cadence is published.
+  personnel: [information security officer, data protection officer]
+  hosting: Google Cloud Platform, with network segregation and application firewalls
+related_pages:
+- url: https://antavo.com/product/loyalty-engine/technology/data-management-and-compliance/
+  title: Data management and compliance
+- url: https://antavo.com/legals/privacy/
+  title: Privacy Policy
+- url: https://antavo.com/legals/vulnerability-disclosure-policy/
+  title: Vulnerability Disclosure Policy (declines to operate a program - see security/antavo-vulnerability-disclosure.yml)
+- url: https://developers.antavo.com/docs/getting-started
+  title: Developer documentation - data compliance section
+evidence:
+- source: https://antavo.com/product/loyalty-engine/technology/security/
+  http_status: 200
+  fetched: '2026-08-13'
+  keywords: [iso 27001, iso 27017, iso 27018, gdpr, encryption, penetration test, rbac, mfa]
+- source: https://trust.antavo.com/
+  http_status: 0
+  fetched: '2026-08-13'
+  finding: DNS does not resolve
+- source: https://antavo.com/trust-center/
+  http_status: 404
+  fetched: '2026-08-13'
+- source: https://antavo.com/compliance/
+  http_status: 404
+  fetched: '2026-08-13'

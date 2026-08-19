@@ -1,0 +1,63 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Coupons API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Coupons",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query coupons independent of customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/coupons",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "The code used to search for a specific coupon."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "The status of the coupons to search for. \nOptions: <code>claimed</code>, <code>redeemed</code>, <code>invalid</code>, <code>expired</code>, <code>unassigned</code>, <code>partially_redeemed</code>"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of results to be returned in one response.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "This parameter gets a specific page of the coupon list if a limit has been set. This is used in pagination in conjunction with the limit query.\t\n"
+              }
+            ]
+          },
+          "docs": "Use this endpoint to query coupons within Antavo independently of customer data. \nThis allows searching for coupons based on criteria such as coupon code and status, providing flexibility in managing coupon data.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

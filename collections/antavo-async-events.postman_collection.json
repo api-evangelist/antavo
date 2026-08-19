@@ -1,0 +1,404 @@
+{
+  "item": [
+    {
+      "id": "885d187a-c3ed-4516-b266-f1fa8213ca65",
+      "name": "Async Events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "431fa796-173c-4075-9080-82e7ead7d9d8",
+          "name": "Query the status of async event processing",
+          "request": {
+            "name": "Query the status of async event processing",
+            "description": {
+              "content": "Use this endpoint to query the processing status of an event sent through the `v1/async/events` endpoint.\nOnce the event has been processed, the response includes the customer information and the detailed event data.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "async",
+                "events",
+                ":correlation_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "correlation_id",
+                  "description": "(Required) Use the correlation_id provided in the response of the asynchronous event request."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "564ef336-9852-44c9-8cb2-96d88cbe2efb",
+              "name": "The request was successfully received and processed. The processing result of the asynchronous event is returned in the payload. Business-level errors are also returned with HTTP 200 status.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "async",
+                    "events",
+                    ":correlation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlation_id",
+                      "description": "(Required) Use the correlation_id provided in the response of the asynchronous event request."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": [],\n  \"payload\": {\n    \"status\": \"processed\",\n    \"response\": {\n      \"success\": {\n        \"id\": \"testcustomer\",\n        \"created_at\": 1657106644,\n        \"email\": \"john.doe@example.com\",\n        \"first_name\": \"John\",\n        \"last_name\": \"Doe\",\n        \"handler\": \"\",\n        \"status\": \"active\",\n        \"score\": 34170,\n        \"spent\": 12167,\n        \"expired\": 0,\n        \"level\": \"64b647cd257f93741550d3e4\",\n        \"pending\": 34511,\n        \"language\": \"\",\n        \"currency\": \"JPY\",\n        \"mobile_phone\": \"\",\n        \"image_url\": null,\n        \"spendable\": 21953,\n        \"events\": [\n          {\n            \"id\": \"69736bd56967744fd607d673\",\n            \"action\": \"point_add\",\n            \"points\": 15,\n            \"expdate\": \"2025-06-01T00:00:00.000Z\",\n            \"account\": {\n              \"id\": \"family_account\",\n              \"name\": \"Family account\"\n            }\n          }\n        ]\n      },\n      \"error\": []\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1de33c9e-f695-4261-bb5f-189d1c16d49a",
+              "name": "Not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "async",
+                    "events",
+                    ":correlation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlation_id",
+                      "description": "(Required) Use the correlation_id provided in the response of the asynchronous event request."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 203408,\n    \"message\": \"Correlation ID not found.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2fae76ca-1a5b-4955-b688-61019db1606d",
+          "name": "Submit an async event",
+          "request": {
+            "name": "Submit an async event",
+            "description": {
+              "content": "Use this endpoint to submit a single event for a specified customer asyncronously. The event is accepted immediately and processed in the background.\nThis endpoint is compatible with the following event actions:\n  - `point_add`\n  - `checkout`\n  - `checkout_item`\n  - `checkout_update`\n  - `checkout_update_item`\n  - `checkout_accept`\n  - `checkout_accept_item`\n  - `checkout_reject`\n  - `partial_refund`\n  - `refund_item`\n  - `refund`\n  - `opt_in`\n  - `opt_out`\n  - `profile`\n\nThe attributes provided in the `data` object are examples of `point_add` and `checkout` events. Refer to the [complete list of events](/docs/api-events) for all the attributes of the mentioned actions.\n\nExamples of event submission:\n\n- **Standard event submission**: Submit an event for the customer without any additional identifiers.\n- **Event submission with an external ID**: Include the `external_id` attribute to link the event with an external identifier of the customer from another system or database.\n- **Event submission with multiple accounts**: Specify multiple accounts by including their IDs in the 'account' attribute. This requires the Points economy module to be enabled.<br>\n*Note*: if no account is specified, the event will be assigned to the default account.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "async",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"<string>\",\n  \"action\": \"<string>\",\n  \"data\": {\n    \"points\": \"<integer>\",\n    \"callback_url\": \"<string>\",\n    \"effective_timestamp\": \"<number>\"\n  },\n  \"callback_url\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"account\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c751288d-7884-444d-9086-188434045cbb",
+              "name": "Indicates a successful event submission.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "async",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"action\": \"point_add\",\n  \"data\": {\n    \"points\": 325\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {},\n  \"payload\": {\n    \"correlation_id\": \"62cc313988befe60e3413e75\",\n    \"status\": \"queued\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c120e968-c7f6-4cda-92ae-7bc330227265",
+              "name": "Bad Request. The request is invalid for one of several reasons.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "async",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"action\": \"point_add\",\n  \"data\": {\n    \"points\": 325\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 203401,\n    \"message\": \"Property '' cannot be empty\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8c52330c-8415-422e-9acf-3b0edb622a74",
+              "name": "Unauthorized. Token authentication failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "async",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"action\": \"point_add\",\n  \"data\": {\n    \"points\": 325\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"UnauthorizedException\",\n    \"code\": 220052,\n    \"message\": \"Bearer token authentication failed\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "af17bcea-c0a7-4ec9-9416-27b5eafa69a3",
+    "name": "Antavo Async Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Email: support@antavo.com",
+      "type": "text/plain"
+    }
+  }
+}

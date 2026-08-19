@@ -1,0 +1,208 @@
+generated: '2026-08-13'
+method: searched
+source: openapi/ (18 harvested OpenAPI documents)
+docs: https://developers.antavo.com/docs/api-security
+docs_signing: https://developers.antavo.com/docs/api-signing
+docs_credentials: https://docs.antavo.com/docs/api-settings
+docs_postman: https://developers.antavo.com/docs/signing-api-requests-in-postman
+description: >-
+  Antavo runs three distinct authentication models side by side, split by API
+  rather than negotiated per request. The spec-derived scheme list below was
+  produced mechanically from the harvested OpenAPI, then upgraded from Antavo's
+  own API security and API signing documentation - the specs alone materially
+  understate the model, because the Escher request signature that actually
+  authenticates most calls is invisible to OpenAPI (it is a computed
+  `Authorization` header, not a declared securityScheme).
+
+summary:
+  types: [apiKey, http, oauth2]
+  api_key_in: [query]
+  http_schemes: [basic, bearer]
+  oauth2_flows: [clientCredentials]
+  signing: escher
+  credential_scope: one workspace, one environment
+
+schemes:
+- name: api_key
+  type: apiKey
+  in: query
+  parameter: api_key
+  description: >-
+    Workspace API key, passed as a query parameter. Generated in Management UI >
+    API settings. The paired API SECRET is displayed only once at generation and
+    is never retrievable afterwards; it is used to compute the Escher signature,
+    not sent on the wire.
+  applies_to:
+  - Events, Async (submission side), Display, Customer, Entities, Rewards
+  - Coupons, Coupon Pools, Offers, FAQ, Leaderboard, Clubs, Bulk Operations
+  - Points Preview, Social Share Campaigns
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+  - openapi/antavo-clubs-openapi.yml
+  - openapi/antavo-coupon-pools-openapi.yml
+  - openapi/antavo-coupons-openapi.yml
+  - openapi/antavo-customer-openapi.yml
+  - openapi/antavo-display-openapi.yml
+  - openapi/antavo-entities-openapi.yml
+  - openapi/antavo-events-openapi.yml
+  - openapi/antavo-faq-openapi.yml
+  - openapi/antavo-leaderboard-openapi.yml
+  - openapi/antavo-offers-openapi.yml
+  - openapi/antavo-rewards-openapi.yml
+  - openapi/antavo-social-share-campaigns-openapi.yml
+  spec_names_observed: [api_key, ApiKeyAuth]
+  warning: >-
+    The key travels in the QUERY STRING on every one of these APIs. Query
+    parameters are routinely written to proxy, CDN and web-server access logs, so
+    the key must be treated as observable in transit infrastructure. It is the
+    signature, not the key, that provides authentication integrity.
+- name: escher-signature
+  type: http-signature
+  header: Authorization
+  specification: https://escherauth.io/
+  derived_from: AWS Signature Version 4
+  declared_in_openapi: false
+  description: >-
+    "Antavo enhances HTTPS security by requiring every request to be signed with
+    an API signature ... The Antavo Loyalty Cloud uses Escher, a stateless HTTP
+    request signing specification based on an enhanced version of the AWS
+    Signature Version 4 protocol." Antavo recomputes the signature server-side
+    and rejects the request when the two do not match.
+  procedure:
+  - Build the Canonical Request (HTTPRequestMethod, CanonicalURI, CanonicalQueryString, CanonicalHeaders, blank line, SignedHeaders, HashedRequestPayload) joined by LF.
+  - Build the String to Sign from the hashed Canonical Request plus metadata.
+  - Sign it with a Signing Key derived from the Antavo API secret.
+  - Place the resulting signature in the Authorization header.
+  required_headers: [Host, Date]
+  encoding: RFC 3986; spaces as %20 never +; commas as %2C; '+' and %2B rewritten to %20 outside the PHP SDK
+  guarantees:
+  - the request originates from an authorized client
+  - the transmitted data was not modified in transit
+  - the request is accepted only once within a defined time window
+  enforcement:
+    production: required today
+    all_environments: required from 2026-12-31
+    source: https://developers.antavo.com/changelog/discontinuing-unsigned-api-requests
+    per_endpoint_toggle: >-
+      Management UI > API settings > Signature enforcement, available when the
+      API signature check module is enabled. Toggleable per API - Challenges
+      (legacy), Clubs, Coupons, Customer, Display, Entities, Events, FAQ, Offers,
+      Rewards, Points preview. With enforcement on, a plain-key request is
+      rejected with an authentication error.
+  libraries:
+  - {language: php, name: antavo/escher-php, url: https://github.com/antavo/escher-php, first_party: true}
+  - {language: javascript, name: '@antavo/api-signature-node', url: https://www.npmjs.com/package/@antavo/api-signature-node, first_party: true}
+  - {language: java, name: escher-java, url: https://github.com/emartech/escher-java, first_party: false}
+  - {language: csharp, name: escher-csharp, url: https://github.com/emartech/escher-csharp, first_party: false}
+  - {language: go, name: EscherAuth/escher, url: https://github.com/EscherAuth/escher, first_party: false}
+  - {language: other, name: Escher implementations index, url: https://escherauth.io/implementations.html, first_party: false}
+  constraint: >-
+    "API signatures should not be generated on front-end implementations as this
+    could potentially expose API keys and secrets." Signing must happen
+    server-side, which is the central design constraint on any Antavo client,
+    MCP server or agent integration.
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: >-
+    HTTP Basic with the Authentication Manager client_id as username and
+    client_secret as password. Used ONLY to authenticate the OAuth token request
+    itself (client_secret_basic).
+  applies_to: POST /v1/auth/token
+  sources: [openapi/antavo-authentication-openapi.yml]
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: >-
+    Bearer presentation of the access token issued by POST /v1/auth/token.
+    'Authorization: Bearer <access_token>'.
+  applies_to: Async Events API; also declared in the Promotion Engine spec
+  token_lifetime_seconds: {minimum: 300, maximum: 3600}
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: oauth2-client-credentials
+  type: oauth2
+  declared_in_openapi: false
+  flow: clientCredentials
+  token_url: /v1/auth/token
+  token_endpoint_auth_method: client_secret_basic
+  request_content_type: application/x-www-form-urlencoded
+  parameters: [grant_type=client_credentials, scope]
+  scopes: [loyalty.async_events]
+  description: >-
+    "Access tokens are issued via an OAuth 2.0 token endpoint using the Client
+    Credentials grant type." Clients are created in Management UI > API settings
+    > Authentication Manager with a name, purpose, expiration date, scope and
+    token audience.
+  note: >-
+    Antavo does not model this as an OpenAPI oauth2 securityScheme, so a
+    spec-only reader sees only basicAuth + bearerAuth and cannot discover the
+    flow, the token URL or the scope. This is why derive-oauth-scopes.py returned
+    nothing for this provider.
+  see: scopes/antavo-scopes.yml
+
+credential_management:
+  location: Management UI > API settings
+  api_key: visible on the settings page at any time
+  api_secret: displayed once at generation, never retrievable
+  rotation_warning: >-
+    "Generating new API credentials will deactivate all existing connections
+    until the new credentials are entered." There is no overlap window and no
+    multi-key rotation - key rotation is a hard cutover with downtime.
+  oauth_client_secret: displayed once at creation, never retrievable
+  oauth_client_statuses: [active, revoked, expired]
+  oauth_revocation: irreversible
+  audit_log: >-
+    The Authentication Manager audit log records client creation, revocation, and
+    every access token issued or rejected by the token endpoint.
+
+network_authorization:
+  ip_filter:
+    supported: true
+    notation: CIDR
+    granularity: per API endpoint
+    module_gated: true
+    on_violation: forbidden exception (HTTP 403)
+    source: https://docs.antavo.com/docs/api-settings
+    note: >-
+      Requires the IP filter module to be enabled by the Antavo Service Desk. The
+      allow-list is per endpoint, not per key, so an agent or server calling from
+      dynamic egress addresses must be allow-listed before any call succeeds.
+
+transport:
+  https_required: true
+  http_behaviour: redirected to HTTPS, but relying on the redirect is discouraged
+  tls_minimum: TLS 1.2
+  observed_tls: TLSv1.3 on antavo.com, developers.antavo.com and api.antavo.com (2026-08-13)
+  see: security/antavo-domain-security.yml
+
+authorization_model:
+  scopes: >-
+    Only the OAuth surface has scopes, and only one exists
+    (loyalty.async_events). Key-authenticated APIs have no scope dimension at
+    all - a workspace key is authorised for every enabled endpoint in that
+    workspace, constrained only by the per-endpoint IP filter and signature
+    enforcement toggles.
+  least_privilege: >-
+    There is no read-only key, no per-resource key and no delegation model. This
+    is the most significant authorisation gap on the platform: any integration
+    holding a workspace key can write loyalty events, claim rewards and read
+    every member profile.
+  end_user_auth:
+    note: >-
+      Separate from API-client auth. Loyalty members authenticate through the
+      Custom login module - POST /customers/-/login, POST /customers/{id}/opt-in,
+      POST /customers/-/password/request, POST /customers/-/password/reset,
+      GET /customers/-/verify/ - which returns the customer object and its
+      Antavo ID for subsequent Display API calls. A successful login also writes
+      a daily_login event, once per calendar day.
+    module_gated: true
+
+cross_links:
+  scopes: scopes/antavo-scopes.yml
+  conventions: conventions/antavo-conventions.yml
+  errors: errors/antavo-problem-types.yml
+  sandbox: sandbox/antavo-sandbox.yml
+  domain_security: security/antavo-domain-security.yml

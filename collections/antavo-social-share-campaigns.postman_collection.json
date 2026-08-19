@@ -1,0 +1,199 @@
+{
+  "item": [
+    {
+      "id": "fc9e2906-45e7-4305-8b6d-d21c2cf2b3ef",
+      "name": "Social Share Campaigns",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d3336da4-cdde-49a0-8918-f0d9c4c3cdfd",
+          "name": "Submit a share intent",
+          "request": {
+            "name": "Submit a share intent",
+            "description": {
+              "content": "This API endpoint registers a customer’s intent to share content for an active campaign configured in the [Social Share Campaigns module](https://docs.antavo.com/docs/social-share-campaigns). Triggers the `share_intent_success` [event](https://developers.antavo.com/docs/internal-events#/share_intent_success) when a campaign match occurs.\nCall this endpoint when a customer clicks a share button on a content page. Include the customer ID, target platform, and URL to be shared.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "social-share-campaigns",
+                "share-intent"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_id\": \"<string>\",\n  \"url\": \"<string>\",\n  \"platform\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b5a77a5f-11d3-4e37-934a-f0d919e4b7f8",
+              "name": "Share intent submitted. This response may be retured when the intent request is successfully validated, but a parameter value is invalid or missing.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "social-share-campaigns",
+                    "share-intent"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer_id\": \"9f3c82d6-288e-4361-aec0-039eb066a334\",\n  \"url\": \"https://brand.com\",\n  \"platform\": \"Facebook\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"RuntimeException\",\n  \"code\": 360300,\n  \"message\": \"Missing required field: customer_id.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fbaa9151-38bc-49de-aa28-58460824113a",
+              "name": "Successful intent submission. This response is returned whether the share intent was validated but no eligible campaign was found, or when there was an eligible campaign and the corresponding event was recorded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "social-share-campaigns",
+                    "share-intent"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer_id\": \"9f3c82d6-288e-4361-aec0-039eb066a334\",\n  \"url\": \"https://brand.com\",\n  \"platform\": \"Facebook\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "0efb21df-13c2-42c0-bdc7-3022510851bc",
+    "name": "Antavo Socal Share Campaigns API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Email: support@antavo.com",
+      "type": "text/plain"
+    }
+  }
+}

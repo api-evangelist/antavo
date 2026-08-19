@@ -1,0 +1,224 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Loyalty Read API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve detailed customer data of a single customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://read-api.<environment>.antavo.com/v1/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Customer identifier. Using an external ID is not supported."
+              }
+            ]
+          },
+          "docs": "Retrieves a customer by customer ID and returns the data associated with the customer."
+        },
+        {
+          "info": {
+            "name": "Retrieve the list of customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://read-api.<environment>.antavo.com/v1/customers",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Use the supported fields and operators to filter the results."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc`\n"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of customers, including standard customer fields and any custom customer attributes configured in the workspace.\nResults can be filtered and sorted by `created_at` and `status` customer attribute values.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Coupons",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of a customer's coupons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://read-api.<environment>.antavo.com/v1/customers/:customer_id/coupons",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Customer identifier. Using an external ID is not supported."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=claimed_at&sort[0][direction]=asc&sort[1][field]=redeemed_at&sort[1][direction]=desc`\n"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of coupons associated with a specific customer.\nResults can be filtered by `status`, `claimed_at`, `redeemed_at`, `expiration_date` coupon attribute values, and sorted by `claimed_at`, `redeemed_at`, `expiration_date` values.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of a customer's events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://read-api.<environment>.antavo.com/v1/customers/:customer_id/events",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Customer identifier. Using an external ID is not supported."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=action&sort[0][direction]=asc&sort[1][field]=points&sort[1][direction]=desc`\n"
+              }
+            ]
+          },
+          "docs": "Returns paginated list of events registered in the customer's events history.\nResults can be filtered and sorted by `action`, `date`, `account`, `expdate` and `points` event attribute values.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of a customer's transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://read-api.<environment>.antavo.com/v1/customers/:customer_id/transactions",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Customer identifier. Using an external ID is not supported."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=earned&sort[1][direction]=desc`\n"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of transactions registered for the customer, including their items, associated events, point values, and current processing status.\nResults can be filtered and sorted by `status`, `checkout_date`, `auto_accept`, `account`, `points_rewarded`, `earned`, and `burned` transaction attribute values.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,335 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@antavo.com
+  description: The Customer API provides another complementary access point to assist programs and integrations
+    access the full potential of the Antavo Loyalty Management Platform. All Customer API requests should
+    be made with a signed API.  In order to be compliant with GDPR standards, any searches for opted out
+    customers will results in an empty search criteria as the  Antavo Loyalty Management Platform does
+    not retain any customer identifiers upon un-enrollment.
+  title: Antavo Rewards API
+  version: 1.0.0-oas3
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /rewards/{reward_id}:
+    get:
+      tags:
+      - Rewards
+      summary: Retrieve reward-specific information
+      parameters:
+      - name: reward_id
+        in: path
+        required: true
+        description: The unique ID of the reward.
+        schema:
+          type: string
+          example: 63dcb7736123782ba6336425
+      responses:
+        '200':
+          description: Reward data JSON object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reward'
+        '404':
+          description: Returned error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                fail:
+                  summary: Error - Wrong endpoint is called
+                  value:
+                    code: 404
+                    type: NotFoundException
+                    message: Not found
+  /rewards:
+    get:
+      tags:
+      - Rewards
+      summary: List reward items
+      description: This endpoint returns a list of available rewards based on various query parameters.
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        description: Limits the number of rewards returned per page.
+        schema:
+          type: number
+          default: 10
+      - name: page
+        in: query
+        required: false
+        description: This parameter gets a specific page of the reward list if a limit has been set.
+        schema:
+          type: number
+          default: 0
+          example: 2
+      - name: min_price
+        in: query
+        required: false
+        description: Lower point limit for returned eligible rewards.
+        schema:
+          type: number
+          example: 100
+      - name: max_price
+        in: query
+        required: false
+        description: Upper point limit for returned eligible rewards.
+        schema:
+          type: number
+          example: 1000
+      - name: customer
+        in: query
+        description: An Antavo-recognized unique customer identifier.
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: external_id
+        in: query
+        description: External ID (requires [configuration](/docs/customers#external-identifiers))
+        required: false
+        schema:
+          type: string
+          example: CL003322913
+      responses:
+        '200':
+          description: Available rewards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rewards'
+        '404':
+          description: Returned error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                fail7:
+                  summary: Error - Reward not found
+                  value:
+                    code: 0
+                    type: NotFoundException
+                    message: Reward not found
+  /rewards/{reward_id}/claim:
+    post:
+      tags:
+      - Rewards
+      deprecated: true
+      summary: Claims a specific reward (deprecated)
+      description: 'This endpoint is used to register that a customer has claimed a specific reward.
+
+        This endpoint is not supported anymore. Please use the [reward endpoint](https://developers.antavo.com/reference/post_customers-customer-id-activities-rewards-reward-id-claim)
+        of the Display API.'
+      parameters:
+      - name: reward_id
+        in: path
+        required: true
+        description: The unique ID of the reward.
+        schema:
+          type: string
+          example: 63dcb7736123782ba6336425
+      responses:
+        '200':
+          description: Reward data JSON object
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Success'
+                - $ref: '#/components/schemas/Error'
+              examples:
+                success:
+                  summary: Successful submission
+                  value:
+                    spent: 100
+                    coupon:
+                      code: TC22341
+                      type: percentage
+                fail2:
+                  summary: Error - Customer is not enrolled in the loyalty program. Status is “inactive”
+                  value:
+                    code: 1606023
+                    type: null
+                    message: Customer is not active
+                fail3:
+                  summary: Error - Customer already claimed the maximum number of rewards
+                  value:
+                    code: 120211
+                    type: null
+                    message: Customer can’t claim this reward more times
+                fail4:
+                  summary: Error - Reward stock is 0. Check reward settings.
+                  value:
+                    code: 120212
+                    type: null
+                    message: Reward stock ran out
+                fail6:
+                  summary: Error - Customer point balance is less than the price of the reward
+                  value:
+                    code: 120241
+                    type: null
+                    message: Customer does not have enough points
+                fail7:
+                  summary: Error - Rewards extension is not enabled
+                  value:
+                    code: 160600
+                    type: null
+                    message: Rewards extension is not enabled
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                fail:
+                  summary: Error - Customer not found
+                  value:
+                    code: 0
+                    type: NotFoundException
+                    message: Not found
+                fail2:
+                  summary: Error - Reward not found
+                  value:
+                    code: 0
+                    type: NotFoundException
+                    message: Not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer
+              properties:
+                customer:
+                  type: string
+                  description: Unique customer identifier.
+                  example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                external_id:
+                  type: string
+                  description: External ID (requires [configuration](/docs/customers#external-identifiers)).
+                  example: CL003322913
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+  schemas:
+    Error:
+      type: object
+      description: Errors occured.
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            code:
+              type: number
+              description: "Error code.\t"
+              example: 404
+            type:
+              type: string
+              description: Type of the error.
+              example: NotFoundException
+            message:
+              type: string
+              description: Human-readable error message.
+    Reward:
+      type: object
+      description: A reward item
+      properties:
+        id:
+          type: string
+          description: Reward ID.
+          example: 63dcb7736123782ba6336425
+        name:
+          type: string
+          description: Name of the reward.
+          example: A 64GB pendrive with illuminating flashing logo.
+        category:
+          type: string
+          description: Category of the reward. It must correlate with category set on the Management UI.
+          example: discounts
+        price:
+          type: number
+          description: Point price of the reward.
+          example: 500
+        image_url:
+          type: string
+          description: URL of the reward image.
+          example: https://example.com/image_url.png
+        description:
+          type: string
+          description: Description of the reward.
+          example: Enjoy 10% off on any item of the Winter Collection.
+    Rewards:
+      type: object
+      description: Array of reward entries.
+      properties:
+        id:
+          type: string
+          description: Reward ID.
+          example: 63dcb7736123782ba6336425
+        name:
+          type: string
+          description: Name of the reward.
+          example: 10% Discount.
+        category:
+          type: string
+          description: Category of the reward. It must correlate with category set on the Management UI.
+          example: discounts
+        price:
+          type: number
+          description: Point price of the reward.
+          example: 500
+        description:
+          type: string
+          description: Description of the reward.
+          example: Enjoy 10% off on any item of the Winter Collection.
+        image_url:
+          type: string
+          description: URL of the reward image.
+          example: https://example.com/reward.jpg
+    Success:
+      type: object
+      description: A successful reward claim.
+      properties:
+        spent:
+          type: number
+          description: The number of points spent by the customer.
+          example: 500
+        coupon:
+          type: object
+          description: The assigned coupon (if any).
+          properties:
+            code:
+              type: string
+              description: Assigned coupon code.
+              example: TC22341
+            type:
+              type: string
+              description: Type of the assigned coupon.
+              example: percentage
+security:
+- ApiKeyAuth: []
+tags:
+- name: Rewards

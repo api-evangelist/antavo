@@ -1,0 +1,134 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developers.antavo.com/docs/api-security,
+  https://developers.antavo.com/docs/api-browser,
+  https://developers.antavo.com/changelog/discontinuing-unsigned-api-requests,
+  https://docs.antavo.com/docs/api-settings,
+  and the servers[] blocks of the 18 OpenAPI documents in openapi/
+model: per-customer staging environment
+self_service: false
+description: >-
+  Antavo has no public sandbox, no demo key and no signup-free test surface.
+  Testing happens in a staging environment provisioned for a contracted customer
+  alongside their production environment, addressed on its own host and its own
+  workspace credentials. This is the enterprise pattern: the sandbox exists and
+  is documented, but it cannot be reached without a commercial relationship.
+environments:
+- id: staging
+  base_url: https://api.staging.antavo.com
+  evidence: >-
+    Declared verbatim as the servers[] entry in 16 of the 18 OpenAPI documents
+    Antavo publishes: {"url": "https://api.staging.antavo.com", "description":
+    "The Antavo staging environment"}.
+  management_ui: https://loyalty.staging.antavo.com/{workspace_id}/
+  status_pages: [https://status.st1.antavo.com/, https://status.st2.antavo.com/, https://status.st3.antavo.com/, https://status.st4.antavo.com/, https://status.st5.antavo.com/, https://status.st9.antavo.com/]
+  note: >-
+    The `st*` status hosts are the staging stacks. Which stack a given workspace
+    lives on is assigned by Antavo.
+- id: production
+  base_url: https://api.antavo.com
+  management_ui: https://loyalty.{environment}.antavo.com/{workspace_id}/
+  status_pages: [https://status.eu6.antavo.com/, https://status.eu7.antavo.com/, https://status.eu8.antavo.com/, https://status.eu9.antavo.com/, https://status.eu11.antavo.com/, https://status.eu71.antavo.com/, https://status.us.antavo.com/, https://status.us6.antavo.com/, https://status.us7.antavo.com/]
+- id: promotion-engine-test
+  base_url: https://promotion.test.antavo.com/api
+  evidence: >-
+    servers[] of openapi/antavo-promotion-engine-openapi.yml. The Promotion
+    Engine is published against a `test` host rather than the `staging` host used
+    by the rest of the platform.
+- id: loyalty-read
+  base_url: https://read-api.<environment>.antavo.com
+  templated: true
+  evidence: >-
+    servers[] of openapi/antavo-loyalty-read-openapi.yml. Antavo publishes the
+    Loyalty Read API base as a literal template with `<environment>`
+    unsubstituted; the customer's assigned environment identifier fills it.
+
+test_vs_live_separation:
+  mechanism: separate hosts and separate workspace credentials
+  key_prefixes: none published
+  mode_flag: none
+  note: >-
+    There is no `test_`/`live_` key prefix and no mode switch on a single key.
+    Separation is by environment: a staging workspace has its own API key and
+    secret generated in that workspace's Management UI API settings, and it will
+    not authenticate against production.
+
+signature_relaxation:
+  staging_accepts_unsigned: true
+  until: '2026-12-31'
+  evidence: >-
+    "Until now, API request signing has been required only in production
+    environments, while requests in staging and other non-production
+    environments could be authenticated using an API key without a signature.
+    This option will remain available until December 31, 2026. After this date,
+    all API requests must be signed in every environment."
+  source: https://developers.antavo.com/changelog/discontinuing-unsigned-api-requests
+  note: >-
+    This is currently the single most useful sandbox affordance Antavo offers -
+    it lets a developer exercise staging with a bare api_key query parameter and
+    no Escher implementation. It is being withdrawn on 2026-12-31, after which
+    signing is a prerequisite for any first call in any environment.
+
+test_tooling:
+- name: API browser
+  url_pattern: https://loyalty.{environment}.antavo.com/{workspace_id}/api-browser/
+  docs: https://developers.antavo.com/docs/api-browser
+  auth: Management UI login
+  capabilities:
+  - path: /api-browser/events
+    description: >-
+      Submit events through the Events API, choosing the action from a dropdown
+      and entering the customer ID manually. The common way to seed test events.
+  - path: /api-browser/customers
+    description: >-
+      Customer details lookup by Antavo customer ID, customer search by criteria
+      (Customer API), and customer leaderboard by interval and limit
+      (Leaderboard API).
+  - path: /api-browser/errors
+    description: >-
+      Error log showing the complete content of every failing request and
+      Antavo's response, for debugging. Customer passwords are never exposed in
+      the log.
+  note: >-
+    Also documented as the standard tool for testing API signatures before
+    wiring them into an integration.
+- name: Antavo APIs Postman collection
+  url: https://documenter.getpostman.com/view/31303107/2sAYdmkTFm
+  visibility: public
+  auth_support: [escher-signed api key/secret, oauth2 client credentials]
+  capabilities:
+  - >-
+    Collection-level pre-request script that generates the Escher API signature,
+    plus a request-level script that attaches it. Populate the environment with
+    the workspace API key and API secret and signed requests work without
+    writing any signing code.
+  - >-
+    Includes the POST /v1/auth/token authentication request and passes the
+    resulting access token to token-authenticated endpoints such as Async Events.
+  setup_guide: https://developers.antavo.com/docs/signing-api-requests-in-postman
+  note: >-
+    This is the closest thing Antavo publishes to a try-it-now surface, and it
+    is genuinely public - but it still requires workspace credentials to return
+    anything.
+
+magic_test_values: []
+test_cards: []
+test_clocks: false
+fixture_triggers: []
+note_on_test_data: >-
+  Antavo publishes NO magic test identifiers, test card numbers, seeded demo
+  customers or fixture-trigger tooling. Test data is whatever the integrator
+  creates in their own staging workspace. The customer IDs, transaction IDs and
+  reward IDs that appear throughout the OpenAPI examples (e.g.
+  280e674c-c4ea-4a30-987a-d9267d1a5018) are illustrative values in the
+  documentation, not addressable fixtures - they resolve to nothing.
+
+access:
+  requires_contract: true
+  signup_url: null
+  note: >-
+    There is no developer signup. API credentials are generated inside a
+    provisioned Antavo workspace, so a staging environment is only available to
+    an existing or in-onboarding enterprise customer. See
+    plans/antavo-plans-pricing.yml.

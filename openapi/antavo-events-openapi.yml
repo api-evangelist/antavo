@@ -1,0 +1,642 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo Events API
+  version: 1.0.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /events/bulk:
+    post:
+      tags:
+      - Events
+      summary: Submit multiple Antavo events in a single request
+      description: "Use this endpoint to submit multiple events within a single API request. Events are\
+        \ processed individually and synchronously. \n\nExamples of event submissions:\n\n- **Standard\
+        \ event submission**: Submit events for the customers without any additional identifiers.\n- **Event\
+        \ submission with an external ID**: Include the `external_id` attribute to link the events with\
+        \ external identifiers of customers from another system or database.\n- **Event submission with\
+        \ multiple accounts**: Specify multiple accounts by including their IDs in the `account` attribute.\
+        \ This requires the Points economy module to be enabled.<br>\n*Note*: if no account is specified,\
+        \ the events will be assigned to the default account.\n\nThe response will include a success message\
+        \ or an error for each event in the order they were submitted. An error code is only returned\
+        \ if the entire request is invalid, not for errors related to individual event submissions.\n\n\
+        > **Note**\n> This endpoint is **not compatible with guest checkout**. Guest checkout events must\
+        \ be submitted individually via the `/events` endpoint using `\"guest\": \"true\"`, and later\
+        \ linked to a member with the `checkout_claim` event.  \n"
+      operationId: bulk
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/events_bulkrequest'
+            examples:
+              Standard:
+                value:
+                  events:
+                  - customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    action: point_add
+                    data:
+                      points: 325
+                  - customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    action: point_sub
+                    data:
+                      points: 35
+              External ID:
+                value:
+                  events:
+                  - customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    action: point_add
+                    account: main_account
+                    data:
+                      points: 325
+                  - customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    external_id: ASeab0cbaa181a
+                    action: point_sub
+                    account: main_account
+                    data:
+                      points: 35
+              Multi-accounts:
+                value:
+                  events:
+                  - customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    action: point_add
+                    account: main_account
+                    data:
+                      points: 145
+                  - customer: '001'
+                    action: point_sub
+                    account: main_account
+                    data:
+                      points: 35
+        required: true
+      responses:
+        '200':
+          description: 'A 200 success response means the request was submitted successfully, not the processing
+            of each event.
+
+            This example shows two point manipulation events submitted in one API request. Responses are
+            returned in the order of submission. The first event includes an error to demonstrate the
+            error response format. This response format is only valid for point_add/point_sub events.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bulk_Event_response'
+              example:
+                results:
+                - error:
+                    type: InterruptException
+                    code: 127201
+                    message: Workflow interruption
+                - events:
+                  - id: 667c850e8ca0cb5f6e0abe03
+                    action: point_add
+                    points: 325
+                total: 2
+                errors: 1
+  /events:
+    post:
+      tags:
+      - Events
+      summary: Submit an Antavo event
+      description: 'Use this endpoint to submit a single event for a specified customer. The attributes
+        provided in the data object are examples of `point_add` and `checkout` events. Refer to the [complete
+        list of events](/docs/api-events) for all available actions and their attributes.
+
+
+        Examples of event submission:
+
+
+        - **Standard event submission**: Submit an event for the customer without any additional identifiers.
+
+        - **Event submission with an external ID**: Include the `external_id` attribute to link the event
+        with an external identifier of the customer from another system or database.
+
+        - **Event submission with multiple accounts**: Specify multiple accounts by including their IDs
+        in the ''account'' attribute. This requires the Points economy module to be enabled.<br>
+
+        *Note*: if no account is specified, the event will be assigned to the default account.
+
+        '
+      operationId: events
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PointAddRequestBody'
+              - $ref: '#/components/schemas/CheckoutRequestBody'
+            examples:
+              Point add Standard:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: point_add
+                  data:
+                    points: 325
+              Point add with External ID:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: point_add
+                  external_id: ASeab0cbaa181a
+                  data:
+                    points: 325
+              Point add with Multi-accounts:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: point_add
+                  account: main_account
+                  data:
+                    points: 325
+              Checkout Standard:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: cehckout
+                  data:
+                    transaction_id: 64b647cd257f93741550d3e4
+                    total: 100
+                    total_quantity: 1
+                    currency: EUR
+                    points_burned: 0
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 100
+                      quantity: 1
+                      discount: 0
+                      subtotal: 50
+              Checkout with External ID:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: checkout
+                  external_id: ASeab0cbaa181a
+                  data:
+                    transaction_id: 64b647cd257f93741550d3e4
+                    total: 100
+                    total_quantity: 1
+                    currency: EUR
+                    points_burned: 0
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 100
+                      quantity: 1
+                      discount: 0
+                      subtotal: 50
+              Checkout withMulti-accounts:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: checkout
+                  account: main_account
+                  data:
+                    transaction_id: 64b647cd257f93741550d3e4
+                    total: 100
+                    total_quantity: 1
+                    currency: EUR
+                    points_burned: 0
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 100
+                      quantity: 1
+                      discount: 0
+                      subtotal: 50
+      responses:
+        '200':
+          description: "A successful event submission returns a customer object. \nThe events field will\
+            \ only include events that directly modify spendable points (e.g., no events will be returned\
+            \ for processes involving pending points).\n"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event_response'
+              examples:
+                point_add event response:
+                  value:
+                    id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    created_at: '2024-01-01T00:00:00Z'
+                    handler: John
+                    status: active
+                    score: 100
+                    spent: 50
+                    pending: 10
+                    language: en
+                    currency: USD
+                    first_name: John
+                    last_name: Doe
+                    email: john.doe@example.com
+                    events:
+                    - id: 667c850e8ca0cb5f6e0abe03
+                      action: point_add
+                      points: 325
+                      expdate: '2024-12-01'
+                      account:
+                        id: main_account
+                        name: Main Account
+                checkout response per transaction:
+                  value:
+                    id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    created_at: '2024-01-01T00:00:00Z'
+                    handler: John
+                    status: active
+                    score: 100
+                    spent: 50
+                    pending: 10
+                    language: en
+                    currency: USD
+                    first_name: John
+                    last_name: Doe
+                    email: john.doe@example.com
+                    events:
+                    - id: 67349428fb18e9b3ec0062d4
+                      action: checkout
+                      points: 100
+                      expdate: '2024-12-01'
+                      account:
+                        id: main_account
+                        name: Main Account
+                checkout response per item:
+                  value:
+                    id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    created_at: '2024-01-01T00:00:00Z'
+                    handler: John
+                    status: active
+                    score: 100
+                    spent: 50
+                    pending: 10
+                    language: en
+                    currency: USD
+                    first_name: John
+                    last_name: Doe
+                    email: john.doe@example.com
+                    events:
+                    - id: 67349428fb18e9b3ec0067y4
+                      action: checkout_item
+                      points: 50
+                      expdate: '2024-12-01'
+                      account:
+                        id: main_account
+                        name: Main Account
+                    - id: 67349428fb18e9b3ec0064s4
+                      action: checkout_item
+                      points: 50
+                      expdate: '2024-12-01'
+                      account:
+                        id: main_account
+                        name: Main Account
+                checkout response with pending period:
+                  value:
+                    id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    created_at: '2024-01-01T00:00:00Z'
+                    handler: John
+                    status: active
+                    score: 100
+                    spent: 50
+                    pending: 10
+                    language: en
+                    currency: USD
+                    first_name: John
+                    last_name: Doe
+                    email: john.doe@example.com
+                    events: []
+        '404':
+          description: Customer or contest not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+components:
+  schemas:
+    Data:
+      title: data
+      description: Refer to the [complete list of events](/docs/api-events) for the data attributes to
+        be sent with each action.
+      required:
+      - points
+      type: object
+      properties:
+        points:
+          type: integer
+          format: int32
+          description: Number of points to be added or subtracted.
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing
+            it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
+    events_bulkrequest:
+      title: Bulk request
+      required:
+      - events
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+          description: ''
+    Event:
+      title: Event
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        customer:
+          type: string
+          description: The target customer.
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please
+            visit full list of events.
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/Data'
+          description: Additional data related to the event.
+    Bulk_Event_response:
+      type: object
+      properties:
+        results:
+          description: Array of event processing results.
+          $ref: '#/components/schemas/results'
+        total:
+          type: integer
+          description: Number of events submitted.
+          example: 2
+        errors:
+          type: integer
+          description: Number of erroneous entries.
+          example: 0
+    results:
+      type: array
+      description: Array of event processing results.
+      items:
+        type: object
+        properties:
+          error:
+            type: object
+            description: Array of errors occurred while events were processed.
+            properties:
+              type:
+                type: string
+                description: Type of the error.
+              code:
+                type: number
+                description: Error code.
+              message:
+                type: string
+                description: Human-readable error message.
+          events:
+            type: object
+            description: Array of events related to the customer. This section, along with all the attributes
+              listed below, only appears if the event changes the customer’s point balance.
+            properties:
+              id:
+                type: string
+                description: ID of the event.
+              action:
+                type: string
+                description: The event action.
+              points:
+                type: number
+                description: Number of points involved in the event.
+    PointAddRequestBody:
+      title: Point add event request
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please
+            visit full list of events.
+          enum:
+          - point_add
+          example: point_add
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/PointAddData'
+    CheckoutRequestBody:
+      title: Checkout event request
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please
+            visit full list of events.
+          enum:
+          - checkout
+          example: checkout
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/CheckoutData'
+    PointAddData:
+      title: data
+      required:
+      - points
+      type: object
+      properties:
+        points:
+          type: integer
+          format: int32
+          description: Number of points to be added or subtracted.
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing
+            it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
+    CheckoutData:
+      title: data
+      required:
+      - transaction_id
+      type: object
+      properties:
+        transaction_id:
+          type: string
+          example: 64b647cd257f93741550d3e4
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing
+            it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
+        total:
+          type: number
+          description: This attribute is required if purchases are rewarded on the transaction level.
+          example: 100
+        total_quantity:
+          type: number
+          example: 1
+        currency:
+          type: string
+          example: EUR
+        points_burned:
+          type: number
+          example: 0
+        items:
+          type: array
+          description: This attribute is required if purchases are rewarded on the item level.
+          properties:
+            product_id:
+              type: string
+              example: prd_987654
+            product_name:
+              type: string
+              example: Vintage Leather Jacket
+            product_url:
+              type: string
+              example: https://example.com/products/vintage-leather-jacket
+            price:
+              type: number
+              example: 100
+            quantity:
+              type: number
+              example: 1
+            discount:
+              type: number
+              example: 0
+            subtotal:
+              type: number
+              example: 50
+            points_rewarded:
+              type: number
+    Event_response:
+      type: object
+      description: Submitting an Event
+      properties:
+        id:
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+          description: Unique identifier of the customer.
+        created_at:
+          example: '2024-01-01T00:00:00Z'
+          description: Timestamp of when the event was created.
+        handler:
+          example: Sally
+          description: Handler of the customer.
+        status:
+          example: active
+          description: Membership status.
+        score:
+          example: 100
+          description: The member's total point balance after processing the event.
+        spent:
+          example: 50
+          description: The member’s total points spent balance after processing the event.
+        pending:
+          example: 10
+          description: The member’s total pending points balance after processing the event.
+        language:
+          example: en
+          description: Language of the customer.
+        currency:
+          example: USD
+          description: Currency associated with the customer.
+        first_name:
+          example: John
+          description: First name of the customer.
+        last_name:
+          example: Doe
+          description: Last name of the customer.
+        email:
+          example: john.doe@example.com
+          description: Email address of the customer.
+        events:
+          type: array
+          description: Array of events related to the customer. This section, along with all the attributes
+            listed below, only appears if the event changes the customer's point balance.
+          items:
+            type: object
+            properties:
+              id:
+                example: 667c850e8ca0cb5f6e0abe03
+                description: Unique identifier of the event.
+              action:
+                example: point_add
+                description: Action associated with the related event.
+              points:
+                example: 325
+                description: Number of points added in the related event.
+              expdate:
+                description: Expiration date for the points added, if there is any.
+                example: '2024-12-31T23:59:59Z'
+              account:
+                type: object
+                description: Account information for the related event.
+                properties:
+                  id:
+                    description: Unique identifier for the account.
+                    example: main_account
+                  name:
+                    description: Name of the account.
+                    example: Main Account
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      description: ''
+      name: api_key
+      in: query
+security:
+- api_key: []

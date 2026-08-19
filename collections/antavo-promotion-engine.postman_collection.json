@@ -1,0 +1,1132 @@
+{
+  "item": [
+    {
+      "id": "539d6ad5-9795-4ffc-bd4d-8ee9a1a89f56",
+      "name": "Promotion",
+      "description": {
+        "content": "Promotion endpoints collection",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0774030e-637b-47fa-9397-ab086f6ac624",
+          "name": "Retrieve a specific promotion by ID",
+          "request": {
+            "name": "Retrieve a specific promotion by ID",
+            "description": {
+              "content": "The endpoint provides detailed information about a specific promotion.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "promotion",
+                ":promotionId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "promotionId",
+                  "description": "(Required) Unique indentifier of the promotion."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "dde891f9-4cb0-4245-9ea9-0a829ad96693",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotion",
+                    ":promotionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "promotionId",
+                      "description": "(Required) Unique indentifier of the promotion."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JVYEHFT9559EHVCMF3WPNNER\",\n  \"workspaceId\": \"500\",\n  \"name\": \"Denim 3+1\",\n  \"status\": \"archived\",\n  \"description\": \"Denim 3+1\",\n  \"type\": \"bonusProducts\",\n  \"imageURL\": \"https://antavo.com\",\n  \"priority\": 1,\n  \"currency\": \"EUR\",\n  \"stackingConfiguration\": {\n    \"selfStackingConfiguration\": {\n      \"isAllowed\": true,\n      \"limit\": 2\n    },\n    \"stackingType\": \"exclusive\",\n    \"excludedPromotionIds\": null\n  },\n  \"applicationsResetSchedule\": null,\n  \"restriction\": {\n    \"timeRestriction\": {\n      \"start\": \"2025-05-01 13:29\",\n      \"end\": \"2025-05-10 13:29\",\n      \"recurringSchedule\": null\n    },\n    \"applicationsCountLimit\": 0,\n    \"minTotalBeforeTax\": \"10\",\n    \"maxTotalBeforeTax\": \"14\",\n    \"storeRestriction\": {\n      \"stores\": [\n        \"5077595177C60923\"\n      ],\n      \"storeGroups\": [\n        \"Germany\",\n        \"Austria\"\n      ]\n    },\n    \"bonusProducts\": {\n      \"products\": [],\n      \"categories\": [\n        {\n          \"categoryId\": \"Apparel & Accessories > Clothing > Pants\",\n          \"quantity\": 3\n        }\n      ],\n      \"itemMatchingRule\": \"any\"\n    }\n  },\n  \"discount\": {\n    \"bonusProducts\": {\n      \"products\": [\n        {\n          \"productId\": \"2235462\",\n          \"quantity\": 1\n        }\n      ],\n      \"value\": \"50.00\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "273da541-bbfd-4f10-97a9-dfbe7fc1f7d5",
+              "name": "Authorization error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotion",
+                    ":promotionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "promotionId",
+                      "description": "(Required) Unique indentifier of the promotion."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"AuthorizationException\",\n  \"message\": \"Token validation failed.\",\n  \"code\": 676\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0195c139-5f6e-4646-887f-57ce4e2432b2",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotion",
+                    ":promotionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "promotionId",
+                      "description": "(Required) Unique indentifier of the promotion."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"ModelNotFoundException\",\n  \"message\": \"No result for query.\",\n  \"code\": 576\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "44d41279-837b-4137-a50b-6fd990d4f667",
+          "name": "Retrieve the list of promotions",
+          "request": {
+            "name": "Retrieve the list of promotions",
+            "description": {
+              "content": "Fetches all promotions [configured](https://docs.antavo.com/docs/configuring-promotions) in your workspace. The response includes the full promotion objects with all settings as configured in the UI. Useful for listing, syncing, or debugging active campaign setups.\nNo request parameters are required.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "promotions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7fb232ef-6bc3-4192-abdf-bef8cf37f04d",
+              "name": "A success response returns all configured promotions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": [],\n  \"payload\": [\n    {\n      \"id\": \"01JVYEHFT9559EHVCMF3WPNNER\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Denim 3+1\",\n      \"status\": \"archived\",\n      \"description\": \"Denim 3+1\",\n      \"type\": \"bonusProducts\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": true,\n          \"limit\": 2\n        },\n        \"stackingType\": \"exclusive\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-05-01 13:29\",\n          \"end\": \"2025-05-10 13:29\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"10\",\n        \"maxTotalBeforeTax\": \"14\",\n        \"storeRestriction\": {\n          \"stores\": [\n            \"5077595177C60923\"\n          ],\n          \"storeGroups\": [\n            \"Germany\",\n            \"Austria\"\n          ]\n        },\n        \"bonusProducts\": {\n          \"products\": [],\n          \"categories\": [\n            {\n              \"categoryId\": \"Apparel & Accessories > Clothing > Pants\",\n              \"quantity\": 3\n            }\n          ],\n          \"itemMatchingRule\": \"any\"\n        }\n      },\n      \"discount\": {\n        \"bonusProducts\": {\n          \"products\": [\n            {\n              \"productId\": \"2235462\",\n              \"quantity\": 1\n            }\n          ],\n          \"value\": \"50.00\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW462QYYXJVFTMT91BPXTBBQ\",\n      \"workspaceId\": \"500\",\n      \"name\": \"€10 OFF on Skirts\",\n      \"status\": \"active\",\n      \"description\": \"€10 OFF on Skirts\",\n      \"type\": \"priceReduction\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": false,\n          \"limit\": 0\n        },\n        \"stackingType\": \"selectiveStackable\",\n        \"excludedPromotionIds\": [\n          \"01JVYEHFT9559EHVCMF3WPNNER\"\n        ]\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-05-18 18:56\",\n          \"end\": \"2025-05-24 00:00\",\n          \"recurringSchedule\": \"FREQ=DAILY;DTSTART=20250518T185600;DTEND=20250524T185600;INTERVAL=4\"\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"10\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [\n            \"5077595177C60923\"\n          ],\n          \"storeGroups\": [\n            \"Austria\"\n          ]\n        },\n        \"priceReduction\": {\n          \"productIds\": [],\n          \"categoryIds\": [\n            \"Apparel & Accessories > Clothing > Skirts\"\n          ]\n        }\n      },\n      \"discount\": {\n        \"priceReduction\": {\n          \"type\": \"fixed\",\n          \"amount\": \"1.00\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW46XJ530J9Z4Y3PKYC3MCST\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Spring 15% Promotion\",\n      \"status\": \"active\",\n      \"description\": \"Celebrate the spring season with 15% off on each product.\",\n      \"type\": \"promoCode\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": false,\n          \"limit\": 0\n        },\n        \"stackingType\": \"stackable\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-03-01 19:10\",\n          \"end\": \"2025-05-31 22:34\",\n          \"recurringSchedule\": \"FREQ=WEEKLY;DTSTART=20250301T191000;DTEND=20250531T191000;INTERVAL=1\"\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"5\",\n        \"maxTotalBeforeTax\": \"100\",\n        \"storeRestriction\": {\n          \"stores\": [],\n          \"storeGroups\": [\n            \"Austria\"\n          ]\n        },\n        \"promoCode\": {\n          \"promoCode\": \"SPRING15\",\n          \"excludedProducts\": []\n        }\n      },\n      \"discount\": {\n        \"promoCode\": {\n          \"type\": \"percentage\",\n          \"amount\": \"15.00\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW4K0FSPZ3GHKN5TWRKJZ5DV\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Summer Skincare Bundle\",\n      \"status\": \"draft\",\n      \"description\": \"Curated skincare products bundle for summer glow and hydration.\",\n      \"type\": \"bundle\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": false,\n          \"limit\": 0\n        },\n        \"stackingType\": \"exclusive\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-06-01 22:37\",\n          \"end\": \"2025-08-30 22:37\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [\n            \"47847307C1652044\"\n          ],\n          \"storeGroups\": [\n            \"Austria\"\n          ]\n        },\n        \"bundle\": {\n          \"productIds\": [\n            \"32087\",\n            \"89412\",\n            \"16532\"\n          ],\n          \"categoryIds\": [\n            \"Skincare\"\n          ]\n        }\n      },\n      \"discount\": {\n        \"bundle\": {\n          \"type\": \"groupPriceBeforeTax\",\n          \"amount\": \"149.99\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW4K7MJJKJB1C58F1CP3K2ZQ\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Buy 4 pens total for €10.\",\n      \"status\": \"active\",\n      \"description\": \"Buy any 4 pens for a total price of €10.\",\n      \"type\": \"buyXForTotalAmount\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": true,\n          \"limit\": 5\n        },\n        \"stackingType\": \"stackable\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-08-01 22:45\",\n          \"end\": \"2025-09-30 22:45\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"10\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [],\n          \"storeGroups\": [\n            \"Germany\"\n          ]\n        },\n        \"buyXForTotalAmount\": {\n          \"quantity\": 4,\n          \"item\": \"Stationery\",\n          \"itemType\": \"category\"\n        }\n      },\n      \"discount\": {\n        \"buyXForTotalAmount\": {\n          \"groupPriceBeforeTax\": \"10.00\",\n          \"itemSelectionStrategy\": \"cheapest\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW4KAXA32N9ZGEERG7MHMR0X\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Buy 3 get 1 free bundle\",\n      \"status\": \"active\",\n      \"description\": \"Buy 3 shirts, get 1 free.\",\n      \"type\": \"buyXGetYFree\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": true,\n          \"limit\": 3\n        },\n        \"stackingType\": \"exclusive\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-03-01 22:48\",\n          \"end\": \"2025-05-31 22:48\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"20\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [\n            \"5077595177C60923\",\n            \"47847307C1652044\"\n          ],\n          \"storeGroups\": [\n            \"Austria\"\n          ]\n        },\n        \"buyXGetYFree\": {\n          \"quantity\": 3,\n          \"item\": \"2223640\",\n          \"itemType\": \"product\"\n        }\n      },\n      \"discount\": {\n        \"buyXGetYFree\": {\n          \"freeProductSelectionStrategy\": \"cheapest\",\n          \"quantity\": 1\n        }\n      }\n    },\n    {\n      \"id\": \"01JW4KGCRX5V5213XT9DXZD6QS\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Cross-sell winter hats\",\n      \"status\": \"draft\",\n      \"description\": \"Get 25% off hats when buying jackets.\",\n      \"type\": \"crossSelling\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": true,\n          \"limit\": 0\n        },\n        \"stackingType\": \"exclusive\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-12-01 22:50\",\n          \"end\": \"2025-12-06 22:50\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"10\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [],\n          \"storeGroups\": [\n            \"Germany\"\n          ]\n        },\n        \"crossSelling\": {\n          \"productIds\": [],\n          \"categoryIds\": [\n            \"Apparel & Accessories > Clothing > Jackets\"\n          ]\n        }\n      },\n      \"discount\": {\n        \"crossSelling\": {\n          \"categories\": [\n            {\n              \"categoryId\": \"Apparel & Accessories > Clothing > Hats\",\n              \"type\": \"percentage\",\n              \"amount\": \"25.00\"\n            }\n          ],\n          \"products\": [],\n          \"itemSelectionStrategy\": \"cheapest\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW4KR347PV2MA9943TD38YQS\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Free perfume sample\",\n      \"status\": \"active\",\n      \"description\": \"Try a free perfume sample with any order.\",\n      \"type\": \"freeSample\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": false,\n          \"limit\": 0\n        },\n        \"stackingType\": \"exclusive\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-01-01 22:55\",\n          \"end\": \"2025-12-31 22:55\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"100\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [],\n          \"storeGroups\": [\n            \"Germany\",\n            \"Austria\"\n          ]\n        },\n        \"freeSample\": {\n          \"products\": [],\n          \"categories\": [\n            {\n              \"categoryId\": \"Perfumes\",\n              \"quantity\": 1\n            }\n          ],\n          \"itemMatchingRule\": \"any\"\n        }\n      },\n      \"discount\": {\n        \"freeSample\": {\n          \"productId\": \"87654\",\n          \"quantity\": 1,\n          \"value\": \"0.00\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW4KY3F49J3NMDF83Y7R5N7F\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Winter coat and scarf set\",\n      \"status\": \"draft\",\n      \"description\": \"Buy coat & scarf set, get 12% off.\",\n      \"type\": \"productSet\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": false,\n          \"limit\": 0\n        },\n        \"stackingType\": \"selectiveStackable\",\n        \"excludedPromotionIds\": [\n          \"01JW4KGCRX5V5213XT9DXZD6QS\"\n        ]\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-11-01 22:57\",\n          \"end\": \"2025-12-31 22:57\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [\n            \"47847307C1652044\"\n          ],\n          \"storeGroups\": [\n            \"Austria\"\n          ]\n        },\n        \"productSet\": {\n          \"products\": [],\n          \"categories\": [\n            {\n              \"categoryId\": \"Apparel & Accessories > Clothing > Coats\",\n              \"quantity\": 1\n            },\n            {\n              \"categoryId\": \"Apparel & Accessories > Clothing > Scarfs\",\n              \"quantity\": 1\n            }\n          ]\n        }\n      },\n      \"discount\": {\n        \"productSet\": {\n          \"type\": \"percentage\",\n          \"amount\": \"12.00\",\n          \"itemSelectionStrategy\": \"cheapest\"\n        }\n      }\n    },\n    {\n      \"id\": \"01JW4M2FS0CX9DQETDV142JB4M\",\n      \"workspaceId\": \"500\",\n      \"name\": \"Sneakers promotional price\",\n      \"status\": \"active\",\n      \"description\": \"Sneakers at €70 during promotion.\",\n      \"type\": \"promotionalPricing\",\n      \"imageURL\": \"https://antavo.com\",\n      \"priority\": 1,\n      \"currency\": \"EUR\",\n      \"stackingConfiguration\": {\n        \"selfStackingConfiguration\": {\n          \"isAllowed\": false,\n          \"limit\": 0\n        },\n        \"stackingType\": \"stackable\",\n        \"excludedPromotionIds\": null\n      },\n      \"applicationsResetSchedule\": null,\n      \"restriction\": {\n        \"timeRestriction\": {\n          \"start\": \"2025-07-01 23:01\",\n          \"end\": \"2025-07-31 23:01\",\n          \"recurringSchedule\": null\n        },\n        \"applicationsCountLimit\": 0,\n        \"minTotalBeforeTax\": \"\",\n        \"maxTotalBeforeTax\": \"\",\n        \"storeRestriction\": {\n          \"stores\": [],\n          \"storeGroups\": [\n            \"Austria\"\n          ]\n        },\n        \"promotionalPricing\": {\n          \"productIds\": [],\n          \"categoryIds\": [\n            \"Apparel & Accessories > Clothing > Shoes > Sneakers\"\n          ]\n        }\n      },\n      \"discount\": {\n        \"promotionalPricing\": {\n          \"unitPriceBeforeTax\": \"70.00\"\n        }\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a0db8480-9920-4b27-b6e6-7c6be4b8faf5",
+              "name": "Authorization error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"AuthorizationException\",\n  \"message\": \"Access denied.\",\n  \"code\": 677\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f1ff14b1-1579-4649-bc14-e0ca2283cc76",
+          "name": "Update the status of a promotion",
+          "request": {
+            "name": "Update the status of a promotion",
+            "description": {
+              "content": "This endpoint allows you to change the status of an existing promotion, enabling you to activate it, return it to draft for further editing, or archive it permanently. Note: once a promotion is archived, it cannot be changed back to any other state.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "promotion",
+                ":promotionId",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "promotionId",
+                  "description": "(Required) The ID of the promotion whose status you want to update."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c7cebec2-71f7-4d2c-885b-fe1482d0794f",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotion",
+                    ":promotionId",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "promotionId",
+                      "description": "(Required) The ID of the promotion whose status you want to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"active\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "14a0c80c-2b62-4964-b08b-b4b24e627707",
+              "name": "Authorization error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotion",
+                    ":promotionId",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "promotionId",
+                      "description": "(Required) The ID of the promotion whose status you want to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"active\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"AuthorizationException\",\n  \"message\": \"JWT Token is required\",\n  \"code\": 673\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c258f3c-940d-43f5-9b94-94b1c8eb40f8",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotion",
+                    ":promotionId",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "promotionId",
+                      "description": "(Required) The ID of the promotion whose status you want to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"active\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"ModelNotFoundException\",\n  \"message\": \"No result for query.\",\n  \"code\": 576\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ff765357-7e79-44ae-876f-e221a165e7ab",
+              "name": "Server error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "promotion",
+                    ":promotionId",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "promotionId",
+                      "description": "(Required) The ID of the promotion whose status you want to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"active\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"MUpdateException\",\n  \"message\": \"Promotion status cannot change from archived to active\",\n  \"code\": 578\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "165c51d3-457d-4461-82a7-98842f0e525a",
+      "name": "Cart",
+      "description": {
+        "content": "Cart endpoints collection",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3204a1bb-249c-42e1-8ce5-fe0068bce03c",
+          "name": "Finalize checkout with applied promotions",
+          "request": {
+            "name": "Finalize checkout with applied promotions",
+            "description": {
+              "content": "Submit a cart to apply final promotion calculations and complete the checkout process.\n\nSimilar to [/cart](https://developers.antavo.com/reference/post_v1-cart), the engine will:\n- Calculate applicable promotions\n- Apply relevant discounts to items\n- Return the adjusted cart with pricing breakdowns\n\nAdditionally, when submitting to the this endpoint, any promotion usage limits (if any) are enforced — meaning:\n- The promotions are applied and counted toward their application limits\n- The cart cannot be resubmitted with the same `cartId`\n\nThis endpoint can be used directly without first calling the `/cart` endpoint if you don't require prior simulation.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "cart",
+                "finalize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"<string>\",\n  \"storeGroupId\": \"<string>\",\n  \"rounding\": \"<string>\",\n  \"precision\": 2,\n  \"currency\": \"<string>\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"<string>\",\n        \"quantity\": \"<number>\",\n        \"unitPriceBeforeTax\": \"<number>\",\n        \"tax\": \"<number>\"\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"<string>\",\n        \"quantity\": \"<number>\",\n        \"unitPriceBeforeTax\": \"<number>\",\n        \"tax\": \"<number>\"\n      }\n    ]\n  },\n  \"customerId\": \"<string>\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6cb53afb-5744-46bb-84a6-0fd53f8c8d6f",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "cart",
+                    "finalize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"47847307C1652044\",\n  \"storeGroupId\": \"GreaterLondon\",\n  \"rounding\": \"mathematical\",\n  \"precision\": 2,\n  \"currency\": \"USD\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      }\n    ]\n  },\n  \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"PROMO10\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": [],\n  \"payload\": {\n    \"cartId\": \"66512\",\n    \"workspaceId\": \"500\",\n    \"storeId\": \"5077595177C60923\",\n    \"storeGroupId\": \"Austria\",\n    \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n    \"timezone\": \"Europe/Budapest\",\n    \"promotionSelectionStrategy\": \"biggestDiscount\",\n    \"promotionApplicationMethod\": \"automatic\",\n    \"rounding\": \"mathematical\",\n    \"precision\": 2,\n    \"promoCode\": \"PROMO10\",\n    \"currency\": \"EUR\",\n    \"cartItems\": [\n      {\n        \"productId\": \"8675645322\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": \"1.000\",\n        \"unitPriceBeforeTax\": \"200.00\",\n        \"tax\": \"40.00\"\n      }\n    ],\n    \"discounts\": [\n      {\n        \"promotionId\": \"01JW4M2FS0CX9DQETDV142JB4M\",\n        \"promotionMetaData\": {\n          \"name\": \"Sneakers promotional price\",\n          \"description\": \"Sneakers at €70 during promotion.\",\n          \"type\": \"promotionalPricing\"\n        },\n        \"discountType\": \"itemDiscount\",\n        \"discountedItems\": [\n          {\n            \"productId\": \"8675645322\",\n            \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n            \"quantity\": \"1.000\",\n            \"unitPriceBeforeTax\": \"70.00\",\n            \"tax\": \"14.00\"\n          }\n        ],\n        \"totalPriceBeforeTaxDiscount\": \"130.00\",\n        \"taxDiscount\": \"26.00\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "74e41b86-5a04-49f4-a7e1-3d76afe36288",
+              "name": "Bad Request error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "cart",
+                    "finalize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"47847307C1652044\",\n  \"storeGroupId\": \"GreaterLondon\",\n  \"rounding\": \"mathematical\",\n  \"precision\": 2,\n  \"currency\": \"USD\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      }\n    ]\n  },\n  \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"PROMO10\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"Validation error\",\n    \"code\": 577,\n    \"message\": \"The cart id field is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8e49cb4d-d9e4-43fb-b405-3ef10558a28c",
+              "name": "Authorization error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "cart",
+                    "finalize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"47847307C1652044\",\n  \"storeGroupId\": \"GreaterLondon\",\n  \"rounding\": \"mathematical\",\n  \"precision\": 2,\n  \"currency\": \"USD\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      }\n    ]\n  },\n  \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"PROMO10\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"AuthorizationException\",\n    \"code\": 674,\n    \"message\": \"Token has expired.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "de82f1fd-e830-4819-8483-ead03953b0b9",
+          "name": "Submit cart details and retrieve applicable promotions",
+          "request": {
+            "name": "Submit cart details and retrieve applicable promotions",
+            "description": {
+              "content": "Submit a cart to simulate promotion calculations based on its current contents and applied conditions.\n\nThe engine will calculate which promotions are applicable to the provided cart and return:\n- Cart object\n- All matched promotions\n- The exact discounts applied\n- Adjusted unit prices (after discount)\n- Updated tax amounts\n- Total discount values\n\nThe same `cartId` can be submitted multiple times to recalculate promotions when the cart changes.\n\nIf any promotions have [application limits](https://docs.antavo.com/docs/configuring-promotions#application-limit-and-reset) and [locking periods](https://docs.antavo.com/docs/promotion-general-settings#locking-period), a reservation is made when the promotion is found applicable.\nIf the cart is not checked out via the [/cart/finalize](https://developers.antavo.com/reference/post_v1-cart-finalize) endpoint before the lock expires, the reservation is released automatically.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "cart"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"<string>\",\n  \"storeGroupId\": \"<string>\",\n  \"rounding\": \"<string>\",\n  \"precision\": 2,\n  \"currency\": \"<string>\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"<string>\",\n        \"quantity\": \"<number>\",\n        \"unitPriceBeforeTax\": \"<number>\",\n        \"tax\": \"<number>\"\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"<string>\",\n        \"quantity\": \"<number>\",\n        \"unitPriceBeforeTax\": \"<number>\",\n        \"tax\": \"<number>\"\n      }\n    ]\n  },\n  \"customerId\": \"<string>\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "96336a23-afea-4f26-b2af-bf13eb331483",
+              "name": "Successful operation",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "cart"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"47847307C1652044\",\n  \"storeGroupId\": \"GreaterLondon\",\n  \"rounding\": \"mathematical\",\n  \"precision\": 2,\n  \"currency\": \"USD\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      }\n    ]\n  },\n  \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"PROMO10\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": [],\n  \"payload\": {\n    \"cartId\": \"66512\",\n    \"workspaceId\": \"500\",\n    \"storeId\": \"5077595177C60923\",\n    \"storeGroupId\": \"Austria\",\n    \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n    \"timezone\": \"Europe/Budapest\",\n    \"promotionSelectionStrategy\": \"biggestDiscount\",\n    \"promotionApplicationMethod\": \"automatic\",\n    \"rounding\": \"mathematical\",\n    \"precision\": 2,\n    \"promoCode\": \"PROMO10\",\n    \"currency\": \"EUR\",\n    \"cartItems\": [\n      {\n        \"productId\": \"8675645322\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": \"1.000\",\n        \"unitPriceBeforeTax\": \"200.00\",\n        \"tax\": \"40.00\"\n      }\n    ],\n    \"discounts\": [\n      {\n        \"promotionId\": \"01JW4M2FS0CX9DQETDV142JB4M\",\n        \"promotionMetaData\": {\n          \"name\": \"Sneakers promotional price\",\n          \"description\": \"Sneakers at €70 during promotion.\",\n          \"type\": \"promotionalPricing\"\n        },\n        \"discountType\": \"itemDiscount\",\n        \"discountedItems\": [\n          {\n            \"productId\": \"8675645322\",\n            \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n            \"quantity\": \"1.000\",\n            \"unitPriceBeforeTax\": \"70.00\",\n            \"tax\": \"14.00\"\n          }\n        ],\n        \"totalPriceBeforeTaxDiscount\": \"130.00\",\n        \"taxDiscount\": \"26.00\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f4f5dc0e-853c-4f7b-81af-81fec4947d89",
+              "name": "Bad Request error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "cart"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"47847307C1652044\",\n  \"storeGroupId\": \"GreaterLondon\",\n  \"rounding\": \"mathematical\",\n  \"precision\": 2,\n  \"currency\": \"USD\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      }\n    ]\n  },\n  \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"PROMO10\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"Validation error\",\n    \"code\": 577,\n    \"message\": \"The cart id field is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c339b801-65b6-4cb9-b02f-eb86db75c139",
+              "name": "Authorization error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "cart"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cartId\": \"<string>\",\n  \"storeId\": \"47847307C1652044\",\n  \"storeGroupId\": \"GreaterLondon\",\n  \"rounding\": \"mathematical\",\n  \"precision\": 2,\n  \"currency\": \"USD\",\n  \"cart\": {\n    \"cartItems\": [\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      },\n      {\n        \"productId\": \"<string>\",\n        \"productCategoryId\": \"Apparel & Accessories > Clothing > Shoes > Sneakers\",\n        \"quantity\": 1,\n        \"unitPriceBeforeTax\": 200,\n        \"tax\": 40\n      }\n    ]\n  },\n  \"customerId\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"promotionSelectionStrategy\": \"biggestDiscount\",\n  \"promotionApplicationMethod\": \"automatic\",\n  \"promoCode\": \"PROMO10\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"AuthorizationException\",\n    \"code\": 674,\n    \"message\": \"Token has expired.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://promotion.test.antavo.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ac802eec-dd33-447b-8657-1098f8df7e3e",
+    "name": "Antavo Promotion Engine API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

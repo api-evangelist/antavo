@@ -1,0 +1,250 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://developers.antavo.com/docs/antavo-apis,
+  https://developers.antavo.com/docs/api-security,
+  https://developers.antavo.com/docs/api-signing,
+  https://developers.antavo.com/docs/pagination-filtering-and-ordering,
+  https://docs.antavo.com/docs/api-settings,
+  and the 18 OpenAPI documents harvested into openapi/
+description: >-
+  Cross-cutting request/response semantics for the Antavo Loyalty Cloud REST
+  APIs. Antavo runs one HTTP surface per customer environment, addressed through
+  a per-workspace API key, with request signing (Escher / AWS SigV4-derived) as
+  the integrity layer on key-based endpoints and OAuth 2.0 client credentials on
+  the newer token-based endpoints.
+
+transport:
+  protocol: HTTPS only
+  note: >-
+    "All API requests sent to Antavo should use HTTPS." Plain HTTP is redirected
+    to HTTPS server-side, but the documentation strongly recommends never relying
+    on that redirect.
+  methods: [GET, POST, PUT, DELETE]
+  request_formats: [application/json, application/x-www-form-urlencoded]
+  response_format: application/json
+  tls_minimum: TLS 1.2
+  tls_source: https://antavo.com/product/loyalty-engine/technology/security/
+
+authentication:
+  styles:
+  - id: api-key-query
+    scheme: apiKey
+    location: query
+    parameter: api_key
+    applies_to: >-
+      Events, Display, Customer, Entities, Rewards, Coupons, Coupon Pools,
+      Offers, FAQ, Leaderboard, Clubs, Bulk Operations, Points Preview,
+      Social Share Campaigns
+    note: >-
+      The api_key is carried as a QUERY PARAMETER, not a header, in every
+      harvested OpenAPI securityScheme. Query-string credentials are logged by
+      intermediaries by default; treat the key as exposed in any proxy or access
+      log and rely on the signature (below) for actual request integrity.
+  - id: escher-request-signing
+    scheme: http-signature
+    header: Authorization
+    specification: https://escherauth.io/
+    derived_from: AWS Signature Version 4
+    required_in: >-
+      production environments today; ALL environments after 2026-12-31 (see
+      changelog/antavo-changelog.yml)
+    canonical_request:
+      elements: [HTTPRequestMethod, CanonicalURI, CanonicalQueryString, CanonicalHeaders, SignedHeaders, HashedRequestPayload]
+      separator: LF
+      required_headers: [Host, Date]
+      path_encoding: RFC 3986
+    note: >-
+      Antavo computes the same signature server-side and rejects the request when
+      the two do not match. Signatures must never be generated in front-end code.
+      Signature enforcement is configurable per API in the Management UI's API
+      settings > Signature enforcement tab.
+  - id: oauth2-client-credentials
+    scheme: oauth2
+    grant: client_credentials
+    token_endpoint: /v1/auth/token
+    token_endpoint_auth: HTTP Basic (client_id / client_secret)
+    request_content_type: application/x-www-form-urlencoded
+    presentation: 'Authorization: Bearer <access_token>'
+    scopes: [loyalty.async_events]
+    token_lifetime_seconds: {min: 300, max: 3600}
+    applies_to: Async Events API
+    note: >-
+      Clients are created in the Management UI Authentication Manager with a
+      name, purpose, expiration date, scope and token audience; the client
+      secret is shown exactly once. Revocation is irreversible.
+  network_restriction:
+    ip_filter: true
+    notation: CIDR
+    scope: per API endpoint
+    on_violation: forbidden exception
+    source: https://docs.antavo.com/docs/api-settings
+
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    Antavo publishes NO idempotency key, no request-replay window and no
+    de-duplication contract. The only guidance offered is client-side: "When a
+    customer action triggers an event (e.g., customer clicks a Submit button),
+    disable the triggering button to prevent multiple submissions in quick
+    succession." Escher signing includes a timestamp and a replay window, but
+    that protects against replay by a third party - it is not a safe-retry
+    primitive, because a signed request retried with a fresh timestamp is a new
+    event. Consequently NO `Idempotency` pointer is emitted in apis.yml: an
+    agent retrying a POST /events or a reward claim against this API must expect
+    to create a duplicate.
+  ordering_contract: >-
+    Events are processed FIFO in the order received and are never reordered. An
+    event resubmitted after an error is recorded with the timestamp of its
+    successful processing, not the original occurrence time.
+
+pagination:
+  style: offset-limit
+  parameters:
+  - {name: limit, in: query, description: Number of entries returned in one response}
+  - {name: offset, in: query, description: Starting position for the returned entries}
+  response_fields:
+  - {name: data, description: The array of entries for this page}
+  - {name: next, description: Generated link to the next page (path + query, not absolute)}
+  - {name: previous, description: Generated link to the previous page}
+  note: >-
+    "The exact response structure depends on the API." next/previous are
+    relative paths, e.g.
+    /customers/{id}/activities/rewards?offset=3&limit=1 - a client must join
+    them onto the environment base URL itself. No cursor, no total count, and
+    no RFC 5988 Link header.
+  supported_endpoints:
+  - /customers
+  - /customers/-/events
+  - /customers/{customer_id}/events
+  - /customers/{customer_id}/transactions
+  - /customers/{customer_id}/transactions/{transaction_id}/events
+  - /customers/{customer_id}/transactions/-/search
+  - /customers/{customer_id}/prize-wheels/
+  - /customers/{customer_id}/rewards
+  - /customers/{customer_id}/activities/rewards
+  - /customers/{customer_id}/activities/quizzes
+  - /v2/customers/{customer_id}/activities/challenges
+  - /entities/{module}/{entity}
+  - /v1/bulk-operation/reward/claim/{batch_id}/status/error
+  - /v1/bulk-operation/customer-list/{batch_id}/status/errors
+  - /rewards
+  - /coupons
+  - /v1/customers
+  - /v1/customers/{customer_id}/coupons
+  - /v1/customers/{customer_id}/events
+  - /v1/customers/{customer_id}/transactions
+  docs: https://developers.antavo.com/docs/pagination-filtering-and-ordering
+
+filtering:
+  style: dotted-operator query parameters
+  operators: [gt, lt, gte, lte, in]
+  example: 'timestamp.gt=2023-01-05T13:28:55.233+0000'
+  constraints:
+  - Filtering is case-sensitive and does not support partial matches.
+  - >-
+    A customer profile field must be tagged "searchable" in the Management UI
+    before it can be used as a Customer API filter.
+  - >-
+    Timezone offsets in ISODate filter values must be URL-encoded (+0000 ->
+    %2B0000).
+  - >-
+    GET /customers/{id}/transactions/-/search has an 8k request-URI limit
+    (~5,000 short transaction IDs); the POST variant exists for higher volumes.
+  docs: https://developers.antavo.com/docs/pagination-filtering-and-ordering
+
+hypermedia:
+  present: true
+  field: _actions
+  note: >-
+    Display API activity objects embed an `_actions` map giving the method and
+    relative URL for the next legal transition, e.g.
+    {"complete": {"method": "POST", "url": "/customers/{id}/activities/rewards/{id}/claim"}}.
+    This is the closest thing Antavo publishes to an affordance contract and is
+    the most agent-usable part of the response shape.
+
+path_wildcards:
+  token: '-'
+  note: >-
+    A literal hyphen in a path position means "all customers" or "all
+    transactions" - e.g. /customers/-/events returns events across every
+    customer, and /customers/{id}/transactions/-/search searches all of that
+    customer's transactions. This is Antavo-specific and easy to misread as a
+    placeholder.
+
+versioning:
+  scheme: uri-path (partial)
+  note: >-
+    Versioning is inconsistent and per-surface rather than global. Older
+    endpoints are unversioned (/events, /customers, /rewards, /coupons); newer
+    ones carry /v1 (/v1/auth/token, /v1/async/events, /v1/clubs, /v1/promotions,
+    /v1/bulk-operation, /v1/cart) and two challenge endpoints carry /v2
+    (/v2/customers/{id}/activities/challenges). There is no version header, no
+    date-pinning and no published version-negotiation policy. All harvested
+    specs declare info.version 1.0.0.0.
+  see: lifecycle/antavo-lifecycle.yml
+
+error_envelope:
+  shapes:
+  - id: standard
+    example: '{"error": {"type": "NotFoundException", "code": 0, "message": "Not Found"}}'
+    fields: [error.type, error.code, error.message]
+    observed: https://api.antavo.com/ (live 404, 2026-08-13)
+  - id: oauth-token
+    example: '{"status": "error", "error": "invalid_request", "details": {"type": "BadRequestException", "code": 220011, "message": "..."}}'
+    fields: [status, error, details.type, details.code, details.message]
+    applies_to: POST /v1/auth/token
+  rfc9457: false
+  content_type: application/json
+  note: >-
+    Antavo does NOT use application/problem+json. Both envelopes nest a
+    vendor-specific `type` (an exception class name) and a numeric `code`.
+    The numeric codes are the stable machine key; the message strings are not.
+  see: errors/antavo-problem-types.yml
+
+rate_limiting:
+  documented_limits: true
+  headers_published: false
+  status_on_exhaustion: 429
+  note: >-
+    Antavo publishes the numbers (1,500 req/min shared stack, 20,000 req/min
+    dedicated stack, per API key, cumulative across all endpoints except Async
+    Events) but publishes NO response headers - there is no X-RateLimit-*,
+    RateLimit-* or Retry-After contract in the docs or in any harvested spec.
+    A client cannot discover its remaining budget at runtime; it can only
+    observe the block. "Exceeding this limit will result in temporary request
+    blocks based on server load."
+  see: rate-limits/antavo-rate-limits.yml
+
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id or correlation header is documented for synchronous calls.
+    The Async Events API is the exception: POST /v1/async/events returns a
+    correlation id that is polled at GET /v1/async/events/{correlation_id}.
+    Failed requests and their responses are separately visible in the Management
+    UI API browser error log (/api-browser/errors).
+
+field_expansion:
+  parameter: fields
+  note: >-
+    A `fields` query parameter is used on some Display API endpoints to inline
+    related objects (for example returning full reward information inside a
+    prize-wheel slice). There is no global sparse-fieldset or expand grammar.
+
+forward_compatibility:
+  policy: >-
+    Clients must tolerate undocumented response fields. "If undocumented data
+    fields appear in responses, such as custom attributes added via Loyalty
+    Engine configuration, make sure these do not cause failures or unexpected
+    behavior on your end." Custom customer attributes and multi-language
+    translation objects are the common sources.
+
+cross_links:
+  authentication: authentication/antavo-authentication.yml
+  scopes: scopes/antavo-scopes.yml
+  errors: errors/antavo-problem-types.yml
+  lifecycle: lifecycle/antavo-lifecycle.yml
+  rate_limits: rate-limits/antavo-rate-limits.yml
+  sandbox: sandbox/antavo-sandbox.yml

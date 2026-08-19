@@ -1,0 +1,766 @@
+{
+  "item": [
+    {
+      "id": "b162415b-8f75-41f0-8ae7-a4d8fe6305b8",
+      "name": "Customers",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d87aa62a-6b93-4457-a99d-b9dfc5aec324",
+          "name": "Returns the number of active customers",
+          "request": {
+            "name": "Returns the number of active customers",
+            "description": {
+              "content": "This endpoint returns the number of customers with active status within Antavo.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "customers",
+                "-",
+                "count"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "25ba5ba2-7a44-4ec8-94b8-43efe8ab3657",
+              "name": "Successful retrieval",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    "-",
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"active\": 24120\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6658ac30-f7d9-43b8-91e3-0c797ced267f",
+          "name": "Returns detailed customer data using the Antavo unique ID",
+          "request": {
+            "name": "Returns detailed customer data using the Antavo unique ID",
+            "description": {
+              "content": "This endpoint returns detailed information for a specific customer. \n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "customers",
+                ":customer_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>",
+                  "description": "Returns additional optional fields: \n\n* Groups: Returns associated groups (requires [User groups module](https://docs.antavo.com/docs/user-groups) for selected customer in the form of an object with the following properties:\n  \n  - `ID` - integer\n\n  - `Name` - string, optional (not returned for non-existing groups)\n  \n  - `external_id` - string, optional (not returned if empty)\n\n* Purchases: A summary of purchase statistics. Options are [here](https://developers.antavo.com/docs/customers#purchases).\n\n* Expiring points: A summary of expiration statistics. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).\n\n* Expiration points history: An array of dates and number of points that have expired or will expire. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).          \n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_id",
+                  "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., `280e674c-c4ea-4a30-987a-d9267d1a5018`\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): `{external_field:external_id_value}`\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f4377b2b-6dc1-4915-8f61-6559e479e2c6",
+              "name": "Successful customer search",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    ":customer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., `280e674c-c4ea-4a30-987a-d9267d1a5018`\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): `{external_field:external_id_value}`\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"55e5d4dc2cf1901e688b45d3\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Smith\",\n  \"nickname\": \"Johnny\",\n  \"email\": \"jsmith@example.com\",\n  \"birth_date\": \"/8012-71-79/\",\n  \"gender\": \"Male\",\n  \"language\": \"en\",\n  \"currency\": \"GBP\",\n  \"status\": \"Active\",\n  \"score\": 100,\n  \"spent\": 20,\n  \"reserved\": 0,\n  \"expired\": 100,\n  \"spendable\": 50,\n  \"pending\": 20,\n  \"image_url\": \"https://example.com/image.png\",\n  \"optin_at\": 1577836800,\n  \"last_login_at\": 1593561600,\n  \"updated_at\": 1593561623,\n  \"properties\": {\n    \"city\": \"London\"\n  },\n  \"purchase_total\": 100,\n  \"purchase_count\": 2,\n  \"purchase_last_date\": \"/8654-94-52/\",\n  \"mobile_phone\": \"123 456 789\",\n  \"accounts\": [\n    {\n      \"id\": \"main_account\",\n      \"name\": \"Main account\",\n      \"earned\": 1000,\n      \"spent\": 500,\n      \"pending\": 50,\n      \"reserved\": 200,\n      \"expired\": 50,\n      \"spendable\": 800,\n      \"burn_rates\": {\n        \"amount\": 100,\n        \"points\": 50,\n        \"currency\": \"USD\"\n      }\n    },\n    {\n      \"id\": \"main_account\",\n      \"name\": \"Main account\",\n      \"earned\": 1000,\n      \"spent\": 500,\n      \"pending\": 50,\n      \"reserved\": 200,\n      \"expired\": 50,\n      \"spendable\": 800,\n      \"burn_rates\": {\n        \"amount\": 100,\n        \"points\": 50,\n        \"currency\": \"USD\"\n      }\n    }\n  ],\n  \"campaigns\": {\n    \"id\": \"63772885e9af5b34933d4aa6\",\n    \"occurrences\": {\n      \"id\": \"662bac7c0e76787c9b75c80b\",\n      \"pending_points\": 100,\n      \"awarded_points\": 50,\n      \"status\": \"cactive\",\n      \"start_date\": \"2022-11-01T07:36:00+01:00\",\n      \"end_date\": \"2022-12-01T07:36:00+01:00\",\n      \"evaluation_date\": \"2022-12-01T07:36:00+01:00\"\n    }\n  },\n  \"tiers\": [\n    {\n      \"id\": \"tier1\",\n      \"name\": \"Gold\",\n      \"since\": \"2022-05-02T12:57:41+02:00\",\n      \"threshold\": 1000,\n      \"expdate\": \"2023-01-11T00:00:00+01:00\",\n      \"points\": 1100,\n      \"points_after_expiration\": 1000,\n      \"structure\": {\n        \"id\": \"standard_tiers\",\n        \"name\": \"Standard tiers\"\n      },\n      \"next\": {\n        \"id\": \"tier2\",\n        \"name\": \"Platinum\",\n        \"points\": \"string\"\n      }\n    },\n    {\n      \"id\": \"tier1\",\n      \"name\": \"Gold\",\n      \"since\": \"2022-05-02T12:57:41+02:00\",\n      \"threshold\": 1000,\n      \"expdate\": \"2023-01-11T00:00:00+01:00\",\n      \"points\": 1100,\n      \"points_after_expiration\": 1000,\n      \"structure\": {\n        \"id\": \"standard_tiers\",\n        \"name\": \"Standard tiers\"\n      },\n      \"next\": {\n        \"id\": \"tier2\",\n        \"name\": \"Platinum\",\n        \"points\": \"string\"\n      }\n    }\n  ],\n  \"groups\": [\n    {\n      \"id\": 330,\n      \"name\": \"USA-Department\",\n      \"external_id\": \"AG331\"\n    },\n    {\n      \"id\": 330,\n      \"name\": \"USA-Department\",\n      \"external_id\": \"AG331\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2ef51415-8274-40b4-8297-bd7e8132b071",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    ":customer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., `280e674c-c4ea-4a30-987a-d9267d1a5018`\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): `{external_field:external_id_value}`\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 160211,\n  \"message\": \"Empty search criteria\",\n  \"type\": \"BadRequestException\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ab0bbd0d-6c09-464d-b854-31fe3dd76322",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    ":customer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., `280e674c-c4ea-4a30-987a-d9267d1a5018`\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): `{external_field:external_id_value}`\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 160212,\n  \"message\": \"Customer not found\",\n  \"type\": \"NotFoundException\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "09f538c1-dc6d-42e6-aa2e-8c2a1d9bb1c8",
+          "name": "Search Antavo database using customer filters",
+          "request": {
+            "name": "Search Antavo database using customer filters",
+            "description": {
+              "content": "This endpoint allows you to search the Antavo database for customers based on specific criteria and returns the Antavo Customer ID. Note that the filtering is case-sensitive and does not support partial matches.\nThe filtering query requires that the filter parameter has been tagged as [searchable](https://docs.antavo.com/customers#add-a-new-field) in the Antavo Management UI.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "customers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Perform searches using key fields such as `first_name`, `last_name`,  `email`, `mobile_phone`, or `membership_id`."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>",
+                  "description": "Returns additional optional attributes from the customer object.\n\n**Note**: Separating commas must be percentage encoded for [API signing](/api-signing).\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "match",
+                  "value": "<string>",
+                  "description": "Enables querying specific customer data. Currently only works with the following attributes: `_id`, `email`, and `membership_id`. Example usage: `&match=exact&membership_id=33492206-ba75-4487-8047-a9d78a135ce9`"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Limits the number of events to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting number of items for pagination.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5a992814-b328-4b7c-9993-fdda9a0761c9",
+              "name": "Successful customer search",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "first_name",
+                      "value": "John"
+                    },
+                    {
+                      "key": "updated_at.gt",
+                      "value": "2022-01-01"
+                    },
+                    {
+                      "key": "search",
+                      "value": "first_name=John"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "match",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9035c8cd-2b2b-42da-a1ef-d3b3cf99cd2b",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "first_name",
+                      "value": "John"
+                    },
+                    {
+                      "key": "updated_at.gt",
+                      "value": "2022-01-01"
+                    },
+                    {
+                      "key": "search",
+                      "value": "first_name=John"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "match",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 160211,\n  \"message\": \"Empty search criteria\",\n  \"type\": \"BadRequestException\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "144af5a6-e23e-44c1-b9fc-72b59eb6a47b",
+          "name": "Merges the current customer into the target account",
+          "request": {
+            "name": "Merges the current customer into the target account",
+            "description": {
+              "content": "This endpoint permanently merges the current customer into the target account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "customers",
+                ":customer_id",
+                "merge"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_id",
+                  "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ddb92de9-2ffa-4cdb-8f52-2f5c13806636",
+              "name": "Merge successful",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    ":customer_id",
+                    "merge"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target\": \"a280e674c-de2a-4a30-987a-d9267d1a119bc123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "21c6af5c-bef1-43d5-b05e-1081db1abe22",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    ":customer_id",
+                    "merge"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target\": \"a280e674c-de2a-4a30-987a-d9267d1a119bc123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 160216,\n  \"message\": \"Customer is not active\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5b338435-dac9-4a7d-b0de-514fbdcb1ebe",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    ":customer_id",
+                    "merge"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Unique customer ID. This can be \n\n* The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target\": \"a280e674c-de2a-4a30-987a-d9267d1a119bc123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"NotFoundException\",\n  \"code\": 160212,\n  \"message\": \"Customer not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ec19c4fc-935e-4c49-bf9f-b9903ce47f6a",
+    "name": "Antavo Customers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Email: support@antavo.com",
+      "type": "text/plain"
+    }
+  }
+}

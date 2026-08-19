@@ -1,0 +1,42 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Antavo Offers API
+  version: 1.0.0
+extends: openapi/antavo-offers-openapi.yml
+x-generated: '2026-08-13'
+x-method: generated
+x-source: derived from the harvested spec + the API Evangelist artifacts in this repo; the harvested openapi/
+  document is never mutated
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: antavo
+    x-apievangelist-harvest: Reconstructed from the per-operation 'OpenAPI definition' JSON blocks Antavo
+      publishes on its ReadMe reference pages (the .md twin of each https://developers.antavo.com/reference/*
+      page). Antavo does not offer a downloadable spec; the ReadMe project sets privacy.openapi=admin.
+    x-apievangelist-operations: 1
+    x-apievangelist-published-servers:
+    - https://api.staging.antavo.com
+    x-apievangelist-production-base: https://api.antavo.com
+    x-apievangelist-base-note: Antavo publishes staging/test hosts in servers[]; the production base recorded
+      in apis.yml is https://api.antavo.com. The published servers[] block is left EXACTLY as Antavo publishes
+      it - this overlay records the production base rather than rewriting the contract.
+- target: $.info
+  update:
+    x-apievangelist-conventions: conventions/antavo-conventions.yml
+    x-apievangelist-errors: errors/antavo-problem-types.yml
+    x-apievangelist-authentication: authentication/antavo-authentication.yml
+    x-apievangelist-rate-limits: rate-limits/antavo-rate-limits.yml
+    x-apievangelist-lifecycle: lifecycle/antavo-lifecycle.yml
+    x-apievangelist-sandbox: sandbox/antavo-sandbox.yml
+- target: $
+  update:
+    x-apievangelist-idempotency:
+      supported: false
+      note: Antavo publishes no idempotency key and no de-duplication window. Retrying a write may duplicate
+        the loyalty event.
+    x-apievangelist-rate-limit-headers:
+      published: false
+      status_on_exhaustion: 429
+      note: Limits are documented (1,500/min shared, 20,000/min dedicated, per API key) but no RateLimit-*
+        or Retry-After response header contract is published.

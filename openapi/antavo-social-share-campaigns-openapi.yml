@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo Socal Share Campaigns API
+  version: 1.0.0-oas3
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /v1/social-share-campaigns/share-intent:
+    post:
+      tags:
+      - Social Share Campaigns
+      summary: Submit a share intent
+      description: 'This API endpoint registers a customer’s intent to share content for an active campaign
+        configured in the [Social Share Campaigns module](https://docs.antavo.com/docs/social-share-campaigns).
+        Triggers the `share_intent_success` [event](https://developers.antavo.com/docs/internal-events#/share_intent_success)
+        when a campaign match occurs.
+
+        Call this endpoint when a customer clicks a share button on a content page. Include the customer
+        ID, target platform, and URL to be shared.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShareIntentRequest'
+      responses:
+        '200':
+          description: Share intent submitted. This response may be retured when the intent request is
+            successfully validated, but a parameter value is invalid or missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing required parameter:
+                  summary: Required parameter is missing
+                  value:
+                    type: RuntimeException
+                    code: 360300
+                    message: 'Missing required field: customer_id.'
+                invalid parameter type:
+                  summary: Invalid parameter type
+                  value:
+                    type: RuntimeExcept
+                    code: 360301
+                    message: Field url must be a string.
+        '202':
+          description: Successful intent submission. This response is returned whether the share intent
+            was validated but no eligible campaign was found, or when there was an eligible campaign and
+            the corresponding event was recorded.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+  schemas:
+    ShareIntentRequest:
+      type: object
+      required:
+      - customer_id
+      - url
+      - platform
+      properties:
+        customer_id:
+          type: string
+          example: 9f3c82d6-288e-4361-aec0-039eb066a334
+          description: The unique identifier of the loyalty member whose share intent is being submitted.
+        url:
+          type: string
+          example: https://brand.com
+          description: The URL of the page that the customer shares. This will be validated against the
+            URLs defined in the campaign criteria.
+        platform:
+          type: string
+          example: Facebook
+          description: The social media platform where the customer shared the content. This will be validated
+            against the platforms defined in the campaign criteria.
+    ErrorResponse:
+      type: object
+      description: occurred
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of the message.
+              example: BadRequestException
+            code:
+              type: number
+              description: "Error code.\t"
+              example: 404
+            message:
+              type: string
+              description: Human-readable error message.
+              example: cart.total should be numeric
+security:
+- ApiKeyAuth: []
+tags:
+- name: Social Share Campaigns

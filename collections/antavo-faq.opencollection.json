@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo FAQ API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "FAQ",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List FAQ entries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/faq"
+          },
+          "docs": "The FAQ API provides access to the questions and answers configured and managed in the Antavo FAQ module. A valid request returns an array of FAQ entries, ensuring no personally identifiable data of customers is included."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

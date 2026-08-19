@@ -1,0 +1,2225 @@
+openapi: 3.0.0
+info:
+  contact:
+    name: Antavo
+    url: https://antavo.com
+  title: Antavo Loyalty Read API
+  version: 0.1.0
+servers:
+- url: https://read-api.<environment>.antavo.com
+paths:
+  /v1/customers/{customer_id}:
+    get:
+      operationId: getCustomer
+      summary: Retrieve detailed customer data of a single customer
+      description: Retrieves a customer by customer ID and returns the data associated with the customer.
+      tags:
+      - Customers
+      parameters:
+      - $ref: '#/components/parameters/CustomerIdParam'
+      responses:
+        '200':
+          description: Success - Customer data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                    example: success
+                  metadata:
+                    type: object
+                  payload:
+                    $ref: '#/components/schemas/CustomerEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Error - Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+  /v1/customers/{customer_id}/coupons:
+    get:
+      operationId: listCustomerCoupons
+      summary: Retrieve the list of a customer's coupons
+      description: 'Returns a paginated list of coupons associated with a specific customer.
+
+        Results can be filtered by `status`, `claimed_at`, `redeemed_at`, `expiration_date` coupon attribute
+        values, and sorted by `claimed_at`, `redeemed_at`, `expiration_date` values.
+
+        '
+      tags:
+      - Coupons
+      parameters:
+      - $ref: '#/components/parameters/CustomerIdParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: filter
+        in: query
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/CouponsFilter'
+      - name: sort
+        in: query
+        style: deepObject
+        explode: true
+        description: 'Sorts results by one or more fields in the specified order. Each field can be used
+          only once.
+
+          When multiple sort instructions are provided, the first field is used as the primary sort field.
+          Each additional field determines the order of results that have the same value for the preceding
+          field.
+
+          Example: `?sort[0][field]=claimed_at&sort[0][direction]=asc&sort[1][field]=redeemed_at&sort[1][direction]=desc`
+
+          '
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCouponSortEntry'
+      responses:
+        '200':
+          description: Success - Coupon data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                    example: success
+                  metadata:
+                    allOf:
+                    - $ref: '#/components/schemas/CollectionMetadata'
+                    example:
+                      pagination:
+                        next: /v1/customers/55e5d4dc2cf1901e688b45d3/coupons?offset=0&limit=20
+                        previous: null
+                  payload:
+                    type: object
+                    required:
+                    - coupons
+                    properties:
+                      coupons:
+                        type: array
+                        description: Coupons associated with the customer.
+                        items:
+                          $ref: '#/components/schemas/CouponEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+  /v1/customers/{customer_id}/events:
+    get:
+      operationId: listCustomerEvents
+      summary: Retrieve the list of a customer's events
+      description: 'Returns paginated list of events registered in the customer''s events history.
+
+        Results can be filtered and sorted by `action`, `date`, `account`, `expdate` and `points` event
+        attribute values.
+
+        '
+      tags:
+      - Events
+      parameters:
+      - $ref: '#/components/parameters/CustomerIdParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: filter
+        in: query
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/EventsFilter'
+      - name: sort
+        in: query
+        style: deepObject
+        explode: true
+        description: 'Sorts results by one or more fields in the specified order. Each field can be used
+          only once.
+
+          When multiple sort instructions are provided, the first field is used as the primary sort field.
+          Each additional field determines the order of results that have the same value for the preceding
+          field.
+
+          Example: `?sort[0][field]=action&sort[0][direction]=asc&sort[1][field]=points&sort[1][direction]=desc`
+
+          '
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerEventSortEntry'
+      responses:
+        '200':
+          description: Success - Customer event data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                  metadata:
+                    allOf:
+                    - $ref: '#/components/schemas/CollectionMetadata'
+                    example:
+                      pagination:
+                        next: /v1/customers/55e5d4dc2cf1901e688b45d3/events?offset=0&limit=20
+                        previous: null
+                  payload:
+                    type: object
+                    required:
+                    - events
+                    properties:
+                      events:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/EventEntity'
+              example:
+                status: success
+                metadata:
+                  pagination:
+                    next: null
+                    previous: null
+                payload:
+                  events:
+                  - _id: 6a57a9681d81297bdc042a6e
+                    timestamp: '2026-06-13T15:38:16+00:00'
+                    unix_timestamp: 1784129896
+                    process_timestamp: '2026-06-13T15:38:16+00:00'
+                    date: '2026-06-13'
+                    ip_address: 87.97.9.123
+                    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+                    customer: 55e5d4dc2cf1901e688b45d3
+                    action: checkout
+                    points: 0
+                    properties:
+                      transaction_id: txn_8f3c2a91d7b64e5a
+                      total: 119.96
+                      points_burned: 0
+                      currency: GBP
+                    admin: false
+                    hash: checkout-txn_8f3c2a91d7b64e5a
+                    user_id: 100012233
+                    signed: false
+                    source: Events API
+                    account: family_account
+                    cid: 5098a0ea-70e1-8c3b-4e4b-ac585cb9fed2
+                    snapshot:
+                      score: 34749
+                      spent: 12167
+                      pending: 34521
+                      expired: 0
+                  - _id: 6a57dae6998349a15c05813a
+                    timestamp: '2026-06-13T15:38:16+00:00'
+                    unix_timestamp: 1784129896
+                    process_timestamp: '2026-06-13T15:38:16+00:00'
+                    date: '2026-06-13'
+                    ip_address: 87.97.9.123
+                    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+                    customer: 55e5d4dc2cf1901e688b45d3
+                    action: checkout_item
+                    points: 60
+                    properties:
+                      transaction_id: txn_8f3c2a91d7b64e5a
+                      total: 59.98
+                      product_id: PROD-84721
+                      product_name: Classic Leather Sneakers
+                      product_url: https://example.com/products/prod-84721
+                      quantity: 2
+                      country: GB
+                      points_rewarded: 60
+                      subtotal: 49.98
+                      price: 29.99
+                      discount: 10
+                      unit_burn: 0
+                      currency: GBP
+                      product_category: Footwear > Sneakers
+                      store: london-oxford-street
+                      effective_timestamp: 1784129896
+                      total_quantity: 2
+                    parent: 6a57a9681d81297bdc042a6e
+                    change:
+                      id: 6a57a9681d81297bdc042a6f
+                      at: '2026-07-15T19:09:26+00:00'
+                      by: '100012233'
+                    admin: false
+                    hash: checkout_item-txn_8f3c2a91d7b64e5a-PROD-84721
+                    signed: false
+                    expdate: '2026-07-16'
+                    source: Events API
+                    account: family_account
+                    cid: 5098a0ea-70e1-8c3b-4e4b-ac585cb9fed2
+                    snapshot:
+                      score: 34749
+                      spent: 12167
+                      pending: 34521
+                      expired: 0
+                  - _id: 69efdcada19262f4a90101f8
+                    timestamp: '2026-04-27T22:01:17+00:00'
+                    unix_timestamp: 1777327277
+                    process_timestamp: '2026-04-27T22:01:17+00:00'
+                    date: '2026-04-27'
+                    ip_address: 91.82.30.113
+                    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+                    customer: 55e5d4dc2cf1901e688b45d3
+                    action: point_add
+                    points: 100
+                    properties:
+                      points: 100
+                    admin: false
+                    user_id: 100012233
+                    signed: false
+                    source: Platform
+                    cid: d62c732a-a525-96cc-80cc-498889fc1053
+                    snapshot:
+                      score: 34649
+                      spent: 12167
+                      pending: 34521
+                      expired: 0
+                    usages:
+                      652f9bad5924e77e8269be13: 100
+                    used_points: 100
+                    expired: true
+                    original: 6a57a9681d81297bdc042a6f
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+  /v1/customers:
+    get:
+      operationId: listCustomers
+      summary: Retrieve the list of customers
+      description: 'Returns a paginated list of customers, including standard customer fields and any
+        custom customer attributes configured in the workspace.
+
+        Results can be filtered and sorted by `created_at` and `status` customer attribute values.
+
+        '
+      tags:
+      - Customers
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: filter
+        in: query
+        style: deepObject
+        explode: true
+        description: Use the supported fields and operators to filter the results.
+        schema:
+          $ref: '#/components/schemas/CustomersFilter'
+      - name: sort
+        in: query
+        style: deepObject
+        explode: true
+        description: 'Sorts results by one or more fields in the specified order. Each field can be used
+          only once.
+
+          When multiple sort instructions are provided, the first field is used as the primary sort field.
+          Each additional field determines the order of results that have the same value for the preceding
+          field.
+
+          Example: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc`
+
+          '
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerSortEntry'
+      responses:
+        '200':
+          description: Success - Customer data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                  metadata:
+                    allOf:
+                    - $ref: '#/components/schemas/CollectionMetadata'
+                    example:
+                      pagination:
+                        next: /v1/customers/55e5d4dc2cf1901e688b45d3/customers?offset=0&limit=20
+                        previous: null
+                  payload:
+                    type: object
+                    required:
+                    - customers
+                    properties:
+                      customers:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CustomerEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+  /v1/customers/{customer_id}/transactions:
+    get:
+      operationId: listCustomerTransactions
+      summary: Retrieve the list of a customer's transactions
+      description: 'Returns a paginated list of transactions registered for the customer, including their
+        items, associated events, point values, and current processing status.
+
+        Results can be filtered and sorted by `status`, `checkout_date`, `auto_accept`, `account`, `points_rewarded`,
+        `earned`, and `burned` transaction attribute values.
+
+        '
+      tags:
+      - Transactions
+      parameters:
+      - $ref: '#/components/parameters/CustomerIdParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: filter
+        in: query
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/TransactionsFilter'
+      - name: sort
+        description: 'Sorts results by one or more fields in the specified order. Each field can be used
+          only once.
+
+          When multiple sort instructions are provided, the first field is used as the primary sort field.
+          Each additional field determines the order of results that have the same value for the preceding
+          field.
+
+          Example: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=earned&sort[1][direction]=desc`
+
+          '
+        in: query
+        style: deepObject
+        explode: true
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerTransactionSortEntry'
+      responses:
+        '200':
+          description: Success - Transaction data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                  metadata:
+                    allOf:
+                    - $ref: '#/components/schemas/CollectionMetadata'
+                    example:
+                      pagination:
+                        next: /v1/customers/55e5d4dc2cf1901e688b45d3/transactions?offset=0&limit=20
+                        previous: null
+                  payload:
+                    type: object
+                    required:
+                    - transactions
+                    properties:
+                      transactions:
+                        type: array
+                        description: Transactions associated with the customer.
+                        items:
+                          $ref: '#/components/schemas/TransactionEntity'
+              example:
+                status: success
+                metadata:
+                  pagination:
+                    next: /v1/customers/55e5d4dc2cf1901e688b45d3/transactions?offset=0&limit=20
+                    previous: null
+                payload:
+                  transactions:
+                  - _id: txn_8f3c2a91d7b64e5a
+                    created_at: '2025-11-13T13:10:19+00:00'
+                    updated_at: '2025-11-13T13:10:20+00:00'
+                    customer: 55e5d4dc2cf1901e688b45d3
+                    status: accepted
+                    event: 6734a53c8bd9da0c85066e1b
+                    items:
+                    - transaction_id: txn_8f3c2a91d7b64e5a
+                      total: 100
+                      product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      quantity: 1
+                      points_rewarded: 50
+                      subtotal: 50
+                      price: 50
+                      discount: 0
+                      currency: EUR
+                      total_quantity: 2
+                    - transaction_id: txn_8f3c2a91d7b64e5a
+                      total: 100
+                      product_id: prd_123456
+                      product_name: Classic Denim Jeans
+                      product_url: https://example.com/products/classic-denim-jeans
+                      quantity: 1
+                      points_rewarded: 50
+                      subtotal: 50
+                      price: 50
+                      discount: 0
+                      currency: EUR
+                      total_quantity: 2
+                    total: 100
+                    earned: 0
+                    burned: 0
+                    events:
+                    - _id: 6734a53c8bd9da0c85066e1b
+                      action: checkout
+                      points: 0
+                    - _id: 6734a53c8bd9da0c85066e1c
+                      action: checkout_item
+                      points: 0
+                    - _id: 6734a53c8bd9da0c85066e1d
+                      action: checkout_item
+                      points: 0
+                    - _id: 6734a53c8bd9da0c85066e1e
+                      action: pending_campaign_bonus
+                      points: 0
+                    currency: EUR
+                    points_rewarded: 100
+                    account: family_account
+                    auto_accept: '2025-12-13'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+components:
+  parameters:
+    CustomerIdParam:
+      name: customer_id
+      in: path
+      required: true
+      description: Customer identifier. Using an external ID is not supported.
+      schema:
+        type: string
+    OffsetParam:
+      name: offset
+      in: query
+      description: 'Offsets the starting position in the sorted result set. Used for pagination together
+        with the `limit` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    LimitParam:
+      name: limit
+      in: query
+      description: 'Sets the maximum number of items to return from the sorted result set. Used for pagination
+        together with the `offset` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 20
+  schemas:
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          description: Contains details about the error.
+          required:
+          - message
+          - code
+          - resendable
+          properties:
+            message:
+              type: string
+              description: Human-readable description of the error.
+              example: Unauthorized
+            code:
+              type: integer
+              description: Numeric code identifying the error.
+              example: 2132
+            resendable:
+              type: boolean
+              description: Indicates whether the request can be retried.
+              example: false
+    CustomerEntity:
+      type: object
+      description: 'Customer entity. The fields and values returned may differ based on workspace configuration.
+
+        '
+      properties:
+        _id:
+          type: string
+          description: The unique customer identifier.
+          example: 55e5d4dc2cf1901e688b45d3
+        external_ids:
+          type: object
+          description: 'External IDs associated with the customer.
+
+            Omitted when the customer has no external ID.
+
+            '
+          properties:
+            crm_id:
+              type: string
+              description: 'The ID of the customer field [configured](https://docs.antavo.com/docs/customers#add-a-new-field)
+                az external_id.
+
+                The `crm_id` property name is shown as an example. The list of external ids returned depend
+                on the fields configured in the workspace.
+
+                '
+              example: 1749RRCT23
+          example:
+            crm_id: 1749RRCT23
+        email:
+          type: string
+          description: Customer's email address.
+          example: jsmith@example.com
+        first_name:
+          type: string
+          description: Customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: Customer's last name.
+          example: Smith
+        handler:
+          type: string
+          description: Nickname displayed on the customer's profile.
+          example: John
+        status:
+          description: 'The current loyalty program status of the customer.
+
+            Customers with an `opted_out` status are not returned by the API.
+
+            '
+          type: string
+          enum:
+          - active
+          - inactive
+          - banned
+          - merged
+          - suspended
+          example: active
+        gender:
+          type: string
+          description: Customer's gender.
+          enum:
+          - male
+          - female
+          example: male
+        language:
+          type: string
+          description: Customer language code (ISO-639-1 format).
+          example: en
+        image_url:
+          description: The URL of the customer profile picture, if available.
+          type: string
+          example: https://example.com/image.png
+        currency:
+          type: string
+          description: The ISO 3-Letter Currency Code for the last currency used.
+          example: GBP
+        mobile_phone:
+          type: string
+          description: The member's mobile phone number.
+          example: 123 456 789
+        country:
+          type: string
+          description: The ISO 3166-1 alpha-2 country code associated with the customer.
+          example: GB
+        membership_id:
+          type: array
+          description: A unique identifier for membership, used across platforms including mobile apps.
+            This ID may function as a range of IDs in specific contexts.
+          items:
+            type: string
+          example:
+          - MA465927t85w
+          - DA465927t85w
+        group_id:
+          type: array
+          description: 'The IDs of the user groups assigned to the customer.
+
+            Returned only when the customer is assigned to at least one user group.
+
+            '
+          items:
+            type: string
+          example:
+          - '146'
+          - '126'
+        src:
+          type: string
+          description: 'The source through which the customer was created. For customers created
+
+            through an import, the value contains the import ID.
+
+            '
+          example: import:672b564c4219e3a65b0f43a0
+        referrer:
+          type: string
+          description: 'The unique account ID of the customer who referred the member to the loyalty program.
+
+            Returned only when the customer has a referrer.
+
+            '
+          example: 557e5d4eg2cf1461e688b45e8
+        score:
+          description: The total number of points ever earned by the customer.
+          type: number
+          example: 100
+        spent:
+          description: The points spent by the customer.
+          type: number
+          example: 20
+        reserved:
+          description: The amount of points reserved on bids or discounts.
+          type: number
+          example: 0
+        expired:
+          description: The number of points expired.
+          type: number
+          example: 100
+        pending:
+          description: The number of pending points for non-finalized actions. Typically given when the
+            purchase is in its refund/return period.
+          type: number
+          example: 20
+        purchase_total:
+          description: 'The money spent on purchases by the customer since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          type: number
+          example: 100
+        purchase_count:
+          description: 'The number of purchases made by the customer since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          type: integer
+          example: 1
+        purchase_item_count:
+          description: 'The number of items purchased since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          type: integer
+          example: 2
+        created_at:
+          description: The date and time when the customer was created.
+          type: string
+          format: date-time
+          example: '2026-07-14T19:41:35+00:00'
+        updated_at:
+          description: The date and time when the customer data was last updated.
+          type: string
+          format: date-time
+          example: '2026-07-14T19:41:35+00:00'
+        birth_date:
+          type: string
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          description: Customer's date of birth.
+          format: date
+          example: '1969-12-25'
+        purchase_first_date:
+          type: string
+          description: 'First time the customer made a purchase since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2020-10-01'
+        purchase_last_date:
+          type: string
+          description: 'Last time the customer made a purchase since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2020-10-01'
+        last_earn_date:
+          type: string
+          description: 'Last time the customer earned points since enrolling into the program.
+
+            Omitted if the customer has not been earned yet.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2026-04-27'
+        last_spend_date:
+          type: string
+          description: 'Last time the customer spent points since enrolling into the program.
+
+            Omitted if the customer has not spent yet.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2025-10-28'
+        last_login_at:
+          description: The date of the last login of the customer.
+          type: string
+          format: date-time
+          example: '2026-06-28T10:27:03+00:00'
+        optin_at:
+          description: The date of the enrollment of the customer.
+          type: string
+          format: date-time
+          example: '2026-06-28T10:27:03+00:00'
+        optout_at:
+          description: 'The date when the customer was unenrolled.
+
+            Omitted if the customer has not been opted-out.
+
+            '
+          type: string
+          format: date-time
+          example: '2026-06-28T10:27:03+00:00'
+        labels:
+          type: array
+          items:
+            type: string
+          description: 'Labels associated with the customer.
+
+            Can be empty or omitted when the customer has no recorded purchases.
+
+            '
+          example:
+          - Elite member
+          - Frequent flyer
+        properties:
+          type: object
+          description: '[Custom attributes](https://developers.antavo.com/docs/customers#attribute-types)
+            that are stored on the customer object.
+
+            The `city` property name is shown as an example. The custom attributes returned depend on
+            the fields configured in the workspace.
+
+            '
+          properties:
+            city:
+              type: string
+              example: London
+        tiers:
+          type: object
+          description: 'The customer''s current tier information within tier structures.
+
+            Only available is the Tiers module is used.
+
+            '
+          properties:
+            fashion_tiers:
+              type: object
+              description: 'Tier information for a specific tier structure.
+
+                The `fashion_tiers` property name is shown as an example of a tier structure ID. The list
+                of tier strucures returned depend on the Tiers module configuration in the workspace.
+
+                '
+              properties:
+                history:
+                  type: object
+                  description: Historical tier point values keyed by date.
+                  additionalProperties:
+                    type: number
+                  example:
+                    '2025-06-24': 1010
+                points:
+                  type: number
+                  description: The number of points currently used to determine the customer's tier.
+                  example: 1010
+                next:
+                  $ref: '#/components/schemas/NextCustomerTier'
+                points_after_expiration:
+                  type: number
+                  description: The number of tier points remaining after the next point expiration.
+                  example: 1010
+                _id:
+                  type: string
+                  description: The ID of the customer's current tier.
+                  example: Couture_Elite
+                event:
+                  type: string
+                  description: The ID of the event associated with the customer's current tier assignment.
+                  example: 685a9c5abe38329c6501bf87
+                expdate:
+                  type: string
+                  format: date
+                  description: The date when the tier expires and the customers' tier is recalculated.
+                  example: '2025-06-30'
+                manual:
+                  type: boolean
+                  description: Indicates whether the customer was manually assigned to the current tier
+                    by a Management UI user.
+                  example: false
+                name:
+                  description: The customer-facing name of the current tier.
+                  oneOf:
+                  - type: string
+                  - type: object
+                    additionalProperties:
+                      type: string
+                  example:
+                    en: Couture Elite
+                since:
+                  type: string
+                  format: date-time
+                  description: The date and time when the customer entered the current tier.
+                  example: '2025-06-24T12:38:50+00:00'
+                threshold:
+                  type: number
+                  description: The number of points required to reach the current tier.
+                  example: 1000
+        accounts:
+          type: object
+          description: 'Point accounts information associated with the customer.
+
+            Only availabe if the Multi-accounts module is used.
+
+            '
+          properties:
+            family_account:
+              type: object
+              description: 'Point balance information for a specific account.
+
+                The `family_account` property name is added as an example of an account ID. The list of
+                accounts returned depend on the Mult-accounts module configuration in the workspace.
+
+                workspaces.
+
+                '
+              properties:
+                name:
+                  type: string
+                  description: The display name of the account.
+                  example: Family account
+                type:
+                  type: string
+                  description: The account type.
+                  enum:
+                  - standard
+                  - status_points
+                  example: standard
+                earned:
+                  type: number
+                  description: The total number of points earned on the account.
+                  example: 9271
+                reserved:
+                  type: number
+                  description: The number of points currently reserved on the account.
+                  example: 0
+                spent:
+                  type: number
+                  description: The total number of points spent from the account.
+                  example: 85
+                pending:
+                  type: number
+                  description: The number of points currently pending on the account.
+                  example: 34401
+                expired:
+                  type: number
+                  description: The total number of points expired from the account.
+                  example: 0
+                negative_points:
+                  type: boolean
+                  description: Indicates whether the account allows a negative point balance.
+                  example: false
+        clubs:
+          type: array
+          description: 'The IDs of the clubs the customer belongs to.
+
+            Can be `null` or omitted when the customer is not a member of any club.
+
+            '
+          items:
+            type: string
+          example:
+          - 67ed4632108c1ad747028c3d
+        activities:
+          type: object
+          description: 'Completed challenges associated with the customer. Each property is keyed
+
+            by the challenge ID, and its value is the Unix timestamp of completion.
+
+            Can be empty or omitted when the customer has no completed challenges.
+
+            '
+          additionalProperties:
+            type: integer
+            format: int64
+          example:
+            63eaabe8b0fe6815c91425b6: 1712134211
+        rewards:
+          type: object
+          description: 'Rewards claimed by the customer. Each property is keyed by the reward ID,
+
+            and its value is the number of times the reward has been claimed.
+
+            Can be empty or omitted when the customer has not claimed any rewards.
+
+            '
+          additionalProperties:
+            type: integer
+            minimum: 1
+          example:
+            63dcc15e59127f05634bf80c: 2
+            63dcb791eb80ef351838fdfb: 8
+        referrals:
+          type: array
+          description: 'The IDs of the customers referred by this customer.
+
+            Returned as an empty array when the customer has no referrals.
+
+            '
+          items:
+            type: string
+          example:
+          - 8a302ca1-337b-4de9-8070-12d6fe669ef3
+    NextCustomerTier:
+      type: object
+      description: Information about the next tier available to the customer. The object is empty when
+        no higher tier is available.
+      properties:
+        id:
+          type: string
+          description: The ID of the next tier.
+          example: Fashion_Royalty
+        name:
+          type: string
+          description: The customer-facing name of the next tier.
+          example: Fashion Royalty
+        points:
+          type: number
+          description: The number of additional points required to reach the next tier.
+          example: 900
+    PaginationLinks:
+      type: object
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    CollectionMetadata:
+      type: object
+      required:
+      - pagination
+      properties:
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+    CustomerCouponSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - claimed_at
+          - redeemed_at
+          - expiration_date
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    DateTimeFilter:
+      type: object
+      description: 'Filters a date or date-time field. The following formats are accepted:
+
+        - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+        - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+        - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
+
+        - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC
+        for comparison)
+
+
+        Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+        '
+      properties:
+        eq:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Equals.
+        lt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than.
+        lte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than or equal to.
+        gt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than.
+        gte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than or equal to.
+    CouponStatus:
+      type: string
+      enum:
+      - claimed
+      - redeemed
+      - expired
+      - partially_redeemed
+      - invalid
+      description: 'The coupon status to match. The status is determined from the coupon’s claim, redemption,
+        expiration, invalidation, and balance data.
+
+        '
+    CouponEntity:
+      type: object
+      description: "Coupon entity. The fields returned depend on the coupon data configured for the workspace.\
+        \ \nIn addition to the standard fields listed below, custom coupon attributes may also be returned\
+        \ as additional properties.\n"
+      properties:
+        _id:
+          type: string
+          description: Unique identifier of the coupon.
+          example: coupon_01J2X9M7QK5A8F3C6D1E4B7N9P
+        code:
+          type: string
+          description: Coupon code used for redemption.
+          example: SUMMER-2026-ABCD
+        name:
+          description: 'Coupon display name. The value can be a plain string or contain translations keyed
+            by locale. (e.g.
+
+            `{"en": "...", "de": "..."}`).
+
+            '
+          oneOf:
+          - type: string
+            example: Summer discount
+          - type: object
+            additionalProperties:
+              type: string
+            example:
+              en: Summer discount
+              de: Sommerrabatt
+        type:
+          type: string
+          description: Coupon type.
+          example: percentage
+        value:
+          type: number
+          description: Coupon value.
+          example: 20
+        currency:
+          type: string
+          description: Currency associated with the coupon value. Only applicable to gift card coupons.
+          example: EUR
+        balance:
+          type: number
+          description: The remaining value of a gift card after redemption. Only applicable to gift card
+            coupons.
+          example: 15.5
+        min_amount:
+          type: number
+          description: 'The minimum balance allowed on a gift card. A lower balance causes the coupon
+            to become invalid.
+
+            Only applicable to gift card coupons.
+
+            '
+          example: 0
+        min_redemption_value:
+          type: number
+          description: 'The minimum gift card amount that can be used in a single purchase.
+
+            Only applicable to gift card coupons.
+
+            '
+          example: 0
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the coupon was created.
+          example: '2026-06-01T10:15:30Z'
+        claimed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date and time when the coupon was claimed.
+          example: '2026-06-05T14:30:00Z'
+        redeemed_at:
+          description: 'The date and time when the coupon was redeemed. Coupons that can be redeemed multiple
+            times may contain multiple timestamps.
+
+            The value is `null` if the coupon has not been redeemed.
+
+            Only applicable if the coupon has been redeemed.
+
+            '
+          example:
+          - '2026-06-10T09:45:00Z'
+          - '2026-06-15T16:20:00Z'
+        expiration_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The date and time when the coupon expires.
+
+            Only applicable if the coupon has an expiration date.
+
+            '
+          example: '2026-12-31T23:59:59Z'
+        expires_in:
+          type: string
+          description: 'The period after activation or claim when the coupon expires.
+
+            Only applicable if the coupon has an expiration date.
+
+            '
+          example: 2 months
+        invalidated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The date and time when the coupon was invalidated.
+
+            Only applicable if the coupon has been invalidated.
+
+            '
+          example: '2026-12-01T23:59:59Z'
+        invalidated_by:
+          type:
+          - integer
+          - 'null'
+          description: 'The ID of the user that invalidated the coupon.
+
+            Only applicable if the coupon has been invalidated.
+
+            '
+          example: 100012233
+        pool:
+          type: string
+          description: The ID of the original coupon pool from which the coupon was sourced, if any.
+          example: summer-campaign-2026
+        parent:
+          type: string
+          description: 'The ID of the reward that assigned the coupon if the coupon was issued through
+            a reward claim.
+
+            '
+          example: 679780ec13fa8bdd1d0345c8
+        original:
+          type: string
+          description: 'The ID of the customer who originally claimed the coupon.
+
+            This value remains unchanged if the customer is later merged or the coupon is transferred.
+
+            '
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        aggregated:
+          type: boolean
+          description: 'Indicates whether the same coupon code is reused whenever the coupon pool issues
+            a coupon to the same customer.
+
+            '
+          example: false
+        claims:
+          type: integer
+          description: The number of times the coupon has been claimed.
+          example: 1
+        redeems:
+          type: integer
+          description: The number of times the coupon has been redeemed.
+          example: 2
+        transfers:
+          type: integer
+          description: The number of times the coupon has been transferred.
+          example: 0
+        status:
+          $ref: '#/components/schemas/CouponStatus'
+        stores:
+          type: array
+          items:
+            type: string
+          description: "The store IDs where the coupon can be redeemed. \nThis field applies only when\
+            \ stores configured in the Stores module are assigned to the coupon pool.\n"
+          example:
+          - store-vienna
+          - store-berlin
+        products:
+          type: array
+          items:
+            type: string
+          description: 'The product IDs for which the coupon can be redeemed.
+
+            Returned only when stores configured in the Stores module are assigned to the coupon pool.
+
+            '
+          example:
+          - product-1001
+          - product-1002
+      additionalProperties: true
+    CouponsFilter:
+      type: object
+      description: 'Filter by allowed fields and operators.
+
+        '
+      properties:
+        status:
+          type: object
+          description: 'Filters coupons by their current status. Only the `eq` operator is supported.
+
+            '
+          properties:
+            eq:
+              $ref: '#/components/schemas/CouponStatus'
+        claimed_at:
+          description: 'Filters coupons by the date and time when the coupon was claimed.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted
+            to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        redeemed_at:
+          description: 'Filters coupons by the date and time when the coupon was redeemed.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted
+            to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        expiration_date:
+          description: 'Filters coupons by the date and time when the coupon expires.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted
+            to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+    CustomerEventSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - action
+          - date
+          - account
+          - points
+          - expdate
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    EventEntity:
+      type: object
+      description: 'An event registered for the customer. The fields returned depend on the
+
+        event type and how the event was registered.
+
+        '
+      properties:
+        _id:
+          type: string
+          description: The unique ID of the event.
+          example: 6a57a9681d81297bdc042a6e
+        timestamp:
+          type: string
+          format: date-time
+          description: The date and time when the event occurred.
+          example: '2026-06-13T15:38:16+00:00'
+        unix_timestamp:
+          type: integer
+          format: int64
+          description: The time when the event occurred, represented as a Unix timestamp in seconds.
+          example: 1784131896
+        process_timestamp:
+          type: string
+          format: date-time
+          description: The date and time when the event was processed by Antavo.
+          example: '2026-06-13T15:38:16+00:00'
+        date:
+          type: string
+          format: date
+          description: The date when the event occurred.
+          example: '2026-06-13'
+        ip_address:
+          type: string
+          description: The IP address from which the event was registered.
+          example: 87.97.9.123
+        user_agent:
+          type: string
+          description: The user agent associated with the event request.
+          example: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+        customer:
+          type: string
+          description: The ID of the customer associated with the event.
+          example: 55e5d4dc2cf1901e688b45d3
+        action:
+          type: string
+          description: Event type.
+          example: checkout
+        points:
+          type: number
+          description: The number of points added or deducted by the event.
+          example: 60
+        properties:
+          type: object
+          description: 'The properties registered with the event. The properties returned depend
+
+            on the event type and the fields configured for the event.
+
+            The example response includes `checkout`, `checkout_item`, and `point_add` events with their
+            registered properties.
+
+            '
+          example:
+            transaction_id: txn_8f3c2a91d7b64e5a
+            total: 119.996
+            points_burned: 0
+            currency: GBP
+        parent:
+          type: string
+          description: 'The ID of the parent event. Returned when the event is associated with
+
+            another event, such as a `checkout_item` associated with a `checkout`.
+
+            '
+          example: 6a57a9681d81297bdc042a6e
+        change:
+          type: object
+          description: 'Information about a change applied to the event.
+
+            For example, a change may occur when the event expiration date is modified in the Management
+            UI.
+
+            '
+          properties:
+            id:
+              type: string
+              description: The ID of the original event before the change was applied.
+              example: 6a57a9681d81297bdc042a6f
+            at:
+              type: string
+              format: date-time
+              description: The date and time when the event was changed.
+              example: '2026-06-13T19:09:26+00:00'
+            by:
+              type: string
+              description: The ID of the user who initiated the change.
+              example: '100012233'
+        admin:
+          type: boolean
+          description: 'Indicates whether the event was registered through the Management UI.
+
+            The value is `true` for events registered through the Management UI and `false` for events
+            registered through an API or another system process.
+
+            '
+          example: false
+        hash:
+          type: string
+          description: 'An automatically generated hash for uniqueness checks.
+
+            '
+          example: checkout-txn_8f3c2a91d7b64e5a
+        user_id:
+          type: integer
+          format: int64
+          description: 'The ID of the Management UI user associated with the event.
+
+            Returned only when the event was initiated by a Management UI user.
+
+            '
+          example: 100012233
+        signed:
+          type: boolean
+          description: Indicates whether the API request that registered the event was authenticated using
+            request signing.
+          example: false
+        expdate:
+          type: string
+          format: date
+          description: 'The expiration date of the points earned by the event.
+
+            Returned only when the event earns points that can expire.
+
+            '
+          example: '2026-07-16'
+        source:
+          type: string
+          description: 'Identifies the channel or system process through which the event was registered.
+
+            The value may indicate an API, an workflow, an import, or the manual or module operation that
+            generated the event.
+
+            '
+          example: Events API
+        account:
+          type: string
+          description: The ID of the point account affected by the event.
+          example: family_account
+        cid:
+          type: string
+          description: 'The correlation ID shared by related events registered as part of the same operation.
+
+            '
+          example: 5098a0ea-70e1-8c3b-4e4b-ac585cb9fed2
+        snapshot:
+          type: object
+          description: The customer's point balances immediately after the event was processed.
+          properties:
+            score:
+              type: number
+              description: The customer's total earned point balance.
+              example: 34749
+            spent:
+              type: number
+              description: The customer's total spent point balance.
+              example: 12167
+            pending:
+              type: number
+              description: The customer's pending point balance.
+              example: 34521
+            expired:
+              type: number
+              description: The customer's total expired point balance.
+              example: 0
+        usages:
+          type: object
+          description: 'Shows how points earned by this event were used. Each property is keyed
+
+            by the ID of the event that used the points, and its value is the number
+
+            of points applied to that event.
+
+            Omitted if no points have been used.
+
+            '
+          additionalProperties:
+            type: number
+          example:
+            652f9bad5924e77e8269be13: 100
+        used_points:
+          type: number
+          description: 'The total number of points earned by this event that have already been used.
+
+            Omitted if no points have been used.
+
+            '
+          example: 100
+        expired:
+          type: boolean
+          description: 'Indicates whether the points earned by the event are no longer available
+
+            for use because they have been fully used or have expired.
+
+            '
+          example: true
+        original:
+          type: string
+          description: 'The ID of the customer from whom the event was transferred during a customer merge.
+
+            Returned only for events transferred from a merged customer.
+
+            '
+          example: 6a57a9681d81297bdc042a6f
+    EventsFilter:
+      type: object
+      description: 'Filter by allowed fields and operators.
+
+        '
+      properties:
+        action:
+          type: object
+          description: 'Filters events by the event type recorded in the `action` property. The comparison
+            operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        date:
+          type: object
+          description: 'Filters events by the date when the event occurred, as recorded in the `date`
+            property. The comparison operators compare values alphabetically.
+
+            Typed as string values (as shown in the example response) even though they are date-like in
+            storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        account:
+          type: object
+          description: 'Filters events by the ID of the point account associated with the event. The comparison
+            operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        points:
+          type: object
+          description: 'Filters events by the number of points assigned to the event. Only whole numbers
+            are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+        expdate:
+          type: object
+          description: 'Filters events by the date when the points earned by the event expire, as recorded
+            in the `expdate` property. The comparison operators compare values alphabetically.
+
+            Typed as string values (as shown in the example response) even though they are date-like in
+            storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+    CustomerSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - created_at
+          - status
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    CustomersFilter:
+      type: object
+      description: 'Filter object for `GET /v1/customers`. URL form:
+
+        `?filter[<field>][<op>]=<value>`. Multiple operators on the
+
+        same field are allowed.
+
+        '
+      properties:
+        created_at:
+          description: 'Filters customers by the date and time when the customer profile was created.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted
+            to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        status:
+          type: object
+          description: 'Filters customers by their current loyalty program status.
+
+            Customers with an `opted_out` status are not returned by the API.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+              enum:
+              - active
+              - inactive
+              - banned
+              - merged
+              - suspended
+              - pending
+              example: active
+    CustomerTransactionSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - status
+          - checkout_date
+          - auto_accept
+          - account
+          - points_rewarded
+          - earned
+          - burned
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    TransactionItem:
+      type: object
+      description: An item included in the transaction.
+      properties:
+        transaction_id:
+          type: string
+          description: The ID of the transaction containing the item.
+          example: txn_8f3c2a91d7b64e5a
+        total:
+          type: number
+          description: The total monetary value of the item.
+          example: 100
+        product_id:
+          type: string
+          description: The ID of the product.
+          example: prd_987654
+        product_name:
+          type: string
+          description: The name of the product.
+          example: Vintage Leather Jacket
+        product_url:
+          type: string
+          format: uri
+          description: The URL of the product.
+          example: https://example.com/products/vintage-leather-jacket
+        quantity:
+          type: number
+          description: The quantity of the product included in this item.
+          example: 1
+        points_rewarded:
+          type: number
+          description: The number of points assigned to this transaction item.
+          example: 50
+        subtotal:
+          type: number
+          description: The monetary value of the item after applying discounts.
+          example: 50
+        price:
+          type: number
+          description: The unit price of the product.
+          example: 50
+        discount:
+          type: number
+          description: The discount applied to the item.
+          example: 0
+        currency:
+          type: string
+          description: The currency used for the item values.
+          example: EUR
+        total_quantity:
+          type: number
+          description: The total number of purchased products.
+          example: 2
+    TransactionEventReference:
+      type: object
+      description: A summary of an event associated with the transaction.
+      properties:
+        _id:
+          type: string
+          description: The unique ID of the event.
+          example: 6734a53c8bd9da0c85066e1b
+        action:
+          type: string
+          description: The action that identifies the event type.
+          example: checkout
+        points:
+          type: number
+          description: The number of points added or deducted by the event.
+          example: 0
+    TransactionEntity:
+      type: object
+      description: 'A transaction registered for the customer, including its items, associated events,
+        point values, and current processing status.
+
+        The fields returned may vary depending on the data submitted with the transaction, the custom
+        attributes configured for the corresponding events, and the transaction processing applied in
+        the workspace.
+
+        '
+      properties:
+        _id:
+          type: string
+          description: The unique ID of the transaction.
+          example: txn_8f3c2a91d7b64e5a
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was created.
+          example: '2025-11-13T13:10:19+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was last updated.
+          example: '2025-11-13T13:10:20+00:00'
+        customer:
+          type: string
+          description: The ID of the customer associated with the transaction.
+          example: 55e5d4dc2cf1901e688b45d3
+        status:
+          type: string
+          description: The current status of the transaction.
+          enum:
+          - draft
+          - pending
+          - accepted
+          - rejected
+          - refunded
+          example: accepted
+        event:
+          type: string
+          description: The ID of the checkout event associated with the transaction.
+          example: 6734a53c8bd9da0c85066e1b
+        items:
+          type: array
+          description: The items included in the transaction.
+          items:
+            $ref: '#/components/schemas/TransactionItem'
+        total:
+          type: number
+          description: The total monetary value of the transaction.
+          example: 100
+        earned:
+          type: number
+          description: 'The number of points credited to the customer after transaction
+
+            processing, according to the configured point calculation rules.
+
+            '
+          example: 0
+        burned:
+          type: number
+          description: 'The number of points deducted from the customer''s balance as part of
+
+            the transaction.
+
+            '
+          example: 0
+        events:
+          type: array
+          description: Events associated with the transaction.
+          items:
+            $ref: '#/components/schemas/TransactionEventReference'
+        currency:
+          type: string
+          description: The currency used for the transaction.
+          example: EUR
+        points_rewarded:
+          type: number
+          description: 'The number of points assigned to the transaction. This value may be
+
+            calculated based on the point calculation settings configured in the
+
+            workspace or provided explicitly in the `points_rewarded` property of
+
+            the registered checkout event.
+
+            '
+          example: 100
+        account:
+          type: string
+          description: The ID of the point account associated with the transaction. Point accounts can
+            be defined in the [Multi-accounts module](https://docs.antavo.com/docs/multi-accounts).
+          example: family_account
+        auto_accept:
+          type: string
+          format: date
+          description: 'The date when the transaction is scheduled to be automatically accepted.
+
+            This value is calculated from the pending period configured in the
+
+            [Checkout accept module](https://docs.antavo.com/docs/checkout-accept).
+
+            Omitted if no pending period applies.
+
+            '
+          example: '2025-12-13'
+    TransactionsFilter:
+      type: object
+      description: 'Filter by allowed fields and operators.
+
+        '
+      properties:
+        status:
+          type: object
+          enum:
+          - draft
+          - pending
+          - accepted
+          - rejected
+          - refunded
+          description: 'Filters transactions by their current transaction lifecycle status. The comparison
+            operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        checkout_date:
+          type: object
+          description: 'Filters transactions by the date when the checkout transaction was registered,
+            as recorded in the `checkout_date` property. The comparison operators compare values alphabetically.
+
+            Typed as string values (as shown in the example response) even though they are date-like in
+            storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        auto_accept:
+          type: object
+          description: 'Filters transactions by the date and time when they are scheduled to be automatically
+            accepted. This value is calculated from the pending period configured in the [Checkout accept
+            module](https://docs.antavo.com/docs/checkout-accept#interval).
+
+            Typed as string values (as shown in the example response) even though they are date-like in
+            storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        account:
+          type: object
+          description: 'Filters transactions by customer accounts configured in the [Multi-accounts module](https://docs.antavo.com/docs/multi-accounts).
+            The comparison operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        points_rewarded:
+          type: object
+          description: 'Filters transactions by the number of points assigned to the transaction.
+
+            This value may be calculated based on the point calculation settings configured in the workspace
+            or provided explicitly in the `points_rewarded` property of the registered checkout event.
+
+            Only whole numbers are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+        earned:
+          type: object
+          description: 'Filters transactions by the number of points actually earned from the transaction.
+
+            This value reflects the points credited to the customer after transaction processing, based
+            on the workspace configuration and applicable point calculation rules.
+
+            Only whole numbers are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+        burned:
+          type: object
+          description: 'Filters transactions by the number of points spent as part of the transaction.
+            This value reflects the points deducted from the customer''s balance during transaction processing.
+
+            Only whole numbers are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+  responses:
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+tags:
+- name: Customers
+- name: Coupons
+- name: Events
+- name: Transactions

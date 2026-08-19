@@ -1,0 +1,3352 @@
+{
+  "item": [
+    {
+      "id": "c847200f-84ae-4501-9025-e8640e4671eb",
+      "name": "Customers",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ee3ff2a7-8f13-412e-ac8d-cbb909717a3e",
+          "name": "Retrieve detailed customer data of a single customer",
+          "request": {
+            "name": "Retrieve detailed customer data of a single customer",
+            "description": {
+              "content": "Retrieves a customer by customer ID and returns the data associated with the customer.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "customers",
+                ":customer_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_id",
+                  "description": "(Required) Customer identifier. Using an external ID is not supported."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4d52e9a3-ee26-4e69-ab14-f6f273790983",
+              "name": "Success - Customer data provided",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {},\n  \"payload\": {\n    \"_id\": \"55e5d4dc2cf1901e688b45d3\",\n    \"external_ids\": {\n      \"crm_id\": \"1749RRCT23\"\n    },\n    \"email\": \"jsmith@example.com\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Smith\",\n    \"handler\": \"John\",\n    \"status\": \"active\",\n    \"gender\": \"male\",\n    \"language\": \"en\",\n    \"image_url\": \"https://example.com/image.png\",\n    \"currency\": \"GBP\",\n    \"mobile_phone\": \"123 456 789\",\n    \"country\": \"GB\",\n    \"membership_id\": [\n      \"MA465927t85w\",\n      \"DA465927t85w\"\n    ],\n    \"group_id\": [\n      \"146\",\n      \"126\"\n    ],\n    \"src\": \"import:672b564c4219e3a65b0f43a0\",\n    \"referrer\": \"557e5d4eg2cf1461e688b45e8\",\n    \"score\": 100,\n    \"spent\": 20,\n    \"reserved\": 0,\n    \"expired\": 100,\n    \"pending\": 20,\n    \"purchase_total\": 100,\n    \"purchase_count\": 1,\n    \"purchase_item_count\": 2,\n    \"created_at\": \"2026-07-14T19:41:35+00:00\",\n    \"updated_at\": \"2026-07-14T19:41:35+00:00\",\n    \"birth_date\": \"/0244-57-43/\",\n    \"purchase_first_date\": \"/5313-01-51/\",\n    \"purchase_last_date\": \"/2053-54-11/\",\n    \"last_earn_date\": \"/4167-42-37/\",\n    \"last_spend_date\": \"/3765-20-17/\",\n    \"last_login_at\": \"2026-06-28T10:27:03+00:00\",\n    \"optin_at\": \"2026-06-28T10:27:03+00:00\",\n    \"optout_at\": \"2026-06-28T10:27:03+00:00\",\n    \"labels\": [\n      \"Elite member\",\n      \"Frequent flyer\"\n    ],\n    \"properties\": {\n      \"city\": \"London\"\n    },\n    \"tiers\": {\n      \"fashion_tiers\": {\n        \"history\": {\n          \"2025-06-24\": 1010\n        },\n        \"points\": 1010,\n        \"next\": {\n          \"id\": \"Fashion_Royalty\",\n          \"name\": \"Fashion Royalty\",\n          \"points\": 900\n        },\n        \"points_after_expiration\": 1010,\n        \"_id\": \"Couture_Elite\",\n        \"event\": \"685a9c5abe38329c6501bf87\",\n        \"expdate\": \"2025-06-30\",\n        \"manual\": false,\n        \"name\": \"string\",\n        \"since\": \"2025-06-24T12:38:50+00:00\",\n        \"threshold\": 1000\n      }\n    },\n    \"accounts\": {\n      \"family_account\": {\n        \"name\": \"Family account\",\n        \"type\": \"standard\",\n        \"earned\": 9271,\n        \"reserved\": 0,\n        \"spent\": 85,\n        \"pending\": 34401,\n        \"expired\": 0,\n        \"negative_points\": false\n      }\n    },\n    \"clubs\": [\n      \"67ed4632108c1ad747028c3d\"\n    ],\n    \"activities\": {\n      \"63eaabe8b0fe6815c91425b6\": 1712134211\n    },\n    \"rewards\": {\n      \"63dcc15e59127f05634bf80c\": 2,\n      \"63dcb791eb80ef351838fdfb\": 8\n    },\n    \"referrals\": [\n      \"8a302ca1-337b-4de9-8070-12d6fe669ef3\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "517f6aa2-5fd9-4b93-b5ed-65f8c2f18432",
+              "name": "Error - Escher signature missing or invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c630637-ab9b-415a-a4f1-db73d4fd2b69",
+              "name": "Error - Customer not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76473a5b-258c-40f4-9387-6f0bbf2d9285",
+              "name": "Error - Unexpected server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "293ab0e7-5dfc-4f1e-a411-31da6278c8bc",
+          "name": "Retrieve the list of customers",
+          "request": {
+            "name": "Retrieve the list of customers",
+            "description": {
+              "content": "Returns a paginated list of customers, including standard customer fields and any custom customer attributes configured in the workspace.\nResults can be filtered and sorted by `created_at` and `status` customer attribute values.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "customers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[created_at][eq]",
+                  "value": "<string>",
+                  "description": "Use the supported fields and operators to filter the results."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[created_at][lt]",
+                  "value": "<string>",
+                  "description": "Use the supported fields and operators to filter the results."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[created_at][lte]",
+                  "value": "<string>",
+                  "description": "Use the supported fields and operators to filter the results."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[created_at][gt]",
+                  "value": "<string>",
+                  "description": "Use the supported fields and operators to filter the results."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[created_at][gte]",
+                  "value": "<string>",
+                  "description": "Use the supported fields and operators to filter the results."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[status][eq]",
+                  "value": "<string>",
+                  "description": "Use the supported fields and operators to filter the results."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc`\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3f104883-3cda-44d6-b192-f0c6e84beeb7",
+              "name": "Success - Customer data provided",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[created_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "active"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"metadata\": {\n    \"pagination\": {\n      \"next\": \"/v1/customers/55e5d4dc2cf1901e688b45d3/customers?offset=0&limit=20\",\n      \"previous\": null\n    }\n  },\n  \"payload\": {\n    \"customers\": [\n      {\n        \"_id\": \"55e5d4dc2cf1901e688b45d3\",\n        \"external_ids\": {\n          \"crm_id\": \"1749RRCT23\"\n        },\n        \"email\": \"jsmith@example.com\",\n        \"first_name\": \"John\",\n        \"last_name\": \"Smith\",\n        \"handler\": \"John\",\n        \"status\": \"active\",\n        \"gender\": \"male\",\n        \"language\": \"en\",\n        \"image_url\": \"https://example.com/image.png\",\n        \"currency\": \"GBP\",\n        \"mobile_phone\": \"123 456 789\",\n        \"country\": \"GB\",\n        \"membership_id\": [\n          \"MA465927t85w\",\n          \"DA465927t85w\"\n        ],\n        \"group_id\": [\n          \"146\",\n          \"126\"\n        ],\n        \"src\": \"import:672b564c4219e3a65b0f43a0\",\n        \"referrer\": \"557e5d4eg2cf1461e688b45e8\",\n        \"score\": 100,\n        \"spent\": 20,\n        \"reserved\": 0,\n        \"expired\": 100,\n        \"pending\": 20,\n        \"purchase_total\": 100,\n        \"purchase_count\": 1,\n        \"purchase_item_count\": 2,\n        \"created_at\": \"2026-07-14T19:41:35+00:00\",\n        \"updated_at\": \"2026-07-14T19:41:35+00:00\",\n        \"birth_date\": \"/0033-80-44/\",\n        \"purchase_first_date\": \"/8193-55-40/\",\n        \"purchase_last_date\": \"/9833-94-53/\",\n        \"last_earn_date\": \"/0031-39-22/\",\n        \"last_spend_date\": \"/6971-20-58/\",\n        \"last_login_at\": \"2026-06-28T10:27:03+00:00\",\n        \"optin_at\": \"2026-06-28T10:27:03+00:00\",\n        \"optout_at\": \"2026-06-28T10:27:03+00:00\",\n        \"labels\": [\n          \"Elite member\",\n          \"Frequent flyer\"\n        ],\n        \"properties\": {\n          \"city\": \"London\"\n        },\n        \"tiers\": {\n          \"fashion_tiers\": {\n            \"history\": {\n              \"2025-06-24\": 1010\n            },\n            \"points\": 1010,\n            \"next\": {\n              \"id\": \"Fashion_Royalty\",\n              \"name\": \"Fashion Royalty\",\n              \"points\": 900\n            },\n            \"points_after_expiration\": 1010,\n            \"_id\": \"Couture_Elite\",\n            \"event\": \"685a9c5abe38329c6501bf87\",\n            \"expdate\": \"2025-06-30\",\n            \"manual\": false,\n            \"name\": \"string\",\n            \"since\": \"2025-06-24T12:38:50+00:00\",\n            \"threshold\": 1000\n          }\n        },\n        \"accounts\": {\n          \"family_account\": {\n            \"name\": \"Family account\",\n            \"type\": \"standard\",\n            \"earned\": 9271,\n            \"reserved\": 0,\n            \"spent\": 85,\n            \"pending\": 34401,\n            \"expired\": 0,\n            \"negative_points\": false\n          }\n        },\n        \"clubs\": [\n          \"67ed4632108c1ad747028c3d\"\n        ],\n        \"activities\": {\n          \"63eaabe8b0fe6815c91425b6\": 1712134211\n        },\n        \"rewards\": {\n          \"63dcc15e59127f05634bf80c\": 2,\n          \"63dcb791eb80ef351838fdfb\": 8\n        },\n        \"referrals\": [\n          \"8a302ca1-337b-4de9-8070-12d6fe669ef3\"\n        ]\n      },\n      {\n        \"_id\": \"55e5d4dc2cf1901e688b45d3\",\n        \"external_ids\": {\n          \"crm_id\": \"1749RRCT23\"\n        },\n        \"email\": \"jsmith@example.com\",\n        \"first_name\": \"John\",\n        \"last_name\": \"Smith\",\n        \"handler\": \"John\",\n        \"status\": \"active\",\n        \"gender\": \"male\",\n        \"language\": \"en\",\n        \"image_url\": \"https://example.com/image.png\",\n        \"currency\": \"GBP\",\n        \"mobile_phone\": \"123 456 789\",\n        \"country\": \"GB\",\n        \"membership_id\": [\n          \"MA465927t85w\",\n          \"DA465927t85w\"\n        ],\n        \"group_id\": [\n          \"146\",\n          \"126\"\n        ],\n        \"src\": \"import:672b564c4219e3a65b0f43a0\",\n        \"referrer\": \"557e5d4eg2cf1461e688b45e8\",\n        \"score\": 100,\n        \"spent\": 20,\n        \"reserved\": 0,\n        \"expired\": 100,\n        \"pending\": 20,\n        \"purchase_total\": 100,\n        \"purchase_count\": 1,\n        \"purchase_item_count\": 2,\n        \"created_at\": \"2026-07-14T19:41:35+00:00\",\n        \"updated_at\": \"2026-07-14T19:41:35+00:00\",\n        \"birth_date\": \"/8650-94-16/\",\n        \"purchase_first_date\": \"/6663-27-97/\",\n        \"purchase_last_date\": \"/3085-57-80/\",\n        \"last_earn_date\": \"/8774-92-73/\",\n        \"last_spend_date\": \"/9792-16-60/\",\n        \"last_login_at\": \"2026-06-28T10:27:03+00:00\",\n        \"optin_at\": \"2026-06-28T10:27:03+00:00\",\n        \"optout_at\": \"2026-06-28T10:27:03+00:00\",\n        \"labels\": [\n          \"Elite member\",\n          \"Frequent flyer\"\n        ],\n        \"properties\": {\n          \"city\": \"London\"\n        },\n        \"tiers\": {\n          \"fashion_tiers\": {\n            \"history\": {\n              \"2025-06-24\": 1010\n            },\n            \"points\": 1010,\n            \"next\": {\n              \"id\": \"Fashion_Royalty\",\n              \"name\": \"Fashion Royalty\",\n              \"points\": 900\n            },\n            \"points_after_expiration\": 1010,\n            \"_id\": \"Couture_Elite\",\n            \"event\": \"685a9c5abe38329c6501bf87\",\n            \"expdate\": \"2025-06-30\",\n            \"manual\": false,\n            \"name\": \"string\",\n            \"since\": \"2025-06-24T12:38:50+00:00\",\n            \"threshold\": 1000\n          }\n        },\n        \"accounts\": {\n          \"family_account\": {\n            \"name\": \"Family account\",\n            \"type\": \"standard\",\n            \"earned\": 9271,\n            \"reserved\": 0,\n            \"spent\": 85,\n            \"pending\": 34401,\n            \"expired\": 0,\n            \"negative_points\": false\n          }\n        },\n        \"clubs\": [\n          \"67ed4632108c1ad747028c3d\"\n        ],\n        \"activities\": {\n          \"63eaabe8b0fe6815c91425b6\": 1712134211\n        },\n        \"rewards\": {\n          \"63dcc15e59127f05634bf80c\": 2,\n          \"63dcb791eb80ef351838fdfb\": 8\n        },\n        \"referrals\": [\n          \"8a302ca1-337b-4de9-8070-12d6fe669ef3\"\n        ]\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a298107d-5961-4b58-826a-1e79924b17f0",
+              "name": "Error - Escher signature missing or invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[created_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "active"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "400100be-dfc5-44fd-80a7-1d7309399e55",
+              "name": "Error - Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[created_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "active"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "704bfc9a-1a14-42d2-890b-acae973cb59b",
+              "name": "Error - Unexpected server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[created_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[created_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "active"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "6f09193a-4bbf-4935-a946-ac8e690b8531",
+      "name": "Coupons",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f5470573-9c1c-44eb-b042-0d17da25ea13",
+          "name": "Retrieve the list of a customer's coupons",
+          "request": {
+            "name": "Retrieve the list of a customer's coupons",
+            "description": {
+              "content": "Returns a paginated list of coupons associated with a specific customer.\nResults can be filtered by `status`, `claimed_at`, `redeemed_at`, `expiration_date` coupon attribute values, and sorted by `claimed_at`, `redeemed_at`, `expiration_date` values.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "customers",
+                ":customer_id",
+                "coupons"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[status][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[claimed_at][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[claimed_at][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[claimed_at][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[claimed_at][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[claimed_at][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[redeemed_at][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[redeemed_at][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[redeemed_at][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[redeemed_at][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[redeemed_at][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expiration_date][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expiration_date][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expiration_date][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expiration_date][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expiration_date][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=claimed_at&sort[0][direction]=asc&sort[1][field]=redeemed_at&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=claimed_at&sort[0][direction]=asc&sort[1][field]=redeemed_at&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=claimed_at&sort[0][direction]=asc&sort[1][field]=redeemed_at&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=claimed_at&sort[0][direction]=asc&sort[1][field]=redeemed_at&sort[1][direction]=desc`\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_id",
+                  "description": "(Required) Customer identifier. Using an external ID is not supported."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a3923a0b-ad9c-4620-8408-41c4a21046f7",
+              "name": "Success - Coupon data provided",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "coupons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"pagination\": {\n      \"next\": \"/v1/customers/55e5d4dc2cf1901e688b45d3/coupons?offset=0&limit=20\",\n      \"previous\": null\n    }\n  },\n  \"payload\": {\n    \"coupons\": [\n      {\n        \"_id\": \"coupon_01J2X9M7QK5A8F3C6D1E4B7N9P\",\n        \"code\": \"SUMMER-2026-ABCD\",\n        \"name\": \"Summer discount\",\n        \"type\": \"percentage\",\n        \"value\": 20,\n        \"currency\": \"EUR\",\n        \"balance\": 15.5,\n        \"min_amount\": 0,\n        \"min_redemption_value\": 0,\n        \"created_at\": \"2026-06-01T10:15:30Z\",\n        \"claimed_at\": \"2026-06-05T14:30:00Z\",\n        \"redeemed_at\": {},\n        \"expiration_date\": \"2026-12-31T23:59:59Z\",\n        \"expires_in\": \"2 months\",\n        \"invalidated_at\": \"2026-12-01T23:59:59Z\",\n        \"invalidated_by\": 100012233,\n        \"pool\": \"summer-campaign-2026\",\n        \"parent\": \"679780ec13fa8bdd1d0345c8\",\n        \"original\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n        \"aggregated\": false,\n        \"claims\": 1,\n        \"redeems\": 2,\n        \"transfers\": 0,\n        \"status\": \"<string>\",\n        \"stores\": [\n          \"store-vienna\",\n          \"store-berlin\"\n        ],\n        \"products\": [\n          \"product-1001\",\n          \"product-1002\"\n        ]\n      },\n      {\n        \"_id\": \"coupon_01J2X9M7QK5A8F3C6D1E4B7N9P\",\n        \"code\": \"SUMMER-2026-ABCD\",\n        \"name\": \"Summer discount\",\n        \"type\": \"percentage\",\n        \"value\": 20,\n        \"currency\": \"EUR\",\n        \"balance\": 15.5,\n        \"min_amount\": 0,\n        \"min_redemption_value\": 0,\n        \"created_at\": \"2026-06-01T10:15:30Z\",\n        \"claimed_at\": \"2026-06-05T14:30:00Z\",\n        \"redeemed_at\": {},\n        \"expiration_date\": \"2026-12-31T23:59:59Z\",\n        \"expires_in\": \"2 months\",\n        \"invalidated_at\": \"2026-12-01T23:59:59Z\",\n        \"invalidated_by\": 100012233,\n        \"pool\": \"summer-campaign-2026\",\n        \"parent\": \"679780ec13fa8bdd1d0345c8\",\n        \"original\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n        \"aggregated\": false,\n        \"claims\": 1,\n        \"redeems\": 2,\n        \"transfers\": 0,\n        \"status\": \"<string>\",\n        \"stores\": [\n          \"store-vienna\",\n          \"store-berlin\"\n        ],\n        \"products\": [\n          \"product-1001\",\n          \"product-1002\"\n        ]\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "791aad07-b5ee-47f3-a686-baeaedfbe2f1",
+              "name": "Error - Escher signature missing or invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "coupons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9eae652f-6022-4e6e-b18f-eea2bb3d6394",
+              "name": "Error - Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "coupons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "34b258dd-c09d-485e-b20f-ddd68a9d244b",
+              "name": "Error - Unexpected server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "coupons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[claimed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[redeemed_at][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expiration_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "299de44f-bbde-4e0b-b160-41945ff3c344",
+      "name": "Events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "26cbcfcd-a455-48e2-8cc2-36f1d03904f1",
+          "name": "Retrieve the list of a customer's events",
+          "request": {
+            "name": "Retrieve the list of a customer's events",
+            "description": {
+              "content": "Returns paginated list of events registered in the customer's events history.\nResults can be filtered and sorted by `action`, `date`, `account`, `expdate` and `points` event attribute values.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "customers",
+                ":customer_id",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[action][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[action][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[action][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[action][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[action][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[date][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[date][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[date][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[date][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[date][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points][eq]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points][lt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points][lte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points][gt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points][gte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expdate][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expdate][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expdate][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expdate][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[expdate][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=action&sort[0][direction]=asc&sort[1][field]=points&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=action&sort[0][direction]=asc&sort[1][field]=points&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=action&sort[0][direction]=asc&sort[1][field]=points&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=action&sort[0][direction]=asc&sort[1][field]=points&sort[1][direction]=desc`\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_id",
+                  "description": "(Required) Customer identifier. Using an external ID is not supported."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0b4993fa-7a67-47e3-8ec3-353ff9ddd808",
+              "name": "Success - Customer event data provided",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[action][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[expdate][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"pagination\": {\n      \"next\": null,\n      \"previous\": null\n    }\n  },\n  \"payload\": {\n    \"events\": [\n      {\n        \"_id\": \"6a57a9681d81297bdc042a6e\",\n        \"timestamp\": \"2026-06-13T15:38:16+00:00\",\n        \"unix_timestamp\": 1784129896,\n        \"process_timestamp\": \"2026-06-13T15:38:16+00:00\",\n        \"date\": \"2026-06-13\",\n        \"ip_address\": \"87.97.9.123\",\n        \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\",\n        \"customer\": \"55e5d4dc2cf1901e688b45d3\",\n        \"action\": \"checkout\",\n        \"points\": 0,\n        \"properties\": {\n          \"transaction_id\": \"txn_8f3c2a91d7b64e5a\",\n          \"total\": 119.96,\n          \"points_burned\": 0,\n          \"currency\": \"GBP\"\n        },\n        \"admin\": false,\n        \"hash\": \"checkout-txn_8f3c2a91d7b64e5a\",\n        \"user_id\": 100012233,\n        \"signed\": false,\n        \"source\": \"Events API\",\n        \"account\": \"family_account\",\n        \"cid\": \"5098a0ea-70e1-8c3b-4e4b-ac585cb9fed2\",\n        \"snapshot\": {\n          \"score\": 34749,\n          \"spent\": 12167,\n          \"pending\": 34521,\n          \"expired\": 0\n        }\n      },\n      {\n        \"_id\": \"6a57dae6998349a15c05813a\",\n        \"timestamp\": \"2026-06-13T15:38:16+00:00\",\n        \"unix_timestamp\": 1784129896,\n        \"process_timestamp\": \"2026-06-13T15:38:16+00:00\",\n        \"date\": \"2026-06-13\",\n        \"ip_address\": \"87.97.9.123\",\n        \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\",\n        \"customer\": \"55e5d4dc2cf1901e688b45d3\",\n        \"action\": \"checkout_item\",\n        \"points\": 60,\n        \"properties\": {\n          \"transaction_id\": \"txn_8f3c2a91d7b64e5a\",\n          \"total\": 59.98,\n          \"product_id\": \"PROD-84721\",\n          \"product_name\": \"Classic Leather Sneakers\",\n          \"product_url\": \"https://example.com/products/prod-84721\",\n          \"quantity\": 2,\n          \"country\": \"GB\",\n          \"points_rewarded\": 60,\n          \"subtotal\": 49.98,\n          \"price\": 29.99,\n          \"discount\": 10,\n          \"unit_burn\": 0,\n          \"currency\": \"GBP\",\n          \"product_category\": \"Footwear > Sneakers\",\n          \"store\": \"london-oxford-street\",\n          \"effective_timestamp\": 1784129896,\n          \"total_quantity\": 2\n        },\n        \"parent\": \"6a57a9681d81297bdc042a6e\",\n        \"change\": {\n          \"id\": \"6a57a9681d81297bdc042a6f\",\n          \"at\": \"2026-07-15T19:09:26+00:00\",\n          \"by\": \"100012233\"\n        },\n        \"admin\": false,\n        \"hash\": \"checkout_item-txn_8f3c2a91d7b64e5a-PROD-84721\",\n        \"signed\": false,\n        \"expdate\": \"2026-07-16\",\n        \"source\": \"Events API\",\n        \"account\": \"family_account\",\n        \"cid\": \"5098a0ea-70e1-8c3b-4e4b-ac585cb9fed2\",\n        \"snapshot\": {\n          \"score\": 34749,\n          \"spent\": 12167,\n          \"pending\": 34521,\n          \"expired\": 0\n        }\n      },\n      {\n        \"_id\": \"69efdcada19262f4a90101f8\",\n        \"timestamp\": \"2026-04-27T22:01:17+00:00\",\n        \"unix_timestamp\": 1777327277,\n        \"process_timestamp\": \"2026-04-27T22:01:17+00:00\",\n        \"date\": \"2026-04-27\",\n        \"ip_address\": \"91.82.30.113\",\n        \"user_agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\",\n        \"customer\": \"55e5d4dc2cf1901e688b45d3\",\n        \"action\": \"point_add\",\n        \"points\": 100,\n        \"properties\": {\n          \"points\": 100\n        },\n        \"admin\": false,\n        \"user_id\": 100012233,\n        \"signed\": false,\n        \"source\": \"Platform\",\n        \"cid\": \"d62c732a-a525-96cc-80cc-498889fc1053\",\n        \"snapshot\": {\n          \"score\": 34649,\n          \"spent\": 12167,\n          \"pending\": 34521,\n          \"expired\": 0\n        },\n        \"usages\": {\n          \"652f9bad5924e77e8269be13\": 100\n        },\n        \"used_points\": 100,\n        \"expired\": true,\n        \"original\": \"6a57a9681d81297bdc042a6f\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6898d56-4779-4539-bcb3-d6e0bcace3f3",
+              "name": "Error - Escher signature missing or invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[action][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[expdate][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd90697f-a6ef-4aad-a16b-a5bdf589767e",
+              "name": "Error - Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[action][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[expdate][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "300625ff-1219-4892-af0a-8371b6ab6c73",
+              "name": "Error - Unexpected server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[action][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[action][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[expdate][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[expdate][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "2c43b792-1033-4780-b208-96bd69e1d899",
+      "name": "Transactions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e455d8d1-66a7-4476-96f6-669245a86c7e",
+          "name": "Retrieve the list of a customer's transactions",
+          "request": {
+            "name": "Retrieve the list of a customer's transactions",
+            "description": {
+              "content": "Returns a paginated list of transactions registered for the customer, including their items, associated events, point values, and current processing status.\nResults can be filtered and sorted by `status`, `checkout_date`, `auto_accept`, `account`, `points_rewarded`, `earned`, and `burned` transaction attribute values.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "customers",
+                ":customer_id",
+                "transactions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[status]",
+                  "value": "draft"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[checkout_date][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[checkout_date][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[checkout_date][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[checkout_date][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[checkout_date][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[auto_accept][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[auto_accept][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[auto_accept][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[auto_accept][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[auto_accept][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][eq]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][lt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][lte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][gt]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[account][gte]",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points_rewarded][eq]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points_rewarded][lt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points_rewarded][lte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points_rewarded][gt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[points_rewarded][gte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[earned][eq]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[earned][lt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[earned][lte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[earned][gt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[earned][gte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[burned][eq]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[burned][lt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[burned][lte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[burned][gt]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[burned][gte]",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=earned&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[0][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=earned&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][field]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=earned&sort[1][direction]=desc`\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort[1][direction]",
+                  "value": "<string>",
+                  "description": "Sorts results by one or more fields in the specified order. Each field can be used only once.\nWhen multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.\nExample: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=earned&sort[1][direction]=desc`\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_id",
+                  "description": "(Required) Customer identifier. Using an external ID is not supported."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "892e32d3-23f8-49ea-871e-3b2dfd643697",
+              "name": "Success - Transaction data provided",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status]",
+                      "value": "draft"
+                    },
+                    {
+                      "key": "filter[checkout_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"pagination\": {\n      \"next\": \"/v1/customers/55e5d4dc2cf1901e688b45d3/transactions?offset=0&limit=20\",\n      \"previous\": null\n    }\n  },\n  \"payload\": {\n    \"transactions\": [\n      {\n        \"_id\": \"txn_8f3c2a91d7b64e5a\",\n        \"created_at\": \"2025-11-13T13:10:19+00:00\",\n        \"updated_at\": \"2025-11-13T13:10:20+00:00\",\n        \"customer\": \"55e5d4dc2cf1901e688b45d3\",\n        \"status\": \"accepted\",\n        \"event\": \"6734a53c8bd9da0c85066e1b\",\n        \"items\": [\n          {\n            \"transaction_id\": \"txn_8f3c2a91d7b64e5a\",\n            \"total\": 100,\n            \"product_id\": \"prd_987654\",\n            \"product_name\": \"Vintage Leather Jacket\",\n            \"product_url\": \"https://example.com/products/vintage-leather-jacket\",\n            \"quantity\": 1,\n            \"points_rewarded\": 50,\n            \"subtotal\": 50,\n            \"price\": 50,\n            \"discount\": 0,\n            \"currency\": \"EUR\",\n            \"total_quantity\": 2\n          },\n          {\n            \"transaction_id\": \"txn_8f3c2a91d7b64e5a\",\n            \"total\": 100,\n            \"product_id\": \"prd_123456\",\n            \"product_name\": \"Classic Denim Jeans\",\n            \"product_url\": \"https://example.com/products/classic-denim-jeans\",\n            \"quantity\": 1,\n            \"points_rewarded\": 50,\n            \"subtotal\": 50,\n            \"price\": 50,\n            \"discount\": 0,\n            \"currency\": \"EUR\",\n            \"total_quantity\": 2\n          }\n        ],\n        \"total\": 100,\n        \"earned\": 0,\n        \"burned\": 0,\n        \"events\": [\n          {\n            \"_id\": \"6734a53c8bd9da0c85066e1b\",\n            \"action\": \"checkout\",\n            \"points\": 0\n          },\n          {\n            \"_id\": \"6734a53c8bd9da0c85066e1c\",\n            \"action\": \"checkout_item\",\n            \"points\": 0\n          },\n          {\n            \"_id\": \"6734a53c8bd9da0c85066e1d\",\n            \"action\": \"checkout_item\",\n            \"points\": 0\n          },\n          {\n            \"_id\": \"6734a53c8bd9da0c85066e1e\",\n            \"action\": \"pending_campaign_bonus\",\n            \"points\": 0\n          }\n        ],\n        \"currency\": \"EUR\",\n        \"points_rewarded\": 100,\n        \"account\": \"family_account\",\n        \"auto_accept\": \"2025-12-13\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0edf7ef9-c270-459f-8c61-a1ea916e4530",
+              "name": "Error - Escher signature missing or invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status]",
+                      "value": "draft"
+                    },
+                    {
+                      "key": "filter[checkout_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fa9a6857-3026-466a-8129-41b506744f9e",
+              "name": "Error - Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status]",
+                      "value": "draft"
+                    },
+                    {
+                      "key": "filter[checkout_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "182b8aff-8598-495e-bcc3-aa4fe8969ce9",
+              "name": "Error - Unexpected server error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customer_id",
+                    "transactions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "filter[status]",
+                      "value": "draft"
+                    },
+                    {
+                      "key": "filter[checkout_date][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[checkout_date][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[auto_accept][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][eq]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][lte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gt]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[account][gte]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[points_rewarded][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[earned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][eq]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][lte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gt]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "filter[burned][gte]",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "sort[0][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[0][direction]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][field]",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort[1][direction]",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_id",
+                      "description": "(Required) Customer identifier. Using an external ID is not supported."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Unauthorized\",\n    \"code\": 2132,\n    \"resendable\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://read-api.<environment>.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "22cf4c72-9056-4d13-8245-b0173fcc00b9",
+    "name": "Antavo Loyalty Read API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Name: Antavo",
+      "type": "text/plain"
+    }
+  }
+}

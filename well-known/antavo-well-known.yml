@@ -1,0 +1,84 @@
+generated: '2026-08-13'
+method: probed
+source: live GET of each /.well-known/ path on every Antavo host in apis.yml + OpenAPI servers[]
+result: none
+note: >-
+  Every /.well-known/ path returned 404 on every host Antavo actually operates,
+  so NO WellKnown, SecurityTxt or APICatalog pointer is emitted in apis.yml -
+  this file records a measured absence, not a served surface.
+  IMPORTANT CAVEAT ON apidocs.antavo.com: that host is a ReadMe.io
+  single-page-app documentation site whose catch-all route answers HTTP 200 with
+  the same React HTML shell for EVERY path, including /.well-known/security.txt,
+  /.well-known/agent-card.json and /security.txt. Those 200s are not documents
+  and are recorded below as html-shell misses. Treating them as hits is the
+  soft-404 false-credit failure mode; they were rejected on body inspection
+  (`<!DOCTYPE html><html lang="en" ... data-color-mode="system"`), not on status
+  code.
+hosts:
+- host: https://api.antavo.com
+  role: production API base
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /security.txt, status: 404}
+  note: >-
+    All 404s return the Antavo API's own JSON error envelope
+    ({"error":{"type":"NotFoundException","code":0,"message":"Not Found"}}),
+    which confirms the API gateway itself answered - these are true negatives.
+- host: https://antavo.com
+  role: corporate website
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /security.txt, status: 404}
+- host: https://developers.antavo.com
+  role: developer documentation + API reference
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+- host: https://docs.antavo.com
+  role: Management UI user manual
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+- host: https://apidocs.antavo.com
+  role: legacy ReadMe API reference
+  spa_catch_all: true
+  documents:
+  - {path: /.well-known/security.txt, status: 200, result: html-shell, document: false}
+  - {path: /.well-known/openid-configuration, status: 200, result: html-shell, document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 200, result: html-shell, document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 200, result: html-shell, document: false}
+  - {path: /.well-known/api-catalog, status: 200, result: html-shell, document: false}
+  - {path: /.well-known/ai-plugin.json, status: 200, result: html-shell, document: false}
+  - {path: /.well-known/agent-card.json, status: 200, result: html-shell, document: false}
+  - {path: /.well-known/agent.json, status: 200, result: html-shell, document: false}
+  - {path: /security.txt, status: 200, result: html-shell, document: false}
+summary:
+  documents_found: 0
+  security_txt: false
+  openid_configuration: false
+  oauth_authorization_server: false
+  api_catalog: false
+  agent_card: false
+  pointers_emitted: []

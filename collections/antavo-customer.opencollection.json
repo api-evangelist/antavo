@@ -1,0 +1,134 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Customers API",
+    "version": "1.0.0-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Returns the number of active customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/-/count"
+          },
+          "docs": "This endpoint returns the number of customers with active status within Antavo."
+        },
+        {
+          "info": {
+            "name": "Returns detailed customer data using the Antavo unique ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo unique ID e.g., `280e674c-c4ea-4a30-987a-d9267d1a5018`\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): `{external_field:external_id_value}`\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Returns additional optional fields: \n\n* Groups: Returns associated groups (requires [User groups module](https://docs.antavo.com/docs/user-groups) for selected customer in the form of an object with the following properties:\n  \n  - `ID` - integer\n\n  - `Name` - string, optional (not returned for non-existing groups)\n  \n  - `external_id` - string, optional (not returned if empty)\n\n* Purchases: A summary of purchase statistics. Options are [here](https://developers.antavo.com/docs/customers#purchases).\n\n* Expiring points: A summary of expiration statistics. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).\n\n* Expiration points history: An array of dates and number of points that have expired or will expire. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).          \n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns detailed information for a specific customer. \n"
+        },
+        {
+          "info": {
+            "name": "Search Antavo database using customer filters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers",
+            "params": [
+              {
+                "name": "Filtering",
+                "value": "",
+                "type": "query",
+                "description": "Customers can be filtered upon any configured customer field (marked as ``searchable``). Results are case-sensitive and return exact matches.\n\nIt's possible to query multiple customers based on the last update date. Customer IDs are returned if the  ``updated_at`` customer attribute is greater than a specified datetime using the format ``updated_at.gt=<datetime>``.\n"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Perform searches using key fields such as `first_name`, `last_name`,  `email`, `mobile_phone`, or `membership_id`."
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Returns additional optional attributes from the customer object.\n\n**Note**: Separating commas must be percentage encoded for [API signing](/api-signing).\n"
+              },
+              {
+                "name": "match",
+                "value": "",
+                "type": "query",
+                "description": "Enables querying specific customer data. Currently only works with the following attributes: `_id`, `email`, and `membership_id`. Example usage: `&match=exact&membership_id=33492206-ba75-4487-8047-a9d78a135ce9`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of events to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of items for pagination.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint allows you to search the Antavo database for customers based on specific criteria and returns the Antavo Customer ID. Note that the filtering is case-sensitive and does not support partial matches.\nThe filtering query requires that the filter parameter has been tagged as [searchable](https://docs.antavo.com/customers#add-a-new-field) in the Antavo Management UI.\n"
+        },
+        {
+          "info": {
+            "name": "Merges the current customer into the target account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/merge",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "280e674c-c4ea-4a30-987a-d9267d1a5018",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint permanently merges the current customer into the target account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

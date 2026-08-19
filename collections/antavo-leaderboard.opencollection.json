@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Leaderboard API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Leaderboard",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List best-performing customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/leaderboard",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The number of results to return. Values outside the acceptable range will be adjusted to the nearest boundary value."
+              }
+            ]
+          },
+          "docs": "The Leaderboard API allows you to retrieve rankings and scores of customers based on various metrics within the Antavo Loyalty Cloud.\nThis API provides a way to showcase top performers, track progress, and foster competition among participants in your loyalty program."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,432 @@
+{
+  "item": [
+    {
+      "id": "ced75981-3a3b-4373-a34e-b32f7b529684",
+      "name": "Coupon pools",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5b4341f1-1793-48d2-8e0e-1e82de327d57",
+          "name": "Update a coupon pool",
+          "request": {
+            "name": "Update a coupon pool",
+            "description": {
+              "content": "This endpoint can be used to update a coupon pool with the attributes provided in the request body.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "coupon-pools",
+                ":coupon_pool_id",
+                "update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "coupon_pool_id",
+                  "description": "(Required) The ID of the coupon pool to update which can be:\n- the ID of the coupon pool (`pool_id`) - a unique external attribute used to identify the coupon pool (`external_id`)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"update_method\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"source\": \"<string>\",\n  \"type\": \"<string>\",\n  \"value\": \"<float>\",\n  \"minimum_value\": \"<number>\",\n  \"minimum_redemption_value\": \"<number>\",\n  \"currency\": \"<string>\",\n  \"purchase_minimum\": \"<number>\",\n  \"expiration_time\": \"<string>\",\n  \"aggregated\": false,\n  \"products\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stores\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"update_matching\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a127f6ef-56f6-4c91-baa4-f150b1228ca1",
+              "name": "200 OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "coupon-pools",
+                    ":coupon_pool_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "coupon_pool_id",
+                      "description": "(Required) The ID of the coupon pool to update which can be:\n- the ID of the coupon pool (`pool_id`) - a unique external attribute used to identify the coupon pool (`external_id`)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"external_id\": \"uniqueExternalID\",\n  \"name\": \"New coupon pool\",\n  \"source\": \"uploaded\",\n  \"type\": \"amount\",\n  \"value\": 12.1,\n  \"purchase_minimum\": 2,\n  \"expiration_time\": \"2 months\",\n  \"aggregated\": false,\n  \"products\": [\n    \"product1\",\n    \"product2\"\n  ],\n  \"stores\": [\n    \"store1\"\n  ],\n  \"update_method\": \"update_none\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"update_method\": \"update_none\",\n    \"update_matching\": false\n  },\n  \"payload\": {\n    \"id\": \"146cb226c3d47e4d6a28176b\",\n    \"external_id\": \"uniqueExternalId\",\n    \"name\": \"New coupon pool\",\n    \"source\": \"uploaded\",\n    \"type\": \"amount\",\n    \"value\": 12.1,\n    \"purchase_minimum\": 2,\n    \"expiration_time\": \"2 months\",\n    \"aggregated\": false,\n    \"products\": [\n      \"product1\",\n      \"product2\"\n    ],\n    \"stores\": [\n      \"store1\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9d7dbced-5a4d-4c84-988a-5894bce88cfb",
+              "name": "400 Bad Request Exception",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "coupon-pools",
+                    ":coupon_pool_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "coupon_pool_id",
+                      "description": "(Required) The ID of the coupon pool to update which can be:\n- the ID of the coupon pool (`pool_id`) - a unique external attribute used to identify the coupon pool (`external_id`)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"external_id\": \"uniqueExternalID\",\n  \"name\": \"New coupon pool\",\n  \"source\": \"uploaded\",\n  \"type\": \"amount\",\n  \"value\": 12.1,\n  \"purchase_minimum\": 2,\n  \"expiration_time\": \"2 months\",\n  \"aggregated\": false,\n  \"products\": [\n    \"product1\",\n    \"product2\"\n  ],\n  \"stores\": [\n    \"store1\"\n  ],\n  \"update_method\": \"update_none\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 202006,\n    \"message\": \"Given source parameter is invalid\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4897ec1c-ba90-4e55-ab3d-2e89799d4ecd",
+              "name": "404 Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "coupon-pools",
+                    ":coupon_pool_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "coupon_pool_id",
+                      "description": "(Required) The ID of the coupon pool to update which can be:\n- the ID of the coupon pool (`pool_id`) - a unique external attribute used to identify the coupon pool (`external_id`)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"external_id\": \"uniqueExternalID\",\n  \"name\": \"New coupon pool\",\n  \"source\": \"uploaded\",\n  \"type\": \"amount\",\n  \"value\": 12.1,\n  \"purchase_minimum\": 2,\n  \"expiration_time\": \"2 months\",\n  \"aggregated\": false,\n  \"products\": [\n    \"product1\",\n    \"product2\"\n  ],\n  \"stores\": [\n    \"store1\"\n  ],\n  \"update_method\": \"update_none\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 202001,\n    \"message\": \"Coupon Pool not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c31c0929-3899-4f75-a429-53991d0e44af",
+          "name": "Create a new coupon pool",
+          "request": {
+            "name": "Create a new coupon pool",
+            "description": {
+              "content": "This endpoint can be used to create a new coupon pool with the attributes provided in the request body.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "coupon-pools"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"source\": \"<string>\",\n  \"type\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"value\": \"<float>\",\n  \"minimum_value\": \"<number>\",\n  \"minimum_redemption_value\": \"<number>\",\n  \"currency\": \"<string>\",\n  \"purchase_minimum\": \"<number>\",\n  \"expiration_time\": \"<string>\",\n  \"aggregated\": false,\n  \"products\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stores\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e6a6f87c-a35b-42e5-9854-e949eb3ddcba",
+              "name": "200 OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "coupon-pools"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"external_id\": \"uniqueExternalID\",\n  \"name\": \"New coupon pool\",\n  \"source\": \"uploaded\",\n  \"type\": \"amount\",\n  \"value\": 12.1,\n  \"purchase_minimum\": 2,\n  \"expiration_time\": \"2 months\",\n  \"aggregated\": false,\n  \"products\": [\n    \"product1\",\n    \"product2\"\n  ],\n  \"stores\": [\n    \"store1\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": [],\n  \"payload\": {\n    \"id\": \"146cb226c3d47e4d6a28176b\",\n    \"external_id\": \"uniqueExternalId\",\n    \"name\": \"New coupon pool\",\n    \"source\": \"uploaded\",\n    \"type\": \"amount\",\n    \"value\": 12.1,\n    \"purchase_minimum\": 2,\n    \"expiration_time\": \"2 months\",\n    \"aggregated\": false,\n    \"products\": [\n      \"product1\",\n      \"product2\"\n    ],\n    \"stores\": [\n      \"store1\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "422e074c-2459-47d8-b3fe-faea482aadd2",
+              "name": "400 Bad Request Exception",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "coupon-pools"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"external_id\": \"uniqueExternalID\",\n  \"name\": \"New coupon pool\",\n  \"source\": \"uploaded\",\n  \"type\": \"amount\",\n  \"value\": 12.1,\n  \"purchase_minimum\": 2,\n  \"expiration_time\": \"2 months\",\n  \"aggregated\": false,\n  \"products\": [\n    \"product1\",\n    \"product2\"\n  ],\n  \"stores\": [\n    \"store1\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 202004,\n    \"message\": \"Given id parameter is invalid\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d4c3158d-76e0-4038-a509-a4f8e942aa2c",
+    "name": "Antavo Coupon Pools API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API endpoints for managing coupon pools",
+      "type": "text/plain"
+    }
+  }
+}

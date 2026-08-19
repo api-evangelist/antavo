@@ -1,0 +1,184 @@
+generated: '2026-08-13'
+method: derived
+source: the 18 OpenAPI documents in openapi/, plus https://developers.antavo.com/docs/api-browser and
+  a live 404 observed at https://api.antavo.com/
+format: vendor
+rfc9457: false
+description: Error catalogue derived from every 4xx/5xx response declared across Antavo's 18 published
+  OpenAPI documents, enriched from the documented error envelope. Antavo does NOT use RFC 9457 application/problem+json
+  - every error is application/json carrying a vendor envelope whose stable machine key is a numeric `code`,
+  not a URI type.
+envelopes:
+- id: standard
+  applies_to: all REST endpoints
+  shape: '{"error": {"type": "<ExceptionClassName>", "code": <int>, "message": "<string>"}}'
+  fields:
+  - error.type
+  - error.code
+  - error.message
+  observed: https://api.antavo.com/ returned this envelope on a live 404 probe, 2026-08-13
+  note: '`type` is a server exception class name (NotFoundException, BadRequestException). `code` is 0
+    on the generic gateway 404 and a five/six-digit number on domain errors.'
+- id: oauth-token
+  applies_to: POST /v1/auth/token
+  shape: '{"status": "error", "error": "<oauth_error>", "details": {"type": "<ExceptionClassName>", "code":
+    <int>, "message": "<string>"}}'
+  fields:
+  - status
+  - error
+  - details.type
+  - details.code
+  - details.message
+  oauth_error_values:
+  - invalid_request
+  - invalid_grant
+  - unauthorized_client
+  - unsupported_grant_type
+  - invalid_scope
+  known_codes:
+  - 220011
+  - 220012
+  - 220013
+  - 220014
+  - 220015
+  note: The only place in the whole surface where Antavo publishes an enumerated set of error codes in
+    the spec itself.
+problems:
+- status: 400
+  title: Bad Request
+  occurrences: 62
+  descriptions:
+  - 400 Bad Request Exception
+  - A response indicating that the request parameters were invalid.
+  - A response indicating that the request was invalid. This response may contain different errors, such
+    as limit, offset, or query parameter errors.
+  - Bad Request error responses for banning members.
+  - Bad Request error responses for disbanding a club.
+  - Bad Request error responses for owner assignments.
+  remediation: Validate the request body and query parameters against the operation schema. On POST /v1/auth/token
+    the OAuth envelope names the specific fault in `error` (invalid_request, invalid_grant, unauthorized_client,
+    unsupported_grant_type, invalid_scope) and the numeric cause in details.code.
+  media_types:
+  - application/json
+  example_operations:
+  - openapi/antavo-async-events-openapi.yml#GET /v1/async/events/{correlation_id}
+  - openapi/antavo-async-events-openapi.yml#POST /v1/async/events
+  - openapi/antavo-authentication-openapi.yml#POST /v1/auth/token
+  - openapi/antavo-bulk-operations-openapi.yml#POST /v1/bulk-operation/coupons/{coupon_pool_id}/{action}
+  - openapi/antavo-bulk-operations-openapi.yml#POST /v1/bulk-operation/customer-list/add/{customer_list_id}
+  - openapi/antavo-bulk-operations-openapi.yml#POST /v1/bulk-operation/customer-list/remove/{customer_list_id}
+  - openapi/antavo-bulk-operations-openapi.yml#POST /v1/bulk-operation/reward/claim/{reward_id}
+  - openapi/antavo-clubs-openapi.yml#GET /v1/clubs
+- status: 401
+  title: Unauthorized
+  occurrences: 8
+  descriptions:
+  - Unauthorized. Client authentication failed.
+  - Unauthorized. Token authentication failed.
+  - UnauthorizedException
+  remediation: The api_key query parameter is missing/invalid, the Escher signature did not match the
+    server-side computation, or the bearer token has expired. Signatures must be recomputed per request
+    - they are not reusable. Token lifetime is 300-3600 seconds.
+  media_types:
+  - application/json
+  example_operations:
+  - openapi/antavo-async-events-openapi.yml#POST /v1/async/events
+  - openapi/antavo-authentication-openapi.yml#POST /v1/auth/token
+  - openapi/antavo-leaderboard-openapi.yml#GET /customers/leaderboard
+  - openapi/antavo-loyalty-read-openapi.yml#getCustomer
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerCoupons
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerEvents
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerTransactions
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomers
+- status: 403
+  title: Forbidden
+  occurrences: 5
+  descriptions: []
+  remediation: The workspace IP filter (CIDR allow-list, configured per endpoint in Management UI > API
+    settings > IP filter) rejected the caller's source address, or signature enforcement is enabled for
+    this endpoint and the request was sent with a plain API key.
+  media_types: []
+  example_operations:
+  - openapi/antavo-promotion-engine-openapi.yml#GET /v1/promotion/{promotionId}
+  - openapi/antavo-promotion-engine-openapi.yml#GET /v1/promotions
+  - openapi/antavo-promotion-engine-openapi.yml#POST /v1/cart
+  - openapi/antavo-promotion-engine-openapi.yml#POST /v1/cart/finalize
+  - openapi/antavo-promotion-engine-openapi.yml#POST /v1/promotion/{promotionId}/status
+- status: 404
+  title: Not Found
+  occurrences: 79
+  descriptions:
+  - 404 Not Found
+  - A response indicating that the specified club could not be found.
+  - A response indicating that the specified club or member could not be found.
+  - Bad request
+  - Club not found.
+  - Club or club member not found.
+  remediation: The addressed customer, entity, reward, coupon, club or transaction does not exist in this
+    workspace, or the module that owns the endpoint is not enabled for the workspace. Antavo returns 404
+    for module-not-enabled as well as record-not-found, so a 404 is not by itself proof the record is
+    absent.
+  media_types:
+  - application/json
+  example_operations:
+  - openapi/antavo-bulk-operations-openapi.yml#GET /v1/bulk-operation/coupons/{batch_id}/status
+  - openapi/antavo-bulk-operations-openapi.yml#GET /v1/bulk-operation/coupons/{batch_id}/status/error
+  - openapi/antavo-bulk-operations-openapi.yml#GET /v1/bulk-operation/customer-list/{batch_id}/status
+  - openapi/antavo-bulk-operations-openapi.yml#GET /v1/bulk-operation/customer-list/{batch_id}/status/errors
+  - openapi/antavo-bulk-operations-openapi.yml#GET /v1/bulk-operation/reward/claim/{batch_id}/status
+  - openapi/antavo-bulk-operations-openapi.yml#GET /v1/bulk-operation/reward/claim/{batch_id}/status/error
+  - openapi/antavo-bulk-operations-openapi.yml#POST /v1/bulk-operation/coupons/{coupon_pool_id}/{action}
+  - openapi/antavo-bulk-operations-openapi.yml#POST /v1/bulk-operation/customer-list/add/{customer_list_id}
+- status: 422
+  title: Unprocessable Entity
+  occurrences: 4
+  descriptions: []
+  remediation: The request was syntactically valid but semantically rejected - typically a loyalty rule
+    refusing the action (insufficient points, reward out of stock, challenge not available to this customer).
+  media_types: []
+  example_operations:
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerCoupons
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerEvents
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerTransactions
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomers
+- status: 500
+  title: Internal Server Error
+  occurrences: 1
+  descriptions: []
+  remediation: Unhandled server error. Retry with backoff. Note that Antavo publishes no idempotency key,
+    so retrying a write may duplicate the event - reconcile before retrying a POST.
+  media_types: []
+  example_operations:
+  - openapi/antavo-promotion-engine-openapi.yml#POST /v1/promotion/{promotionId}/status
+- status: 5XX
+  title: Server Error
+  occurrences: 5
+  descriptions: []
+  remediation: Server-side failure class declared as a wildcard response. Retry with backoff; see the
+    500 note on duplicate risk.
+  media_types: []
+  example_operations:
+  - openapi/antavo-loyalty-read-openapi.yml#getCustomer
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerCoupons
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerEvents
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomerTransactions
+  - openapi/antavo-loyalty-read-openapi.yml#listCustomers
+error_reference:
+  published: false
+  attempted:
+  - url: https://developers.antavo.com/reference/errors
+    status: 200
+    finding: listed in llms.txt as 'List of errors' but the page body renders client-side and its markdown
+      twin carries no code table
+  - url: https://developers.antavo.com/page/test.md
+    status: 200
+    finding: titled 'Errors'; the page is empty apart from its heading
+  note: Antavo advertises an error reference in two places and publishes no error-code table at either.
+    The only runtime way to read a full Antavo error is the Management UI API browser error log at /api-browser/errors,
+    which 'shows every request and its subsequent response that results in an error' - workspace-gated,
+    and therefore unavailable to an agent. Titles and remediation above are derived from the response
+    descriptions in the specs and from the documented platform behaviour, not invented.
+cross_links:
+  conventions: conventions/antavo-conventions.yml
+  authentication: authentication/antavo-authentication.yml
+  scopes: scopes/antavo-scopes.yml

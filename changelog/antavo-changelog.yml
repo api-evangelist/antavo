@@ -1,0 +1,56 @@
+generated: '2026-08-13'
+method: searched
+source: https://developers.antavo.com/changelog
+url: https://developers.antavo.com/changelog
+title: Deprecations
+description: >-
+  Antavo's developer site carries a ReadMe changelog module, renamed
+  "Deprecations", used as a dated breaking-change notice board rather than a
+  running release feed. It is the only dated, developer-facing change surface
+  Antavo publishes; there is no per-release API changelog, no RSS/Atom feed and
+  no version history in any of the harvested OpenAPI documents (all 18 declare
+  info.version 1.0.0.0).
+scheme: dated-notices
+current_version: null
+feed: null
+window: complete - the changelog contains one entry as of 2026-08-13
+entries:
+- title: Discontinuing unsigned API requests
+  url: https://developers.antavo.com/changelog/discontinuing-unsigned-api-requests
+  effective_date: '2026-12-31'
+  breaking: true
+  additions: []
+  highlights:
+  - >-
+    Request signing has until now been required only in production environments;
+    staging and other non-production environments could authenticate with an API
+    key alone.
+  - >-
+    That option remains available until 2026-12-31. After that date all API
+    requests must be signed in every environment, and requests sent with an API
+    key only will be rejected.
+  - >-
+    Integrators must update API clients to use signed (Escher) requests before
+    the deadline; implementation detail is at
+    https://developers.antavo.com/docs/api-signing.
+related_change_surfaces:
+- name: Quarterly Releases
+  url: https://antavo.com/
+  scope: product
+  machine_readable: false
+  note: >-
+    Antavo's marketing site advertises a "Quarterly Releases" resource in its
+    Resources navigation, but it is product release marketing rather than an API
+    changelog, and no stable public URL for it resolved during this pass
+    (https://antavo.com/quarterly-releases/ -> 404).
+- name: Management UI user manual page history
+  url: https://docs.antavo.com/
+  scope: platform documentation
+  machine_readable: false
+  note: >-
+    docs.antavo.com pages carry `updated:` timestamps in their markdown
+    frontmatter, which is the only per-page change signal available for the
+    non-developer documentation.
+cross_links:
+  lifecycle: lifecycle/antavo-lifecycle.yml
+  conventions: conventions/antavo-conventions.yml

@@ -1,0 +1,159 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo Authentication API
+  version: 1.0.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /v1/auth/token:
+    post:
+      tags:
+      - Authentication API
+      summary: Generate access token
+      description: ''
+      security:
+      - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - grant_type
+              - scope
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                  example: client_credentials
+                scope:
+                  type: string
+                  description: Use `loyalty.async_events` scope to get access to the Async Events API
+                    endpoints.
+                  example: loyalty.async_events
+      responses:
+        '200':
+          description: Access token issued successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - access_token
+                - token_type
+                - expires_in
+                - scope
+                properties:
+                  access_token:
+                    type: string
+                    description: Access token
+                    example: example_token
+                  token_type:
+                    type: string
+                    description: Token type
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    description: Token lifetime in seconds
+                    minimum: 300
+                    maximum: 3600
+                    example: 3600
+                  scope:
+                    type: string
+                    description: Granted scope
+                    example: loyalty.async_events
+        '400':
+          description: Bad Request. The request is invalid for one of several reasons.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - error
+                - details
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: string
+                    enum:
+                    - invalid_request
+                    - invalid_grant
+                    - unauthorized_client
+                    - unsupported_grant_type
+                    - invalid_scope
+                    example: invalid_request
+                  details:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: BadRequestException
+                      code:
+                        type: integer
+                        enum:
+                        - 220011
+                        - 220012
+                        - 220013
+                        - 220014
+                        - 220015
+                        example: 220011
+                      message:
+                        type: string
+                        enum:
+                        - The request includes a parameter that is not allowed for this grant type.
+                        - The provided authorization grant is invalid
+                        - The authenticated client is not authorized to use this authorization grant type
+                        - The authorization grant type is not supported by this server
+                        - The requested scope is invalid, unknown, or malformed
+                        example: The request includes a parameter that is not allowed for this grant type.
+        '401':
+          description: Unauthorized. Client authentication failed.
+          headers:
+            WWW-Authenticate:
+              description: Indicates that authentication is required.
+              schema:
+                type: string
+                example: Basic realm="OAuth2 Token Endpoint"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - error
+                - details
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: string
+                    enum:
+                    - invalid_client
+                  details:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: UnauthorizedException
+                      code:
+                        type: integer
+                        example: 220010
+                      message:
+                        type: string
+                        example: Client authentication failed
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+- basicAuth: []

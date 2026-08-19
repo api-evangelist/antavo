@@ -1,0 +1,174 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://docs.antavo.com/docs/webhooks,
+  https://docs.antavo.com/docs/incoming-webhooks,
+  https://docs.antavo.com/docs/webhooks-deprecated,
+  https://developers.antavo.com/docs/integrations,
+  https://developers.antavo.com/docs/internal-events,
+  https://developers.antavo.com/docs/api-events
+spec_type: none
+asyncapi_published: false
+note_on_asyncapi: >-
+  Antavo publishes NO AsyncAPI document. Searched developers.antavo.com,
+  docs.antavo.com, github.com/antavo and /asyncapi.yaml + /asyncapi.json on
+  every Antavo host; nothing was found. The event surface below is real and
+  documented in prose, so this file captures the webhook catalog and apis.yml
+  carries a `Webhooks` pointer - but no AsyncAPI pointer is emitted, because
+  none exists. Nothing here is fabricated into spec form.
+
+description: >-
+  Antavo has a two-directional event surface, but neither direction has a fixed
+  published event catalog: both are configured per workspace in the Management
+  UI. Outbound webhooks are emitted by Workflow action nodes to preconfigured
+  Trusted sites; inbound webhooks accept arbitrary third-party payloads and map
+  them onto Antavo loyalty events. The event VOCABULARY is published and stable
+  (the API events and Internal events references); the DELIVERY CONTRACT is not.
+
+outbound:
+  name: Webhooks (outgoing)
+  docs: https://docs.antavo.com/docs/webhooks
+  module: Webhooks (Modules menu)
+  trigger: >-
+    The "Webhook message" action node in the Workflow editor. The node selects a
+    preconfigured Trusted site authentication rather than carrying per-node
+    credentials; the legacy "Webhook message (legacy)" node, where every detail
+    is entered individually, is deprecated.
+  destination_model: Trusted sites
+  trusted_sites_docs: https://docs.antavo.com/docs/trusted-sites
+  path_templating: true
+  path_example: /customers/{customer._id}
+  payload: >-
+    Configured per workflow node. There is no fixed envelope, no published JSON
+    Schema and no signature or shared-secret verification documented on the
+    outbound side.
+  delivery_semantics:
+    retries: 5
+    retry_interval_seconds: 10
+    ordering: not guaranteed
+    statuses:
+    - {status: Queued, meaning: The webhook message will be sent shortly.}
+    - {status: Resent, meaning: The external party responded with an error or did not respond within the timeout interval, so a new message with the same content was resent after 10 seconds.}
+    - {status: Failed, meaning: Registered after 5 unsuccessful attempts.}
+    - {status: Done, meaning: The external party responded with a success message.}
+    note: >-
+      At-least-once with a hard cap. After 5 failures the message is dropped and
+      marked Failed; there is no dead-letter queue, no manual replay documented
+      and no callback to tell the workflow that delivery was abandoned. A
+      consumer must be idempotent on its own side.
+  observability:
+    log_page: Webhooks > Logs
+    log_fields: [Created at, Action, Customer, Response code, Status]
+    log_retention_days: 90
+    log_retention_seconds: 7776000
+    queue_page: Webhooks > Queue
+    queue_fields: [ID, Customer, Trusted Site, Path, Action, Retries, Source]
+  trigger_vocabulary:
+    note: >-
+      The "Action" recorded on every webhook log row is the Antavo event that
+      fired the workflow. That vocabulary IS published, in two references, and
+      is the closest thing to a machine-readable channel list Antavo offers.
+    api_events: https://developers.antavo.com/docs/api-events
+    internal_events: https://developers.antavo.com/docs/internal-events
+    examples:
+    - point_add
+    - point_spend
+    - point_unspend
+    - checkout
+    - checkout_item
+    - checkout_update
+    - checkout_update_item
+    - checkout_accept
+    - checkout_accept_item
+    - checkout_reject
+    - checkout_claim
+    - refund
+    - partial_refund
+    - refund_item
+    - reserve_points
+    - release_points
+    - opt_in
+    - opt_out
+    - profile
+    - daily_login
+    - profiling_answer
+    - profiling_flow
+    - share_intent_success
+    - club_point_add
+    - club_point_remove
+    - club_point_donation
+    - club_detail_change
+    - club_revoke_ownership
+    - club_disband
+    - club_member_remove
+    note_on_examples: >-
+      This is a documented subset, not the complete list. The complete
+      vocabulary is enumerated on the two reference pages above and is workspace
+      dependent (modules that are not enabled do not emit their events).
+
+inbound:
+  name: Incoming webhooks
+  docs: https://docs.antavo.com/docs/incoming-webhooks
+  module: Incoming webhooks (Modules menu)
+  purpose: >-
+    Lets external systems - marketing automation providers, CDPs - push customer
+    information into the loyalty program. Messages are processed and registered
+    as customer events in members' event histories according to a mapping
+    configured in the module editor.
+  methods: [POST, PUT]
+  endpoint_model: >-
+    The integrator names the endpoint path when creating the webhook
+    configuration; each configuration is one endpoint.
+  filters:
+    supported: true
+    addressable: [headers, body]
+    prefixes: [headers, body]
+    example: headers.request_original_date / body.request_original_date
+    combinators: [AND, OR]
+  authentication:
+    standard_methods_supported: false
+    verbatim: >-
+      "While the Incoming Webhooks module does not support standard
+      authentication methods directly, you can achieve access control by adding
+      a filter that checks for a specific static value (e.g., a token or key)."
+    pattern: static shared secret matched by a filter on a header or body attribute
+    provider_guidance: >-
+      Use non-standard attribute naming, rotate tokens regularly, store them in a
+      key vault.
+    note: >-
+      This is the most significant security finding on the event surface. Inbound
+      webhook authentication is a string-equality filter the integrator builds
+      themselves - there is no HMAC signature verification, no mTLS, no OAuth and
+      no replay protection. Anyone who learns the endpoint path and the static
+      value can write events into a member's loyalty history.
+  action_mapping: >-
+    The configuration selects the Antavo event to register from the dropdown of
+    all triggerable events; body attributes are mapped onto the event payload.
+  blueprints:
+  - {name: Blank, description: Define unique settings from scratch}
+  - {name: mParticle, description: Pre-filled blueprints for specific scenarios when an mParticle integration is live}
+
+deprecated:
+- name: Webhook message (legacy) workflow node
+  docs: https://docs.antavo.com/docs/webhooks-deprecated
+  superseded_by: Webhook message node backed by preconfigured Trusted sites
+
+related_async_surface:
+  name: Async Events API
+  spec: openapi/antavo-async-events-openapi.yml
+  note: >-
+    Not a webhook, but the other half of Antavo's asynchronous story: events are
+    POSTed to /v1/async/events, acknowledged immediately, queued for background
+    processing, and the outcome is retrieved by POLLING
+    GET /v1/async/events/{correlation_id}. There is no completion callback - the
+    result is pull-only.
+  auth: OAuth 2.0 client credentials, scope loyalty.async_events
+
+pointers_emitted:
+- type: Webhooks
+  reason: >-
+    A real, documented, bidirectional webhook surface with published delivery
+    semantics, retry policy, status vocabulary and log retention.
+pointers_not_emitted:
+- type: AsyncAPI
+  reason: No AsyncAPI document is published by Antavo anywhere.

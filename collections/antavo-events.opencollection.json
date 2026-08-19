@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Events API",
+    "version": "1.0.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit multiple Antavo events in a single request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/events/bulk",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this endpoint to submit multiple events within a single API request. Events are processed individually and synchronously. \n\nExamples of event submissions:\n\n- **Standard event submission**: Submit events for the customers without any additional identifiers.\n- **Event submission with an external ID**: Include the `external_id` attribute to link the events with external identifiers of customers from another system or database.\n- **Event submission with multiple accounts**: Specify multiple acco"
+        },
+        {
+          "info": {
+            "name": "Submit an Antavo event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this endpoint to submit a single event for a specified customer. The attributes provided in the data object are examples of `point_add` and `checkout` events. Refer to the [complete list of events](/docs/api-events) for all available actions and their attributes.\n\nExamples of event submission:\n\n- **Standard event submission**: Submit an event for the customer without any additional identifiers.\n- **Event submission with an external ID**: Include the `external_id` attribute to link the event "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

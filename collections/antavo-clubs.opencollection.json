@@ -1,0 +1,738 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Clubs API",
+    "version": "1.0.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Clubs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve club history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/history",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the club to retrieve history for."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter history by action type."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter history by customer ID."
+              },
+              {
+                "name": "created_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter or order history by creation date."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of actions to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of actions returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint provides the history of actions performed in a club with optional filtering."
+        },
+        {
+          "info": {
+            "name": "Retrieve details of a specific club member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club to which the member belongs."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club member whose details are being requested."
+              }
+            ]
+          },
+          "docs": "This endpoint returns detailed information about a specific club member identified by their customer ID. The response includes the member's role, status, balance, and spending limits within the club."
+        },
+        {
+          "info": {
+            "name": "List members of a specific club",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club whose members are being requested."
+              },
+              {
+                "name": "id.eq",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific club member by their unique identifier."
+              },
+              {
+                "name": "role",
+                "value": "",
+                "type": "query",
+                "description": "Filter by member type. Possible values are 'owner' or 'member'."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by member status. Possible values are 'applicant', 'active', 'kicked', 'removed', or 'banned'."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of club members to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of members returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint returns the registered club members of a specified club. You can filter members by various parameters, such as member ID, role, and status. Pagination is also supported through offset and limit query parameters."
+        },
+        {
+          "info": {
+            "name": "List expiring points by date",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/point-expiry",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the club for which point expirations are being retrieved."
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "The start date (inclusive) for retrieving expiring points. Must be in YYYY-MM-DD format."
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "The end date (inclusive) for retrieving expiring points. Must be in YYYY-MM-DD format. Maximum range is 30 days."
+              }
+            ]
+          },
+          "docs": "This endpoint allows you to retrieve the list of expiring points within a given date range for a specific club."
+        },
+        {
+          "info": {
+            "name": "Retrieve club details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club whose details are being requested. This ID must correspond to an existing club."
+              }
+            ]
+          },
+          "docs": "This endpoint returns details of a specific club."
+        },
+        {
+          "info": {
+            "name": "List club templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/clubs/templates",
+            "params": [
+              {
+                "name": "id.eq",
+                "value": "123e4567-e89b-12d3-a456-426614174000",
+                "type": "query",
+                "description": "Filter to a specific template by ID."
+              },
+              {
+                "name": "account_group_settings.accounts",
+                "value": "default_account",
+                "type": "query",
+                "description": "Filter templates by accounts in Account Group Settings."
+              },
+              {
+                "name": "name",
+                "value": "Families and Friends",
+                "type": "query",
+                "description": "Filter templates by name."
+              },
+              {
+                "name": "type",
+                "value": "public",
+                "type": "query",
+                "description": "Filter templates by type."
+              },
+              {
+                "name": "status",
+                "value": "active",
+                "type": "query",
+                "description": "Filter templates by status."
+              },
+              {
+                "name": "contribution_type",
+                "value": "split_points",
+                "type": "query",
+                "description": "Filter templates by contribution type."
+              },
+              {
+                "name": "expiration_type",
+                "value": "rolling",
+                "type": "query",
+                "description": "Filter templates by expiration type."
+              },
+              {
+                "name": "burn_eligibility",
+                "value": "active_members",
+                "type": "query",
+                "description": "Filter templates by burn eligibility."
+              },
+              {
+                "name": "spending_limit",
+                "value": "500",
+                "type": "query",
+                "description": "Filter templates by spending limit value."
+              },
+              {
+                "name": "account_group_settings.point_donation_enabled",
+                "value": "true",
+                "type": "query",
+                "description": "Filter templates by whether point donation is enabled in account group settings."
+              },
+              {
+                "name": "limit_reset_type",
+                "value": "fix_date",
+                "type": "query",
+                "description": "Filter templates by donation limit reset type."
+              },
+              {
+                "name": "offset",
+                "value": "10",
+                "type": "query",
+                "description": "Offsets the starting number of club templates to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "50",
+                "type": "query",
+                "description": "Limits the number of club templates returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint returns the list of club templates based on various query parameters."
+        },
+        {
+          "info": {
+            "name": "List clubs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/clubs",
+            "params": [
+              {
+                "name": "id.eq",
+                "value": "987e6543-e89b-12d3-a456-426614174000",
+                "type": "query",
+                "description": "Filter to a specific club by ID."
+              },
+              {
+                "name": "template_id",
+                "value": "123e4567-e89b-12d3-a456-426614174000",
+                "type": "query",
+                "description": "Filter by associated template ID."
+              },
+              {
+                "name": "name",
+                "value": "Family Moments Club",
+                "type": "query",
+                "description": "Filter by name."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by template type."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status."
+              },
+              {
+                "name": "offset",
+                "value": "10",
+                "type": "query",
+                "description": "Offsets the starting number of clubs to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "50",
+                "type": "query",
+                "description": "Limits the number of clubs returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint returns the list of clubs based on various query parameters."
+        },
+        {
+          "info": {
+            "name": "Create a new club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows users to create a new club, which can be assigned to different templates, allowing for varied functionalities and features based on specific user needs. To create a club, the user must provide key details, including the club's name, associated template, and owner ID.\n\nOnce created, the `club_create` event is automatically registered in both the club's and the club owner's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Accept club membership",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/applicants/:customer_id/accept",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the club to which the applicant is being accepted."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the customer who is being accepted as a member of the club."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows the club owner to accept an applicant's request to join the club.\n\nWhen a customer is accepted, the `club_applicant_accept` event is automatically registered in both the club's and the new member's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Ban an applicant from a club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/applicants/:customer_id/ban",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows a user to ban an applicant from the club. The customer cannot apply to the club again in the future.\n\nWhen a customer is banned, the `club_applicant_ban` event is automatically registered in both the club's and the customer's event history.    \n"
+        },
+        {
+          "info": {
+            "name": "Refuse a club applicant",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/applicants/:customer_id/refuse",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the club from which the applicant is being refused."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the customer who is being refused from the club."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows a user to refuse an applicant from the club. The customer can apply to the club again in the future.\n\nWhen a customer is refused, the `club_applicant_refuse` event is automatically registered in both the club's and the customer's event history.      \n"
+        },
+        {
+          "info": {
+            "name": "Disband a club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/disband",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the club to disband."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows usersclub owners to disband a specified club.\n\nWhen a club is disbanded, 3 types of events are created:\n- `club_revoke_ownership` is registered in the club's and the owner's event history\n- `club_disband` is registered in the club's and the owner's event history.\n- `club_member_remove` is registered in the club's and all club members' event history (including the club owner).\n"
+        },
+        {
+          "info": {
+            "name": "Create an invitation to a club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/invitations",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club for which the invitation is being created."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates an invitation from one member to another in a specified club."
+        },
+        {
+          "info": {
+            "name": "Ban a member from a club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id/ban",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club from which the member will be banned."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the member to be banned from the club."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint is used to removes a member from a club with a ban, preventing the customer from rejoining in the future.\n\nOnce created, the `club_member_ban` event is automatically registered in both the club's and the club member's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Update club details",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id/club-update",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the club to update."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer making the club name update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows a club member to update the club's name and provide a reason for the update.\n\nWhen the name of the club is updated, the `club_detail_change` event is automatically registered in both the club's and the customer's event history.  \n"
+        },
+        {
+          "info": {
+            "name": "Assign club ownership",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id/ownership",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the club to assign ownership."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the new club owner."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows a user to refuse an applicant from the club. The customer can apply to the club again in the future.\n\nWhen a customer is refused, 2 types of events are created:\n- `club_revoke_ownership` is registered in the club's and the previous owner's event history\n- `club_assing_ownership` is registered in the club's and the new owner's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Adjust points for a specific club member",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id/point-adjustment",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the club where the member belongs."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer whose contribution is being updated."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows you to adjust the point contribution for a specific member of a club. Points can be modified positively or negatively.\n\nBased on the value of the adjustment, either the `club_point_add` or `club_point_remove` event is recorded in both the club's and the club member's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Donate account points to clubs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id/point-donation",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows a club member to donate their account points to a club.\nConverts account points into club points and applies cycle limits according to the [configured contribution settings](https://docs.antavo.com/docs/club-templates#contribution-settings).\nWhen points are donated, the `club_point_donation` event is automatically registered in both the club's and the customer's event history.  \n"
+        },
+        {
+          "info": {
+            "name": "Remove a member from a club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id/remove",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club from which the member will be removed."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the member to be removed from the club."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows users to remove a member from a club. The customer may rejoin the club later.\n\nOnce created, the `club_member_remove` event is automatically registered in both the club's and the club member's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Unban a banned member from a club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/:customer_id/unban",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the club from which the member is being unbanned."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the customer who is being unbanned."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows banned member to rejoin a club.\n\nOnce created, the `club_member_unban` event is automatically registered in both the club's and the club member's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Add a customer to a public club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/:club_id/members/join-public",
+            "params": [
+              {
+                "name": "club_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the public club to join."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows a registered loyalty member to join a public club as an active member.\n\nWhen a member joins, the `club_member_join` event is automatically registered in both the club's and customer's event history.\n"
+        },
+        {
+          "info": {
+            "name": "Add a customer to a private club",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/clubs/invitations/:invitation_id",
+            "params": [
+              {
+                "name": "invitation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the invitation."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows a registered loyalty member to join a private club as an active club member.\n\nWhen a member joins, the `club_member_join` event is automatically registered in both the club's and customer's event history.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,180 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  npm registry (registry.npmjs.org search + package metadata), Packagist
+  (packagist.org/packages/list.json?vendor=antavo + repo.packagist.org/p2),
+  github.com/antavo, and https://developers.antavo.com/docs/api-signing
+note: >-
+  Antavo publishes no self-service SDK page; the client libraries below were
+  found by searching the public registries for the `antavo` vendor/scope plus
+  the Escher signing libraries the API signing documentation links to by name.
+  Every first-party package carries a version and a published date read from
+  the registry metadata endpoint. THE CURRENCY FINDING IS THE HEADLINE: the
+  newest first-party Antavo release on any registry is @antavo/microsite-sdk-node
+  3.9.5-DEV from 2021-10-06, and the newest non-prerelease is
+  @antavo/api-async-client-node 1.0.1 from 2021-06-08 - roughly five years
+  behind the REST API these libraries wrap, whose reference pages were last
+  updated in 2026. Antavo's own developer documentation does not link to any of
+  them; it points integrators at the Postman collection and at generic Escher
+  implementations instead.
+packages:
+- language: php
+  registry: packagist
+  name: antavo/escher-php
+  url: https://packagist.org/packages/antavo/escher-php
+  install: composer require antavo/escher-php
+  official: true
+  version: 1.2.1
+  published: '2018-12-13'
+  repository: https://github.com/antavo/escher-php
+  description: >-
+    Library for HTTP request signing (PHP implementation of Escher, the
+    AWS Signature V4 derived scheme Antavo requires on signed endpoints).
+  note: >-
+    Linked by name from https://developers.antavo.com/docs/api-signing as the
+    reference implementation for signing Antavo requests. The GitHub repository
+    was last pushed 2026-04-09 but no release has been tagged to Packagist
+    since 1.2.1 (2018-12-13), so `composer require` still installs the 2018 build.
+- language: php
+  registry: packagist
+  name: antavo/loyalty-sdk-php
+  url: https://packagist.org/packages/antavo/loyalty-sdk-php
+  install: composer require antavo/loyalty-sdk-php
+  official: true
+  version: 1.0.4
+  published: '2019-06-13'
+  repository: https://github.com/antavo/loyalty-sdk-php
+  description: Antavo Loyalty SDK for PHP.
+- language: php
+  registry: packagist
+  name: antavo/loyaltyapps
+  url: https://packagist.org/packages/antavo/loyaltyapps
+  install: composer require antavo/loyaltyapps
+  official: true
+  version: 2.3.4
+  published: '2021-01-22'
+  repository: https://github.com/antavo/loyaltyapps
+  description: >-
+    Magento 2 plugin that runs an Antavo gamified loyalty program inside a
+    Magento store.
+  note: >-
+    Distribution channel for the Magento integration documented at
+    https://developers.antavo.com/docs/magento.
+- language: php
+  registry: packagist
+  name: antavo/rest-client
+  url: https://packagist.org/packages/antavo/rest-client
+  install: composer require antavo/rest-client
+  official: true
+  version: 1.0.1
+  published: '2016-03-22'
+  description: Lightweight, flexible helper for consuming REST APIs.
+- language: php
+  registry: packagist
+  name: antavo/signed-token
+  url: https://packagist.org/packages/antavo/signed-token
+  install: composer require antavo/signed-token
+  official: true
+  version: 1.0.2
+  published: '2016-01-08'
+  description: Library to create and check signed tokens.
+- language: javascript
+  registry: npm
+  name: '@antavo/api-client-node'
+  url: https://www.npmjs.com/package/@antavo/api-client-node
+  install: npm install @antavo/api-client-node
+  official: true
+  version: 1.1.0
+  published: '2021-06-07'
+  description: Antavo API Client - sends secure (signed) HTTP requests to the Antavo APIs.
+- language: javascript
+  registry: npm
+  name: '@antavo/api-async-client-node'
+  url: https://www.npmjs.com/package/@antavo/api-async-client-node
+  install: npm install @antavo/api-async-client-node
+  official: true
+  version: 1.0.1
+  published: '2021-06-08'
+  repository: https://github.com/antavo/api-async-client-node
+  description: Antavo API Client for sending secure HTTP requests asynchronously.
+- language: javascript
+  registry: npm
+  name: '@antavo/api-signature-node'
+  url: https://www.npmjs.com/package/@antavo/api-signature-node
+  install: npm install @antavo/api-signature-node
+  official: true
+  version: 1.0.0
+  published: '2020-10-17'
+  description: >-
+    Antavo API Signature - creates the Escher request signature required on
+    signed Antavo endpoints.
+- language: javascript
+  registry: npm
+  name: '@antavo/microsite-sdk-node'
+  url: https://www.npmjs.com/package/@antavo/microsite-sdk-node
+  install: npm install @antavo/microsite-sdk-node
+  official: true
+  version: 3.9.5-DEV
+  published: '2021-10-06'
+  description: >-
+    Antavo microsite SDK. Only a -DEV prerelease has ever been published to
+    npm; there is no stable release on the registry.
+third_party_signing_libraries:
+- language: java
+  registry: null
+  name: escher-java
+  url: https://github.com/emartech/escher-java
+  official: false
+  version: null
+  published: null
+  note: >-
+    Linked from https://developers.antavo.com/docs/api-signing as a supported
+    Escher implementation. Published by Emarsys (emartech), not Antavo; no
+    registry coordinates are given in Antavo's documentation, so no version was
+    read.
+- language: csharp
+  registry: null
+  name: escher-csharp
+  url: https://github.com/emartech/escher-csharp
+  official: false
+  version: null
+  published: null
+  note: >-
+    Linked from the Antavo API signing document. A fork also exists at
+    github.com/antavo/escher-csharp (last pushed 2018-10-25). Not published to
+    NuGet under an Antavo identity, so no registry version is recorded.
+- language: go
+  registry: null
+  name: EscherAuth/escher
+  url: https://github.com/EscherAuth/escher
+  official: false
+  version: null
+  published: null
+  note: >-
+    Linked from the Antavo API signing document. Community Escher implementation;
+    Antavo publishes no Go module of its own, so no proxy.golang.org version was read.
+registries_checked:
+- registry: npm
+  query: scope @antavo + text search "antavo"
+  result: 4 first-party packages
+- registry: packagist
+  query: vendor=antavo
+  result: 5 first-party packages
+- registry: pypi
+  query: antavo, antavo-sdk
+  result: 404 - no Antavo package published
+- registry: rubygems
+  query: antavo
+  result: not published
+- registry: crates.io
+  query: antavo
+  result: not published
+- registry: nuget
+  query: antavo
+  result: not published
+- registry: maven-central
+  query: antavo
+  result: not published
+- registry: pkg.go.dev
+  query: antavo
+  result: not published

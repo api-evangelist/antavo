@@ -1,0 +1,892 @@
+openapi: 3.0.0
+info:
+  contact: {}
+  description: API endpoints for managing coupon pools
+  title: Antavo Coupon Pools API
+  version: 1.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /v1/coupon-pools/{coupon_pool_id}/update:
+    post:
+      tags:
+      - Coupon pools
+      summary: Update a coupon pool
+      description: This endpoint can be used to update a coupon pool with the attributes provided in the
+        request body.
+      parameters:
+      - name: coupon_pool_id
+        in: path
+        description: 'The ID of the coupon pool to update which can be:
+
+          - the ID of the coupon pool (`pool_id`) - a unique external attribute used to identify the coupon
+          pool (`external_id`)'
+        required: true
+        schema:
+          type: string
+          example: 606eae8e1cb1a70e0005
+      requestBody:
+        required: true
+        description: Request body to update the coupon pool with the specified attributes. The `update_method`
+          is required. The request body can also include custom attributes (if used).
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCouponPoolRequest'
+            example:
+              external_id: uniqueExternalID
+              name: New coupon pool
+              source: uploaded
+              type: amount
+              value: 12.1
+              purchase_minimum: 2
+              expiration_time: 2 months
+              aggregated: false
+              products:
+              - product1
+              - product2
+              stores:
+              - store1
+              update_method: update_none
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCouponPoolResponse'
+              examples:
+                Coupon pool updated successfully:
+                  value:
+                    status: success
+                    metadata:
+                      update_method: update_none
+                      update_matching: false
+                    payload:
+                      id: 146cb226c3d47e4d6a28176b
+                      external_id: uniqueExternalId
+                      name: New coupon pool
+                      source: uploaded
+                      type: amount
+                      value: 12.1
+                      purchase_minimum: 2
+                      expiration_time: 2 months
+                      aggregated: false
+                      products:
+                      - product1
+                      - product2
+                      stores:
+                      - store1
+        '400':
+          description: 400 Bad Request Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid source attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202006
+                      message: Given source parameter is invalid
+                The name attribute must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202008
+                      message: The name must be a string
+                The type attribute must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202010
+                      message: The type must be a string
+                Invalid type attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202011
+                      message: Given type parameter is invalid
+                The value attribute must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202012
+                      message: The value must be a number
+                The value attribute must be a value with up to 2 decimal places:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202013
+                      message: The value must be a value with up to 2 decimal places
+                The value attribute must be at least 0.01:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202014
+                      message: The value must be at least 0.01
+                The purchase_minimum must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202015
+                      message: The purchase_minimum must be a number
+                The purchase_minimum value must be at least 1:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202016
+                      message: The value must be at least 1
+                The minimum_value must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202017
+                      message: The minimum_value must be a number
+                The minimum_value must be at least 1:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202018
+                      message: The minimum_value must be at least 1
+                The minimum_redemption_value must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202019
+                      message: The minimum_redemption_value must be a number
+                The minimum_redemption_value must be at least 1:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202020
+                      message: The minimum_redemption_value must be at least 1
+                The currency attribute must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202021
+                      message: The currency must be a string
+                The currency attribute must contain letters only:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202022
+                      message: The currency must contain only letters
+                The expiration_time must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202023
+                      message: The expiration_time must be a string
+                Invalid expiration_time attribute (1):
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202024
+                      message: Given expiration_time parameter is invalid
+                Invalid expiration_time attribute (2):
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202025
+                      message: Given expiration_time parameter is invalid
+                The aggregated attribute must be a boolean:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202026
+                      message: The aggregated must be a boolean
+                The stores attribute must be an array:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202027
+                      message: The stores must be an array
+                The stores attribute must include a valid store ID:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202028
+                      message: The stores must be a valid store id
+                The products attribute must be an array:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202029
+                      message: The products must be an array
+                The external_id must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202030
+                      message: The external_id must be a string
+                The external_id must be unique:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202031
+                      message: The external_id must be unique
+                The external_id must be between 6 and 24 characters:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202032
+                      message: The external_id must be between 6 and 24 characters
+                Missing update_method:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202033
+                      message: The update_method is required
+                The update_method must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202034
+                      message: The update_method must be a string
+                Invalid update_method attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202035
+                      message: Given update_method parameter is invalid
+                The update_matching must be a boolean:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202038
+                      message: The update_matching must be a boolean
+                The minimum_value is not allowed for this type of pool:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202039
+                      message: The minimum_value is not allowed for this type of pool
+                The minimum_redemption_value is not allowed for this type of pool:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202040
+                      message: The minimum_redemption_value is not allowed for this type of pool
+                The currency is not allowed for this type of pool:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202041
+                      message: The currency is not allowed for this type of pool
+        '404':
+          description: 404 Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Coupon pool not found:
+                  summary: The coupon pool ID provided in the path does not match the ID or external ID
+                    of an existing coupon pool
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 202001
+                      message: Coupon Pool not found
+  /v1/coupon-pools:
+    post:
+      tags:
+      - Coupon pools
+      summary: Create a new coupon pool
+      description: This endpoint can be used to create a new coupon pool with the attributes provided
+        in the request body.
+      requestBody:
+        required: true
+        description: The `name`, `source` and `type` attributes are required. The request body can also
+          include custom attributes (if used).
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCouponPoolRequest'
+            example:
+              external_id: uniqueExternalID
+              name: New coupon pool
+              source: uploaded
+              type: amount
+              value: 12.1
+              purchase_minimum: 2
+              expiration_time: 2 months
+              aggregated: false
+              products:
+              - product1
+              - product2
+              stores:
+              - store1
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCouponPoolResponse'
+              examples:
+                Coupon pool created successfully:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      id: 146cb226c3d47e4d6a28176b
+                      external_id: uniqueExternalId
+                      name: New coupon pool
+                      source: uploaded
+                      type: amount
+                      value: 12.1
+                      purchase_minimum: 2
+                      expiration_time: 2 months
+                      aggregated: false
+                      products:
+                      - product1
+                      - product2
+                      stores:
+                      - store1
+        '400':
+          description: 400 Bad Request Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Invalid ID attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202004
+                      message: Given id parameter is invalid
+                Missing source attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202005
+                      message: The source is required
+                Invalid source attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202006
+                      message: Given source parameter is invalid
+                Missing name attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202007
+                      message: The name is required
+                The name attribute must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202008
+                      message: The name must be a string
+                Missing type attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202009
+                      message: The type is required
+                The type attribute must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202010
+                      message: The type must be a string
+                Invalid type attribute:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202011
+                      message: Given type parameter is invalid
+                The value attribute must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202012
+                      message: The value must be a number
+                The value attribute must be a value with up to 2 decimal places:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202013
+                      message: The value must be a value with up to 2 decimal places
+                The value attribute must be at least 0.01:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202014
+                      message: The value must be at least 0.01
+                The purchase_minimum must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202015
+                      message: The purchase_minimum must be a number
+                The value attribute must be at least 1:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202016
+                      message: The value must be at least 1
+                The minimum_value must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202017
+                      message: The minimum_value must be a number
+                The minimum_value must be at least 1:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202018
+                      message: The minimum_value must be at least 1
+                The minimum_redemption_value must be a number:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202019
+                      message: The minimum_redemption_value must be a number
+                The minimum_redemption_value must be at least 1:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202020
+                      message: The minimum_redemption_value must be at least 1
+                The currency attribute must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202021
+                      message: The currency must be a string
+                The currency attribute must contain letters only:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202022
+                      message: The currency must contain only letters
+                The expiration_time must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202023
+                      message: The expiration_time must be a string
+                Invalid expiration_time attribute (1):
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202024
+                      message: Given expiration_time parameter is invalid
+                Invalid expiration_time attribute (2):
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202025
+                      message: Given expiration_time parameter is invalid
+                The aggregated attribute must be a boolean:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202026
+                      message: The aggregated must be a boolean
+                The stores attribute must be an array:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202027
+                      message: The stores must be an array
+                The stores attribute must include a valid store ID:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202028
+                      message: The stores must be a valid store id
+                The products attribute must be an array:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202029
+                      message: The products must be an array
+                The external_id must be a string:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202030
+                      message: The external_id must be a string
+                The external_id must be unique:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202031
+                      message: The external_id must be unique
+                The external_id must be between 6 and 24 characters:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202032
+                      message: The external_id must be between 6 and 24 characters
+                The minimum_value is not allowed for this type of pool:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202039
+                      message: The minimum_value is not allowed for this type of pool
+                The minimum_redemption_value is not allowed for this type of pool:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202040
+                      message: The minimum_redemption_value is not allowed for this type of pool
+                The currency is not allowed for this type of pool:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202041
+                      message: The currency is not allowed for this type of pool
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      description: API key for accessing data via the API endpoints
+      name: api_key
+      in: query
+  schemas:
+    UpdateCouponPoolRequest:
+      type: object
+      required:
+      - update_method
+      properties:
+        update_method:
+          type: string
+          description: 'The update method, which can be:
+
+            - `update_all`: Update all coupons. - `update_none`: Do not update coupons. - `update_not_redeemed`:
+            Update only the coupons which have not been redeemed. - `update_unassigned`: Update only the
+            unassigned coupons.'
+        external_id:
+          type: string
+          minLength: 6
+          maxLength: 24
+          description: An optional unique identifier used for mapping the coupon pool to an external system.
+        name:
+          type: string
+          description: The name of the coupon pool.
+        source:
+          type: string
+          description: The source of the coupon pool, which must be `uploaded`.
+        type:
+          type: string
+          description: The type of the coupon pool, which can be `amount`, `percentage`, `free_shipping`
+            or `gift_card`.
+        value:
+          type: number
+          format: float
+          description: The value of the coupon pool.
+          minimum: 0.01
+        minimum_value:
+          type: number
+          description: The minimum value below which gift card coupons are invalidated (only applicable
+            if the value of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        minimum_redemption_value:
+          type: number
+          description: The minimum redemption value for gift card coupons (only applicable if the value
+            of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        currency:
+          type: string
+          description: The currency of the gift card coupons (only applicable if the value of the `type`
+            attribute is set to `gift_card`).
+        purchase_minimum:
+          type: number
+          description: The minimum basket value required to use coupons from this coupon pool.
+          minimum: 1
+        expiration_time:
+          type: string
+          description: The expiration time of coupons from this coupon pool (e.g., 2 months).
+        aggregated:
+          type: boolean
+          default: false
+          description: The value determines whether the same coupon code is assigned each time a coupon
+            from this coupon pool is issued for a specific customer.
+        products:
+          type: array
+          description: List of active product IDs to which the coupon discount can be applied (only applicable
+            if the Product catalog module is enabled).
+          items:
+            type: string
+        stores:
+          type: array
+          description: List of active store IDs for which the coupons of this coupon pool can be validated
+            (only applicable if the Stores module is enabled).
+          items:
+            type: string
+        update_matching:
+          type: boolean
+          description: Only update coupons with matching original value.
+          default: false
+    UpdateCouponPoolResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        metadata:
+          type: object
+          properties:
+            update_method:
+              type: string
+            update_matching:
+              type: boolean
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+            external_id:
+              type: string
+            name:
+              type: string
+            source:
+              type: string
+            type:
+              type: string
+            value:
+              type: number
+            purchase_minimum:
+              type: number
+            expiration_time:
+              type: string
+            aggregated:
+              type: boolean
+            stores:
+              type: array
+              items:
+                type: string
+            products:
+              type: array
+              items:
+                type: string
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+            code:
+              type: integer
+              example: 202004
+            message:
+              type: string
+              example: Given id parameter is invalid
+    CreateCouponPoolRequest:
+      type: object
+      required:
+      - name
+      - source
+      - type
+      properties:
+        external_id:
+          type: string
+          minLength: 6
+          maxLength: 24
+          description: An optional unique identifier used for mapping the coupon pool to an external system.
+        name:
+          type: string
+          description: The name of the coupon pool.
+        source:
+          type: string
+          description: The source of the coupon pool, which must be `uploaded`.
+        type:
+          type: string
+          description: The type of the coupon pool, which can be `amount`, `percentage`, `free_shipping`
+            or `gift_card`.
+        value:
+          type: number
+          format: float
+          description: The value of the coupon pool.
+          minimum: 0.01
+        minimum_value:
+          type: number
+          description: The minimum value below which gift card coupons are invalidated (only applicable
+            if the value of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        minimum_redemption_value:
+          type: number
+          description: The minimum redemption value for gift card coupons (only applicable if the value
+            of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        currency:
+          type: string
+          description: The currency of the gift card coupons (only applicable if the value of the `type`
+            attribute is set to `gift_card`).
+        purchase_minimum:
+          type: number
+          description: The minimum basket value required to use coupons from this coupon pool.
+          minimum: 1
+        expiration_time:
+          type: string
+          description: The expiration time of coupons from this coupon pool (e.g., 2 months).
+        aggregated:
+          type: boolean
+          default: false
+          description: The value determines whether the same coupon code is assigned each time a coupon
+            from this coupon pool is issued for a specific customer.
+        products:
+          type: array
+          description: List of active product IDs to which the coupon discount can be applied (only applicable
+            if the Product catalog module is enabled).
+          items:
+            type: string
+        stores:
+          type: array
+          description: List of active store IDs for which the coupons of this coupon pool can be validated
+            (only applicable if the Stores module is enabled).
+          items:
+            type: string
+    CreateCouponPoolResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the request.
+          example: success
+        metadata:
+          type: object
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Identifier of the coupon pool.
+              example: 146cb226c3d47e4d6a28176b
+            external_id:
+              type: string
+              description: External identifier of the coupon pool.
+              example: uniqueExternalId
+            name:
+              type: string
+              description: The name of the coupon pool.
+              example: New coupon pool
+            source:
+              type: string
+              description: The source of the coupon pool.
+              example: uploaded
+            type:
+              type: string
+              description: The type of the coupon pool.
+              example: amount
+            value:
+              type: number
+              format: float
+              description: The value of the coupon pool.
+              example: 12.1
+            purchase_minimum:
+              type: number
+              description: The minimum basket value required to use coupons in this coupon pool.
+              example: 2
+            expiration_time:
+              type: string
+              description: The expiration time of coupons from this coupon pool.
+              example: 2 months
+            aggregated:
+              type: boolean
+              description: The value determines whether the same coupon code is assigned each time a coupon
+                from this coupon pool is issued for a specific customer.
+              example: false
+            products:
+              type: array
+              description: List of active product IDs to which the coupon discount can be applied (only
+                applicable if the Product catalog module is enabled).
+              items:
+                type: string
+              example:
+              - product1
+              - product2
+            stores:
+              type: array
+              items:
+                type: string
+              description: List of active store IDs for which the coupons of this coupon pool can be validated
+                (only applicable if the Stores module is enabled)
+              example:
+              - store1
+security:
+- api_key: []
+tags:
+- name: Coupon pools

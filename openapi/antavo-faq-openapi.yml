@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo FAQ API
+  version: 1.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /faq:
+    get:
+      tags:
+      - FAQ
+      summary: List FAQ entries
+      description: The FAQ API provides access to the questions and answers configured and managed in
+        the Antavo FAQ module. A valid request returns an array of FAQ entries, ensuring no personally
+        identifiable data of customers is included.
+      responses:
+        '200':
+          description: Succesful Request - FAQ data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FAQSuccessResponse'
+              examples:
+                success:
+                  summary: Successful Request
+                  value:
+                    data:
+                      title: How to use points?
+                      description: Points can be used to redeem rewards.
+                fail:
+                  summary: Error-No Active FAQ questions
+                  value:
+                    data: []
+        '404':
+          description: FAQ module not activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FAQError'
+              examples:
+                fail:
+                  summary: FAQs Module not active
+                  value:
+                    type: NotFoundException
+                    code: 0
+                    message: Not Found
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query
+  schemas:
+    FAQSuccessResponse:
+      title: FAQResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FAQSuccess'
+          description: ''
+    FAQSuccess:
+      title: FAQ
+      required:
+      - title
+      - description
+      type: object
+      properties:
+        title:
+          type: string
+          description: The FAQ question.
+          example: How to use points?
+        description:
+          type: string
+          description: Answer to the FAQ question.
+          example: Points can be used to redeem rewards.
+    FAQError:
+      title: FAQ
+      required:
+      - type
+      - code
+      - message
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: NotFoundException
+        code:
+          type: number
+          description: Error code.
+          example: '0'
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Not Found
+security:
+- api_key: []
+tags:
+- name: FAQ

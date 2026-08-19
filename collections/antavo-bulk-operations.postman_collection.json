@@ -1,0 +1,2038 @@
+{
+  "item": [
+    {
+      "id": "8daa20ae-c05a-43fc-8d2c-7b204a53f9cf",
+      "name": "Coupons",
+      "description": {
+        "content": "Bulk Coupons API endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8cb4d796-0436-42af-84ca-2a4fd0b07764",
+          "name": "Query the list of errors related to a coupon import",
+          "request": {
+            "name": "Query the list of errors related to a coupon import",
+            "description": {
+              "content": "This endpoint allows you to query information about any errors or issues encountered during a coupon import. It provides details about failures that may have occurred during the process.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "coupons",
+                ":batch_id",
+                "status",
+                "error"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "batch_id",
+                  "description": "(Required) The batch ID associated with the coupon import operation."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9053db55-e95d-4e65-840f-e6aec4e4262a",
+              "name": "Returned after the coupon import operation has been processed. Provides information about errors, if any, that occurred during the operation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "coupons",
+                    ":batch_id",
+                    "status",
+                    "error"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The batch ID associated with the coupon import operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"pagination\": {\n      \"total\": 42,\n      \"next\": \"https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status/error?offset=40&limit=20\",\n      \"previous\": \"https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status/error?offset=0&limit=20\"\n    }\n  },\n  \"payload\": {\n    \"number_of_errors\": 42,\n    \"coupons\": [\n      {\n        \"coupon_code\": \"CODE1\",\n        \"pool_id\": \"146cb226c3d47e4d6a28176b\",\n        \"error_message\": \"Error message\",\n        \"error_code\": 123456\n      },\n      {\n        \"coupon_code\": \"CODE2\",\n        \"pool_id\": \"146cb226c3d47e4d6a28176b\",\n        \"error_message\": \"Error message\",\n        \"error_code\": 123456\n      },\n      \"...\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e7a9acf8-b169-4a42-92c0-a1f301d54aa3",
+              "name": "The batch ID provided as a parameter does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "coupons",
+                    ":batch_id",
+                    "status",
+                    "error"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The batch ID associated with the coupon import operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 320504,\n    \"message\": \"Bulk operation request queue is not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "49539279-8783-4fe6-a0a9-629b21f7d80a",
+          "name": "Query the status of a coupon import",
+          "request": {
+            "name": "Query the status of a coupon import",
+            "description": {
+              "content": "This endpoint allows you to query the status of a coupon batch import. It provides information about the current processing status of the operation, which can be `queued`, `processing` or `done`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "coupons",
+                ":batch_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "batch_id",
+                  "description": "(Required) The batch ID associated with the coupon import operation."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dc8976d9-eb47-4445-a1a1-18c8e944f7c3",
+              "name": "Returned after the batch has been successfully added to the queue.\nProvides information about the batch status, including whether it is `queued`, `processing`, or `done`.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "coupons",
+                    ":batch_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The batch ID associated with the coupon import operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"bulk_operation_error\": {\n      \"number_of_errors\": 0,\n      \"url\": \"https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status\"\n    }\n  },\n  \"payload\": {\n    \"batch_status\": \"queued\",\n    \"number_of_coupons\": 0\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eb79dc3b-f25d-497d-999c-0c3f9a5f8ed3",
+              "name": "The batch ID provided as a path parameter does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "coupons",
+                    ":batch_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The batch ID associated with the coupon import operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 202004,\n    \"message\": \"Batch ID is not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1e5e1e24-fcb8-4835-902c-e14d09af9030",
+          "name": "Manage coupon codes in coupon pools",
+          "request": {
+            "name": "Manage coupon codes in coupon pools",
+            "description": {
+              "content": "This endpoint allows you to upload, assign, and unassign coupons in Coupon Pools in batches. It supports both pre-assigned and unassigned coupons. Uploaded coupon batches are processed asynchronously.\nEach request can process up to 50,000 coupon codes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "coupons",
+                ":coupon_pool_id",
+                ":action"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "coupon_pool_id",
+                  "description": "(Required) The ID of an existing coupon pool for which the source is set to `uploaded`."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "action",
+                  "description": "(Required) The action carried on the coupons, which can be `add`, `assign`, or `unassign`."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"coupons\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0fb472c1-f9ed-4acf-a1c8-c6f5af61f832",
+              "name": "200 OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "coupons",
+                    ":coupon_pool_id",
+                    ":action"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "coupon_pool_id",
+                      "description": "(Required) The ID of an existing coupon pool for which the source is set to `uploaded`."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "action",
+                      "description": "(Required) The action carried on the coupons, which can be `add`, `assign`, or `unassign`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"coupons\": [\n    \"CODE1\",\n    \"CODE2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"external_batch_id\": \"batch_001\"\n  },\n  \"payload\": {\n    \"batch_id\": \"batch001\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ba3967e5-bda1-49a3-ae49-3eeca36942c6",
+              "name": "400 Bad Request Exception",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "coupons",
+                    ":coupon_pool_id",
+                    ":action"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "coupon_pool_id",
+                      "description": "(Required) The ID of an existing coupon pool for which the source is set to `uploaded`."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "action",
+                      "description": "(Required) The action carried on the coupons, which can be `add`, `assign`, or `unassign`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"coupons\": [\n    \"CODE1\",\n    \"CODE2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 202002,\n    \"message\": \"The 'payload' field is not found or empty\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "755fdaa1-e16a-4cfc-82ba-ebb33922f2c2",
+              "name": "404 Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "coupons",
+                    ":coupon_pool_id",
+                    ":action"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "coupon_pool_id",
+                      "description": "(Required) The ID of an existing coupon pool for which the source is set to `uploaded`."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "action",
+                      "description": "(Required) The action carried on the coupons, which can be `add`, `assign`, or `unassign`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"coupons\": [\n    \"CODE1\",\n    \"CODE2\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 202001,\n    \"message\": \"Coupon Pool not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "c9eb3cb4-4bdf-403f-b392-d7653be5f5bd",
+      "name": "Customer lists",
+      "description": {
+        "content": "Bulk Customer List API endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "72070cb7-761a-4cce-b702-44f5ff9701d8",
+          "name": "Query the erronous list operation attempts",
+          "request": {
+            "name": "Query the erronous list operation attempts",
+            "description": {
+              "content": "This endpoint allows you to query information about any errors or issues encountered during a list operation process. It provides details about errors, if any, that occurred during the operation.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "customer-list",
+                ":batch_id",
+                "status",
+                "errors"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting number of errors to return. This is used in pagination in conjunction with the limit query.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Limits the number of errors to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "batch_id",
+                  "description": "(Required) The external batch ID associated with the list operation."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ba66ffbd-cbfb-4efc-bc86-caca02df7629",
+              "name": "Returned after the list operation request has been processed. Provides information about errors, if any, that occurred during the operation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    ":batch_id",
+                    "status",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The external batch ID associated with the list operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"pagination\": {\n      \"total\": 42,\n      \"next\": \"https://api.{environment}.antavo.com/customer-list/batch001/status/error?offset=40&limit=20\",\n      \"previous\": \"https://api.{environment}.antavo.com/customer-list/batch001/status/error?offset=0&limit=20\"\n    }\n  },\n  \"payload\": {\n    \"number of errors\": 42,\n    \"customers\": {\n      \"customer_01\": {\n        \"customer_list\": {},\n        \"error message\": {},\n        \"error code\": {}\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "41862201-5328-4cfb-9674-cdc655509146",
+              "name": "The batch ID provided as a parameter does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    ":batch_id",
+                    "status",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The external batch ID associated with the list operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": \"string\",\n    \"message\": \"Batch ID is not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "19004f0c-3ce2-4a97-a66b-a11aed6de6cb",
+          "name": "Query the status of a list operation process",
+          "request": {
+            "name": "Query the status of a list operation process",
+            "description": {
+              "content": "This endpoint allows you to query the status of a list operation process, such as adding or removing customers from a customer list. It provides information about the current processing status of the operation.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "customer-list",
+                ":batch_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "batch_id",
+                  "description": "(Required) The external batch ID associated with the list operation."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "42824407-7613-4615-984e-7ef40deba0e1",
+              "name": "Returned after the batch has been successfully added to the queue.\nProvides information about the batch status, including whether it is `queued`, `processing`, or `done`.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    ":batch_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The external batch ID associated with the list operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"bulk_operation_error\": {\n      \"number_of_errors\": 0,\n      \"url\": \"https://api.{environment}.antavo.com/v1/bulk-operation/customer-list/batch001/status/error\"\n    }\n  },\n  \"payload\": {\n    \"batch_status\": \"queued\",\n    \"number_of_customers\": 0\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "50b2db0d-ac76-4342-a609-b5fd5f363be4",
+              "name": "The batch ID provided as a path parameter does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    ":batch_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The external batch ID associated with the list operation."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 330521,\n    \"message\": \"Batch ID is not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "705ea018-4881-42a7-bfa7-3ce036b7caad",
+          "name": "Add customers to a customer list",
+          "request": {
+            "name": "Add customers to a customer list",
+            "description": {
+              "content": "This API endpoint allows you to add a group of customers to a customer list all at once.\nIt accepts a single customer list ID and an array of customer IDs as input.\n\nThis API endpoint operates asynchronously, so customer list updates are processed separately.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "customer-list",
+                "add",
+                ":customer_list_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_list_id",
+                  "description": "(Required) The ID of the customer list to which customers will be added to."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "99afe89b-b5f6-4aa6-9dcb-d585261a437e",
+              "name": "Successful response with batch details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    "add",
+                    ":customer_list_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_list_id",
+                      "description": "(Required) The ID of the customer list to which customers will be added to."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"external_batch_id\": \"batch001\",\n    \"payload\": {}\n  },\n  \"payload\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3fa11a11-cb41-4a8a-a2bd-c9e2b580da2f",
+              "name": "Bad request, indicates missing or empty payload or exceeding payload size limitations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    "add",
+                    ":customer_list_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_list_id",
+                      "description": "(Required) The ID of the customer list to which customers will be added to."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 330502,\n    \"message\": \"The 'payload' field is not found or empty\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1cfba100-682b-4413-91d0-befdfde8c40f",
+              "name": "Thrown in case there is no Customer list registered in Antavo with the ID provided in the path as customerListId.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    "add",
+                    ":customer_list_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_list_id",
+                      "description": "(Required) The ID of the customer list to which customers will be added to."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 330501,\n    \"message\": \"Customer List not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6b886a4e-8748-4f82-b7fc-c191df2064f5",
+          "name": "Remove customers from a customer list",
+          "request": {
+            "name": "Remove customers from a customer list",
+            "description": {
+              "content": "This endpoint supports the removal of customers from a customer list in batches.\nIt operates asynchronously, processing customer list updates separately.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "customer-list",
+                "remove",
+                ":customer_list_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customer_list_id",
+                  "description": "(Required) The ID of the customer list from which customers will be removed."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5394e813-0194-4123-823d-be0aa409a264",
+              "name": "Success response with batch details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    "remove",
+                    ":customer_list_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_list_id",
+                      "description": "(Required) The ID of the customer list from which customers will be removed."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"external_batch_id\": \"batch001\",\n    \"payload\": {}\n  },\n  \"payload\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ec6850d1-5cf9-4111-9d3e-a2e6b0d30c57",
+              "name": "Bad request, indicates missing or empty payload or exceeding payload size limitations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    "remove",
+                    ":customer_list_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_list_id",
+                      "description": "(Required) The ID of the customer list from which customers will be removed."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 330502,\n    \"message\": \"The 'payload' field is not found or empty\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "543e58fe-e401-4788-858e-7864268ba062",
+              "name": "Thrown in case there is no Customer list registered in Antavo with the ID provided in the path as customer_list_id.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "customer-list",
+                    "remove",
+                    ":customer_list_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customer_list_id",
+                      "description": "(Required) The ID of the customer list from which customers will be removed."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 330511,\n    \"message\": \"Customer List not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "75608d45-460a-4552-bd72-f8a86f8ab820",
+      "name": "Rewards",
+      "description": {
+        "content": "Bulk Reward Claim API endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9c228c4d-18ea-493f-8023-449449fd8d0c",
+          "name": "Query the failed reward claim attempts",
+          "request": {
+            "name": "Query the failed reward claim attempts",
+            "description": {
+              "content": "This endpoint returns the error occured while processing the batch.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "reward",
+                "claim",
+                ":batch_id",
+                "status",
+                "error"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting number of errors to return. This is used in pagination in conjunction with the limit query.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Limits the number of errors to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "batch_id",
+                  "description": "(Required) The ID of the batch."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "06bc88f5-9800-4577-a966-46a39ca1fa8b",
+              "name": "Returned after the batch claim request has been processed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "reward",
+                    "claim",
+                    ":batch_id",
+                    "status",
+                    "error"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The ID of the batch."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"pagination\": {\n      \"total\": 42,\n      \"next\": \"https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error?offset=40&limit=20\",\n      \"previous\": \"https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error?offset=0&limit=20\"\n    }\n  },\n  \"payload\": {\n    \"number_of_errors\": 42,\n    \"customers\": {\n      \"customer_01\": {\n        \"reward\": \"6275010c75c54b7810090000\",\n        \"error_message\": \"Sorry, you can't claim this reward, as it's currently out of stock\",\n        \"error_code\": 156156\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "52950f60-87d1-42a1-a34f-8277dc9bc44a",
+              "name": "The batch ID provided as parameter does not exists.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "reward",
+                    "claim",
+                    ":batch_id",
+                    "status",
+                    "error"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The ID of the batch."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 320510,\n    \"message\": \"Batch ID is not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "73774f61-2de8-43b2-8963-cb34faa04e21",
+          "name": "Query the status of the reward claim process",
+          "request": {
+            "name": "Query the status of the reward claim process",
+            "description": {
+              "content": "This API endpoint allows you to query the status of a bulk reward claim process, providing details on the processing status, any errors encountered, and the overall completion status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "reward",
+                "claim",
+                ":batch_id",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "batch_id",
+                  "description": "(Required) The ID of the batch."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f50218d2-77cd-48f1-bd0f-e9991a75c587",
+              "name": "Returned after the batch has been successfully added to the queue.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "reward",
+                    "claim",
+                    ":batch_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The ID of the batch."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"bulk_operation_error\": {\n      \"number_of_errors\": 0,\n      \"url\": \"https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error\"\n    },\n    \"pagination\": {\n      \"total\": 0\n    }\n  },\n  \"payload\": {\n    \"batch_status\": \"queued\",\n    \"customers\": []\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d04bc76e-04a3-405b-a1b2-42c0286c60e7",
+              "name": "The batch ID provided as parameter does not exists.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "reward",
+                    "claim",
+                    ":batch_id",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "batch_id",
+                      "description": "(Required) The ID of the batch."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 320510,\n    \"message\": \"Batch ID is not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6a4028b9-377c-4225-8eb2-b6dbce48bbf0",
+          "name": "Claim a specific reward to multiple customers",
+          "request": {
+            "name": "Claim a specific reward to multiple customers",
+            "description": {
+              "content": "Submit reward claim requests for a batch of customers. Each request can include a maximum of 100,000 customers.\nPlease note that only one bulk reward claim process can run at a time for one specific reward. If additional batches are submitted while the current one is still processing, they will be added to the queue and processed once the ongoing batch is completed.\nBy the end of the process, the reward events get registered in each customer's event history.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "bulk-operation",
+                "reward",
+                "claim",
+                ":reward_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "reward_id",
+                  "description": "(Required) The ID of the reward to be claimed."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"callback_url\": \"<string>\",\n  \"metadata\": {\n    \"external_batch_id\": \"<string>\",\n    \"custom_attributes\": {\n      \"id\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  },\n  \"force_claim\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b4274851-f240-4124-bc91-271e07457598",
+              "name": "The batch claim request has been submitted successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "reward",
+                    "claim",
+                    ":reward_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reward_id",
+                      "description": "(Required) The ID of the reward to be claimed."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"callback_url\": \"https://webservices.yourapi.com/callback_url\",\n  \"metadata\": {\n    \"external_batch_id\": \"batch001\",\n    \"custom_attributes\": {\n      \"id\": \"country\",\n      \"value\": \"DE\"\n    }\n  },\n  \"force_claim\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"metadata\": {\n    \"external_batch_id\": \"batch001\",\n    \"custom_attributes\": {\n      \"id\": \"country\",\n      \"value\": \"DE\"\n    }\n  },\n  \"payload\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0f1fcabc-5d42-4917-a148-d40c91d38616",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "reward",
+                    "claim",
+                    ":reward_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reward_id",
+                      "description": "(Required) The ID of the reward to be claimed."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"callback_url\": \"https://webservices.yourapi.com/callback_url\",\n  \"metadata\": {\n    \"external_batch_id\": \"batch001\",\n    \"custom_attributes\": {\n      \"id\": \"country\",\n      \"value\": \"DE\"\n    }\n  },\n  \"force_claim\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 320503,\n    \"message\": \"The unique batch id provided already exists\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b349e39-eda3-4e8a-9e6e-313dd6771530",
+              "name": "Reward not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "bulk-operation",
+                    "reward",
+                    "claim",
+                    ":reward_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reward_id",
+                      "description": "(Required) The ID of the reward to be claimed."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"callback_url\": \"https://webservices.yourapi.com/callback_url\",\n  \"metadata\": {\n    \"external_batch_id\": \"batch001\",\n    \"custom_attributes\": {\n      \"id\": \"country\",\n      \"value\": \"DE\"\n    }\n  },\n  \"force_claim\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"error\": {\n    \"type\": \"NotFoundException\",\n    \"code\": 320501,\n    \"message\": \"Reward not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ef59cab5-fcf0-47ef-817c-baeb8493dd63",
+    "name": "Antavo Bulk Operations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

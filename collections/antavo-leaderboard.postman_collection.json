@@ -1,0 +1,182 @@
+{
+  "item": [
+    {
+      "id": "bce0f4d8-d4eb-471f-9391-c7d4b636a00b",
+      "name": "Leaderboard",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "07b66b08-c5f2-478e-98fb-7d5a26de75d0",
+          "name": "List best-performing customers",
+          "request": {
+            "name": "List best-performing customers",
+            "description": {
+              "content": "The Leaderboard API allows you to retrieve rankings and scores of customers based on various metrics within the Antavo Loyalty Cloud.\nThis API provides a way to showcase top performers, track progress, and foster competition among participants in your loyalty program.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "customers",
+                "leaderboard"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "The number of results to return. Values outside the acceptable range will be adjusted to the nearest boundary value."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "30290dcc-c69e-45dc-af69-b0869f3402f2",
+              "name": "List of top performing customers",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    "leaderboard"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n      \"handler\": \"john_doe\",\n      \"image_url\": \"https://example.com/avatar.jpg\",\n      \"score\": 1500\n    },\n    {\n      \"id\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n      \"handler\": \"john_doe\",\n      \"image_url\": \"https://example.com/avatar.jpg\",\n      \"score\": 1500\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "637f66b2-84ed-47b9-b165-d1e8a540fac6",
+              "name": "UnauthorizedException",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "customers",
+                    "leaderboard"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"type\": \"UnauthorizedException\",\n      \"code\": 0,\n      \"message\": \"No api_key provided\"\n    },\n    {\n      \"type\": \"UnauthorizedException\",\n      \"code\": 0,\n      \"message\": \"No api_key provided\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "cc04038a-cf89-4b55-a54a-536c004249a0",
+    "name": "Antavo Leaderboard API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Email: support@antavo.com",
+      "type": "text/plain"
+    }
+  }
+}

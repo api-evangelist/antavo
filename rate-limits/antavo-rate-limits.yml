@@ -6,6 +6,8 @@ providerId: antavo
 created: '2026-07-10'
 modified: '2026-07-10'
 reconciled: false
+method: searched
+source: https://developers.antavo.com/docs/antavo-apis
 tags:
 - Loyalty
 - Enterprise
@@ -59,3 +61,29 @@ policies:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+responseHeaders:
+  published: false
+  checked:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  - RateLimit-Limit
+  - RateLimit-Remaining
+  - RateLimit-Reset
+  - Retry-After
+  finding: >-
+    Antavo publishes NO rate-limit response headers. None are documented at
+    https://developers.antavo.com/docs/antavo-apis and none are declared in any
+    of the 122 operations across the 18 OpenAPI documents in openapi/. A client
+    cannot read its remaining budget or a recommended backoff at runtime - it can
+    only observe the 429. This is the gap that matters most for an agent: the
+    numbers are published for humans reading the docs, but the runtime signal an
+    automated client needs does not exist.
+  status_on_exhaustion: 429
+  documented_behaviour: >-
+    "Exceeding this limit will result in temporary request blocks based on server
+    load." The block duration is load-dependent and unpublished.
+  exemption: >-
+    The Async Events API endpoint is excluded from the cumulative per-API-key
+    limit; its throughput is environment-specific and negotiated with the Antavo
+    Service Desk rather than published.

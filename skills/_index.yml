@@ -1,0 +1,110 @@
+generated: '2026-08-13'
+method: generated
+source: >-
+  openapi/ (18 documents, 122 operations harvested from Antavo's published
+  reference pages), conventions/antavo-conventions.yml,
+  errors/antavo-problem-types.yml, scopes/antavo-scopes.yml,
+  lifecycle/antavo-lifecycle.yml, sandbox/antavo-sandbox.yml
+description: >-
+  Packaged Agent Skills for the Antavo Loyalty Cloud - one per marquee flow.
+  Each is grounded in operations that genuinely exist in Antavo's published
+  OpenAPI and carries the platform's real safety rules (no idempotency key,
+  Escher request signing, invisible rate limits, deprecated legacy surfaces).
+grounding_note: >-
+  Steps are addressed by HTTP METHOD + PATH rather than by operationId. This is
+  deliberate and is a finding about the contract, not a shortcut: only 16 of
+  Antavo's 122 published operations declare an operationId, and several of those
+  are inconsistently cased (Rewardget, entityget, Genericspeccreate). Where a
+  real operationId exists it is named in the skill frontmatter's `operations:`
+  list; where none exists the frontmatter carries an empty list and the `paths:`
+  list is authoritative. No operationId has been invented.
+searched_for_provider_skills:
+  result: none
+  attempted:
+  - https://developers.antavo.com/llms.txt
+  - https://antavo.com/llms.txt
+  - github.com/antavo (8 public repositories)
+  finding: >-
+    Antavo publishes no AGENTS.md, skills/ directory or agent operating
+    instructions of its own. It does publish an excellent llms.txt on both hosts,
+    which is what made the underlying specs harvestable.
+skills:
+- file: antavo-submit-loyalty-event.md
+  name: Submit a loyalty event to Antavo
+  api: openapi/antavo-events-openapi.yml
+  operations: [events, bulk]
+  paths: ['POST /events', 'POST /events/bulk', 'GET /customers/{customer_id}/events']
+  risk: write - awards or spends points, not idempotent, not reversible by the same call
+- file: antavo-async-event-ingestion.md
+  name: Ingest events asynchronously with an Antavo OAuth token
+  api: openapi/antavo-async-events-openapi.yml
+  operations: []
+  paths: ['POST /v1/auth/token', 'POST /v1/async/events', 'GET /v1/async/events/{correlation_id}']
+  risk: write - queued and non-idempotent; the token flow itself is safe
+- file: antavo-member-experience-and-reward-claim.md
+  name: Build a headless member experience and claim a reward
+  api: openapi/antavo-display-openapi.yml
+  operations: []
+  paths:
+  - GET /customers/{customer_id}/activities
+  - GET /customers/{customer_id}/activities/rewards
+  - POST /customers/{customer_id}/activities/rewards/{reward_id}/claim
+  - POST /customers/{customer_id}/activities/rewards/{reward_id}/revoke
+  - GET /customers/{customer_id}/wallet
+  risk: >-
+    mixed - reads return member PII; the claim spends real points and needs human
+    confirmation
+- file: antavo-cart-promotions-and-points-preview.md
+  name: Preview points and apply cart promotions at checkout
+  api: openapi/antavo-promotion-engine-openapi.yml
+  operations: []
+  paths:
+  - POST /extensions/automation/campaign-bonus
+  - POST /offers/
+  - POST /v1/cart
+  - POST /v1/cart/finalize
+  - GET /v1/promotions
+  - 'POST /v1/promotion/{promotionId}/status'
+  risk: >-
+    mixed - campaign-bonus is a pure preview; /v1/cart takes promotion
+    reservations; /v1/cart/finalize and promotion archival are terminal
+shared_safety_rules:
+- >-
+  NO IDEMPOTENCY. Antavo publishes no idempotency key on any of its 122
+  operations. Every retried write risks a duplicate loyalty event. Read back
+  before retrying; never wrap an Antavo write in an automatic retry policy.
+- >-
+  RATE LIMITS ARE INVISIBLE AT RUNTIME. 1,500 req/min shared stack, 20,000
+  dedicated, per API key, cumulative across all endpoints except Async Events.
+  No RateLimit-*, X-RateLimit-* or Retry-After header is published. Exhaustion
+  is a 429 with no guidance on when to resume.
+- >-
+  SIGNING BECOMES UNIVERSAL ON 2026-12-31. Escher (AWS SigV4-derived) request
+  signing is required in production today and in every environment after that
+  date. Key-only integrations have a hard expiry.
+- >-
+  THE API KEY IS A QUERY PARAMETER. It will appear in proxy and access logs.
+  The signature, not the key, is the authentication.
+- >-
+  404 IS AMBIGUOUS. It means record-not-found OR module-not-enabled-for-this-
+  workspace. Never treat an Antavo 404 as proof a record is absent.
+- >-
+  DEPRECATIONS ARE PROSE ONLY. The legacy Rewards API, the v1 challenge
+  endpoints and the Leaderboard API are all deprecated in documentation, but no
+  OpenAPI operation carries `deprecated: true`. Tooling cannot see any of it.
+- >-
+  '-' IN A PATH IS A WILDCARD MEANING "ALL", not a placeholder. /customers/-/events
+  returns events across every customer in the workspace.
+- >-
+  EVERY READ RETURNS MEMBER PII. Antavo holds loyalty member profiles, purchase
+  history and custom attributes under ISO 27018 and GDPR. Carry that posture to
+  wherever an agent renders or stores the response.
+cross_links:
+  conventions: conventions/antavo-conventions.yml
+  errors: errors/antavo-problem-types.yml
+  authentication: authentication/antavo-authentication.yml
+  scopes: scopes/antavo-scopes.yml
+  lifecycle: lifecycle/antavo-lifecycle.yml
+  sandbox: sandbox/antavo-sandbox.yml
+  rate_limits: rate-limits/antavo-rate-limits.yml
+  webhooks: asyncapi/antavo-webhooks.yml

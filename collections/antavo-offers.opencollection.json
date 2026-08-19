@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Offers API",
+    "version": "1.0.0-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Offers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List customer-specific offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/offers/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API endpoint is used to submit the contents of a cart and receive any available offers on the products within.\nThe Offers API request body consists of 4 components:\n\n- `cart`: The intended purchase items, recorded in the same format as an Antavo checkout event.\n- `customer`: The Antavo ID of the customer.\n- `store`: The Antavo ID of the store. This may result in store-specific offers if configured.\n- `eligible_only`: Restricts the returned offers to those available to the customer.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,2128 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/ (18 documents, 122 operations) + https://developers.antavo.com/docs/customers, https://developers.antavo.com/docs/transactions,
+  https://developers.antavo.com/docs/actions-events
+description: 'Entity-relationship graph derived from Antavo''s published OpenAPI: component schema $ref
+  links, array item refs, and the resource graph implied by the URI paths. Antavo''s core is a customer-centric
+  event store - a Customer accumulates Events, Events roll up into Transactions and point balances, and
+  every other object (reward, challenge, coupon, offer, club, promotion) is a configurable entity a customer
+  can act on.'
+root_entity:
+  name: Customer
+  identifier: customer_id
+  id_format: UUID v4 (e.g. 280e674c-c4ea-4a30-987a-d9267d1a5018) as shown throughout the published examples
+  alternate_keys:
+  - external_id - an identifier from the integrator's own system, accepted on event submission to link
+    records
+  wildcard: A literal '-' in the customer position means 'all customers' (GET /customers/-/events)
+  note: Nearly every path in the platform is rooted at /customers/{customer_id}; the Display API alone
+    hangs 41 paths off it.
+core_domains:
+- domain: events
+  description: Customer interactions submitted through the Events API or Async Events API and recorded
+    on the member's event history. The event `action` (point_add, checkout, opt_in, ...) is the platform's
+    central vocabulary.
+  vocabulary: https://developers.antavo.com/docs/api-events
+- domain: transactions
+  description: Purchases assembled from checkout* events, carrying items, status (pending/accepted/rejected),
+    points earned and burned.
+  docs: https://developers.antavo.com/docs/transactions
+- domain: activities
+  description: 'The Display API aggregation of everything a member can earn or spend on: challenges, rewards,
+    offers, coupons, quizzes, contests, prize wheels, profiling flows, treasure hunts, content consumption.'
+  hypermedia: each activity embeds an `_actions` map giving the method + relative URL of its next legal
+    transition
+- domain: entities
+  description: The configurable building blocks - rewards, challenges, stores, products, transactions,
+    customer lists - addressed generically as /entities/{module}/{entity}.
+  note: This one path carries 17 of the 122 operations; the entity TYPES are workspace configuration,
+    not spec-declared, so the schema of an entity is not knowable from the OpenAPI.
+- domain: clubs
+  description: Member communities with templates, membership, invitations, applicants, bans, ownership,
+    point donation and adjustment, and history. 22 operations, the second largest surface.
+  note: Clubs have their own point balance distinct from the customer account balance; club_point_donation
+    converts one into the other.
+- domain: promotions
+  description: Cart-level promotion evaluation. POST /v1/cart simulates and reserves; POST /v1/cart/finalize
+    commits and counts usage against application limits.
+  note: Served from a different host (promotion.test.antavo.com/api) than the rest of the platform.
+- domain: accounts
+  description: Multi-account points economy. Events may name an `account`; when none is given the event
+    lands on the default account.
+  note: Requires the Points economy module.
+schema_entities:
+- name: AcceptSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: AccessBadRequestError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: AccessNotFoundError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: Account
+  fields: 2
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+  - openapi/antavo-entities-openapi.yml
+- name: Activity
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: AddCouponsRequest
+  fields: 1
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: AnsweringaQuizResponse
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: AnsweringaQuizResponseError
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: This describes the structure returned if an error occurred at the challenges endpoint.
+- name: AssignCouponsRequest
+  fields: 1
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: BadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: BanBadRequestError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+  description: Bad Request error responses for banning members.
+- name: BanMemberBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: BanMemberNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: BanMemberResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: BanNotFoundError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+  description: Not Found error responses for banning members.
+- name: BatchNotFound
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: BidResponse
+  fields: 18
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: BulkRewardClaim
+  fields: 4
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: Bulk_Event_response
+  fields: 3
+  sources:
+  - openapi/antavo-events-openapi.yml
+- name: Bulkentityone
+  fields: 3
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: An API response for an error-free defined bulk entity call.
+- name: Bulkentitytwo
+  fields: 4
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: An API response containing an erroneous bulk entity call.
+- name: Bulkentitytwoitems
+  fields: 3
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: Cart
+  fields: 4
+  sources:
+  - openapi/antavo-offers-openapi.yml
+  description: Cart content to check against available offers.
+- name: CartItem
+  fields: 5
+  sources:
+  - openapi/antavo-offers-openapi.yml
+  description: Cart content to check against available offers.
+- name: CartItems
+  fields: 0
+  sources:
+  - openapi/antavo-offers-openapi.yml
+  description: Cart content to check against available offers.
+- name: Category
+  fields: 1
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Reward category associated with the reward.
+- name: Challenge
+  fields: 16
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Activity where users participate in a challenge.
+- name: ChallengeActivity
+  fields: 15
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: ChallengeCompletion
+  fields: 16
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: ChallengesErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: This describes the structure returned if an error occurred at the challenges endpoint.
+- name: CheckoutData
+  fields: 8
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+  - openapi/antavo-events-openapi.yml
+- name: CheckoutRequestBody
+  fields: 6
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+  - openapi/antavo-events-openapi.yml
+- name: ClaimButtonLabel
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Label of the claim button.
+- name: ClubDetailsNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubDetailsSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubHistoryBadRequestErrorResponse
+  fields: 0
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubHistoryNotFoundErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubHistoryResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubMembersBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubMembersSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubUpdateBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubUpdateNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ClubUpdateSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: CollectionMetadata
+  fields: 1
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+- name: ContentConsumption
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Activity where users consume content (videos or articles).
+- name: ContentConsumptionActivityEndpoint
+  fields: 6
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: ContestActivity
+  fields: 13
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: CorrelationIDResponse
+  fields: 3
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+- name: CorrelationIDResponseCustomer
+  fields: 18
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+- name: CorrelationIDResponsePayload
+  fields: 2
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+- name: Count
+  fields: 1
+  sources:
+  - openapi/antavo-customer-openapi.yml
+  description: Number of customers
+- name: Coupon
+  fields: 15
+  sources:
+  - openapi/antavo-coupons-openapi.yml
+  - openapi/antavo-display-openapi.yml
+- name: CouponClaim
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: CouponEntity
+  fields: 26
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: "Coupon entity. The fields returned depend on the coupon data configured for the workspace.\
+    \ \nIn addition to the standard fields listed below, custom coupon attributes may also be returned\
+    \ as additional properties.\n"
+- name: CouponError
+  fields: 3
+  sources:
+  - openapi/antavo-coupons-openapi.yml
+- name: CouponPoolRewardActivity
+  fields: 20
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: CouponStatus
+  fields: 0
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'The coupon status to match. The status is determined from the coupon’s claim, redemption,
+    expiration, invalidation, and balance data.
+
+    '
+- name: Couponlist
+  fields: 1
+  sources:
+  - openapi/antavo-coupons-openapi.yml
+- name: CouponsFilter
+  fields: 4
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'Filter by allowed fields and operators.
+
+    '
+- name: CouponsResponse
+  fields: 3
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: CouponsStatusResponse
+  fields: 3
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: CreateClubBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: CreateClubSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: CreateCouponPoolRequest
+  fields: 13
+  sources:
+  - openapi/antavo-coupon-pools-openapi.yml
+- name: CreateCouponPoolResponse
+  fields: 3
+  sources:
+  - openapi/antavo-coupon-pools-openapi.yml
+- name: Customer
+  fields: 29
+  sources:
+  - openapi/antavo-customer-openapi.yml
+  - openapi/antavo-display-openapi.yml
+  description: Detailed customer information for a given Customer unique id.
+- name: CustomerCouponSortEntry
+  fields: 2
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: Defines a single sorting instruction by specifying the field and direction.
+- name: CustomerEntity
+  fields: 43
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'Customer entity. The fields and values returned may differ based on workspace configuration.
+
+    '
+- name: CustomerEventSortEntry
+  fields: 2
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: Defines a single sorting instruction by specifying the field and direction.
+- name: CustomerList
+  fields: 1
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: CustomerListRemove
+  fields: 1
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: CustomerSortEntry
+  fields: 2
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: Defines a single sorting instruction by specifying the field and direction.
+- name: CustomerTransactionSortEntry
+  fields: 2
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: Defines a single sorting instruction by specifying the field and direction.
+- name: CustomernotfoundErrorResponse
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: This describes the structure returned if an error occurred
+- name: Customers
+  fields: 1
+  sources:
+  - openapi/antavo-customer-openapi.yml
+  description: Returns Customer unique id which match the search criteria
+- name: CustomersFilter
+  fields: 2
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'Filter object for `GET /v1/customers`. URL form:
+
+    `?filter[<field>][<op>]=<value>`. Multiple operators on the
+
+    same field are allowed.
+
+    '
+- name: Data
+  fields: 2
+  sources:
+  - openapi/antavo-events-openapi.yml
+  description: Refer to the [complete list of events](/docs/api-events) for the data attributes to be
+    sent with each action.
+- name: DateTimeFilter
+  fields: 5
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'Filters a date or date-time field. The following formats are accepted:
+
+    - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+    - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+    - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
+
+    - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC for
+    comparison)
+
+
+    Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+    '
+- name: Description
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Description of the reward.
+- name: DisbandBadRequestResponses
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+  description: Possible error responses when attempting to disband a club.
+- name: DisbandNotFoundResponses
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+  description: Possible not found error responses when attempting to disband a club.
+- name: DisbandSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: DynamicCouponRewardActivity
+  fields: 27
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: Entity
+  fields: 4
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: A specified API call for a defined entity
+- name: Error
+  fields: 3
+  sources:
+  - openapi/antavo-leaderboard-openapi.yml
+  - openapi/antavo-rewards-openapi.yml
+  description: UnauthorizedException
+- name: ErrorEnvelope
+  fields: 1
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+- name: ErrorResponse
+  fields: 3
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+  - openapi/antavo-clubs-openapi.yml
+  - openapi/antavo-coupon-pools-openapi.yml
+  - openapi/antavo-customer-openapi.yml
+  - openapi/antavo-display-openapi.yml
+  - openapi/antavo-entities-openapi.yml
+  - openapi/antavo-events-openapi.yml
+  - openapi/antavo-offers-openapi.yml
+  - openapi/antavo-points-preview-openapi.yml
+  - openapi/antavo-social-share-campaigns-openapi.yml
+- name: Event
+  fields: 8
+  sources:
+  - openapi/antavo-display-openapi.yml
+  - openapi/antavo-events-openapi.yml
+- name: EventEntity
+  fields: 26
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'An event registered for the customer. The fields returned depend on the
+
+    event type and how the event was registered.
+
+    '
+- name: EventProperty
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: EventProperty2
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: Event_response
+  fields: 13
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+  - openapi/antavo-events-openapi.yml
+  description: Successful event submission
+- name: EventsFilter
+  fields: 5
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'Filter by allowed fields and operators.
+
+    '
+- name: FAQError
+  fields: 3
+  sources:
+  - openapi/antavo-faq-openapi.yml
+- name: FAQSuccess
+  fields: 2
+  sources:
+  - openapi/antavo-faq-openapi.yml
+- name: FAQSuccessResponse
+  fields: 1
+  sources:
+  - openapi/antavo-faq-openapi.yml
+- name: GamifiedProfiling
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Activity where users answer questions for gamified profiling flows.
+- name: GamifiedReviews
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Activity encouraging users to leave reviews. If the Multi-accounts module is used, the
+    response includes point logic settings for all configured accounts.
+- name: Gender
+  fields: 0
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Gender of the customer.
+- name: GetRewardResponse
+  fields: 24
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: GetRewardsResponse
+  fields: 1
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: Image
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Object contains different sizes of the image asset.
+- name: ImageSet
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Object containing image URLs of various sizes.
+- name: IncentivizedPurchase
+  fields: 7
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Activity where users complete a purchase to earn points.
+- name: InvitationBadRequestErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: InvitationNotFoundErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: InvitationSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: Item
+  fields: 4
+  sources:
+  - openapi/antavo-offers-openapi.yml
+- name: LimitError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListBatchNotFound
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: ListClubsBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListClubsEmptySuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListClubsSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListErrorResponse
+  fields: 3
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: ListExpiryErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListExpirySuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListNotFoundResponseAdd
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: ListNotFoundResponseRemove
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: ListStatusResponse
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: ListTemplatesBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListTemplatesSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ListofallActivitiesResponse
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: Login
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: MemberDetailsResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: MemberNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: Name
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: The name of the reward.
+- name: NextCustomerTier
+  fields: 3
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: Information about the next tier available to the customer. The object is empty when no
+    higher tier is available.
+- name: NotFoundErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: OfferActivity
+  fields: 11
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: OfferListRequest
+  fields: 4
+  sources:
+  - openapi/antavo-offers-openapi.yml
+- name: OfflineTreasure
+  fields: 7
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Activities where users participate in offline treasure hunts.
+- name: OffsetError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: Optin
+  fields: 11
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Customer opt-in properties
+- name: OwnerBadRequestResponses
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+  description: Possible error responses when attempting to assign an owner.
+- name: OwnerNotFoundResponses
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+  description: Not Found error responses for owner assignments.
+- name: OwnershipSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PUTError
+  fields: 3
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: PUTlistresponse
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: PaginationLinks
+  fields: 2
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+- name: Pass
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: A pass assigned to a customer
+- name: PasswordRequest
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: PasswordReset
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: PasswordResponse
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: This describes the structure returned if an error occurred.
+- name: PointAddData
+  fields: 3
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+  - openapi/antavo-events-openapi.yml
+- name: PointAddRequestBody
+  fields: 6
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+  - openapi/antavo-events-openapi.yml
+- name: PointAlignmentBadRequestErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PointAlignmentNotFoundErrorResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PointAlignmentResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PointDonationRequest
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PointDonationSuccessResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: Price
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Price of the reward in different currencies.
+- name: PrivateJoinBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PrivateJoinNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PrivateJoinResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PrizeWheelOption
+  fields: 11
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: PrizeWheelsOptions
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: PrizeWheelsOptions_ind
+  fields: 6
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: ProcessingError
+  fields: 2
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+- name: ProcessingSuccess
+  fields: 2
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+- name: ProfilingExtension
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: ProfilingQuestionOptions
+  fields: 7
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: The profiling question to be answered.
+- name: Progress
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Progress details of the customer's challenge completion.
+- name: ProgressCriterion
+  fields: 5
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Individual criterion contributing to the overall progress.
+- name: Properties
+  fields: 1
+  sources:
+  - openapi/antavo-customer-openapi.yml
+  description: Custom attributes you track about the customer. Data returned in this object depends on
+    profiling questions or custom data recorded by custom events (may require additional modules enabled).
+- name: PublicJoinBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PublicJoinNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: PublicJoinResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: QueryParameterError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: QuizActivity
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: QuizDetailsResponse
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: RedeemInstructions
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Instructions on how to redeem the reward.
+- name: RefuseBadRequestError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: RefuseNotFoundError
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: RemoveMemberBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: RemoveMemberNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: RemoveMemberResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: ResponseBadRequest
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: RestrictedMessage
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Message displayed to customer who cannot claim the reward.
+- name: Reward
+  fields: 6
+  sources:
+  - openapi/antavo-rewards-openapi.yml
+  description: A reward item
+- name: RewardClaimA
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: RewardNotFound
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: RewardPut
+  fields: 11
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: RewardResponse
+  fields: 23
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: Rewards
+  fields: 6
+  sources:
+  - openapi/antavo-rewards-openapi.yml
+  description: Array of reward entries.
+- name: Segment
+  fields: 3
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Segments associated with the reward.
+- name: SegmentError
+  fields: 3
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: SegmentErrorResponse
+  fields: 1
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: This describes the generic structure returned if an error occurred - A reward entity has
+    been used as an example.
+- name: SegmentResponse
+  fields: 3
+  sources:
+  - openapi/antavo-entities-openapi.yml
+- name: ShareIntentRequest
+  fields: 3
+  sources:
+  - openapi/antavo-social-share-campaigns-openapi.yml
+- name: SocialFollow
+  fields: 9
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Activity encouraging users to follow a social media profile.
+- name: SortDirection
+  fields: 0
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+- name: SpendActivity
+  fields: 17
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: Status8
+  fields: 0
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: 'Transaction status. Can be one of:'
+- name: Status9
+  fields: 0
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Status of the customer.
+- name: StatusResponse
+  fields: 3
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: SubmittedLoyaltyEvent
+  fields: 5
+  sources:
+  - openapi/antavo-async-events-openapi.yml
+- name: SuccesfulResponse
+  fields: 3
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: Success
+  fields: 2
+  sources:
+  - openapi/antavo-rewards-openapi.yml
+  description: A successful reward claim.
+- name: SuccessBanResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: SuccessRefuseResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: SuccessResponse
+  fields: 4
+  sources:
+  - openapi/antavo-leaderboard-openapi.yml
+  description: Array of reward entries.
+- name: Terms
+  fields: 2
+  sources:
+  - openapi/antavo-entities-openapi.yml
+  description: Terms and conditions of reward redemption.
+- name: TierNext
+  fields: 3
+  sources:
+  - openapi/antavo-customer-openapi.yml
+  description: Information about the next available loyalty tier.
+- name: TierStructure
+  fields: 2
+  sources:
+  - openapi/antavo-customer-openapi.yml
+  description: The overall structure in which the current tier is located.
+- name: Transaction
+  fields: 10
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: Transaction2
+  fields: 7
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: TransactionEntity
+  fields: 15
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'A transaction registered for the customer, including its items, associated events, point
+    values, and current processing status.
+
+    The fields returned may vary depending on the data submitted with the transaction, the custom attributes
+    configured for the corresponding events, and the transaction processing applied in the workspace.
+
+    '
+- name: TransactionEventReference
+  fields: 3
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: A summary of an event associated with the transaction.
+- name: TransactionEvents
+  fields: 6
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: TransactionEventsHistoryResponse
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: TransactionHistoryResponse
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: TransactionHistoryResponse2
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: TransactionItem
+  fields: 12
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: An item included in the transaction.
+- name: TransactionPerTransactionContent
+  fields: 10
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: TransactionPerTransactionResponse
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: TransactionsFilter
+  fields: 7
+  sources:
+  - openapi/antavo-loyalty-read-openapi.yml
+  description: 'Filter by allowed fields and operators.
+
+    '
+- name: TreasureHuntResponse
+  fields: 8
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: UnassignCouponsRequest
+  fields: 1
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: UnbanMemberBadRequestResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: UnbanMemberNotFoundResponse
+  fields: 2
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: UnbanMemberResponse
+  fields: 3
+  sources:
+  - openapi/antavo-clubs-openapi.yml
+- name: UpdateCouponPoolRequest
+  fields: 15
+  sources:
+  - openapi/antavo-coupon-pools-openapi.yml
+- name: UpdateCouponPoolResponse
+  fields: 3
+  sources:
+  - openapi/antavo-coupon-pools-openapi.yml
+- name: V2ChallengeActivity
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: V2ChallengeCompletion
+  fields: 17
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Represents a challenge and its completion status.
+- name: V2ChallengeCompletionCriteria
+  fields: 5
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Defines the completion criteria for a challenge.
+- name: V2ChallengeCompletionImage
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Object containing different sizes of the image asset.
+- name: V2ChallengeCompletionMetadata
+  fields: 1
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Metadata for the challenge completion response.
+- name: V2ChallengeCompletionPagination
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Pagination information for challenge completion list.
+- name: V2ChallengeCompletionProgress
+  fields: 2
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Tracks overall progress and individual criteria. Returned for active challenges only.
+- name: V2ChallengeCompletionResponse
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Response object for the list of challenge completions.
+- name: V2ChallengeItem
+  fields: 16
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: V2ChallengeProgress
+  fields: 3
+  sources:
+  - openapi/antavo-display-openapi.yml
+- name: campaign
+  fields: 2
+  sources:
+  - openapi/antavo-points-preview-openapi.yml
+- name: campaigns
+  fields: 0
+  sources:
+  - openapi/antavo-points-preview-openapi.yml
+- name: cartItem
+  fields: 5
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: cartModel
+  fields: 11
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: cartResponse
+  fields: 14
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+  description: The calculated cart object with applied promotions.
+- name: data
+  fields: 3
+  sources:
+  - openapi/antavo-offers-openapi.yml
+  - openapi/antavo-points-preview-openapi.yml
+  description: An array of Offer objects
+- name: discountBonusProducts
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountBundle
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountBuyXForTotalAmount
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountBuyXGetYFree
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountCrossSelling
+  fields: 3
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountFreeSample
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountPriceReduction
+  fields: 3
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountProductSet
+  fields: 3
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountPromoCode
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: discountPromotionalPricing
+  fields: 1
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: events_bulkrequest
+  fields: 1
+  sources:
+  - openapi/antavo-events-openapi.yml
+- name: item
+  fields: 7
+  sources:
+  - openapi/antavo-points-preview-openapi.yml
+- name: items
+  fields: 0
+  sources:
+  - openapi/antavo-points-preview-openapi.yml
+- name: metadata
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: metadatalist
+  fields: 2
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+- name: offer
+  fields: 15
+  sources:
+  - openapi/antavo-offers-openapi.yml
+- name: promotionModel
+  fields: 13
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: response
+  fields: 4
+  sources:
+  - openapi/antavo-bulk-operations-openapi.yml
+  - openapi/antavo-offers-openapi.yml
+- name: restrictionBase
+  fields: 5
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+  description: Conditions that must be met for the promotion to apply to the cart. The structure and applicable
+    fields may vary depending on the promotion type.
+- name: restrictionBonusProducts
+  fields: 0
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionBundle
+  fields: 0
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionBuyXForTotalAmount
+  fields: 3
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionBuyXGetYFree
+  fields: 3
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionCrossSelling
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionFreeSample
+  fields: 3
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionPriceReduction
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionProductSet
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionPromoCode
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: restrictionPromotionalPricing
+  fields: 2
+  sources:
+  - openapi/antavo-promotion-engine-openapi.yml
+- name: results
+  fields: 0
+  sources:
+  - openapi/antavo-events-openapi.yml
+  description: Array of event processing results.
+- name: token
+  fields: 0
+  sources:
+  - openapi/antavo-display-openapi.yml
+  description: Token needed for [password reset](https://developers.antavo.com/reference/post_customers-password-reset).
+- name: transrequest
+  fields: 4
+  sources:
+  - openapi/antavo-display-openapi.yml
+relationships:
+- from: CorrelationIDResponse
+  type: has_one
+  to: CorrelationIDResponsePayload
+  via: payload
+  source: openapi/antavo-async-events-openapi.yml
+- from: CorrelationIDResponsePayload
+  type: has_one
+  to: ProcessingSuccess
+  via: response
+  source: openapi/antavo-async-events-openapi.yml
+- from: CorrelationIDResponsePayload
+  type: has_one
+  to: ProcessingError
+  via: response
+  source: openapi/antavo-async-events-openapi.yml
+- from: ProcessingSuccess
+  type: has_one
+  to: CorrelationIDResponseCustomer
+  via: success
+  source: openapi/antavo-async-events-openapi.yml
+- from: CorrelationIDResponseCustomer
+  type: has_many
+  to: SubmittedLoyaltyEvent
+  via: events
+  source: openapi/antavo-async-events-openapi.yml
+- from: SubmittedLoyaltyEvent
+  type: has_one
+  to: Account
+  via: account
+  source: openapi/antavo-async-events-openapi.yml
+- from: PointAddRequestBody
+  type: has_one
+  to: PointAddData
+  via: data
+  source: openapi/antavo-async-events-openapi.yml
+- from: CheckoutRequestBody
+  type: has_one
+  to: CheckoutData
+  via: data
+  source: openapi/antavo-async-events-openapi.yml
+- from: SuccesfulResponse
+  type: has_one
+  to: metadatalist
+  via: metadata
+  source: openapi/antavo-bulk-operations-openapi.yml
+- from: response
+  type: has_one
+  to: metadata
+  via: metadata
+  source: openapi/antavo-bulk-operations-openapi.yml
+- from: BulkRewardClaim
+  type: has_one
+  to: metadata
+  via: metadata
+  source: openapi/antavo-bulk-operations-openapi.yml
+- from: Couponlist
+  type: has_many
+  to: Coupon
+  via: data
+  source: openapi/antavo-coupons-openapi.yml
+- from: Customer
+  type: has_one
+  to: Properties
+  via: $ref
+  source: openapi/antavo-customer-openapi.yml
+- from: Customer
+  type: has_one
+  to: TierStructure
+  via: structure
+  source: openapi/antavo-customer-openapi.yml
+- from: Customer
+  type: has_one
+  to: TierNext
+  via: next
+  source: openapi/antavo-customer-openapi.yml
+- from: ChallengeActivity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: ContestActivity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: Progress
+  type: has_many
+  to: ProgressCriterion
+  via: criteria
+  source: openapi/antavo-display-openapi.yml
+- from: GamifiedReviews
+  type: has_one
+  to: ImageSet
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: SocialFollow
+  type: has_one
+  to: ImageSet
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: Challenge
+  type: has_one
+  to: ImageSet
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: Challenge
+  type: has_one
+  to: Progress
+  via: progress
+  source: openapi/antavo-display-openapi.yml
+- from: ContentConsumption
+  type: has_one
+  to: ImageSet
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: IncentivizedPurchase
+  type: has_one
+  to: ImageSet
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: OfflineTreasure
+  type: has_one
+  to: ImageSet
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: GamifiedProfiling
+  type: has_one
+  to: ImageSet
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: OfferActivity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: Activity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: QuizDetailsResponse
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: QuizActivity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: DynamicCouponRewardActivity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: CouponPoolRewardActivity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: CouponPoolRewardActivity
+  type: has_many
+  to: Image
+  via: gallery
+  source: openapi/antavo-display-openapi.yml
+- from: SpendActivity
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: SpendActivity
+  type: has_many
+  to: Image
+  via: ends_at
+  source: openapi/antavo-display-openapi.yml
+- from: TreasureHuntResponse
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: ListofallActivitiesResponse
+  type: has_many
+  to: Activity
+  via: data
+  source: openapi/antavo-display-openapi.yml
+- from: ChallengeCompletion
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: Event
+  type: has_many
+  to: EventProperty
+  via: items
+  source: openapi/antavo-display-openapi.yml
+- from: RewardClaimA
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: TransactionHistoryResponse
+  type: has_many
+  to: Transaction
+  via: data
+  source: openapi/antavo-display-openapi.yml
+- from: Transaction
+  type: has_one
+  to: Status8
+  via: status
+  source: openapi/antavo-display-openapi.yml
+- from: TransactionEventsHistoryResponse
+  type: has_many
+  to: TransactionEvents
+  via: data
+  source: openapi/antavo-display-openapi.yml
+- from: TransactionPerTransactionResponse
+  type: has_many
+  to: TransactionPerTransactionContent
+  via: data
+  source: openapi/antavo-display-openapi.yml
+- from: TransactionPerTransactionContent
+  type: has_one
+  to: Status8
+  via: status
+  source: openapi/antavo-display-openapi.yml
+- from: TransactionHistoryResponse2
+  type: has_many
+  to: Transaction2
+  via: data
+  source: openapi/antavo-display-openapi.yml
+- from: Transaction2
+  type: has_one
+  to: Status8
+  via: status
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeActivity
+  type: has_many
+  to: V2ChallengeItem
+  via: payload
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeItem
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeItem
+  type: has_one
+  to: V2ChallengeProgress
+  via: progress
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeCompletionProgress
+  type: has_many
+  to: V2ChallengeCompletionCriteria
+  via: criteria
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeCompletion
+  type: has_one
+  to: V2ChallengeCompletionImage
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeCompletion
+  type: has_one
+  to: V2ChallengeCompletionProgress
+  via: progress
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeCompletionMetadata
+  type: has_one
+  to: V2ChallengeCompletionPagination
+  via: pagination
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeCompletionResponse
+  type: has_one
+  to: V2ChallengeCompletionMetadata
+  via: metadata
+  source: openapi/antavo-display-openapi.yml
+- from: V2ChallengeCompletionResponse
+  type: has_many
+  to: V2ChallengeCompletion
+  via: payload
+  source: openapi/antavo-display-openapi.yml
+- from: BidResponse
+  type: has_one
+  to: Image
+  via: image
+  source: openapi/antavo-display-openapi.yml
+- from: Customer
+  type: has_one
+  to: Gender
+  via: gender
+  source: openapi/antavo-display-openapi.yml
+- from: Customer
+  type: has_one
+  to: Status9
+  via: status
+  source: openapi/antavo-display-openapi.yml
+- from: Optin
+  type: has_one
+  to: Gender
+  via: gender
+  source: openapi/antavo-display-openapi.yml
+- from: PasswordResponse
+  type: has_one
+  to: token
+  via: token
+  source: openapi/antavo-display-openapi.yml
+- from: SegmentErrorResponse
+  type: has_one
+  to: SegmentError
+  via: error
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: Name
+  via: name
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: Description
+  via: description
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: RedeemInstructions
+  via: redeem_instructions
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: Terms
+  via: terms
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: Account
+  via: account
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: ClaimButtonLabel
+  via: claim_button_label
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: Category
+  via: category
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_many
+  to: Segment
+  via: segments
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: RestrictedMessage
+  via: restricted_message
+  source: openapi/antavo-entities-openapi.yml
+- from: RewardResponse
+  type: has_one
+  to: Price
+  via: price
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: Name
+  via: name
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: Description
+  via: description
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: RedeemInstructions
+  via: redeem_instructions
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: Terms
+  via: terms
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: Account
+  via: account
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: ClaimButtonLabel
+  via: claim_button_label
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: Category
+  via: category
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_many
+  to: Segment
+  via: segments
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: RestrictedMessage
+  via: restricted_message
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardResponse
+  type: has_one
+  to: Price
+  via: price
+  source: openapi/antavo-entities-openapi.yml
+- from: GetRewardsResponse
+  type: has_many
+  to: GetRewardResponse
+  via: data
+  source: openapi/antavo-entities-openapi.yml
+- from: Bulkentitytwo
+  type: has_many
+  to: Bulkentitytwoitems
+  via: error
+  source: openapi/antavo-entities-openapi.yml
+- from: events_bulkrequest
+  type: has_many
+  to: Event
+  via: events
+  source: openapi/antavo-events-openapi.yml
+- from: Event
+  type: has_one
+  to: Data
+  via: data
+  source: openapi/antavo-events-openapi.yml
+- from: Bulk_Event_response
+  type: has_one
+  to: results
+  via: results
+  source: openapi/antavo-events-openapi.yml
+- from: FAQSuccessResponse
+  type: has_many
+  to: FAQSuccess
+  via: data
+  source: openapi/antavo-faq-openapi.yml
+- from: CustomerEntity
+  type: has_one
+  to: NextCustomerTier
+  via: next
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CollectionMetadata
+  type: has_one
+  to: PaginationLinks
+  via: pagination
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CustomerCouponSortEntry
+  type: has_one
+  to: SortDirection
+  via: direction
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CouponEntity
+  type: has_one
+  to: CouponStatus
+  via: status
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CouponsFilter
+  type: has_one
+  to: CouponStatus
+  via: eq
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CouponsFilter
+  type: has_one
+  to: DateTimeFilter
+  via: claimed_at
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CouponsFilter
+  type: has_one
+  to: DateTimeFilter
+  via: redeemed_at
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CouponsFilter
+  type: has_one
+  to: DateTimeFilter
+  via: expiration_date
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CustomerEventSortEntry
+  type: has_one
+  to: SortDirection
+  via: direction
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CustomerSortEntry
+  type: has_one
+  to: SortDirection
+  via: direction
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CustomersFilter
+  type: has_one
+  to: DateTimeFilter
+  via: created_at
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: CustomerTransactionSortEntry
+  type: has_one
+  to: SortDirection
+  via: direction
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: TransactionEntity
+  type: has_many
+  to: TransactionItem
+  via: items
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: TransactionEntity
+  type: has_many
+  to: TransactionEventReference
+  via: events
+  source: openapi/antavo-loyalty-read-openapi.yml
+- from: response
+  type: has_many
+  to: data
+  via: data
+  source: openapi/antavo-offers-openapi.yml
+- from: response
+  type: has_many
+  to: CartItems
+  via: cart
+  source: openapi/antavo-offers-openapi.yml
+- from: offer
+  type: has_many
+  to: Item
+  via: required_items
+  source: openapi/antavo-offers-openapi.yml
+- from: offer
+  type: has_many
+  to: Item
+  via: eligible_items
+  source: openapi/antavo-offers-openapi.yml
+- from: OfferListRequest
+  type: has_one
+  to: Cart
+  via: cart
+  source: openapi/antavo-offers-openapi.yml
+- from: Cart
+  type: has_many
+  to: CartItems
+  via: items
+  source: openapi/antavo-offers-openapi.yml
+- from: data
+  type: has_many
+  to: items
+  via: items
+  source: openapi/antavo-points-preview-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionBase
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionPromoCode
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionBundle
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionBonusProducts
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionBuyXForTotalAmount
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionBuyXGetYFree
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionCrossSelling
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionPriceReduction
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionFreeSample
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionProductSet
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: restrictionPromotionalPricing
+  via: restriction
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountPromoCode
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountBundle
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountBonusProducts
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountBuyXForTotalAmount
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountBuyXGetYFree
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountCrossSelling
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountPriceReduction
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountFreeSample
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountProductSet
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: promotionModel
+  type: has_one
+  to: discountPromotionalPricing
+  via: discount
+  source: openapi/antavo-promotion-engine-openapi.yml
+- from: cartModel
+  type: has_many
+  to: cartItem
+  via: cartItems
+  source: openapi/antavo-promotion-engine-openapi.yml
+resource_graph:
+- resource: customers
+  operations: 53
+  paths:
+  - /customers
+  - /customers/-/count
+  - /customers/-/events
+  - /customers/-/login
+  - /customers/-/password/request
+  - /customers/-/password/reset
+  - /customers/-/verify/
+  - /customers/leaderboard
+  - /customers/{customer_id}
+  - /customers/{customer_id}/activities
+  - /customers/{customer_id}/activities/challenges
+  - /customers/{customer_id}/activities/content-consumption
+  specs:
+  - openapi/antavo-customer-openapi.yml
+  - openapi/antavo-display-openapi.yml
+  - openapi/antavo-leaderboard-openapi.yml
+  - openapi/antavo-loyalty-read-openapi.yml
+- resource: clubs
+  operations: 22
+  paths:
+  - /v1/clubs
+  - /v1/clubs/invitations/{invitation_id}
+  - /v1/clubs/templates
+  - /v1/clubs/{club_id}
+  - /v1/clubs/{club_id}/applicants/{customer_id}/accept
+  - /v1/clubs/{club_id}/applicants/{customer_id}/ban
+  - /v1/clubs/{club_id}/applicants/{customer_id}/refuse
+  - /v1/clubs/{club_id}/disband
+  - /v1/clubs/{club_id}/history
+  - /v1/clubs/{club_id}/invitations
+  - /v1/clubs/{club_id}/members
+  - /v1/clubs/{club_id}/members/join-public
+  specs:
+  - openapi/antavo-clubs-openapi.yml
+- resource: entities
+  operations: 17
+  paths:
+  - /entities
+  - /entities/core/customer-list
+  - /entities/core/customer-list/{entity_id}
+  - /entities/rewards/reward
+  - /entities/rewards/reward/{entity_id}
+  - /entities/{module}/{entity}
+  - /entities/{module}/{entity}/{entity_id}
+  specs:
+  - openapi/antavo-entities-openapi.yml
+- resource: bulk-operation
+  operations: 10
+  paths:
+  - /v1/bulk-operation/coupons/{batch_id}/status
+  - /v1/bulk-operation/coupons/{batch_id}/status/error
+  - /v1/bulk-operation/coupons/{coupon_pool_id}/{action}
+  - /v1/bulk-operation/customer-list/add/{customer_list_id}
+  - /v1/bulk-operation/customer-list/remove/{customer_list_id}
+  - /v1/bulk-operation/customer-list/{batch_id}/status
+  - /v1/bulk-operation/customer-list/{batch_id}/status/errors
+  - /v1/bulk-operation/reward/claim/{batch_id}/status
+  - /v1/bulk-operation/reward/claim/{batch_id}/status/error
+  - /v1/bulk-operation/reward/claim/{reward_id}
+  specs:
+  - openapi/antavo-bulk-operations-openapi.yml
+- resource: rewards
+  operations: 3
+  paths:
+  - /rewards
+  - /rewards/{reward_id}
+  - /rewards/{reward_id}/claim
+  specs:
+  - openapi/antavo-rewards-openapi.yml
+- resource: async
+  operations: 2
+  paths:
+  - /v1/async/events
+  - /v1/async/events/{correlation_id}
+  specs:
+  - openapi/antavo-async-events-openapi.yml
+- resource: coupon-pools
+  operations: 2
+  paths:
+  - /v1/coupon-pools
+  - /v1/coupon-pools/{coupon_pool_id}/update
+  specs:
+  - openapi/antavo-coupon-pools-openapi.yml
+- resource: events
+  operations: 2
+  paths:
+  - /events
+  - /events/bulk
+  specs:
+  - openapi/antavo-events-openapi.yml
+- resource: promotion
+  operations: 2
+  paths:
+  - /v1/promotion/{promotionId}
+  - /v1/promotion/{promotionId}/status
+  specs:
+  - openapi/antavo-promotion-engine-openapi.yml
+- resource: cart
+  operations: 2
+  paths:
+  - /v1/cart
+  - /v1/cart/finalize
+  specs:
+  - openapi/antavo-promotion-engine-openapi.yml
+- resource: auth
+  operations: 1
+  paths:
+  - /v1/auth/token
+  specs:
+  - openapi/antavo-authentication-openapi.yml
+- resource: coupons
+  operations: 1
+  paths:
+  - /coupons
+  specs:
+  - openapi/antavo-coupons-openapi.yml
+- resource: faq
+  operations: 1
+  paths:
+  - /faq
+  specs:
+  - openapi/antavo-faq-openapi.yml
+- resource: offers
+  operations: 1
+  paths:
+  - /offers/
+  specs:
+  - openapi/antavo-offers-openapi.yml
+- resource: extensions
+  operations: 1
+  paths:
+  - /extensions/automation/campaign-bonus
+  specs:
+  - openapi/antavo-points-preview-openapi.yml
+- resource: promotions
+  operations: 1
+  paths:
+  - /v1/promotions
+  specs:
+  - openapi/antavo-promotion-engine-openapi.yml
+- resource: social-share-campaigns
+  operations: 1
+  paths:
+  - /v1/social-share-campaigns/share-intent
+  specs:
+  - openapi/antavo-social-share-campaigns-openapi.yml
+path_identifiers:
+- action
+- batch_id
+- club_id
+- contest_id
+- correlation_id
+- coupon_pool_id
+- customer_id
+- customer_list_id
+- data_extension
+- entity
+- entity_id
+- flow_id
+- invitation_id
+- module
+- offer_id
+- promotionId
+- pw_id
+- question_id
+- quiz_id
+- reward_id
+- transaction_id
+caveats:
+- Antavo's specs declare comparatively few reusable components.schemas - most request and response bodies
+  are declared inline per operation, so this graph under-represents the true model. The resource_graph
+  below, derived from URI structure, is the more complete view.
+- Custom customer attributes, custom entity modules and translation objects are workspace configuration
+  and appear in responses without being declared in any spec. Antavo explicitly warns clients to tolerate
+  undocumented response fields.
+render: null

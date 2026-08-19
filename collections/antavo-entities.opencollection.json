@@ -1,0 +1,449 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Entities API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customer lists",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve information of a specific customer list",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/entities/core/customer-list/:entity_id",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "66810d9683aeae307b712d43",
+                "type": "path",
+                "description": "The ID of the customer list."
+              }
+            ]
+          },
+          "docs": "This endpoint returns a specific customer list."
+        },
+        {
+          "info": {
+            "name": "Update a customer list",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/entities/core/customer-list/:entity_id",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer list."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows you to update a customer list."
+        },
+        {
+          "info": {
+            "name": "Archive a customer list",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.staging.antavo.com/entities/core/customer-list/:entity_id",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer list."
+              }
+            ]
+          },
+          "docs": "This endpoint allows archiving a customer list and removing users from it. Only inactive lists can be archived. Once archived, lists cannot be restored."
+        },
+        {
+          "info": {
+            "name": "List all available customer lists",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/entities/core/customer-list"
+          },
+          "docs": "This endpoint returns all available customer lists."
+        },
+        {
+          "info": {
+            "name": "Create a new customer list",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.staging.antavo.com/entities/core/customer-list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows you to create a new customer list."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Generic",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve all information regarding a specific entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/entities/:module/:entity/:entity_id",
+            "params": [
+              {
+                "name": "module",
+                "value": "rewards",
+                "type": "path",
+                "description": "Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+              },
+              {
+                "name": "entity",
+                "value": "reward",
+                "type": "path",
+                "description": "The entity's unique ID - typically the singular form of the entity module name."
+              },
+              {
+                "name": "entity_id",
+                "value": "63eaabe8b0fe6815c91425b6",
+                "type": "path",
+                "description": "The unique ID of a specific entity."
+              },
+              {
+                "name": "additional queries",
+                "value": "",
+                "type": "query",
+                "description": "\nCustom queries can be added here.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns all information regarding a specific entity item."
+        },
+        {
+          "info": {
+            "name": "Update a specific entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/entities/:module/:entity/:entity_id",
+            "params": [
+              {
+                "name": "module",
+                "value": "rewards",
+                "type": "path",
+                "description": "Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+              },
+              {
+                "name": "entity",
+                "value": "reward",
+                "type": "path",
+                "description": "The  entity's unique ID - typically the singular form of the entity module."
+              },
+              {
+                "name": "entity_id",
+                "value": "63eaabe8b0fe6815c91425b6",
+                "type": "path",
+                "description": "The unique id for the specific entity item."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Any pre-configured attribute in an entity itek can be modified using this API endpoint. Modification requires the use of  attribute's unique ID, set in the Management UI."
+        },
+        {
+          "info": {
+            "name": "Create a new entity with a specific entity ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.staging.antavo.com/entities/:module/:entity/:entity_id",
+            "params": [
+              {
+                "name": "module",
+                "value": "rewards",
+                "type": "path",
+                "description": "Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+              },
+              {
+                "name": "entity",
+                "value": "reward",
+                "type": "path",
+                "description": "The  entity's unique ID - typically the singular form of the entity module."
+              },
+              {
+                "name": "entity_id",
+                "value": "63eaabe8b0fe6815c91425b6",
+                "type": "path",
+                "description": "The unique ID for the new entity."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An entity item with a specified ID can be created in an entity module using this endpoint. Any parameter can be set as long as there is the corresponding attribute pre-configured in the Management UI."
+        },
+        {
+          "info": {
+            "name": "Archive an inactive entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.staging.antavo.com/entities/:module/:entity/:entity_id",
+            "params": [
+              {
+                "name": "module",
+                "value": "wardsre",
+                "type": "path",
+                "description": "Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+              },
+              {
+                "name": "entity",
+                "value": "reward",
+                "type": "path",
+                "description": "The  entity's unique ID - typically the singular form of the entity module."
+              },
+              {
+                "name": "entity_id",
+                "value": "63eaabe8b0fe6815c91425b6",
+                "type": "path",
+                "description": "The unique ID of a specific entity."
+              }
+            ]
+          },
+          "docs": "This endpoint archives a specific deactivated entity, effectively removing it from the system. The reward will be completely non-visible and inaccessible for member and Management UI users as well."
+        },
+        {
+          "info": {
+            "name": "List all available entity of an entity module",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/entities/:module/:entity",
+            "params": [
+              {
+                "name": "module",
+                "value": "rewards",
+                "type": "path",
+                "description": "Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+              },
+              {
+                "name": "entity",
+                "value": "reward",
+                "type": "path",
+                "description": "The entity's unique ID - typically the singular form of the entity module name."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of entity items to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of entity items to be returned in one response. Other values are accessible by pagination made accessible via the offset."
+              },
+              {
+                "name": "additional queries",
+                "value": "",
+                "type": "query",
+                "description": "\nCustom queries can be added here.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint lists all available entity items within the specified entity module. This interaction is customer-independent."
+        },
+        {
+          "info": {
+            "name": "Create a new entity",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.staging.antavo.com/entities/:module/:entity",
+            "params": [
+              {
+                "name": "module",
+                "value": "rewards",
+                "type": "path",
+                "description": "Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+              },
+              {
+                "name": "entity",
+                "value": "reward",
+                "type": "path",
+                "description": "The  entity's unique ID - typically the singular form of the module."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint created an entity in an entity module. Any parameter can be set as long as there is the corresponding attribute pre-configured in the Management UI."
+        },
+        {
+          "info": {
+            "name": "Submit entities in bulk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/entities",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Multiple calls to various entity endpoints can be made by submitting a request with data in array format. The following options are available for error checking the submitted data:\n- `skip`: Erroneous data is not added, and the whole entry is skipped.\n- `pre-check`: The submitted data is checked for validity but not entered into the Antavo system. Any error messages are returned.\n- `fail`: The submission is stopped when an error is encountered."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Rewards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Returns all information regarding a specific reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/entities/rewards/reward/:entity_id",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the reward."
+              }
+            ]
+          },
+          "docs": "A detailed breakdown of all parameters for the specific reward is returned."
+        },
+        {
+          "info": {
+            "name": "Update specific reward attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/entities/rewards/reward/:entity_id",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "63dcb7736123782ba6336425",
+                "type": "path",
+                "description": "The unique identifier of the reward."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "An attribute of a reward can be updated via this endpoint."
+        },
+        {
+          "info": {
+            "name": "Archive an inactive reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.staging.antavo.com/entities/rewards/reward/:entity_id",
+            "params": [
+              {
+                "name": "entity_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the reward."
+              }
+            ]
+          },
+          "docs": "This endpoint archives a specific deactivated reward, effectively removing it from the system. The reward will be completely non-visible and inaccessible for members and Management UI users as well."
+        },
+        {
+          "info": {
+            "name": "List all available rewards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/entities/rewards/reward",
+            "params": [
+              {
+                "name": "stores",
+                "value": "",
+                "type": "query",
+                "description": "Filters the return rewards by stores, using a store ID."
+              }
+            ]
+          },
+          "docs": "This endpoint lists all available rewards.<br>It allows filtering by stores configured in the Stores module."
+        },
+        {
+          "info": {
+            "name": "Create a new reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.staging.antavo.com/entities/rewards/reward",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint facilitates the creation of rewards."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

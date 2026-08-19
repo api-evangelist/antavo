@@ -1,0 +1,608 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo Customers API
+  version: 1.0.0-oas3
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /customers/-/count:
+    get:
+      tags:
+      - Customers
+      summary: Returns the number of active customers
+      description: This endpoint returns the number of customers with active status within Antavo.
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+              examples:
+                Success:
+                  value:
+                    active: 24120
+  /customers/{customer_id}:
+    get:
+      tags:
+      - Customers
+      summary: Returns detailed customer data using the Antavo unique ID
+      description: "This endpoint returns detailed information for a specific customer. \n"
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo unique ID e.g., `280e674c-c4ea-4a30-987a-d9267d1a5018`\n\
+          * An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)):\
+          \ `{external_field:external_id_value}`\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a501
+      - name: fields
+        in: query
+        required: false
+        description: "Returns additional optional fields: \n\n* Groups: Returns associated groups (requires\
+          \ [User groups module](https://docs.antavo.com/docs/user-groups) for selected customer in the\
+          \ form of an object with the following properties:\n  \n  - `ID` - integer\n\n  - `Name` - string,\
+          \ optional (not returned for non-existing groups)\n  \n  - `external_id` - string, optional\
+          \ (not returned if empty)\n\n* Purchases: A summary of purchase statistics. Options are [here](https://developers.antavo.com/docs/customers#purchases).\n\
+          \n* Expiring points: A summary of expiration statistics. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).\n\
+          \n* Expiration points history: An array of dates and number of points that have expired or will\
+          \ expire. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).\
+          \          \n"
+        schema:
+          type: string
+          enum:
+          - groups
+          - purchases.ytd
+          - expiring_points
+          - expiring_points.history
+      responses:
+        '200':
+          description: Successful customer search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                failed:
+                  summary: Error - search field is empty or missing
+                  value:
+                    code: 160211
+                    message: Empty search criteria
+                    type: BadRequestException
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                failed:
+                  summary: Error - customer not found
+                  value:
+                    code: 160212
+                    message: Customer not found
+                    type: NotFoundException
+  /customers:
+    get:
+      tags:
+      - Customers
+      summary: Search Antavo database using customer filters
+      description: 'This endpoint allows you to search the Antavo database for customers based on specific
+        criteria and returns the Antavo Customer ID. Note that the filtering is case-sensitive and does
+        not support partial matches.
+
+        The filtering query requires that the filter parameter has been tagged as [searchable](https://docs.antavo.com/customers#add-a-new-field)
+        in the Antavo Management UI.
+
+        '
+      parameters:
+      - in: query
+        name: Filtering
+        description: 'Customers can be filtered upon any configured customer field (marked as ``searchable``).
+          Results are case-sensitive and return exact matches.
+
+
+          It''s possible to query multiple customers based on the last update date. Customer IDs are returned
+          if the  ``updated_at`` customer attribute is greater than a specified datetime using the format
+          ``updated_at.gt=<datetime>``.
+
+          '
+        schema:
+          type: object
+          example:
+            first_name: John
+            updated_at.gt: '2022-01-01'
+      - name: search
+        in: query
+        required: false
+        description: Perform searches using key fields such as `first_name`, `last_name`,  `email`, `mobile_phone`,
+          or `membership_id`.
+        schema:
+          type: string
+          example: first_name=John
+      - name: fields
+        in: query
+        required: false
+        description: 'Returns additional optional attributes from the customer object.
+
+
+          **Note**: Separating commas must be percentage encoded for [API signing](/api-signing).
+
+          '
+        schema:
+          type: string
+      - name: match
+        in: query
+        required: false
+        description: 'Enables querying specific customer data. Currently only works with the following
+          attributes: `_id`, `email`, and `membership_id`. Example usage: `&match=exact&membership_id=33492206-ba75-4487-8047-a9d78a135ce9`'
+        schema:
+          type: string
+          enum:
+          - exact
+      - name: limit
+        in: query
+        description: 'Limits the number of events to be returned in one response. Other values are accessible
+          by pagination made accessible via the offset.
+
+          '
+        schema:
+          type: integer
+          example: 50
+          default: 100
+      - name: offset
+        in: query
+        description: 'Offsets the starting number of items for pagination.
+
+          '
+        schema:
+          type: integer
+          example: 10
+          default: 0
+      responses:
+        '200':
+          description: Successful customer search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customers'
+              examples:
+                Success:
+                  value:
+                    id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                Success 2:
+                  summary: Success with fields=groups query
+                  value:
+                    id: a280e674c-c4ea-4a30-987a-d9267d1a5018nakin
+                    groups:
+                    - id: 331
+                      name: USA-Department
+                      external_id: AG331
+        '404':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Error - search field is empty or missing
+                  value:
+                    code: 160211
+                    message: Empty search criteria
+                    type: BadRequestException
+  /customers/{customer_id}/merge:
+    post:
+      tags:
+      - Customers
+      summary: Merges the current customer into the target account
+      description: This endpoint permanently merges the current customer into the target account.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n\
+          \n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)):\
+          \ ``{external_field:external_id_value}``\n"
+        example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+              - target
+              type: object
+              properties:
+                target:
+                  type: string
+                  example: a280e674c-de2a-4a30-987a-d9267d1a119bc123
+                  description: "The target account to merge into.  This can be \n\n*  The Antavo unique\
+                    \ ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n*  An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)):\
+                    \ ``{external_field:external_id_value}``\n"
+      responses:
+        '200':
+          description: Merge successful
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failure:
+                  value:
+                    type: BadRequestException
+                    code: 160216
+                    message: Customer is not active
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failure:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      deprecated: false
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+  schemas:
+    Count:
+      type: object
+      description: Number of customers
+      properties:
+        active:
+          type: number
+          description: The number of active customers.
+          example: 123456
+    ErrorResponse:
+      type: object
+      description: occurred
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            code:
+              type: number
+              description: Error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            type:
+              type: string
+              description: Type of the error.
+    Customer:
+      type: object
+      description: Detailed customer information for a given Customer unique id.
+      properties:
+        id:
+          type: string
+          description: The unique customer identifier.
+          example: 55e5d4dc2cf1901e688b45d3
+        first_name:
+          type: string
+          description: Customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: Customer's last name.
+          example: Smith
+        nickname:
+          type: string
+          description: Customer's nickname.
+          example: Johnny
+        email:
+          type: string
+          description: Customer's email address.
+          example: jsmith@example.com
+        birth_date:
+          type: string
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          description: Customer language code (ISO-639-1 format).
+          format: date
+          example: '1969-12-25'
+        gender:
+          type: string
+          description: Customer's date of birth.
+          example: Male
+        language:
+          type: string
+          description: Customer's gender
+          example: en
+        currency:
+          type: string
+          description: The ISO 3-Letter Currency Code for the last currency used.
+          example: GBP
+        status:
+          description: The status of the customer.
+          type: string
+          example: Active
+        score:
+          description: The total number of points ever earned by the customer.
+          type: number
+          example: 100
+        spent:
+          description: The points spent by the customer.
+          type: number
+          example: 20
+        reserved:
+          description: The amount of points reserved on bids or discounts.
+          type: number
+          example: 0
+        expired:
+          description: The number of points expired.
+          type: number
+          example: 100
+        spendable:
+          description: The amount of points currently spendable.
+          type: number
+          example: 50
+        pending:
+          description: The number of pending points for non-finalized actions. Typically given when the
+            purchase is in its refund/return period.
+          type: number
+          example: 20
+        image_url:
+          description: The URL of the customer profile picture, if it’s available
+          type: string
+          example: https://example.com/image.png
+        optin_at:
+          description: The unix timestamp of the enrollment of the customer.
+          type: number
+          example: 1577836800
+        last_login_at:
+          description: The unix timestamp of the last login of the customer.
+          type: number
+          example: 1593561600
+        updated_at:
+          description: The unix timestamp of the last time customer data was updated.
+          type: number
+          example: 1593561623
+        properties:
+          $ref: '#/components/schemas/Properties'
+        purchase_total:
+          description: The money spent on purchases by the customer since enrolling into the program.
+          type: number
+          example: 100
+        purchase_count:
+          description: The number of purchases made by the customer since enrolling into the program.
+          type: number
+          example: 2
+        purchase_last_date:
+          type: string
+          description: Last time the customer made a purchase since enrolling into the program.
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2020-10-01'
+        mobile_phone:
+          type: string
+          description: The member's mobile phone number.
+          example: 123 456 789
+        accounts:
+          type: array
+          description: Sorted by ``account_id`` that contains the customer's accounts.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the account.
+                example: main_account
+              name:
+                type: string
+                description: The label of the account.
+                example: Main account
+              earned:
+                type: number
+                description: The total numbers of points earned in this account.
+                example: 1000
+              spent:
+                type: number
+                description: The total number of points spent in this account.
+                example: 500
+              pending:
+                type: number
+                description: The total number of pending points in this account.
+                example: 50
+              reserved:
+                type: number
+                description: The total number of reserved points in this account.
+                example: 200
+              expired:
+                type: number
+                description: The total number of expired points in this account.
+                example: 50
+              spendable:
+                type: number
+                description: The total number of spendable  points in this account.
+                example: 800
+              burn_rates:
+                type: object
+                description: The currency-dependent burn rates set in the Management UI.
+                properties:
+                  amount:
+                    type: number
+                    description: The value of the points.
+                    example: 100
+                  points:
+                    type: number
+                    description: The number of points to be burnt.
+                    example: 50
+                  currency:
+                    type: string
+                    description: The selected currency.
+                    example: USD
+        campaigns:
+          type: object
+          description: Tiered campaign-related information.
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the current tiered campaign.
+              example: 63772885e9af5b34933d4aa6
+            occurrences:
+              type: object
+              description: Detailed description and data for all the scheduled occurrences configured
+                in the current tiered campaign.
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier of the current occurrence.
+                  example: 662bac7c0e76787c9b75c80b
+                pending_points:
+                  type: number
+                  description: The number of pending points in the current occurrence.
+                  example: 100
+                awarded_points:
+                  type: number
+                  description: The number of points awarded the current occurrence.
+                  example: 50
+                status:
+                  type: string
+                  description: 'The current status of the current occurrence: Values: `active`, `completed`,
+                    `grace period`, `scheduled`.'
+                  example: cactive
+                start_date:
+                  type: string
+                  description: The start date of the current occurrence.
+                  example: '2022-11-01T07:36:00+01:00'
+                end_date:
+                  type: string
+                  description: The end date of the the current occurrence.
+                  example: '2022-12-01T07:36:00+01:00'
+                evaluation_date:
+                  type: string
+                  description: The date when the current occurrence challenge instance was evaluated.
+                  example: '2022-12-01T07:36:00+01:00'
+        tiers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the current tier.
+                example: tier1
+              name:
+                type: string
+                description: The tier label.
+                example: Gold
+              since:
+                type: string
+                description: The datetime at which the member joined this tier.
+                example: '2022-05-02T12:57:41+02:00'
+              threshold:
+                type: number
+                description: The point threshold for joining this tier.
+                example: 1000
+              expdate:
+                type: string
+                description: The date when the tier expires and the customers' tier is recalculated.
+                example: '2023-01-11T00:00:00+01:00'
+              points:
+                type: number
+                description: The number of tier-status points the customer has earned. These may not be
+                  the same as the customer's earned points.
+                example: 1100
+              points_after_expiration:
+                type: number
+                description: The number of points remaining after the current tier has expired.
+                example: 1000
+              structure:
+                $ref: '#/components/schemas/TierStructure'
+              next:
+                $ref: '#/components/schemas/TierNext'
+        groups:
+          type: array
+          description: An array of groups which to which the customer belongs.
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                description: The numerical group ID.
+                example: 330
+              name:
+                type: string
+                description: The name of the group (not returned for non-existent groups).
+                example: USA-Department
+              external_id:
+                type: string
+                description: The external ID of the user group, if any.
+                example: AG331
+    TierNext:
+      type: object
+      description: Information about the next available loyalty tier.
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the tier.
+          example: tier2
+        name:
+          type: string
+          description: Name of the next tier.
+          example: Platinum
+        points:
+          type: string
+          description: Number of points to collect to reach the next tier.
+          example: 900
+    TierStructure:
+      type: object
+      description: The overall structure in which the current tier is located.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the current tier structure.
+          example: standard_tiers
+        name:
+          type: string
+          description: The tier structure label.
+          example: Standard tiers
+    Properties:
+      type: object
+      description: Custom attributes you track about the customer. Data returned in this object depends
+        on profiling questions or custom data recorded by custom events (may require additional modules
+        enabled).
+      properties:
+        city:
+          type: string
+          example: London
+    Customers:
+      type: object
+      description: Returns Customer unique id which match the search criteria
+      properties:
+        id:
+          type: string
+          description: The unique customer identifier.
+          example: 55e5d4dc2cf1901e688b45d3
+security:
+- ApiKeyAuth: []
+tags:
+- name: Customers

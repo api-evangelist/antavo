@@ -1,0 +1,2817 @@
+{
+  "item": [
+    {
+      "id": "d5b92fa9-30a7-4792-96ce-b4dce89cded8",
+      "name": "Generic",
+      "description": {
+        "content": "A general method for creating, accessing and modifying an Antavo entity.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "33ef29fa-13b5-4d2b-8731-ba6b32e94824",
+          "name": "Archive an inactive entity",
+          "request": {
+            "name": "Archive an inactive entity",
+            "description": {
+              "content": "This endpoint archives a specific deactivated entity, effectively removing it from the system. The reward will be completely non-visible and inaccessible for member and Management UI users as well.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":module",
+                ":entity",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "module",
+                  "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity",
+                  "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The unique ID of a specific entity."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7ee3ad47-0156-4ca5-b978-37db5ca27cc4",
+              "name": "Entity archived",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of a specific entity."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"OK\",\n  \"OK\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "da382658-caa0-4460-a763-7fccc88d041b",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of a specific entity."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"Entity not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b84ba23d-fb89-4741-a74d-9319e0614e51",
+          "name": "Retrieve all information regarding a specific entity",
+          "request": {
+            "name": "Retrieve all information regarding a specific entity",
+            "description": {
+              "content": "This endpoint returns all information regarding a specific entity item.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":module",
+                ":entity",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "key_0",
+                  "value": "<string>",
+                  "description": "\nCustom queries can be added here.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "module",
+                  "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity",
+                  "description": "(Required) The entity's unique ID - typically the singular form of the entity module name."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The unique ID of a specific entity."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "164ba258-2a78-43a4-bda1-6faabf47d5ec",
+              "name": "Entity indformation provided - example data is based on a reward entity with translations included.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query_field",
+                      "value": "query_text"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The entity's unique ID - typically the singular form of the entity module name."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of a specific entity."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"5f05b989a44bc1c44008b4590\",\n  \"name\": {\n    \"en\": \"20% Off on Winter Collection\",\n    \"de\": \"20% Rabatt auf die Winterkollektion\"\n  },\n  \"description\": {\n    \"en\": \"Enjoy a 20% discount on our Winter Collection items.\",\n    \"de\": \"Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.\"\n  },\n  \"redeem_instructions\": {\n    \"en\": \"Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.\",\n    \"de\": \"Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.\"\n  },\n  \"terms\": {\n    \"en\": \"Cannot be combined with other offers.\",\n    \"de\": \"Nicht mit anderen Angeboten kombinierbar.\"\n  },\n  \"account\": {\n    \"id\": \"Main account\",\n    \"name\": \"main_account\"\n  },\n  \"type\": \"coupon\",\n  \"starts_at\": \"2020-07-21T12:00:00+00:00\",\n  \"ends_at\": \"2020-12-21T12:00:00+00:00\",\n  \"claim_button_label\": {\n    \"en\": \"Get Discount\",\n    \"de\": \"Rabatt Sichern\"\n  },\n  \"category\": {\n    \"id\": \"5ef1ad79a44b5e15008b456e\"\n  },\n  \"segments\": [\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    }\n  ],\n  \"cost\": \"150.5\",\n  \"hide_restricted\": false,\n  \"hidden\": false,\n  \"restricted_message\": {\n    \"en\": \"This offer is currently unavailable. Please visit us again later.\",\n    \"de\": \"Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.\"\n  },\n  \"repeat_interval\": \"1 week\",\n  \"stock\": 42,\n  \"max_claims\": 90,\n  \"notifications\": false,\n  \"user_notifications\": false,\n  \"status\": \"inactive\",\n  \"price\": {\n    \"EUR\": 500,\n    \"USD\": 500\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9889aa06-98cb-4def-85cd-e6ee32d6cf05",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query_field",
+                      "value": "query_text"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The entity's unique ID - typically the singular form of the entity module name."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of a specific entity."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"Entity not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3384c58f-6560-44ae-9a6b-3a6a43e9020a",
+          "name": "Update a specific entity",
+          "request": {
+            "name": "Update a specific entity",
+            "description": {
+              "content": "Any pre-configured attribute in an entity itek can be modified using this API endpoint. Modification requires the use of  attribute's unique ID, set in the Management UI.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":module",
+                ":entity",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "module",
+                  "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity",
+                  "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The unique id for the specific entity item."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c8d2751f-8cf6-4f94-a5f7-5de8941de128",
+              "name": "Entity has been successfully updated -  example data is based on a reward entity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique id for the specific entity item."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"test entity\",\n  \"description\": \"This is the description field\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6479d9e55a48f71fca4cda22\",\n  \"status\": \"inactive\",\n  \"type\": \"coupon\",\n  \"name\": \"20% Off on Winter Collection\",\n  \"description\": \"Enjoy a 20% discount on our Winter Collection items.\",\n  \"claim_button_label\": \"Get Discount\",\n  \"price\": \"string\",\n  \"hide_restricted\": \"string\",\n  \"notifications\": \"string\",\n  \"user_notification\": \"string\",\n  \"transferable\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e28c5833-cc9b-4b45-9692-77ee3e190119",
+              "name": "Entity not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique id for the specific entity item."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"test entity\",\n  \"description\": \"This is the description field\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"Entity not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b9bbe9f4-1cd4-4f0f-a262-064496fc944e",
+          "name": "Create a new entity with a specific entity ID",
+          "request": {
+            "name": "Create a new entity with a specific entity ID",
+            "description": {
+              "content": "An entity item with a specified ID can be created in an entity module using this endpoint. Any parameter can be set as long as there is the corresponding attribute pre-configured in the Management UI.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":module",
+                ":entity",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "module",
+                  "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity",
+                  "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The unique ID for the new entity."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fd692525-e6d0-4f35-bd5c-73c10502c6e0",
+              "name": "Successful entity creation - example data is based a reward entity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID for the new entity."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"test entity\",\n  \"description\": \"This is the description field\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6479d9e55a48f71fca4cda22\",\n  \"status\": \"inactive\",\n  \"type\": \"coupon\",\n  \"name\": \"20% Off on Winter Collection\",\n  \"description\": \"Enjoy a 20% discount on our Winter Collection items.\",\n  \"claim_button_label\": \"Get Discount\",\n  \"price\": \"string\",\n  \"hide_restricted\": \"string\",\n  \"notifications\": \"string\",\n  \"user_notification\": \"string\",\n  \"transferable\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6f1bb312-f883-4e75-9e24-8aa63cf91602",
+              "name": "Bad request - A required attribute is not provided.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the entity module."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID for the new entity."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"test entity\",\n  \"description\": \"This is the description field\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"message\": \"'<attribute>' property is required\",\n  \"code\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7461f3e1-3a1a-4374-8059-d8c20abc677f",
+          "name": "List all available entity of an entity module",
+          "request": {
+            "name": "List all available entity of an entity module",
+            "description": {
+              "content": "This endpoint lists all available entity items within the specified entity module. This interaction is customer-independent.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":module",
+                ":entity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offsets the starting number of entity items to return. This is used in pagination in conjunction with the limit query."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Limits the number of entity items to be returned in one response. Other values are accessible by pagination made accessible via the offset."
+                },
+                {
+                  "disabled": false,
+                  "key": "key_0",
+                  "value": "<string>",
+                  "description": "\nCustom queries can be added here.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "module",
+                  "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity",
+                  "description": "(Required) The entity's unique ID - typically the singular form of the entity module name."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "83b78baa-895c-4dee-807c-1525a6769e05",
+              "name": "Lists all entities - Example data is based on a reward entity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "query_field",
+                      "value": "query_text"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The entity's unique ID - typically the singular form of the entity module name."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"5f05b989a44bc1c44008b4590\",\n      \"name\": {\n        \"en\": \"20% Off on Winter Collection\",\n        \"de\": \"20% Rabatt auf die Winterkollektion\"\n      },\n      \"description\": {\n        \"en\": \"Enjoy a 20% discount on our Winter Collection items.\",\n        \"de\": \"Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.\"\n      },\n      \"redeem_instructions\": {\n        \"en\": \"Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.\",\n        \"de\": \"Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.\"\n      },\n      \"terms\": {\n        \"en\": \"Cannot be combined with other offers.\",\n        \"de\": \"Nicht mit anderen Angeboten kombinierbar.\"\n      },\n      \"account\": {\n        \"id\": \"Main account\",\n        \"name\": \"main_account\"\n      },\n      \"type\": \"coupon\",\n      \"starts_at\": \"2020-07-21T12:00:00+00:00\",\n      \"ends_at\": \"2020-12-21T12:00:00+00:00\",\n      \"claim_button_label\": {\n        \"en\": \"Get Discount\",\n        \"de\": \"Rabatt Sichern\"\n      },\n      \"category\": {\n        \"id\": \"5ef1ad79a44b5e15008b456e\"\n      },\n      \"segments\": [\n        {\n          \"id\": \"5ef1ad79a44b5e15008b456e\",\n          \"name\": \"Returning Customers\",\n          \"status\": \"active\"\n        },\n        {\n          \"id\": \"5ef1ad79a44b5e15008b456e\",\n          \"name\": \"Returning Customers\",\n          \"status\": \"active\"\n        }\n      ],\n      \"cost\": \"150.5\",\n      \"hide_restricted\": false,\n      \"hidden\": false,\n      \"restricted_message\": {\n        \"en\": \"This offer is currently unavailable. Please visit us again later.\",\n        \"de\": \"Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.\"\n      },\n      \"repeat_interval\": \"1 week\",\n      \"stock\": 42,\n      \"max_claims\": 90,\n      \"notifications\": false,\n      \"user_notifications\": false,\n      \"status\": \"inactive\",\n      \"price\": {\n        \"EUR\": 500,\n        \"USD\": 500\n      },\n      \"coupon_pool\": \"5b22a37f71f92e7f798q4186\"\n    },\n    {\n      \"id\": \"5f05b989a44bc1c44008b4590\",\n      \"name\": {\n        \"en\": \"20% Off on Winter Collection\",\n        \"de\": \"20% Rabatt auf die Winterkollektion\"\n      },\n      \"description\": {\n        \"en\": \"Enjoy a 20% discount on our Winter Collection items.\",\n        \"de\": \"Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.\"\n      },\n      \"redeem_instructions\": {\n        \"en\": \"Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.\",\n        \"de\": \"Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.\"\n      },\n      \"terms\": {\n        \"en\": \"Cannot be combined with other offers.\",\n        \"de\": \"Nicht mit anderen Angeboten kombinierbar.\"\n      },\n      \"account\": {\n        \"id\": \"Main account\",\n        \"name\": \"main_account\"\n      },\n      \"type\": \"coupon\",\n      \"starts_at\": \"2020-07-21T12:00:00+00:00\",\n      \"ends_at\": \"2020-12-21T12:00:00+00:00\",\n      \"claim_button_label\": {\n        \"en\": \"Get Discount\",\n        \"de\": \"Rabatt Sichern\"\n      },\n      \"category\": {\n        \"id\": \"5ef1ad79a44b5e15008b456e\"\n      },\n      \"segments\": [\n        {\n          \"id\": \"5ef1ad79a44b5e15008b456e\",\n          \"name\": \"Returning Customers\",\n          \"status\": \"active\"\n        },\n        {\n          \"id\": \"5ef1ad79a44b5e15008b456e\",\n          \"name\": \"Returning Customers\",\n          \"status\": \"active\"\n        }\n      ],\n      \"cost\": \"150.5\",\n      \"hide_restricted\": false,\n      \"hidden\": false,\n      \"restricted_message\": {\n        \"en\": \"This offer is currently unavailable. Please visit us again later.\",\n        \"de\": \"Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.\"\n      },\n      \"repeat_interval\": \"1 week\",\n      \"stock\": 42,\n      \"max_claims\": 90,\n      \"notifications\": false,\n      \"user_notifications\": false,\n      \"status\": \"inactive\",\n      \"price\": {\n        \"EUR\": 500,\n        \"USD\": 500\n      },\n      \"coupon_pool\": \"5b22a37f71f92e7f798q4186\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ad50377-69c8-46f1-b07b-b0a005581c43",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "10"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "query_field",
+                      "value": "query_text"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The entity's unique ID - typically the singular form of the entity module name."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"message\": \"Entity type does not exist\",\n  \"code\": 350300\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d276642c-8a5a-4c3e-8288-f290288a4487",
+          "name": "Create a new entity",
+          "request": {
+            "name": "Create a new entity",
+            "description": {
+              "content": "This endpoint created an entity in an entity module. Any parameter can be set as long as there is the corresponding attribute pre-configured in the Management UI.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                ":module",
+                ":entity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "module",
+                  "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity",
+                  "description": "(Required) The  entity's unique ID - typically the singular form of the module."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key_0\": \"<string>\",\n  \"key_1\": \"<string>\",\n  \"key_2\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "169238ff-ca1b-41a8-a980-2d3152342ba1",
+              "name": "Successful entity creation - example data is based on a reward entity.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the module."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"test entity\",\n  \"description\": \"This is the description field\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6479d9e55a48f71fca4cda22\",\n  \"status\": \"inactive\",\n  \"type\": \"coupon\",\n  \"name\": \"20% Off on Winter Collection\",\n  \"description\": \"Enjoy a 20% discount on our Winter Collection items.\",\n  \"claim_button_label\": \"Get Discount\",\n  \"price\": \"string\",\n  \"hide_restricted\": \"string\",\n  \"notifications\": \"string\",\n  \"user_notification\": \"string\",\n  \"transferable\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5b0f75ea-970f-4385-8a7c-fdb700f788d6",
+              "name": "Bad request - a required attribute is not provided",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    ":module",
+                    ":entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "module",
+                      "description": "(Required) Name of the entity module e.g., rewards, accounts, custom (for custom entities)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) The  entity's unique ID - typically the singular form of the module."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"test entity\",\n  \"description\": \"This is the description field\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"The ID is required and needs to be unique\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7d5c3a9e-f64b-41f3-b9ef-3abdbdc1bbcd",
+          "name": "Submit entities in bulk",
+          "request": {
+            "name": "Submit entities in bulk",
+            "description": {
+              "content": "Multiple calls to various entity endpoints can be made by submitting a request with data in array format. The following options are available for error checking the submitted data:\n- `skip`: Erroneous data is not added, and the whole entry is skipped.\n- `pre-check`: The submitted data is checked for validity but not entered into the Antavo system. Any error messages are returned.\n- `fail`: The submission is stopped when an error is encountered.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entities\": [\n    {\n      \"method\": \"<string>\",\n      \"type\": \"<string>\",\n      \"id\": \"<string>\",\n      \"data\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    },\n    {\n      \"method\": \"<string>\",\n      \"type\": \"<string>\",\n      \"id\": \"<string>\",\n      \"data\": [\n        \"<object>\",\n        \"<object>\"\n      ]\n    }\n  ],\n  \"error_handling\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bebf4f10-70e0-4cd0-b02d-688c9b5076dc",
+              "name": "Successful pre-check response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entities\": [\n    {\n      \"method\": \"PUT\",\n      \"type\": \"custom/demo_entity\",\n      \"id\": \"63eaabe8b0fe6815c91425b6\"\n    },\n    {\n      \"method\": \"PUT\",\n      \"type\": \"custom/demo_entity\",\n      \"id\": \"63eaabe8b0fe6815c91425b6\"\n    }\n  ],\n  \"error_handling\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"method\": \"PUT\",\n      \"type\": \"custom/demo_entity\"\n    },\n    {\n      \"method\": \"GET\",\n      \"type\": \"custom/demo_entity\",\n      \"entity\": {\n        \"name\": \"10% coupon\"\n      }\n    }\n  ],\n  \"total\": 2,\n  \"errors\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4f40e051-a71b-4245-a7ad-a68b091ada01",
+              "name": "Erroneous pre-check response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"entities\": [\n    {\n      \"method\": \"PUT\",\n      \"type\": \"custom/demo_entity\",\n      \"id\": \"63eaabe8b0fe6815c91425b6\"\n    },\n    {\n      \"method\": \"PUT\",\n      \"type\": \"custom/demo_entity\",\n      \"id\": \"63eaabe8b0fe6815c91425b6\"\n    }\n  ],\n  \"error_handling\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"method\": \"PUT\",\n      \"type\": \"custom/demo_entity\",\n      \"id\": \"63eaabe8b0fe6815c91425b6\",\n      \"error\": [\n        {\n          \"type\": \"RuntimeException\",\n          \"code\": 0,\n          \"message\": \"Entity not found\"\n        },\n        {\n          \"type\": \"RuntimeException\",\n          \"code\": 0,\n          \"message\": \"Entity not found\"\n        }\n      ]\n    },\n    {\n      \"method\": \"PUT\",\n      \"type\": \"custom/demo_entity\",\n      \"id\": \"63eaabe8b0fe6815c91425b6\",\n      \"error\": [\n        {\n          \"type\": \"RuntimeException\",\n          \"code\": 0,\n          \"message\": \"Entity not found\"\n        },\n        {\n          \"type\": \"RuntimeException\",\n          \"code\": 0,\n          \"message\": \"Entity not found\"\n        }\n      ]\n    }\n  ],\n  \"total\": 2,\n  \"errors\": 1\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "a46e9825-f113-43db-8323-126f344249e0",
+      "name": "Rewards",
+      "description": {
+        "content": "Customer-independent endpoint for accessing and modifying rewards within Antavo.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5c0bb9b8-9559-43cb-b5c8-2e45b028bd8e",
+          "name": "Archive an inactive reward",
+          "request": {
+            "name": "Archive an inactive reward",
+            "description": {
+              "content": "This endpoint archives a specific deactivated reward, effectively removing it from the system. The reward will be completely non-visible and inaccessible for members and Management UI users as well.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "rewards",
+                "reward",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The unique ID of the reward."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b38969b7-101e-4eb6-a53c-35f3ffd86fd4",
+              "name": "Reward archived",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"OK\",\n  \"OK\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ee71157-fad9-486e-92aa-45e653f83b75",
+              "name": "Reward not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"Entity not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5d7acb97-da68-47ba-b193-c7e69d6333d0",
+          "name": "Update specific reward attributes",
+          "request": {
+            "name": "Update specific reward attributes",
+            "description": {
+              "content": "An attribute of a reward can be updated via this endpoint.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "rewards",
+                "reward",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The unique identifier of the reward."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key_0\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b7da3e1d-7cce-4d06-b2e4-932687888f20",
+              "name": "Successful update - updated reward",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique identifier of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"5f05b989a44bc1c44008b4590\",\n  \"name\": {\n    \"en\": \"20% Off on Winter Collection\",\n    \"de\": \"20% Rabatt auf die Winterkollektion\"\n  },\n  \"description\": {\n    \"en\": \"Enjoy a 20% discount on our Winter Collection items.\",\n    \"de\": \"Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.\"\n  },\n  \"redeem_instructions\": {\n    \"en\": \"Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.\",\n    \"de\": \"Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.\"\n  },\n  \"terms\": {\n    \"en\": \"Cannot be combined with other offers.\",\n    \"de\": \"Nicht mit anderen Angeboten kombinierbar.\"\n  },\n  \"account\": {\n    \"id\": \"Main account\",\n    \"name\": \"main_account\"\n  },\n  \"type\": \"coupon\",\n  \"starts_at\": \"2020-07-21T12:00:00+00:00\",\n  \"ends_at\": \"2020-12-21T12:00:00+00:00\",\n  \"claim_button_label\": {\n    \"en\": \"Get Discount\",\n    \"de\": \"Rabatt Sichern\"\n  },\n  \"category\": {\n    \"id\": \"5ef1ad79a44b5e15008b456e\"\n  },\n  \"segments\": [\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    }\n  ],\n  \"cost\": \"150.5\",\n  \"hide_restricted\": false,\n  \"hidden\": false,\n  \"restricted_message\": {\n    \"en\": \"This offer is currently unavailable. Please visit us again later.\",\n    \"de\": \"Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.\"\n  },\n  \"repeat_interval\": \"1 week\",\n  \"stock\": 42,\n  \"max_claims\": 90,\n  \"notifications\": false,\n  \"user_notifications\": false,\n  \"status\": \"inactive\",\n  \"price\": {\n    \"EUR\": 500,\n    \"USD\": 500\n  },\n  \"coupon_pool\": \"5b22a37f71f92e7f798q4186\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a7890ec8-0ed1-4fd8-a42d-b78ae4f5b827",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique identifier of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"message\": \"'<attribute>' property is required\",\n  \"code\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0aaa721d-0a9e-4f97-9dcd-c5fb7cc34ef0",
+          "name": "Returns all information regarding a specific reward",
+          "request": {
+            "name": "Returns all information regarding a specific reward",
+            "description": {
+              "content": "A detailed breakdown of all parameters for the specific reward is returned.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "rewards",
+                "reward",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The unique ID of the reward."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cddf0cb6-d33f-42b2-8529-e51e43838aa3",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"5f05b989a44bc1c44008b4590\",\n  \"name\": {\n    \"en\": \"20% Off on Winter Collection\",\n    \"de\": \"20% Rabatt auf die Winterkollektion\"\n  },\n  \"description\": {\n    \"en\": \"Enjoy a 20% discount on our Winter Collection items.\",\n    \"de\": \"Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.\"\n  },\n  \"redeem_instructions\": {\n    \"en\": \"Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.\",\n    \"de\": \"Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.\"\n  },\n  \"terms\": {\n    \"en\": \"Cannot be combined with other offers.\",\n    \"de\": \"Nicht mit anderen Angeboten kombinierbar.\"\n  },\n  \"account\": {\n    \"id\": \"Main account\",\n    \"name\": \"main_account\"\n  },\n  \"type\": \"coupon\",\n  \"starts_at\": \"2020-07-21T12:00:00+00:00\",\n  \"ends_at\": \"2020-12-21T12:00:00+00:00\",\n  \"claim_button_label\": {\n    \"en\": \"Get Discount\",\n    \"de\": \"Rabatt Sichern\"\n  },\n  \"category\": {\n    \"id\": \"5ef1ad79a44b5e15008b456e\"\n  },\n  \"segments\": [\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    }\n  ],\n  \"cost\": \"150.5\",\n  \"hide_restricted\": false,\n  \"hidden\": false,\n  \"restricted_message\": {\n    \"en\": \"This offer is currently unavailable. Please visit us again later.\",\n    \"de\": \"Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.\"\n  },\n  \"repeat_interval\": \"1 week\",\n  \"stock\": 42,\n  \"max_claims\": 90,\n  \"notifications\": false,\n  \"user_notifications\": false,\n  \"status\": \"inactive\",\n  \"price\": {\n    \"EUR\": 500,\n    \"USD\": 500\n  },\n  \"coupon_pool\": \"5b22a37f71f92e7f798q4186\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1566f7f4-543b-4112-97c4-a360ed5c5e33",
+              "name": "Reward not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"Entity not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "94d37c3e-094d-4d2e-8a7c-4821a3a8e489",
+          "name": "List all available rewards",
+          "request": {
+            "name": "List all available rewards",
+            "description": {
+              "content": "This endpoint lists all available rewards.<br>It allows filtering by stores configured in the Stores module.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "rewards",
+                "reward"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "stores",
+                  "value": "<string>",
+                  "description": "Filters the return rewards by stores, using a store ID."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9139c6e4-cb41-4c26-9fef-8dd7fed490c5",
+              "name": "List of all rewards - this example includes translations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "stores",
+                      "value": "667f3f88527d2e6c00319373"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"5f05b989a44bc1c44008b4590\",\n  \"name\": {\n    \"en\": \"20% Off on Winter Collection\",\n    \"de\": \"20% Rabatt auf die Winterkollektion\"\n  },\n  \"description\": {\n    \"en\": \"Enjoy a 20% discount on our Winter Collection items.\",\n    \"de\": \"Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.\"\n  },\n  \"redeem_instructions\": {\n    \"en\": \"Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.\",\n    \"de\": \"Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.\"\n  },\n  \"terms\": {\n    \"en\": \"Cannot be combined with other offers.\",\n    \"de\": \"Nicht mit anderen Angeboten kombinierbar.\"\n  },\n  \"account\": {\n    \"id\": \"Main account\",\n    \"name\": \"main_account\"\n  },\n  \"type\": \"coupon\",\n  \"starts_at\": \"2020-07-21T12:00:00+00:00\",\n  \"ends_at\": \"2020-12-21T12:00:00+00:00\",\n  \"claim_button_label\": {\n    \"en\": \"Get Discount\",\n    \"de\": \"Rabatt Sichern\"\n  },\n  \"category\": {\n    \"id\": \"5ef1ad79a44b5e15008b456e\"\n  },\n  \"segments\": [\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": \"5ef1ad79a44b5e15008b456e\",\n      \"name\": \"Returning Customers\",\n      \"status\": \"active\"\n    }\n  ],\n  \"cost\": \"150.5\",\n  \"hide_restricted\": false,\n  \"hidden\": false,\n  \"restricted_message\": {\n    \"en\": \"This offer is currently unavailable. Please visit us again later.\",\n    \"de\": \"Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.\"\n  },\n  \"repeat_interval\": \"1 week\",\n  \"stock\": 42,\n  \"max_claims\": 90,\n  \"notifications\": false,\n  \"user_notifications\": false,\n  \"status\": \"inactive\",\n  \"price\": {\n    \"EUR\": 500,\n    \"USD\": 500\n  },\n  \"coupon_pool\": \"5b22a37f71f92e7f798q4186\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "41abdd1b-af7a-4960-a3ea-58032944ec92",
+          "name": "Create a new reward",
+          "request": {
+            "name": "Create a new reward",
+            "description": {
+              "content": "This endpoint facilitates the creation of rewards.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "rewards",
+                "reward"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "104253dc-a764-4a70-beb2-0cdf07bd53e6",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"20% Off on Winter Collection\",\n  \"description\": \"Enjoy a 20% discount on our Winter Collection items.\",\n  \"price\": 100,\n  \"type\": \"coupon\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6479d9e55a48f71fca4cda22\",\n  \"status\": \"inactive\",\n  \"type\": \"coupon\",\n  \"name\": \"20% Off on Winter Collection\",\n  \"description\": \"Enjoy a 20% discount on our Winter Collection items.\",\n  \"claim_button_label\": \"Get Discount\",\n  \"price\": \"string\",\n  \"hide_restricted\": \"string\",\n  \"notifications\": \"string\",\n  \"user_notification\": \"string\",\n  \"transferable\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd9b359c-a91d-4cd2-b34b-d4ad5b837a6d",
+              "name": "Bad request - a required attribute is not provided",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "rewards",
+                    "reward"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"20% Off on Winter Collection\",\n  \"description\": \"Enjoy a 20% discount on our Winter Collection items.\",\n  \"price\": 100,\n  \"type\": \"coupon\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"'<attribute>' property is required\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "1fc0c38a-1e96-4233-a460-9bc07c1b04a2",
+      "name": "Customer lists",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "497d7465-d0df-4b12-9d27-1db8987ace21",
+          "name": "Archive a customer list",
+          "request": {
+            "name": "Archive a customer list",
+            "description": {
+              "content": "This endpoint allows archiving a customer list and removing users from it. Only inactive lists can be archived. Once archived, lists cannot be restored.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "core",
+                "customer-list",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The ID of the customer list."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2517bab9-dcf9-4bf2-b456-2f305a06b2f0",
+              "name": "Customer list archived",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The ID of the customer list."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"ok\",\n  \"ok\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "532e732d-642e-409b-847f-eabea51aa567",
+              "name": "Customer list not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The ID of the customer list."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 300400,\n  \"message\": \"Customer List not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ac8f8171-2475-4aa1-b1be-e904b882dc69",
+          "name": "Retrieve information of a specific customer list",
+          "request": {
+            "name": "Retrieve information of a specific customer list",
+            "description": {
+              "content": "This endpoint returns a specific customer list.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "core",
+                "customer-list",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The ID of the customer list."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e098faf4-3113-496d-9a99-166fd5d3d69c",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The ID of the customer list."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"VIP list\",\n  \"id\": \"63f2cc942d6ef241c0167e6c\",\n  \"status\": \"active\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4bad6d73-5d11-4d74-89d3-dd978bb5bde5",
+              "name": "Customer list not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The ID of the customer list."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 300400,\n    \"message\": \"Customer List not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f42d6f68-a857-4a29-a157-dbcc338aaa89",
+          "name": "Update a customer list",
+          "request": {
+            "name": "Update a customer list",
+            "description": {
+              "content": "This endpoint allows you to update a customer list.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "core",
+                "customer-list",
+                ":entity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity_id",
+                  "description": "(Required) The ID of the customer list."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"status\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9fb0c157-62a0-45d8-879c-48d45a3e05e4",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The ID of the customer list."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"VIP members\",\n  \"status\": \"inactive\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"VIP list\",\n  \"id\": \"63f2cc942d6ef241c0167e6c\",\n  \"status\": \"active\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c65376de-d9c3-45b6-99ef-b7ecd80311e1",
+              "name": "Customer list not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list",
+                    ":entity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity_id",
+                      "description": "(Required) The ID of the customer list."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"VIP members\",\n  \"status\": \"inactive\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"type\": \"BadRequestException\",\n    \"code\": 300400,\n    \"message\": \"Customer List not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "91a5f480-6263-40c6-9d87-c6d232c5b8e1",
+          "name": "List all available customer lists",
+          "request": {
+            "name": "List all available customer lists",
+            "description": {
+              "content": "This endpoint returns all available customer lists.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "core",
+                "customer-list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c5c1fbae-54c6-41e3-a067-ce6331bdd0fb",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"VIP list\",\n  \"id\": \"63f2cc942d6ef241c0167e6c\",\n  \"status\": \"active\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "efb089d4-4146-4f22-b889-b0aa04160053",
+          "name": "Create a new customer list",
+          "request": {
+            "name": "Create a new customer list",
+            "description": {
+              "content": "This endpoint allows you to create a new customer list.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "entities",
+                "core",
+                "customer-list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "df3d64ec-d8d2-415d-a77d-fc161ac95fc9",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "entities",
+                    "core",
+                    "customer-list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"VIP members\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"draft\",\n  \"id\": \"63f2cc942d6ef241c0167e6c\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8a55a557-01de-4aa5-a579-711df3a24838",
+    "name": "Antavo Entities API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

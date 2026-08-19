@@ -1,0 +1,278 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Bulk Operations API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Coupons",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query the list of errors related to a coupon import",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/coupons/:batch_id/status/error",
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "batch001",
+                "type": "path",
+                "description": "The batch ID associated with the coupon import operation."
+              }
+            ]
+          },
+          "docs": "This endpoint allows you to query information about any errors or issues encountered during a coupon import. It provides details about failures that may have occurred during the process."
+        },
+        {
+          "info": {
+            "name": "Query the status of a coupon import",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/coupons/:batch_id/status",
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "batch001",
+                "type": "path",
+                "description": "The batch ID associated with the coupon import operation."
+              }
+            ]
+          },
+          "docs": "This endpoint allows you to query the status of a coupon batch import. It provides information about the current processing status of the operation, which can be `queued`, `processing` or `done`."
+        },
+        {
+          "info": {
+            "name": "Manage coupon codes in coupon pools",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/coupons/:coupon_pool_id/:action",
+            "params": [
+              {
+                "name": "coupon_pool_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of an existing coupon pool for which the source is set to `uploaded`."
+              },
+              {
+                "name": "action",
+                "value": "",
+                "type": "path",
+                "description": "The action carried on the coupons, which can be `add`, `assign`, or `unassign`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows you to upload, assign, and unassign coupons in Coupon Pools in batches. It supports both pre-assigned and unassigned coupons. Uploaded coupon batches are processed asynchronously.\nEach request can process up to 50,000 coupon codes."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Customer lists",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query the erronous list operation attempts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/customer-list/:batch_id/status/errors",
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "batch001",
+                "type": "path",
+                "description": "The external batch ID associated with the list operation."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of errors to return. This is used in pagination in conjunction with the limit query.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of errors to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint allows you to query information about any errors or issues encountered during a list operation process. It provides details about errors, if any, that occurred during the operation."
+        },
+        {
+          "info": {
+            "name": "Query the status of a list operation process",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/customer-list/:batch_id/status",
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "batch001",
+                "type": "path",
+                "description": "The external batch ID associated with the list operation."
+              }
+            ]
+          },
+          "docs": "This endpoint allows you to query the status of a list operation process, such as adding or removing customers from a customer list. It provides information about the current processing status of the operation."
+        },
+        {
+          "info": {
+            "name": "Add customers to a customer list",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/customer-list/add/:customer_list_id",
+            "params": [
+              {
+                "name": "customer_list_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the customer list to which customers will be added to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API endpoint allows you to add a group of customers to a customer list all at once.\nIt accepts a single customer list ID and an array of customer IDs as input.\n\nThis API endpoint operates asynchronously, so customer list updates are processed separately.\n"
+        },
+        {
+          "info": {
+            "name": "Remove customers from a customer list",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/customer-list/remove/:customer_list_id",
+            "params": [
+              {
+                "name": "customer_list_id",
+                "value": "63f2cc942d6ef241c0167e6c",
+                "type": "path",
+                "description": "The ID of the customer list from which customers will be removed."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint supports the removal of customers from a customer list in batches.\nIt operates asynchronously, processing customer list updates separately."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Rewards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query the failed reward claim attempts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/reward/claim/:batch_id/status/error",
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the batch."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of errors to return. This is used in pagination in conjunction with the limit query.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of errors to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns the error occured while processing the batch."
+        },
+        {
+          "info": {
+            "name": "Query the status of the reward claim process",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/reward/claim/:batch_id/status",
+            "params": [
+              {
+                "name": "batch_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the batch."
+              }
+            ]
+          },
+          "docs": "This API endpoint allows you to query the status of a bulk reward claim process, providing details on the processing status, any errors encountered, and the overall completion status."
+        },
+        {
+          "info": {
+            "name": "Claim a specific reward to multiple customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/bulk-operation/reward/claim/:reward_id",
+            "params": [
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the reward to be claimed."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit reward claim requests for a batch of customers. Each request can include a maximum of 100,000 customers.\nPlease note that only one bulk reward claim process can run at a time for one specific reward. If additional batches are submitted while the current one is still processing, they will be added to the queue and processed once the ongoing batch is completed.\nBy the end of the process, the reward events get registered in each customer's event history."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

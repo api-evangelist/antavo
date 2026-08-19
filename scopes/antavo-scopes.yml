@@ -1,0 +1,76 @@
+generated: '2026-08-13'
+method: searched
+source: openapi/antavo-authentication-openapi.yml
+docs: https://docs.antavo.com/docs/api-settings
+docs_secondary: https://developers.antavo.com/docs/api-security
+description: >-
+  Antavo's OAuth 2.0 surface is deliberately narrow. Token-based authentication
+  exists on exactly one API today (Async Events) and exactly one scope is
+  supported. The derive-oauth-scopes pass returned nothing because Antavo models
+  the token endpoint as an ordinary operation with a `scope` form field rather
+  than as an OpenAPI `oauth2` securityScheme - the scope is real and documented,
+  but it is invisible to a spec-only scope extraction. This file is written from
+  the token endpoint's own request schema plus the Management UI documentation.
+schemes:
+- name: oauth2-client-credentials
+  spec_representation: >-
+    Not declared as an OpenAPI oauth2 securityScheme. The token endpoint
+    (POST /v1/auth/token) is secured with `basicAuth` (client_id / client_secret)
+    and takes `grant_type` + `scope` as application/x-www-form-urlencoded fields;
+    protected endpoints then declare `bearerAuth` (http bearer, JWT).
+  source: openapi/antavo-authentication-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /v1/auth/token
+    authorizationUrl: null
+    token_endpoint_auth_method: client_secret_basic
+    token_type: Bearer
+    token_lifetime_seconds: {minimum: 300, maximum: 3600}
+    note: >-
+      The base host is per-environment; the published server in the spec is
+      https://api.staging.antavo.com and the production base is
+      https://api.antavo.com.
+scopes:
+- scope: loyalty.async_events
+  description: >-
+    Grants access to the Async Events API endpoints
+    (POST /v1/async/events and GET /v1/async/events/{correlation_id}).
+  flows: [clientCredentials]
+  sources:
+  - openapi/antavo-authentication-openapi.yml
+  - https://docs.antavo.com/docs/api-settings
+  evidence: >-
+    Spec: `scope` property description reads "Use `loyalty.async_events` scope to
+    get access to the Async Events API endpoints." Management UI: "Scope -
+    Defines which APIs the generated access tokens can be used for. Currently,
+    only the `loyalty.async_events` scope is supported."
+scope_count: 1
+completeness:
+  exhaustive: true
+  note: >-
+    Antavo's own documentation states this is the complete set: "Currently, only
+    the `loyalty.async_events` scope is supported." Every other Antavo API is
+    authorised by workspace API key + Escher signature, which has no scope
+    dimension at all - authorisation there is a per-endpoint IP filter and a
+    per-endpoint signature-enforcement toggle in the Management UI, not a scope.
+client_model:
+  managed_in: Management UI > API settings > Authentication Manager
+  client_attributes: [name, purpose, expiration_date, token_issuer, scope, token_audience]
+  secret_visibility: displayed once at creation, never retrievable afterwards
+  statuses: [active, revoked, expired]
+  revocation: irreversible
+  audit_log: >-
+    The Authentication Manager records client creation, revocation, and every
+    access token issued or rejected by the token endpoint.
+  source: https://docs.antavo.com/docs/api-settings
+errors:
+  scope_related:
+  - error: invalid_scope
+    status: 400
+    note: Returned by POST /v1/auth/token in the OAuth error envelope.
+  - error: unauthorized_client
+    status: 400
+  see: errors/antavo-problem-types.yml
+cross_links:
+  authentication: authentication/antavo-authentication.yml
+  conventions: conventions/antavo-conventions.yml

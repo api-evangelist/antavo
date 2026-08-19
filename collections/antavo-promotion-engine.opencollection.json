@@ -1,0 +1,129 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Promotion Engine API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Promotion",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a specific promotion by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://promotion.test.antavo.com/api/v1/promotion/:promotionId",
+            "params": [
+              {
+                "name": "promotionId",
+                "value": "01JW4M2FS0CX9DQETDV142JB4M",
+                "type": "path",
+                "description": "Unique indentifier of the promotion."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The endpoint provides detailed information about a specific promotion."
+        },
+        {
+          "info": {
+            "name": "Retrieve the list of promotions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://promotion.test.antavo.com/api/v1/promotions",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetches all promotions [configured](https://docs.antavo.com/docs/configuring-promotions) in your workspace. The response includes the full promotion objects with all settings as configured in the UI. Useful for listing, syncing, or debugging active campaign setups.\nNo request parameters are required.\n"
+        },
+        {
+          "info": {
+            "name": "Update the status of a promotion",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://promotion.test.antavo.com/api/v1/promotion/:promotionId/status",
+            "params": [
+              {
+                "name": "promotionId",
+                "value": "01JW4K0FSPZ3GHKN5TWRKJZ5DV",
+                "type": "path",
+                "description": "The ID of the promotion whose status you want to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint allows you to change the status of an existing promotion, enabling you to activate it, return it to draft for further editing, or archive it permanently. Note: once a promotion is archived, it cannot be changed back to any other state."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Cart",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Finalize checkout with applied promotions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://promotion.test.antavo.com/api/v1/cart/finalize",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a cart to apply final promotion calculations and complete the checkout process.\n\nSimilar to [/cart](https://developers.antavo.com/reference/post_v1-cart), the engine will:\n- Calculate applicable promotions\n- Apply relevant discounts to items\n- Return the adjusted cart with pricing breakdowns\n\nAdditionally, when submitting to the this endpoint, any promotion usage limits (if any) are enforced — meaning:\n- The promotions are applied and counted toward their application limits\n- The cart can"
+        },
+        {
+          "info": {
+            "name": "Submit cart details and retrieve applicable promotions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://promotion.test.antavo.com/api/v1/cart",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submit a cart to simulate promotion calculations based on its current contents and applied conditions.\n\nThe engine will calculate which promotions are applicable to the provided cart and return:\n- Cart object\n- All matched promotions\n- The exact discounts applied\n- Adjusted unit prices (after discount)\n- Updated tax amounts\n- Total discount values\n\nThe same `cartId` can be submitted multiple times to recalculate promotions when the cart changes.\n\nIf any promotions have [application limits](https"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,291 @@
+{
+  "item": [
+    {
+      "id": "25d5042d-79a3-4df5-ae73-cca845ea7030",
+      "name": "Events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "10f8ae21-9edd-4ecd-83f5-412e4ae9a982",
+          "name": "Submit multiple Antavo events in a single request",
+          "request": {
+            "name": "Submit multiple Antavo events in a single request",
+            "description": {
+              "content": "Use this endpoint to submit multiple events within a single API request. Events are processed individually and synchronously. \n\nExamples of event submissions:\n\n- **Standard event submission**: Submit events for the customers without any additional identifiers.\n- **Event submission with an external ID**: Include the `external_id` attribute to link the events with external identifiers of customers from another system or database.\n- **Event submission with multiple accounts**: Specify multiple accounts by including their IDs in the `account` attribute. This requires the Points economy module to be enabled.<br>\n*Note*: if no account is specified, the events will be assigned to the default account.\n\nThe response will include a success message or an error for each event in the order they were submitted. An error code is only returned if the entire request is invalid, not for errors related to individual event submissions.\n\n> **Note**\n> This endpoint is **not compatible with guest checkout**. Guest checkout events must be submitted individually via the `/events` endpoint using `\"guest\": \"true\"`, and later linked to a member with the `checkout_claim` event.  \n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "events",
+                "bulk"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"customer\": \"<string>\",\n      \"action\": \"<string>\",\n      \"data\": {\n        \"points\": \"<integer>\",\n        \"effective_timestamp\": \"<number>\"\n      },\n      \"account\": \"<string>\"\n    },\n    {\n      \"customer\": \"<string>\",\n      \"action\": \"<string>\",\n      \"data\": {\n        \"points\": \"<integer>\",\n        \"effective_timestamp\": \"<number>\"\n      },\n      \"account\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3211a794-5d30-4473-8f59-e6b026f51dd4",
+              "name": "A 200 success response means the request was submitted successfully, not the processing of each event.\nThis example shows two point manipulation events submitted in one API request. Responses are returned in the order of submission. The first event includes an error to demonstrate the error response format. This response format is only valid for point_add/point_sub events.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events",
+                    "bulk"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n      \"action\": \"point_add\",\n      \"data\": {\n        \"points\": 325\n      }\n    },\n    {\n      \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n      \"action\": \"point_sub\",\n      \"data\": {\n        \"points\": 35\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"error\": {\n        \"type\": \"InterruptException\",\n        \"code\": 127201,\n        \"message\": \"Workflow interruption\"\n      }\n    },\n    {\n      \"events\": [\n        {\n          \"id\": \"667c850e8ca0cb5f6e0abe03\",\n          \"action\": \"point_add\",\n          \"points\": 325\n        }\n      ]\n    }\n  ],\n  \"total\": 2,\n  \"errors\": 1\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0db9abfa-aecf-4262-8c43-995ebc1b2fa8",
+          "name": "Submit an Antavo event",
+          "request": {
+            "name": "Submit an Antavo event",
+            "description": {
+              "content": "Use this endpoint to submit a single event for a specified customer. The attributes provided in the data object are examples of `point_add` and `checkout` events. Refer to the [complete list of events](/docs/api-events) for all available actions and their attributes.\n\nExamples of event submission:\n\n- **Standard event submission**: Submit an event for the customer without any additional identifiers.\n- **Event submission with an external ID**: Include the `external_id` attribute to link the event with an external identifier of the customer from another system or database.\n- **Event submission with multiple accounts**: Specify multiple accounts by including their IDs in the 'account' attribute. This requires the Points economy module to be enabled.<br>\n*Note*: if no account is specified, the event will be assigned to the default account.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"<string>\",\n  \"action\": \"<string>\",\n  \"data\": {\n    \"points\": \"<integer>\",\n    \"effective_timestamp\": \"<number>\"\n  },\n  \"external_id\": \"<string>\",\n  \"account\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "45524870-503f-4bfc-89e9-b37cd8b12cf8",
+              "name": "A successful event submission returns a customer object. \nThe events field will only include events that directly modify spendable points (e.g., no events will be returned for processes involving pending points).\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"action\": \"point_add\",\n  \"data\": {\n    \"points\": 325\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"created_at\": \"2024-01-01T00:00:00Z\",\n  \"handler\": \"John\",\n  \"status\": \"active\",\n  \"score\": 100,\n  \"spent\": 50,\n  \"pending\": 10,\n  \"language\": \"en\",\n  \"currency\": \"USD\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"events\": [\n    {\n      \"id\": \"667c850e8ca0cb5f6e0abe03\",\n      \"action\": \"point_add\",\n      \"points\": 325,\n      \"expdate\": \"2024-12-01\",\n      \"account\": {\n        \"id\": \"main_account\",\n        \"name\": \"Main Account\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49ed75bc-869c-4d4e-9bb2-4047a963ef38",
+              "name": "Customer or contest not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"action\": \"point_add\",\n  \"data\": {\n    \"points\": 325\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"NotFoundException\",\n  \"code\": 160212,\n  \"message\": \"Customer not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "63409306-dc8b-40f6-b2fb-1a812b24696f",
+    "name": "Antavo Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Email: support@antavo.com",
+      "type": "text/plain"
+    }
+  }
+}

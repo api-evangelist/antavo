@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Socal Share Campaigns API",
+    "version": "1.0.0-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Social Share Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit a share intent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/social-share-campaigns/share-intent",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API endpoint registers a customer’s intent to share content for an active campaign configured in the [Social Share Campaigns module](https://docs.antavo.com/docs/social-share-campaigns). Triggers the `share_intent_success` [event](https://developers.antavo.com/docs/internal-events#/share_intent_success) when a campaign match occurs.\nCall this endpoint when a customer clicks a share button on a content page. Include the customer ID, target platform, and URL to be shared.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

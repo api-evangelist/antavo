@@ -1,0 +1,221 @@
+{
+  "item": [
+    {
+      "id": "d83bd794-b86f-4f71-ae0a-720ce57dd64a",
+      "name": "Coupons",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0773ef66-0942-4514-a79f-2a3c21dc895a",
+          "name": "Query coupons independent of customer",
+          "request": {
+            "name": "Query coupons independent of customer",
+            "description": {
+              "content": "Use this endpoint to query coupons within Antavo independently of customer data. \nThis allows searching for coupons based on criteria such as coupon code and status, providing flexibility in managing coupon data.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "coupons"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "code",
+                  "value": "<string>",
+                  "description": "The code used to search for a specific coupon."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "The status of the coupons to search for. \nOptions: <code>claimed</code>, <code>redeemed</code>, <code>invalid</code>, <code>expired</code>, <code>unassigned</code>, <code>partially_redeemed</code>"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Limits the number of results to be returned in one response.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "0",
+                  "description": "This parameter gets a specific page of the coupon list if a limit has been set. This is used in pagination in conjunction with the limit query.\t\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6a639233-4682-46d6-b03b-2bbac5d575d9",
+              "name": "A successful response containing the list of coupons matching the specific query criteria.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "coupons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "TC22341"
+                    },
+                    {
+                      "key": "status",
+                      "value": "claimed"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"code\": \"TC22341\",\n      \"name\": \"10% Discount Coupon\",\n      \"status\": \"claimed\",\n      \"created_at\": \"2024-01-01T00:00:00Z\",\n      \"customer\": {\n        \"id\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\"\n      },\n      \"claimed_at\": \"2024-01-02T00:00:00Z\",\n      \"expires_at\": \"2024-12-31T23:59:59Z\",\n      \"currency\": \"USD\",\n      \"type\": \"percentage\",\n      \"value\": 100,\n      \"balance\": 50,\n      \"pool\": \"60b8bec0ce61d7c91b000014\",\n      \"min_amount\": 5,\n      \"min_redemption_value\": 20,\n      \"purchase_threshold\": 100\n    },\n    {\n      \"code\": \"TS34523\",\n      \"name\": \"Free Shipping Coupon\",\n      \"status\": \"claimed\",\n      \"created_at\": \"2021-10-29T12:15:53+01:00\",\n      \"customer\": {\n        \"id\": \"280e674c-de2a-4a30-987a-d9267d1a119\"\n      },\n      \"claimed_at\": \"2021-10-29T12:15:53+01:00\",\n      \"type\": \"free_shipping\"\n    }\n  ],\n  \"next\": \"/coupons?page=2&limit=0\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "884710c7-6bf3-4012-90e9-85746b17b485",
+              "name": "Empty search criteria",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "coupons"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "TC22341"
+                    },
+                    {
+                      "key": "status",
+                      "value": "claimed"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 160311,\n  \"message\": \"Empty search criteria\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "eefe6bac-5cb2-4b71-bdcd-58a3a267330b",
+    "name": "Antavo Coupons API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,187 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://antavo.com/product/loyalty-engine/technology/security/,
+  https://developers.antavo.com/docs/api-security,
+  https://developers.antavo.com/docs/api-signing,
+  https://developers.antavo.com/docs/pagination-filtering-and-ordering,
+  and the 18 OpenAPI documents in openapi/
+description: >-
+  Which cross-cutting and industry standards the Antavo Loyalty Cloud API
+  actually conforms to, judged from Antavo's own published claims and from the
+  contract itself. Antavo's compliance posture is genuine and certified on the
+  information-security side (ISO 27001/27017/27018, GDPR) and thin on the
+  API-protocol side - it uses no RFC 9457 problem details, no RFC 8594 sunset
+  headers, no RateLimit headers and no OpenAPI-declared OAuth2 scheme.
+
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: >-
+    Antavo publishes an `openapi: 3.0.0` document per operation on every API
+    reference page. Harvested and merged into 18 documents / 122 operations in
+    openapi/.
+  caveat: >-
+    Not offered as a downloadable artifact - the ReadMe project sets
+    privacy.openapi = admin, so the spec is readable but not fetchable as a file.
+- id: openapi-3.1
+  conforms: false
+  evidence: every published document declares 3.0.0
+- id: oauth2
+  conforms: true
+  evidence: >-
+    POST /v1/auth/token implements the RFC 6749 client_credentials grant with
+    client_secret_basic client authentication, application/x-www-form-urlencoded
+    request, and an access_token / token_type / expires_in / scope response.
+    Error responses use the RFC 6749 error codes (invalid_request, invalid_grant,
+    unauthorized_client, unsupported_grant_type, invalid_scope).
+  caveat: >-
+    The flow is NOT declared as an OpenAPI `oauth2` securityScheme - the token
+    endpoint is modelled as an ordinary operation secured with basicAuth and
+    protected endpoints declare a plain `bearerAuth` http scheme. A machine
+    reading the spec alone cannot discover the flow, the token URL or the scope.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returned 404 on every Antavo host
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource returned 404 on every Antavo host
+- id: oidc
+  conforms: false
+  evidence: >-
+    /.well-known/openid-configuration 404s on every host. Antavo supports SSO/MFA
+    for Management UI users but publishes no OIDC discovery for API clients.
+- id: escher-http-request-signing
+  conforms: true
+  specification: https://escherauth.io/
+  evidence: >-
+    "The Antavo Loyalty Cloud uses Escher, a stateless HTTP request signing
+    specification based on an enhanced version of the AWS Signature Version 4
+    protocol." Full canonical-request, string-to-sign and signing-key procedure
+    is published at https://developers.antavo.com/docs/api-signing, with
+    reference implementations in PHP, Java, C# and Go.
+  note: >-
+    This is Antavo's strongest protocol-level conformance claim and the least
+    common - very few catalogued providers implement a documented SigV4-family
+    signing scheme.
+- id: rfc3986-uri-normalization
+  conforms: true
+  evidence: >-
+    Canonical URI and canonical query string construction are specified against
+    RFC 3986, including percent-encoding rules and the +/%2B -> %20 exception.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    No operation declares application/problem+json. All 262 declared response
+    media types across the 18 specs are application/json, carrying a vendor
+    envelope {"error": {"type", "code", "message"}}.
+  see: errors/antavo-problem-types.yml
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: >-
+    No Sunset or Deprecation header is documented or declared. Deprecations are
+    published as prose in a changelog and in operation summaries; no OpenAPI
+    operation carries `deprecated: true`.
+  see: lifecycle/antavo-lifecycle.yml
+- id: ratelimit-headers
+  conforms: false
+  evidence: >-
+    Limits are published as numbers (1,500 req/min shared stack, 20,000 req/min
+    dedicated) and the exhaustion status is 429, but no X-RateLimit-*,
+    RateLimit-* or Retry-After response header is documented or declared in any
+    spec.
+  see: rate-limits/antavo-rate-limits.yml
+- id: idempotency-key
+  conforms: false
+  evidence: >-
+    No idempotency key header or parameter exists anywhere in the 122 published
+    operations, and the documentation's only duplicate-prevention guidance is to
+    disable the submit button client-side.
+  see: conventions/antavo-conventions.yml
+- id: json-api
+  conforms: false
+  evidence: responses are plain JSON with an ad-hoc {next, previous, data} pagination envelope
+- id: odata
+  conforms: false
+- id: scim2
+  conforms: false
+- id: fhir
+  conforms: false
+- id: psd2
+  conforms: false
+- id: fapi
+  conforms: false
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    A real bidirectional webhook surface exists and is documented in prose, but
+    no AsyncAPI document is published.
+  see: asyncapi/antavo-webhooks.yml
+- id: graphql
+  conforms: false
+  evidence: >-
+    The ReadMe project explicitly disables the graphql module
+    (modules.graphql = false); no /graphql endpoint was found on any host.
+- id: mcp
+  conforms: false
+  evidence: no MCP server, hosted or stdio
+  see: mcp/antavo-mcp.yml
+- id: a2a
+  conforms: false
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json 404 on every host
+    Antavo operates.
+- id: llmstxt
+  conforms: true
+  evidence: >-
+    Antavo serves a real llms.txt on BOTH its documentation host
+    (https://developers.antavo.com/llms.txt, 173 lines indexing every guide,
+    reference page and changelog entry with .md twins) and its corporate site
+    (https://antavo.com/llms.txt, 89 lines). Both are complete and current.
+  note: >-
+    This is Antavo's single best agent-readiness signal: every reference page has
+    a .md twin that carries the operation's full OpenAPI definition inline, which
+    is how this repo's 122 operations were harvested.
+  see: llms/antavo-llms.txt
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt 404s on every Antavo host
+
+compliance_program:
+  published: true
+  url: https://antavo.com/product/loyalty-engine/technology/security/
+  certifications: [ISO 27001, ISO 27017, ISO 27018]
+  regulatory: [GDPR, UK GDPR]
+  not_claimed: [SOC 2, PCI DSS, HIPAA, FedRAMP, CSA STAR, FIPS 140]
+  note: >-
+    Named certifications with quoted claims; no certificate numbers, audit
+    reports or registry references are published. Detail and evidence in
+    security/antavo-trust-center.yml.
+
+contract_quality_findings:
+- finding: 106 of 122 operations have no operationId
+  detail: >-
+    Only 16 operations declare an operationId (events, bulk, Coupons,
+    Genericcreate, Genericspeccreate, Entitydelete, entityget, entityupdate,
+    Rewardcreate, Rewardget, Rewardupdate, Rewarddelete, listCustomers,
+    getCustomer, listCustomerCoupons, listCustomerEvents,
+    listCustomerTransactions - and several of those are inconsistently cased).
+    Everything else must be addressed by method + path. This is why the Agent
+    Skills in skills/ are grounded on METHOD + PATH rather than operationId.
+- finding: servers[] names non-production hosts
+  detail: >-
+    16 of 18 documents declare https://api.staging.antavo.com; the Promotion
+    Engine declares https://promotion.test.antavo.com/api and the Loyalty Read
+    API declares the literal template https://read-api.<environment>.antavo.com.
+    The production base is https://api.antavo.com. The harvested specs are left
+    exactly as Antavo publishes them; see overlays/ for the recorded production
+    base.
+- finding: strong example coverage
+  detail: >-
+    Request bodies carry named, realistic `examples` maps (Standard, With
+    External ID, With Multi-accounts, ...) - materially better than the catalogue
+    norm and directly useful to an agent.
+- finding: few reusable components
+  detail: >-
+    271 component schemas exist across the 18 documents but most bodies are
+    declared inline per operation, so reuse across operations is low.

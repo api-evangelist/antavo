@@ -1,0 +1,117 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Rewards API",
+    "version": "1.0.0-oas3"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Rewards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve reward-specific information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/rewards/:reward_id",
+            "params": [
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the reward."
+              }
+            ]
+          },
+          "docs": "Retrieve reward-specific information"
+        },
+        {
+          "info": {
+            "name": "List reward items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/rewards",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of rewards returned per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "This parameter gets a specific page of the reward list if a limit has been set."
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Lower point limit for returned eligible rewards."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Upper point limit for returned eligible rewards."
+              },
+              {
+                "name": "customer",
+                "value": "",
+                "type": "query",
+                "description": "An Antavo-recognized unique customer identifier."
+              },
+              {
+                "name": "external_id",
+                "value": "",
+                "type": "query",
+                "description": "External ID (requires [configuration](/docs/customers#external-identifiers))"
+              }
+            ]
+          },
+          "docs": "This endpoint returns a list of available rewards based on various query parameters."
+        },
+        {
+          "info": {
+            "name": "Claims a specific reward (deprecated)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/rewards/:reward_id/claim",
+            "params": [
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the reward."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint is used to register that a customer has claimed a specific reward.\nThis endpoint is not supported anymore. Please use the [reward endpoint](https://developers.antavo.com/reference/post_customers-customer-id-activities-rewards-reward-id-claim) of the Display API."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

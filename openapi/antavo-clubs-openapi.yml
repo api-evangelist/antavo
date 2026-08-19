@@ -1,0 +1,4670 @@
+openapi: 3.0.0
+info:
+  contact: {}
+  title: Antavo Clubs API
+  version: 1.0.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /v1/clubs/{club_id}/history:
+    get:
+      tags:
+      - Clubs
+      summary: Retrieve club history
+      description: This endpoint provides the history of actions performed in a club with optional filtering.
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The ID of the club to retrieve history for.
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+      - name: type
+        in: query
+        required: false
+        description: Filter history by action type.
+        schema:
+          type: string
+          enum:
+          - club_applicant_accept
+          - club_applicant_refuse
+          - club_create
+          - club_disband
+          - club_point_donation
+          - club_member_ban
+          - club_member_unban
+          - club_member_join
+          - club_member_remove
+          - club_ownership_assign
+          - club_ownership_revoke
+          - club_point_contribution
+          - club_point_spent
+          - club_point_add
+          - club_point_remove
+          example: club_create
+      - name: customer_id
+        in: query
+        required: false
+        description: Filter history by customer ID.
+        schema:
+          type: string
+          example: 22cc313988befe60e3413e76
+      - name: created_at
+        in: query
+        required: false
+        description: Filter or order history by creation date.
+        schema:
+          type: string
+          format: date-time
+          example: '2024-01-01T00:00:00+01:00'
+      - name: offset
+        in: query
+        required: false
+        description: Offsets the starting number of actions to return. This is used in pagination in conjunction
+          with the limit query.
+        schema:
+          type: integer
+          example: 0
+      - name: limit
+        in: query
+        required: false
+        description: Limits the number of actions returned in one response. Other values are accessible
+          by pagination made accessible via the offset.
+        schema:
+          type: integer
+          example: 20
+      responses:
+        '200':
+          description: Response containing the history of actions taken on the specified club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubHistoryResponse'
+        '400':
+          description: A response indicating that the request was invalid. This response may contain different
+            errors, such as limit, offset, or query parameter errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubHistoryBadRequestErrorResponse'
+        '404':
+          description: A response indicating that the specified club could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubHistoryNotFoundErrorResponse'
+  /v1/clubs/{club_id}/members/{customer_id}:
+    get:
+      tags:
+      - Clubs
+      summary: Retrieve details of a specific club member
+      description: This endpoint returns detailed information about a specific club member identified
+        by their customer ID. The response includes the member's role, status, balance, and spending limits
+        within the club.
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the club to which the member belongs.
+        schema:
+          type: string
+          example: 65d758e7f9cb852e19212e15
+      - name: customer_id
+        in: path
+        required: true
+        description: The unique identifier of the club member whose details are being requested.
+        schema:
+          type: string
+          example: 62cc313988befe60e3413e75
+      responses:
+        '200':
+          description: Successful response with details of the club member.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberDetailsResponse'
+        '404':
+          description: Not found response indicating the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberNotFoundResponse'
+  /v1/clubs/{club_id}/members:
+    get:
+      tags:
+      - Clubs
+      summary: List members of a specific club
+      description: This endpoint returns the registered club members of a specified club. You can filter
+        members by various parameters, such as member ID, role, and status. Pagination is also supported
+        through offset and limit query parameters.
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the club whose members are being requested.
+        schema:
+          type: string
+          example: 65fc09f6cab4445deb626562
+      - name: id.eq
+        in: query
+        required: false
+        description: Filter to a specific club member by their unique identifier.
+        schema:
+          type: string
+          example: 6604074cb8208607742492c7
+      - name: role
+        in: query
+        required: false
+        description: Filter by member type. Possible values are 'owner' or 'member'.
+        schema:
+          type: string
+          enum:
+          - owner
+          - member
+          example: member
+      - name: status
+        in: query
+        required: false
+        description: Filter by member status. Possible values are 'applicant', 'active', 'kicked', 'removed',
+          or 'banned'.
+        schema:
+          type: string
+          enum:
+          - applicant
+          - active
+          - kicked
+          - removed
+          - banned
+          example: active
+      - name: offset
+        in: query
+        required: false
+        description: Offsets the starting number of club members to return. This is used in pagination
+          in conjunction with the limit query.
+        schema:
+          type: integer
+          default: 0
+          example: 0
+      - name: limit
+        in: query
+        required: false
+        description: Limits the number of members returned in one response. Other values are accessible
+          by pagination made accessible via the offset.
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+          example: 20
+      responses:
+        '200':
+          description: Successful response with the list of club members.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubMembersSuccessResponse'
+        '400':
+          description: Bad request due to invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubMembersBadRequestResponse'
+  /v1/clubs/{club_id}/point-expiry:
+    get:
+      tags:
+      - Clubs
+      summary: List expiring points by date
+      description: This endpoint allows you to retrieve the list of expiring points within a given date
+        range for a specific club.
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The ID of the club for which point expirations are being retrieved.
+        schema:
+          type: string
+          example: 33cc313988befe60e3413e76
+      - name: from
+        in: query
+        required: true
+        description: The start date (inclusive) for retrieving expiring points. Must be in YYYY-MM-DD
+          format.
+        schema:
+          type: string
+          format: date
+          example: '2024-03-14'
+      - name: to
+        in: query
+        required: true
+        description: The end date (inclusive) for retrieving expiring points. Must be in YYYY-MM-DD format.
+          Maximum range is 30 days.
+        schema:
+          type: string
+          format: date
+          example: '2024-03-20'
+      responses:
+        '200':
+          description: Response containing expiring points.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListExpirySuccessResponse'
+              examples:
+                success:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      expirations:
+                      - status: expired
+                        date: '2024-03-15'
+                        amount: 100
+                      - status: expiring
+                        date: '2024-03-18'
+                        amount: 200
+                      total: 300
+        '400':
+          description: Bad request due to invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListExpiryErrorResponse'
+              examples:
+                invalid_date:
+                  value:
+                    status: error
+                    error:
+                      type: RuntimeException
+                      code: 201121
+                      message: Invalid date provided. Please provide a valid date in a supported format.
+                date_range_exceeded:
+                  value:
+                    status: error
+                    error:
+                      type: RuntimeException
+                      code: 201120
+                      message: 'The date range exceeds the allowed limit of 30 days. Provided range: {}
+                        days.'
+        '404':
+          description: Club not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListExpiryErrorResponse'
+              examples:
+                club_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201054
+                      message: Club not found
+  /v1/clubs/{club_id}:
+    get:
+      tags:
+      - Clubs
+      summary: Retrieve club details
+      description: This endpoint returns details of a specific club.
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the club whose details are being requested. This ID must
+          correspond to an existing club.
+        schema:
+          type: string
+          example: 66056b8fc0380d23824277b7
+      responses:
+        '200':
+          description: Successful response with club details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubDetailsSuccessResponse'
+        '404':
+          description: Club not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubDetailsNotFoundResponse'
+  /v1/clubs/templates:
+    get:
+      tags:
+      - Clubs
+      summary: List club templates
+      description: This endpoint returns the list of club templates based on various query parameters.
+      parameters:
+      - name: id.eq
+        in: query
+        description: Filter to a specific template by ID.
+        required: false
+        schema:
+          type: string
+        example: 123e4567-e89b-12d3-a456-426614174000
+      - name: account_group_settings.accounts
+        in: query
+        description: Filter templates by accounts in Account Group Settings.
+        required: false
+        schema:
+          type: string
+        example: default_account
+      - name: name
+        in: query
+        description: Filter templates by name.
+        required: false
+        schema:
+          type: string
+        example: Families and Friends
+      - name: type
+        in: query
+        description: Filter templates by type.
+        required: false
+        schema:
+          type: string
+          enum:
+          - public
+          - private
+        example: public
+      - name: status
+        in: query
+        description: Filter templates by status.
+        required: false
+        schema:
+          type: string
+          enum:
+          - active
+          - draft
+          - archived
+        example: active
+      - name: contribution_type
+        in: query
+        description: Filter templates by contribution type.
+        required: false
+        schema:
+          type: string
+          enum:
+          - split_points
+          - incentive_points
+          - none
+        example: split_points
+      - name: expiration_type
+        in: query
+        description: Filter templates by expiration type.
+        required: false
+        schema:
+          type: string
+          enum:
+          - rolling
+          - calendar
+          - no_expiration
+        example: rolling
+      - name: burn_eligibility
+        in: query
+        description: Filter templates by burn eligibility.
+        required: false
+        schema:
+          type: string
+          enum:
+          - active_members
+          - owner
+        example: active_members
+      - name: spending_limit
+        in: query
+        description: Filter templates by spending limit value.
+        required: false
+        schema:
+          type: integer
+        example: 500
+      - name: account_group_settings.point_donation_enabled
+        in: query
+        description: Filter templates by whether point donation is enabled in account group settings.
+        required: false
+        schema:
+          type: boolean
+        example: true
+      - name: limit_reset_type
+        in: query
+        description: Filter templates by donation limit reset type.
+        required: false
+        schema:
+          type: string
+          enum:
+          - fix_date
+          - first_spending
+          - none
+        example: fix_date
+      - name: offset
+        in: query
+        description: Offsets the starting number of club templates to return. This is used in pagination
+          in conjunction with the limit query.
+        required: false
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+        example: 10
+      - name: limit
+        in: query
+        description: Limits the number of club templates returned in one response. Other values are accessible
+          by pagination made accessible via the offset.
+        required: false
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+        example: 50
+      responses:
+        '200':
+          description: Request successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTemplatesSuccessResponse'
+        '400':
+          description: Bad request due to invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTemplatesBadRequestResponse'
+              examples:
+                limit_out_of_bounds:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201010
+                      message: Limit must be between 1 and 100
+                negative_offset:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201011
+                      message: Offset cannot be negative
+                invalid_query_parameters:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201014
+                      message: Invalid query string parameter(s)
+  /v1/clubs:
+    get:
+      tags:
+      - Clubs
+      summary: List clubs
+      description: This endpoint returns the list of clubs based on various query parameters.
+      parameters:
+      - name: id.eq
+        in: query
+        required: false
+        description: Filter to a specific club by ID.
+        schema:
+          type: string
+        example: 987e6543-e89b-12d3-a456-426614174000
+      - name: template_id
+        in: query
+        required: false
+        description: Filter by associated template ID.
+        schema:
+          type: string
+        example: 123e4567-e89b-12d3-a456-426614174000
+      - name: name
+        in: query
+        required: false
+        description: Filter by name.
+        schema:
+          type: string
+        example: Family Moments Club
+      - name: type
+        in: query
+        required: false
+        description: Filter by template type.
+        schema:
+          type: string
+          enum:
+          - public
+          - private
+          example: public
+      - name: status
+        in: query
+        required: false
+        description: Filter by status.
+        schema:
+          type: string
+          enum:
+          - active
+          - disbanded
+          - fraudulent
+          example: active
+      - name: offset
+        in: query
+        required: false
+        description: Offsets the starting number of clubs to return. This is used in pagination in conjunction
+          with the limit query.
+        schema:
+          type: integer
+          default: 0
+        example: 10
+      - name: limit
+        in: query
+        required: false
+        description: Limits the number of clubs returned in one response. Other values are accessible
+          by pagination made accessible via the offset.
+        schema:
+          type: integer
+          default: 20
+          minimum: 1
+          maximum: 100
+        example: 50
+      responses:
+        '200':
+          description: Request successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListClubsSuccessResponse'
+        '400':
+          description: Bad request due to invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListClubsBadRequestResponse'
+              examples:
+                limit_out_of_bounds:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201010
+                      message: Limit must be between 1 and 100
+                negative_offset:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201011
+                      message: Offset cannot be negative
+                invalid_query_parameters:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201012
+                      message: Invalid query string parameter(s)
+        '404':
+          description: Request successful but no clubs found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListClubsEmptySuccessResponse'
+    post:
+      tags:
+      - Clubs
+      summary: Create a new club
+      description: 'This endpoint allows users to create a new club, which can be assigned to different
+        templates, allowing for varied functionalities and features based on specific user needs. To create
+        a club, the user must provide key details, including the club''s name, associated template, and
+        owner ID.
+
+
+        Once created, the `club_create` event is automatically registered in both the club''s and the
+        club owner''s event history.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: object
+                  description: The name of the club, which can be provided in multiple languages. This
+                    parameter should be an object where each key corresponds to a language code, and the
+                    value is the club name in that language. At least one language must be provided.
+                  properties:
+                    en:
+                      type: string
+                      example: Family Moments Club
+                template_id:
+                  type: string
+                  description: The unique identifier of the club template under which the new club is
+                    being created. This ID must reference an existing template in the system and should
+                    be active. If the specified template does not exist or is inactive, an error will
+                    be returned.
+                  example: 123e4567-e89b-12d3-a456-426614174000
+                owner_id:
+                  type: string
+                  description: The unique identifier of the customer who will own the new club. The customer
+                    associated with this ID must be active and should not already own another club or
+                    be a member of another club.
+                  example: 62cc313988befe60e3413e75
+      responses:
+        '200':
+          description: Club created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateClubSuccessResponse'
+        '400':
+          description: Bad request due to invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateClubBadRequestResponse'
+              examples:
+                property_empty:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201094
+                      message: Property '%s' cannot be empty
+                club_name_too_short:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201045
+                      message: The club name is too short. It must be at least 3 characters long.
+                club_template_not_exist:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201040
+                      message: Club template with given ID does not exist
+                club_template_not_active:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201041
+                      message: Club template with given ID is not active
+                only_active_customer_can_be_owner:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201044
+                      message: Only active customer can be owner of a club
+                customer_already_owns_club:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201042
+                      message: The customer already owns a club
+                customer_already_member:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201043
+                      message: Customer is already a member of a club
+  /v1/clubs/{club_id}/applicants/{customer_id}/accept:
+    post:
+      tags:
+      - Clubs
+      summary: Accept club membership
+      description: 'This endpoint allows the club owner to accept an applicant''s request to join the
+        club.
+
+
+        When a customer is accepted, the `club_applicant_accept` event is automatically registered in
+        both the club''s and the new member''s event history.
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: Unique identifier of the club to which the applicant is being accepted.
+        schema:
+          type: string
+          example: 22cc313988befe60e3413e76
+      - name: customer_id
+        in: path
+        required: true
+        description: Unique identifier of the customer who is being accepted as a member of the club.
+        schema:
+          type: string
+          example: 66cc313988befe60
+      requestBody:
+        required: true
+        description: Information required to accept the applicant into the club.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: string
+                  description: ID of the customer who is making the action. Must be the owner of the club.
+                  example: 33cc313988befe60e3413e76
+                reason:
+                  type: string
+                  description: Reason for the acceptance (optional).
+                  example: Reason
+      responses:
+        '200':
+          description: Successful acceptance of club membership.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptSuccessResponse'
+        '400':
+          description: Bad request error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessBadRequestError'
+              examples:
+                actor_empty:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201094
+                      message: Property 'actor' cannot be empty
+                insufficient_permission:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201027
+                      message: Actor has no permission to change status
+                only_applicants_allowed:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201016
+                      message: Only applicants can be accepted
+                owners_cannot_be_applicants:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201017
+                      message: Owners cannot be applicants
+                member_limit_exceeded:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201078
+                      message: Member limit exceeded
+        '404':
+          description: Not found error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessNotFoundError'
+              examples:
+                club_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201054
+                      message: Club not found
+                customer_member_applicant_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201079
+                      message: The customer could not be found as a club member or applicant in this club
+                customer_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 320620
+                      message: Customer not found
+  /v1/clubs/{club_id}/applicants/{customer_id}/ban:
+    post:
+      tags:
+      - Clubs
+      summary: Ban an applicant from a club
+      description: "This endpoint allows a user to ban an applicant from the club. The customer cannot\
+        \ apply to the club again in the future.\n\nWhen a customer is banned, the `club_applicant_ban`\
+        \ event is automatically registered in both the club's and the customer's event history.    \n"
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 65d758e7f9cb852e19212e15
+          description: Unique identifier of the club from which the applicant is being banned.
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 22cc313988befe60e3413e76
+          description: Unique identifier of the club to which the applicant is being banned
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: string
+                  description: ID of the customer who is making the action.
+                  example: 33cc313988befe60e3413e76
+                reason:
+                  type: string
+                  description: Reason for the ban (optional).
+                  example: Returning exploiter.
+      responses:
+        '200':
+          description: Response for banning a club applicant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessBanResponse'
+        '400':
+          description: Bad Request error responses for banning members.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanBadRequestError'
+              examples:
+                property_actor_empty:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201094
+                      message: Property 'actor' cannot be empty
+                actor_no_permission:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201027
+                      message: Actor has no permission to change status
+                owner_cannot_be_banned:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201024
+                      message: Owners cannot be banned. Ownership must be reassigned!
+                member_already_banned:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201025
+                      message: Banned club members cannot be banned again
+        '404':
+          description: Not Found error responses for banning members.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanNotFoundError'
+              examples:
+                club_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201054
+                      message: Club not found
+                customer_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 320620
+                      message: Customer not found
+                club_member_or_applicant_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201079
+                      message: The customer could not be found as a club member or applicant in this club
+  /v1/clubs/{club_id}/applicants/{customer_id}/refuse:
+    post:
+      tags:
+      - Clubs
+      summary: Refuse a club applicant
+      description: "This endpoint allows a user to refuse an applicant from the club. The customer can\
+        \ apply to the club again in the future.\n\nWhen a customer is refused, the `club_applicant_refuse`\
+        \ event is automatically registered in both the club's and the customer's event history.     \
+        \ \n"
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: Unique identifier of the club from which the applicant is being refused.
+        schema:
+          type: string
+          example: 65d758e7f9cb852e19212e15
+      - name: customer_id
+        in: path
+        required: true
+        description: Unique identifier of the customer who is being refused from the club.
+        schema:
+          type: string
+          example: 22cc313988befe60e3413e76
+      requestBody:
+        required: true
+        description: Information required to refuse the applicant from the club.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: string
+                  description: ID of the customer who is making the action. Must be the owner of the club.
+                  example: 33cc313988befe60e3413e76
+                reason:
+                  type: string
+                  description: Reason for refusing the applicant (optional).
+                  example: Reason.
+      responses:
+        '200':
+          description: Successful response for refusing an applicant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessRefuseResponse'
+        '400':
+          description: Bad Request error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefuseBadRequestError'
+        '404':
+          description: Not Found error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefuseNotFoundError'
+  /v1/clubs/{club_id}/disband:
+    post:
+      tags:
+      - Clubs
+      summary: Disband a club
+      description: 'This endpoint allows usersclub owners to disband a specified club.
+
+
+        When a club is disbanded, 3 types of events are created:
+
+        - `club_revoke_ownership` is registered in the club''s and the owner''s event history
+
+        - `club_disband` is registered in the club''s and the owner''s event history.
+
+        - `club_member_remove` is registered in the club''s and all club members'' event history (including
+        the club owner).
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 65d758e7f9cb852e19212e15
+        description: The ID of the club to disband.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: string
+                  description: The ID of the current owner making the request.
+                  example: 62cc313988befe60e3413e75
+                reason:
+                  type: string
+                  description: The reason for disbanding the club (optional).
+                  example: Not interested
+              required:
+              - actor
+      responses:
+        '200':
+          description: Successful response when the club is disbanded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisbandSuccessResponse'
+        '400':
+          description: Bad Request error responses for disbanding a club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisbandBadRequestResponses'
+              examples:
+                club_not_active:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201047
+                      message: Club is not active
+                actor_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201048
+                      message: The actor could not be found as a club member in this club
+                no_permission:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201039
+                      message: Actor has no permission to change status
+                actor_empty:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201094
+                      message: Property 'actor' cannot be empty
+                owner_update_error:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201056
+                      message: An error occurred while updating the owner id
+        '404':
+          description: Not Found error responses for disbanding a club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisbandNotFoundResponses'
+              examples:
+                club_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201054
+                      message: Club not found
+                customer_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 320620
+                      message: Customer not found
+  /v1/clubs/{club_id}/invitations:
+    post:
+      tags:
+      - Clubs
+      summary: Create an invitation to a club
+      description: Creates an invitation from one member to another in a specified club.
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the club for which the invitation is being created.
+        schema:
+          type: string
+          example: 33cc313988befe60e3413e76
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - inviter_customer_id
+              - invitee_customer_id
+              properties:
+                inviter_customer_id:
+                  type: string
+                  description: The identifier of the member sending the invitation.
+                  example: 44pw313198beei60e3413e76
+                invitee_customer_id:
+                  type: string
+                  description: The identifier of the member receiving the invitation.
+                  example: 22cc313988befe60e3413e75
+      responses:
+        '200':
+          description: Invitation created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationSuccessResponse'
+        '400':
+          description: Bad request response indicating an issue with the invitation request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationBadRequestErrorResponse'
+              examples:
+                inviter_customer_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201060
+                      message: Inviter customer not found
+                invitee_customer_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201061
+                      message: Invitee customer not found
+                club_template_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201062
+                      message: Club template is not found
+                invitation_already_exists:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201064
+                      message: 'Invitation already exists: {invitationId}'
+                club_not_active:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201065
+                      message: Club with given ID is not active
+                inviter_customer_not_active:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201066
+                      message: The inviter customer is not active, only active customers can invite members
+                        to the club
+                invitee_customer_not_active:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201067
+                      message: The invitee customer is not active, only active customers can be members
+                        of a club
+                inviter_customer_not_member:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201068
+                      message: The inviter customer is not a member of the club
+                invitee_customer_already_member:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201069
+                      message: The invitee customer is already a member of the club
+                member_status_not_active:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201070
+                      message: The member status is not active, only active club members can invite members
+                        to the club
+                invitation_id_for_private_clubs_only:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201071
+                      message: Invitation ID can only be generated for private clubs
+                invitee_customer_banned:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201072
+                      message: The invitee customer is already banned from the club
+        '404':
+          description: Not found response indicating the requested club does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitationNotFoundErrorResponse'
+  /v1/clubs/{club_id}/members/{customer_id}/ban:
+    post:
+      tags:
+      - Clubs
+      summary: Ban a member from a club
+      description: 'This endpoint is used to removes a member from a club with a ban, preventing the customer
+        from rejoining in the future.
+
+
+        Once created, the `club_member_ban` event is automatically registered in both the club''s and
+        the club member''s event history.
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the club from which the member will be banned.
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+      - name: customer_id
+        in: path
+        required: true
+        description: The unique identifier of the member to be banned from the club.
+        schema:
+          type: string
+          example: 22cc313988befe60e3413e76
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - actor
+              properties:
+                actor:
+                  type: string
+                  description: The ID of the customer performing the ban action. This is a mandatory field.
+                  example: 33cc313988befe60e3413e76
+                reason:
+                  type: string
+                  description: Reason for banning the member from the club (optional).
+                  example: Fraudulent user
+      responses:
+        '200':
+          description: Successful response indicating the member has been banned from the club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanMemberResponse'
+        '400':
+          description: Bad request response indicating an issue with the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanMemberBadRequestResponse'
+        '404':
+          description: Not found response indicating the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanMemberNotFoundResponse'
+  /v1/clubs/{club_id}/members/{customer_id}/club-update:
+    post:
+      summary: Update club details
+      tags:
+      - Clubs
+      description: "This endpoint allows a club member to update the club's name and provide a reason\
+        \ for the update.\n\nWhen the name of the club is updated, the `club_detail_change` event is automatically\
+        \ registered in both the club's and the customer's event history.  \n"
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The ID of the club to update.
+        schema:
+          type: string
+          example: 33cc313988befe60e3413e76
+      - name: customer_id
+        in: path
+        required: true
+        description: The ID of the customer making the club name update.
+        schema:
+          type: string
+          example: f23a1b48-4df6-4b12-b678-c9e768a4e45d
+      requestBody:
+        required: true
+        description: The request body containing the club update details.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: The new name of the club.
+                  example: New Club Name
+                reason:
+                  type: string
+                  description: Reason for the club name change. Maximum 500 characters.
+                  maxLength: 500
+                  example: Rebranding for a new season
+      responses:
+        '200':
+          description: Response for updating the club name successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubUpdateSuccessResponse'
+        '400':
+          description: Bad request due to missing or invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubUpdateBadRequestResponse'
+        '404':
+          description: Club or club member not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubUpdateNotFoundResponse'
+  /v1/clubs/{club_id}/members/{customer_id}/ownership:
+    post:
+      tags:
+      - Clubs
+      summary: Assign club ownership
+      description: 'This endpoint allows a user to refuse an applicant from the club. The customer can
+        apply to the club again in the future.
+
+
+        When a customer is refused, 2 types of events are created:
+
+        - `club_revoke_ownership` is registered in the club''s and the previous owner''s event history
+
+        - `club_assing_ownership` is registered in the club''s and the new owner''s event history.
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+        description: ID of the club to assign ownership.
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 33cc313988befe60e3413e76
+        description: ID of the new club owner.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                actor:
+                  type: string
+                  description: ID of the current owner making the request.
+                  example: 22cc313988befe60e3413e76
+                reason:
+                  type: string
+                  description: Reason for changing ownership (optional).
+                  example: Change ownership
+              required:
+              - actor
+      responses:
+        '200':
+          description: Successful response for assigning club ownership.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnershipSuccessResponse'
+        '400':
+          description: Bad Request error responses for owner assignments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerBadRequestResponses'
+              examples:
+                owners_cannot_be_reassigned:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201034
+                      message: Owners cannot be reassigned
+                customer_already_owns_club:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201037
+                      message: The customer already owns a club
+                actor_empty:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201094
+                      message: Property 'actor' cannot be empty
+                no_permission:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201039
+                      message: Actor has no permission to change status
+                owners_role_already_set:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201033
+                      message: Owners role is already set as member
+                only_active_members_can_be_owners:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201036
+                      message: Only active club members can be owners of the club
+                only_active_customers_can_be_owners:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201035
+                      message: Only active customer can be owner of a club
+        '404':
+          description: Not Found error responses for owner assignment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnerNotFoundResponses'
+              examples:
+                club_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201054
+                      message: Club not found
+                customer_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 320620
+                      message: Customer not found
+                club_member_not_found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201081
+                      message: Club Member not found
+  /v1/clubs/{club_id}/members/{customer_id}/point-adjustment:
+    post:
+      tags:
+      - Clubs
+      summary: Adjust points for a specific club member
+      description: 'This endpoint allows you to adjust the point contribution for a specific member of
+        a club. Points can be modified positively or negatively.
+
+
+        Based on the value of the adjustment, either the `club_point_add` or `club_point_remove` event
+        is recorded in both the club''s and the club member''s event history.
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The ID of the club where the member belongs.
+        schema:
+          type: string
+          example: 65fc09f6cab4445deb626562
+      - name: customer_id
+        in: path
+        required: true
+        description: The ID of the customer whose contribution is being updated.
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                points:
+                  type: integer
+                  description: The number of points to adjust, can be a positive or negative whole number.
+                  example: 100
+                reason:
+                  type: string
+                  maxLength: 500
+                  description: Optional reason for the adjustment.
+                  example: Manual fix
+      responses:
+        '200':
+          description: A successful response containing the updated member and club information after
+            the points adjustment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointAlignmentResponse'
+        '400':
+          description: A response indicating that the request parameters were invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointAlignmentBadRequestErrorResponse'
+        '404':
+          description: A response indicating that the specified club or member could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointAlignmentNotFoundErrorResponse'
+  /v1/clubs/{club_id}/members/{customer_id}/point-donation:
+    post:
+      summary: Donate account points to clubs
+      description: "Allows a club member to donate their account points to a club.\nConverts account points\
+        \ into club points and applies cycle limits according to the [configured contribution settings](https://docs.antavo.com/docs/club-templates#contribution-settings).\n\
+        When points are donated, the `club_point_donation` event is automatically registered in both the\
+        \ club's and the customer's event history.  \n"
+      tags:
+      - Clubs
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 33cc313988befe60e3413e76
+          description: The ID of the club to which the points will be donated.
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: f23a1b48-4df6-4b12-b678-c9e768a4e45d
+          description: The ID of the customer who is donating the points.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PointDonationRequest'
+      responses:
+        '200':
+          description: Successful point donation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointDonationSuccessResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_parameter:
+                  summary: Missing parameter
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201094
+                      message: Property '%s' cannot be empty
+                text_too_long:
+                  summary: Text input too long
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201102
+                      message: Property '%s' is too long
+                invalid_number:
+                  summary: Numeric parameter zero or negative
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201103
+                      message: The 'donated_account_points' value must be a whole positive or negative
+                        number
+                cannot_donate_points:
+                  summary: The number of donated points is below the minimum threshold defined for point
+                    donations.
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201154
+                      message: Cannot donate points to this club below the minimum points threshold
+                not_enough_points:
+                  summary: Customer account has not enough points
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201155
+                      message: 'Point donation not allowed: club member status is inactive or membership
+                        duration requirement not met'
+                donation_limit_exceeded:
+                  summary: Donated points exceed the donation limit for the current period
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201156
+                      message: Donated points exceed the donation limit for the current period
+                active_member_not_found:
+                  summary: Active club member not found
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201097
+                      message: Active club member not found
+                group_settings_not_found:
+                  summary: Group settings not found for the account
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201150
+                      message: Account Group Settings on the Club Template not found
+                insufficient_points_balance:
+                  summary: Customer does not have enough points to donate (multi-account check)
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 201157
+                      message: Customer does not have enough points to donate (donation would exceed allowed
+                        spendable balance)
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                customer_not_found:
+                  summary: Customer not found
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 320620
+                      message: Customer not found
+                club_not_found:
+                  summary: Club not found
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 201054
+                      message: Club not found
+  /v1/clubs/{club_id}/members/{customer_id}/remove:
+    post:
+      tags:
+      - Clubs
+      summary: Remove a member from a club
+      description: 'This endpoint allows users to remove a member from a club. The customer may rejoin
+        the club later.
+
+
+        Once created, the `club_member_remove` event is automatically registered in both the club''s and
+        the club member''s event history.
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the club from which the member will be removed.
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+      - name: customer_id
+        in: path
+        required: true
+        description: The unique identifier of the member to be removed from the club.
+        schema:
+          type: string
+          example: 22cc313988befe60e3413e76
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - actor
+              properties:
+                actor:
+                  type: string
+                  description: The ID of the customer performing the removal action. This is a mandatory
+                    field.
+                  example: 33cc313988befe60e3413e76
+                reason:
+                  type: string
+                  description: Reason for removing the member from the club (optional).
+                  example: Inactive user
+      responses:
+        '200':
+          description: Successful response indicating the member has been removed from the club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveMemberResponse'
+        '400':
+          description: Bad request response indicating an issue with the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveMemberBadRequestResponse'
+        '404':
+          description: Not found response indicating the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveMemberNotFoundResponse'
+  /v1/clubs/{club_id}/members/{customer_id}/unban:
+    post:
+      tags:
+      - Clubs
+      summary: Unban a banned member from a club
+      description: 'This endpoint allows banned member to rejoin a club.
+
+
+        Once created, the `club_member_unban` event is automatically registered in both the club''s and
+        the club member''s event history.
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the club from which the member is being unbanned.
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+      - name: customer_id
+        in: path
+        required: true
+        description: The unique identifier of the customer who is being unbanned.
+        schema:
+          type: string
+          example: 22cc313988befe60e3413e76
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - actor
+              properties:
+                actor:
+                  type: string
+                  description: The ID of the customer making the unban action (restricted to owner ID).
+                  example: 33cc313988befe60e3413e76
+                reason:
+                  type: string
+                  description: Reason for the unban action (optional).
+                  example: Wrongly banned member
+      responses:
+        '200':
+          description: Successful response indicating the member has been unbanned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnbanMemberResponse'
+        '400':
+          description: Bad request response indicating an issue with the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnbanMemberBadRequestResponse'
+        '404':
+          description: Not found response indicating the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnbanMemberNotFoundResponse'
+  /v1/clubs/{club_id}/members/join-public:
+    post:
+      tags:
+      - Clubs
+      summary: Add a customer to a public club
+      description: 'This endpoint allows a registered loyalty member to join a public club as an active
+        member.
+
+
+        When a member joins, the `club_member_join` event is automatically registered in both the club''s
+        and customer''s event history.
+
+        '
+      parameters:
+      - name: club_id
+        in: path
+        required: true
+        description: The unique identifier of the public club to join.
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer_id
+              properties:
+                customer_id:
+                  type: string
+                  description: The loyalty member’s identifier to join.
+                  example: 62cc313988befe60e3413e44
+                channel:
+                  type: string
+                  description: Channel through which the member is joining (optional).
+                  example: friend referral
+      responses:
+        '200':
+          description: Successful response indicating the member has joined the public club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicJoinResponse'
+        '400':
+          description: Bad request response indicating an issue with the request for joining a public
+            club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicJoinBadRequestResponse'
+        '404':
+          description: Not found response indicating the requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicJoinNotFoundResponse'
+  /v1/clubs/invitations/{invitation_id}:
+    post:
+      tags:
+      - Clubs
+      summary: Add a customer to a private club
+      description: 'This endpoint allows a registered loyalty member to join a private club as an active
+        club member.
+
+
+        When a member joins, the `club_member_join` event is automatically registered in both the club''s
+        and customer''s event history.
+
+        '
+      parameters:
+      - name: invitation_id
+        in: path
+        required: true
+        description: The unique identifier of the invitation.
+        schema:
+          type: string
+          example: 66cc313988befe60e3413e75
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channel:
+                  type: string
+                  description: Channel through which the member is joining (optional).
+                  example: friend referral
+      responses:
+        '200':
+          description: Successful response indicating the member has joined the private club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateJoinResponse'
+        '400':
+          description: Bad request response indicating an issue with the request for joining a private
+            club.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateJoinBadRequestResponse'
+        '404':
+          description: Not found response indicating the requested private club invitation does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateJoinNotFoundResponse'
+components:
+  schemas:
+    ClubHistoryResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Indicates the status of the response.
+        metadata:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 111
+              description: The total number of history records available for the club.
+            next:
+              type: string
+              example: https://{api_url}/v1/clubs/{clubId}/history?offset=40&limit=20
+              description: URL for the next page of history records, if available.
+            previous:
+              type: string
+              example: https://{api_url}/v1/clubs/{clubId}/history?offset=0&limit=20
+              description: URL for the previous page of history records, if available.
+        payload:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 62cc313988befe60e3413e75
+                description: The ID of the specific history record.
+              customer_id:
+                type: string
+                example: 22cc313988befe60e3413e76
+                description: The ID of the customer associated with the action in the history record.
+              type:
+                type: string
+                enum:
+                - club_applicant_accept
+                - club_applicant_refuse
+                - club_create
+                - club_disband
+                - club_point_donation
+                - club_member_ban
+                - club_member_unban
+                - club_member_join
+                - club_member_remove
+                - club_ownership_assign
+                - club_ownership_revoke
+                - club_point_contribution
+                - club_point_spent
+                - club_point_add
+                - club_point_remove
+                description: The type of action that occurred in the club's history.
+              source:
+                type: string
+                example: API
+                description: The source of the action that generated this history record (e.g., API, user
+                  interface).
+              properties:
+                type: object
+                description: Additional properties depending on action type.
+                oneOf:
+                - type: object
+                  title: club_applicant_accept or club_applicant_refuse
+                  description: Properties when type is club_applicant_accept or club_applicant_refuse.
+                  properties:
+                    actor:
+                      type: string
+                      nullable: true
+                      description: Customer ID who acted or null.
+                  example:
+                    actor: 22cc313988befe60e3413e76
+                - type: object
+                  title: club_create
+                  description: Properties for club_create.
+                  properties:
+                    name:
+                      type: string
+                    template_id:
+                      type: string
+                  example:
+                    name: Group 20110
+                    template_id: 66602b173b8fe35df05e3dca
+                - type: object
+                  title: club_disband
+                  description: Properties for club_disband.
+                  properties:
+                    actor:
+                      type: string
+                      nullable: true
+                  example:
+                    actor: 22cc313988befe60e3413e76
+                - type: object
+                  title: club_member_ban
+                  description: Properties for club_member_ban.
+                  properties:
+                    actor:
+                      type: string
+                      nullable: true
+                    previous_status:
+                      type: string
+                      nullable: true
+                  example:
+                    actor: 22cc313988befe60e3413e76
+                    previous_status: active
+                - type: object
+                  title: club_member_remove
+                  description: Properties for club_member_remove.
+                  properties:
+                    actor:
+                      type: string
+                      nullable: true
+                    previous_status:
+                      type: string
+                      nullable: true
+                    status:
+                      type: string
+                      nullable: true
+                  example:
+                    actor: 22cc313988befe60e3413e76
+                    previous_status: active
+                    status: banned
+                - type: object
+                  title: club_member_unban
+                  description: Properties for club_member_unban.
+                  properties:
+                    actor:
+                      type: string
+                      nullable: true
+                    status:
+                      type: string
+                      nullable: true
+                  example:
+                    actor: 22cc313988befe60e3413e76
+                    previous_status: active
+                - type: object
+                  title: club_member_join
+                  description: Properties for club_member_join.
+                  properties:
+                    status:
+                      type: string
+                      nullable: true
+                    channel:
+                      type: string
+                      nullable: true
+                  example:
+                    status: active
+                    channel: mobile_app
+                - type: object
+                  title: club_point_contribution
+                  description: Properties for club_point_contribution.
+                  properties:
+                    points:
+                      type: number
+                    transaction_id:
+                      type: string
+                      nullable: true
+                    club_template_percentage:
+                      type: number
+                      nullable: true
+                    expiration_date:
+                      type: string
+                      nullable: true
+                      format: date-time
+                  example:
+                    points: 150
+                    transaction_id: TR37882412
+                    club_template_percentage: 5
+                    expiration_date: '2025-06-30T12:00:00Z'
+                - type: object
+                  title: club_point_spent
+                  description: Properties for club_point_spent.
+                  properties:
+                    points:
+                      type: number
+                  example:
+                    points: 50
+                - type: object
+                  title: club_point_add or club_point_remove
+                  description: Properties for club_point_add, club_point_remove.
+                  properties:
+                    points:
+                      type: number
+                    reason:
+                      type: string
+                      nullable: true
+                  example:
+                    points: 50
+                    reason: purchase
+                - type: object
+                  title: club_ownership_assign or club_ownership_revoke
+                  description: Properties for club_ownership_assign, club_ownership_revoke.
+                  properties:
+                    actor:
+                      type: string
+                      nullable: true
+                  example:
+                    actor: 22cc313988befe60e3413e76
+                - type: object
+                  title: club_point_donation
+                  description: Properties for club_point_donation.
+                  properties:
+                    donating_points:
+                      type: number
+                      description: The number of donated points.
+                    account:
+                      type: string
+                      description: The account of points used for donation.
+                    conversion_rate:
+                      type: number
+                      description: The account-point to club-point conversion.
+                    converted_club_points:
+                      type: number
+                      description: The final number of club points after conversion.
+                  example:
+                    donating_points: 100
+                    account: default_account
+                    conversion_rate: 1.2
+                    converted_club_points: 120
+              created_at:
+                type: string
+                format: date-time
+                example: '2024-04-12T12:15:53+01:00'
+                description: The date and time when the action occurred, in ISO 8601 format.
+    ClubHistoryBadRequestErrorResponse:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/LimitError'
+      - $ref: '#/components/schemas/OffsetError'
+      - $ref: '#/components/schemas/QueryParameterError'
+    LimitError:
+      type: object
+      title: Limit error
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201010
+              description: Error code.
+            message:
+              type: string
+              example: Limit must be between 1 and 100
+              description: Human-readable error message.
+    OffsetError:
+      type: object
+      title: Offset error
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201011
+              description: Error code.
+            message:
+              type: string
+              example: Offset cannot be negative
+              description: Human-readable error message.
+    QueryParameterError:
+      type: object
+      title: Query Parameter Error
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201100
+              description: Error code.
+            message:
+              type: string
+              example: Invalid query string parameter(s)
+              description: Human-readable error message.
+    ClubHistoryNotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201099
+              description: Error code.
+            message:
+              type: string
+              example: Club not found
+              description: Human-readable error message.
+    MemberDetailsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: object
+          description: Additional metadata, can be empty.
+          example: {}
+        payload:
+          type: object
+          required:
+          - id
+          - club_id
+          - customer_id
+          - role
+          - status
+          - balance
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the club member.
+              example: 65dc4568e804ab70d405e678
+            club_id:
+              type: string
+              description: The unique identifier of the club.
+              example: 65d758e7f9cb852e19212e15
+            customer_id:
+              type: string
+              description: The unique identifier of the customer who is a member of the club.
+              example: 44cc313988befe60e3413e76
+            role:
+              type: string
+              description: The role of the member in the club.
+              enum:
+              - owner
+              - member
+              example: owner
+            status:
+              type: string
+              description: The current status of the member.
+              enum:
+              - applicant
+              - active
+              - kicked
+              - removed
+              - banned
+              example: active
+            balance:
+              type: object
+              required:
+              - contributed
+              - spent
+              properties:
+                contributed:
+                  type: integer
+                  description: Total amount contributed by the member to the club.
+                  example: 10
+                spent:
+                  type: integer
+                  description: Total amount spent by the member from their balance.
+                  example: 5
+            donation_intervals:
+              type: array
+              description: List of donation intervals for all account groups of the member.
+              items:
+                type: object
+                required:
+                - accounts
+                - donation_limit
+                - used_from_donation_limit
+                - next_donation_limit_reset_date
+                properties:
+                  accounts:
+                    type: array
+                    description: List of accounts from which donations are made.
+                    items:
+                      type: string
+                    example:
+                    - rc_balance
+                    - kmd_balance
+                  donation_limit:
+                    type: number
+                    description: Maximum amount that can be donated during the interval.
+                    example: 50
+                  used_from_donation_limit:
+                    type: number
+                    description: Amount already donated in the current interval.
+                    example: 50
+                  next_donation_limit_reset_date:
+                    type: string
+                    format: date-time
+                    description: Date when the donation limit will reset.
+                    example: '2026-01-01T00:00:00+01:00'
+            spend_limit:
+              type: object
+              description: Spending limits for the member, optional if not applicable.
+              properties:
+                from:
+                  type: string
+                  description: Start date of the spend limit period.
+                  example: 2024-01-01T12:00:+0200
+                to:
+                  type: string
+                  description: End date of the spend limit period.
+                  example: 2024-04-01T12:00:+0100
+                limit:
+                  type: integer
+                  description: Maximum amount that can be spent by the member.
+                  example: 200
+                spent:
+                  type: integer
+                  description: Amount already spent by the member within the limit period.
+                  example: 56
+    MemberNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201092
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    ClubMembersSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Total number of members in the club.
+              example: 42
+            pagination:
+              type: object
+              properties:
+                next:
+                  type: string
+                  description: URL for the next page of results, if available.
+                  example: https://api.{stack}.antavo.com/v1/clubs/{clubId}/members?offset=40&limit=20
+                previous:
+                  type: string
+                  description: URL for the previous page of results, if available.
+                  example: https://api.{stack}.antavo.com/v1/clubs/{clubId}/members?offset=0&limit=20
+        payload:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - customer_id
+            - club_id
+            - role
+            - status
+            - balance
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the club member.
+                example: 6604074cb8208607742492c7
+              customer_id:
+                type: string
+                description: The unique identifier of the customer who is a member of the club.
+                example: 44cc313988befe60e3413e76
+              club_id:
+                type: string
+                description: The unique identifier of the club.
+                example: 65fc09f6cab4445deb626562
+              role:
+                type: string
+                enum:
+                - owner
+                - member
+                description: The role of the member in the club.
+                example: member
+              status:
+                type: string
+                enum:
+                - applicant
+                - active
+                - kicked
+                - removed
+                - banned
+                description: The current status of the member.
+                example: active
+              balance:
+                type: object
+                required:
+                - contributed
+                - spent
+                properties:
+                  contributed:
+                    type: integer
+                    description: Total amount contributed by the member to the club.
+                    example: 0
+                  spent:
+                    type: integer
+                    description: Total amount spent by the member from their balance.
+                    example: 0
+              donation_intervals:
+                type: array
+                description: List of donation intervals for all account groups of the member.
+                items:
+                  type: object
+                  required:
+                  - accounts
+                  - donation_limit
+                  - used_from_donation_limit
+                  - next_donation_limit_reset_date
+                  properties:
+                    accounts:
+                      type: array
+                      description: List of accounts from which donations are made.
+                      items:
+                        type: string
+                      example:
+                      - rc_balance
+                      - kmd_balance
+                    donation_limit:
+                      type: number
+                      description: Maximum amount that can be donated during the interval.
+                      example: 50
+                    used_from_donation_limit:
+                      type: number
+                      description: Amount already donated in the current interval.
+                      example: 50
+                    next_donation_limit_reset_date:
+                      type: string
+                      format: date-time
+                      description: Date when the donation limit will reset.
+                      example: '2026-01-01T00:00:00+01:00'
+              spend_limit:
+                type: object
+                properties:
+                  from:
+                    type: string
+                    description: Start date of the spend limit period.
+                    example: 2024-01-01T12:00:+0200
+                  to:
+                    type: string
+                    description: End date of the spend limit period.
+                    example: 2024-04-01T12:00:+0100
+                  limit:
+                    type: integer
+                    description: Maximum amount that can be spent by the member.
+                    example: 200
+                  spent:
+                    type: integer
+                    description: Amount already spent by the member within the limit period.
+                    example: 56
+    ClubMembersBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201010
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Limit must be between 1 and 100
+    ListExpirySuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata about the response.
+          items:
+            type: object
+        payload:
+          type: object
+          properties:
+            expirations:
+              type: array
+              description: List of expiring point records.
+              items:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - expired
+                    - expiring
+                    description: The status of the expiration (expired or expiring soon).
+                    example: expired
+                  date:
+                    type: string
+                    format: date
+                    description: The date when points expired or will expire.
+                    example: '2024-03-15'
+                  amount:
+                    type: integer
+                    description: The number of points that expired or will expire on the given date.
+                    example: 100
+            total:
+              type: integer
+              description: The total number of points that expired or will expire in the given range.
+              example: 300
+    ListExpiryErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response, typically "error".
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: RuntimeException
+            code:
+              type: integer
+              description: Error code.
+              example: 201121
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Invalid date provided. Please provide a valid date in a supported format.
+    ClubDetailsSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata about the response.
+          items:
+            type: object
+        payload:
+          type: object
+          required:
+          - id
+          - name
+          - status
+          - member_count
+          - owner_customer_id
+          - balance
+          - spend_limit
+          - group_settings
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the club.
+              example: 66056b8fc0380d23824277b7
+            name:
+              type: object
+              description: The name of the club.
+              properties:
+                en:
+                  type: string
+                  example: Family Moments Club
+            template_id:
+              type: string
+              description: The unique identifier of the template associated with the club.
+              example: 65c9f779eba05c56785d61a3
+            type:
+              type: string
+              description: The type of the club (private or public).
+              example: private
+            status:
+              type: string
+              description: The current status of the club.
+              enum:
+              - active
+              - disbanded
+              - fraudulent
+              example: active
+            balance:
+              type: object
+              properties:
+                contributed:
+                  type: integer
+                  description: Total amount contributed to the club.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total amount spent from the club's balance.
+                  example: 0
+                expired:
+                  type: integer
+                  description: Total amount of funds that have expired.
+                  example: 0
+                spendable:
+                  type: integer
+                  description: Amount currently available to be spent from the club's balance.
+                  example: 0
+            spend_limit:
+              type: object
+              required:
+              - eligibility
+              - reset_type
+              properties:
+                eligibility:
+                  type: string
+                  description: Eligibility criteria for spending limits.
+                  enum:
+                  - active_members
+                  - owner
+                  example: active_members
+                limit:
+                  type: integer
+                  description: Maximum spend limit for the club.
+                  example: 1000
+                reset_type:
+                  type: string
+                  description: How the spend limit resets.
+                  enum:
+                  - none
+                  - fix_date
+                  - first_spending
+                  example: first_spending
+            group_settings:
+              type: array
+              description: Group-specific donation settings.
+              items:
+                type: object
+                required:
+                - account_names
+                - donation_limit
+                - donation_reset_type
+                properties:
+                  account_names:
+                    type: array
+                    description: List of account identifiers for the group.
+                    items:
+                      type: string
+                    example:
+                    - rc_balance
+                    - kmd_balance
+                  donation_limit:
+                    type: number
+                    description: Maximum donation limit for the group.
+                    example: 50
+                  donation_reset_type:
+                    type: string
+                    description: How the donation limit resets.
+                    enum:
+                    - donation_limit_reset_none
+                    - donation_limit_reset_fix_date
+                    - donation_limit_reset_first_donation
+                    example: donation_limit_reset_fix_date
+            member_count:
+              type: integer
+              description: Total number of members currently in the club.
+              example: 1
+            owner_customer_id:
+              type: string
+              description: The unique identifier of the customer who owns the club.
+              example: 123e4567-e89b-12d3-a456-426614174000
+    ClubDetailsNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    ListTemplatesSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          description: Indicates the status of the response.
+        metadata:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 42
+              description: The total number of templates available in the response.
+            next:
+              type: string
+              example: https://{api_url}/v1/clubs/templates?offset=40&limit=20
+              description: A URL to the next set of templates, if available.
+            previous:
+              type: string
+              example: https://{api_url}/v1/clubs/templates?offset=0&limit=20
+              description: A URL to the previous set of templates, if available.
+        payload:
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 62cc313988befe60e3413e75
+                  description: The ID of the template.
+                name:
+                  type: string
+                  example: Family Club Template
+                  description: The name of the template.
+                type:
+                  type: string
+                  enum:
+                  - private
+                  - public
+                  example: private
+                  description: The visibility type of the template, indicating whether it is private or
+                    public.
+                status:
+                  type: string
+                  enum:
+                  - active
+                  - archived
+                  example: active
+                  description: The current status of the template, indicating if it is active or archived.
+                contribution_type:
+                  type: string
+                  enum:
+                  - split_points
+                  - incentive_points
+                  - none
+                  example: incentive_points
+                  description: Type of contribution method used in the template.
+                account_group:
+                  type: array
+                  description: List of account group configuration blocks.
+                  items:
+                    type: object
+                    properties:
+                      account_names:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - default_Account
+                        - family_account
+                        description: List of account names this group applies to.
+                      contribution_percentage:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Percentage of contribution from the specified accounts.
+                      minimum_points_threshold:
+                        type: integer
+                        example: 0
+                        description: Minimum points required for the contribution to be applied.
+                      point_conversion_rate:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Rate at which points are converted.
+                      point_donation:
+                        type: boolean
+                        example: true
+                        description: Indicates whether point donation is enabled.
+                      donation_limit:
+                        type: integer
+                        nullable: true
+                        example: 1
+                        description: Maximum number of points that can be donated.
+                      donation_reset_type:
+                        type: string
+                        enum:
+                        - donation_limit_reset_fix_date
+                        - donation_limit_reset_after_donation
+                        - donation_limit_reset_never
+                        example: donation_limit_reset_fix_date
+                        description: Method used to reset the donation limit.
+            - type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 62cc313988befe60e3413e76
+                  description: The ID of the template.
+                name:
+                  type: string
+                  example: Friends Club Template
+                  description: The name of the template.
+                type:
+                  type: string
+                  enum:
+                  - public
+                  - private
+                  example: public
+                  description: The visibility type of the template, indicating whether it is private or
+                    public.
+                status:
+                  type: string
+                  enum:
+                  - active
+                  - archived
+                  example: active
+                  description: The current status of the template, indicating if it is active or archived.
+                contribution_type:
+                  type: string
+                  enum:
+                  - split_points
+                  - incentive_points
+                  - none
+                  example: split_points
+                  description: Type of contribution method used in the template.
+                account_group:
+                  type: array
+                  description: List of account group configuration blocks.
+                  items:
+                    type: object
+                    properties:
+                      account_names:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - kmd_balance
+                        description: List of account names this group applies to.
+                      contribution_percentage:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Percentage of contribution from the specified accounts.
+                      minimum_points_threshold:
+                        type: integer
+                        example: 1
+                        description: Minimum points required for the contribution to be applied.
+                      point_conversion_rate:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Rate at which points are converted.
+                      point_donation:
+                        type: boolean
+                        example: false
+                        description: Indicates whether point donation is enabled.
+                      donation_limit:
+                        type: integer
+                        nullable: true
+                        example: null
+                        description: Maximum number of points that can be donated.
+                      donation_reset_type:
+                        type: string
+                        enum:
+                        - donation_limit_reset_fix_date
+                        - donation_limit_reset_after_donation
+                        - donation_limit_reset_never
+                        example: donation_limit_reset_fix_date
+                        description: Method used to reset the donation limit.
+    ListTemplatesBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - error
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error that occurred.
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+    ListClubsSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          description: Indicates the status of the response.
+        metadata:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 111
+              description: The total number of clubs available in the response.
+            next:
+              type: string
+              example: https://{api_url}/v1/clubs?offset=40&limit=20
+              description: A URL to the next set of clubs, if available.
+            previous:
+              type: string
+              example: https://{api_url}/v1/clubs?offset=0&limit=20
+              description: A URL to the previous set of clubs, if available.
+        payload:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                example: 62cc313988befe60e3413e75
+                description: The ID of the club.
+              name:
+                type: string
+                example: My Club
+                description: The name of the club.
+              template_id:
+                type: string
+                format: uuid
+                example: 62cc313988befe60e3413e75
+                description: The ID of the template used by the club.
+              type:
+                type: string
+                enum:
+                - private
+                - public
+                description: The visibility type of the club, indicating whether it is private or public.
+              status:
+                type: string
+                enum:
+                - active
+                - disbanded
+                - fraudulent
+                description: The current status of the club, indicating if it is active, disbanded, or
+                  fraudulent.
+              balance:
+                type: object
+                properties:
+                  contributed:
+                    type: integer
+                    example: 1000
+                    description: The total points contributed to the club.
+                  spend:
+                    type: integer
+                    example: 500
+                    description: The total points spent by the club.
+                  expired:
+                    type: integer
+                    example: 300
+                    description: The total points that have expired.
+                  spendable:
+                    type: integer
+                    example: 200
+                    description: The total points available for spending by the club.
+              member_count:
+                type: integer
+                example: 4
+                description: The total number of members currently in the club.
+              owner_customer_id:
+                type: string
+                format: uuid
+                example: 62cc313988befe60e3413e75
+                description: The ID of the club owner.
+    ListClubsEmptySuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          description: The status of the response, indicating success or failure.
+        metadata:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 0
+              description: The total number of clubs available in the response (0 indicates no clubs found).
+            next:
+              type: string
+              example: ''
+              description: A URL to the next set of clubs, if available; an empty string indicates there
+                are no more clubs to fetch.
+            previous:
+              type: string
+              example: ''
+              description: A URL to the previous set of clubs, if available; an empty string indicates
+                there is no previous set.
+        payload:
+          type: array
+          items: {}
+          description: An empty array indicating that there are no clubs available in the response.
+    ListClubsBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - error
+          example: error
+          description: The status of the response, indicating success or failure.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error that occurred.
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+    AcceptSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Indicates the status of the response.
+        metadata:
+          type: array
+          items:
+            type: string
+          description: An array containing any additional metadata related to the response.
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              example: 65dc4568e804ab70d405e678
+              description: The ID of the acceptance record.
+            customer_id:
+              type: string
+              example: 66cc313988befe60
+              description: The ID of the customer who has been accepted into the club.
+            club_id:
+              type: string
+              example: 22cc313988befe60e3413e76
+              description: The ID of the club the customer has been accepted into.
+            role:
+              type: string
+              example: member
+              description: The role assigned to the customer within the club.
+            status:
+              type: string
+              example: active
+              description: The current status of the customer’s membership in the club.
+            balance:
+              type: object
+              properties:
+                contributed:
+                  type: integer
+                  example: 0
+                  description: The total points contributed by the customer to the club.
+                spent:
+                  type: integer
+                  example: 0
+                  description: The total points spent by the customer in the club.
+            spend_limit:
+              type: object
+              nullable: true
+              properties:
+                from:
+                  type: integer
+                  example: 0
+                  description: The starting limit of points that can be spent by the customer.
+                to:
+                  type: integer
+                  example: 100
+                  description: The maximum limit of points that can be spent by the customer.
+                limit:
+                  type: integer
+                  example: 100
+                  description: The total spend limit set for the customer in the club.
+                spent:
+                  type: integer
+                  example: 0
+                  description: The total points already spent by the customer against the spend limit.
+    AccessNotFoundError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    AccessBadRequestError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    SuccessBanResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Indicates the status of the response.
+        metadata:
+          type: array
+          items:
+            type: object
+          example: []
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              example: 65dc4568e804ab70d405e678
+              description: The ID of the ban record.
+            customer_id:
+              type: string
+              example: 22cc313988befe60e3413e76
+              description: The ID of the customer who has been banned from the club.
+            club_id:
+              type: string
+              example: 65d758e7f9cb852e19212e15
+              description: The ID of the club from which the customer has been banned.
+            role:
+              type: string
+              example: member
+              description: The role assigned to the customer before the ban (e.g., member).
+            status:
+              type: string
+              example: banned
+              description: The current status of the customer's membership, indicating they are banned.
+            balance:
+              type: object
+              properties:
+                contributed:
+                  type: integer
+                  example: 10
+                  description: The total points contributed by the banned customer to the club.
+                spent:
+                  type: integer
+                  example: 5
+                  description: The total points spent by the banned customer in the club.
+            spend_limit:
+              type: object
+              nullable: true
+              properties:
+                from:
+                  type: number
+                  example: 0
+                  description: The starting limit of points that could be spent by the customer prior
+                    to the ban.
+                to:
+                  type: number
+                  example: 100
+                  description: The maximum limit of points that could be spent by the customer prior to
+                    the ban.
+                limit:
+                  type: number
+                  example: 50
+                  description: The total spend limit set for the customer before they were banned.
+                spent:
+                  type: number
+                  example: 30
+                  description: The total points already spent by the banned customer against the spend
+                    limit before the ban.
+      required:
+      - status
+      - metadata
+      - payload
+    BanNotFoundError:
+      type: object
+      description: Not Found error responses for banning members.
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    BanBadRequestError:
+      type: object
+      description: Bad Request error responses for banning members.
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    SuccessRefuseResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Indicates the status of the response.
+        metadata:
+          type: array
+          items:
+            type: object
+          example: []
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              example: 65dc4568e804ab70d405e678
+              description: The ID of the refuse record.
+            customer_id:
+              type: string
+              example: 22cc313988befe60e3413e76
+              description: The ID of the customer who has been refused from the club.
+            club_id:
+              type: string
+              example: 65d758e7f9cb852e19212e15
+              description: The ID of the club from which the customer has been refused.
+            role:
+              type: string
+              example: member
+              description: The role assigned to the customer before removal (e.g., member).
+            status:
+              type: string
+              example: removed
+              description: The current status of the customer's membership, indicating they have been
+                refused.
+            balance:
+              type: object
+              properties:
+                contributed:
+                  type: integer
+                  example: 0
+                  description: The total points contributed by the refused customer.
+                spent:
+                  type: integer
+                  example: 0
+                  description: The total points spent by the refused customer.
+            spend_limit:
+              type: object
+              nullable: true
+              properties:
+                from:
+                  type: number
+                  example: 0
+                  description: The starting limit of points that could be spent by the customer.
+                to:
+                  type: number
+                  example: 100
+                  description: The maximum limit of points that could be spent by the customer.
+                limit:
+                  type: number
+                  example: 50
+                  description: The total spend limit.
+                spent:
+                  type: number
+                  example: 30
+                  description: The total points already spent.
+      required:
+      - status
+      - metadata
+      - payload
+    RefuseNotFoundError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+      required:
+      - status
+      - error
+      example:
+        status: error
+        error:
+          type: NotFoundException
+          code: 201054
+          message: Club not found
+    RefuseBadRequestError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+      required:
+      - status
+      - error
+      example:
+        status: error
+        error:
+          type: BadRequestException
+          code: 201094
+          message: Property 'actor' cannot be empty
+    DisbandSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        metadata:
+          type: array
+          items:
+            type: object
+          example: []
+        payload:
+          type: object
+          example: null
+    DisbandNotFoundResponses:
+      type: object
+      description: Possible not found error responses when attempting to disband a club.
+      properties:
+        status:
+          type: string
+          example: error
+          description: Type of error.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Error code.
+            code:
+              type: integer
+              example: 201054
+            message:
+              type: string
+              example: Club not found
+              description: Human-readable error message.
+    DisbandBadRequestResponses:
+      type: object
+      description: Possible error responses when attempting to disband a club.
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201047
+              description: Error code.
+            message:
+              type: string
+              example: Club is not active
+              description: Human-readable error message.
+    InvitationSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          required:
+          - invitation_id
+          - invitation_link
+          - inviter_customer_id
+          - invitee_customer_id
+          - created_at
+          - expires_at
+          properties:
+            invitation_id:
+              type: string
+              description: The unique identifier for the invitation.
+              example: 3569a4f1-3f46-4dee-99b3-d2a44943fcfb
+            invitation_link:
+              type: string
+              description: The link for the invitee to accept the invitation.
+              example: https://shop.antavo.com?invitation_id=3569a4f1-3f46-4dee-99b3-d2a44943fcfb
+            inviter_customer_id:
+              type: string
+              description: The identifier of the inviter customer.
+              example: 44pw313198beei60e3413e76
+            invitee_customer_id:
+              type: string
+              description: The identifier of the invitee customer.
+              example: 22cc313988befe60e3413e75
+            created_at:
+              type: string
+              format: date-time
+              description: Timestamp when the invitation was created.
+              example: '2024-04-08T07:51:01+01:00'
+            expires_at:
+              type: string
+              format: date-time
+              description: Timestamp when the invitation expires.
+              example: '2024-07-17T07:51:01+01:00'
+    InvitationNotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    InvitationBadRequestErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201060
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Inviter customer not found
+    BanMemberResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          description: No additional payload in response for a successful ban.
+    BanMemberNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    BanMemberBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201094
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Property 'actor' cannot be empty
+    ClubUpdateSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata about the response.
+          items:
+            type: object
+        payload:
+          type: object
+          description: The updated club details.
+          properties:
+            id:
+              type: string
+              description: The ID of the club.
+              example: 62cc313988befe60e3413e75
+            name:
+              type: string
+              description: The updated name of the club.
+              example: Club 1
+            status:
+              type: string
+              enum:
+              - active
+              description: The current status of the club (active, disbanded, or fraudulent).
+              example: active
+            balance:
+              type: object
+              description: The balance details of the club.
+              properties:
+                contributed:
+                  type: integer
+                  description: Total amount contributed to the club.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total amount spent from the club's balance.
+                  example: 0
+                expired:
+                  type: integer
+                  description: Total amount of funds that have expired.
+                  example: 0
+                spendable:
+                  type: integer
+                  description: Amount currently available to be spent from the club's balance.
+                  example: 0
+            member_count:
+              type: integer
+              description: Total number of members currently in the club.
+              example: 1
+            owner_customer_id:
+              type: string
+              description: The ID of the club owner.
+              example: 62cc313988befe60e3413e75
+            name_change_frequency:
+              type: object
+              description: Information about the club name change frequency.
+              properties:
+                remaining:
+                  type: integer
+                  description: Number of allowed name changes remaining.
+                  example: 5
+                next_reset_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  description: The date-time when the name change limit resets.
+                  example: '2025-12-31T23:59:59Z'
+                last_updated_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  description: The date-time when the last name change was made.
+                  example: '2025-01-15T14:30:00Z'
+    ClubUpdateBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Error code.
+              example: 201094
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Property 'name' cannot be empty
+    ClubUpdateNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Error code.
+              example: 201054
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Club not found
+    OwnershipSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        metadata:
+          type: array
+          items:
+            type: object
+          example: []
+        payload:
+          type: object
+          example: null
+    OwnerNotFoundResponses:
+      type: object
+      description: Not Found error responses for owner assignments.
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    OwnerBadRequestResponses:
+      type: object
+      description: Possible error responses when attempting to assign an owner.
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201034
+              description: Error code.
+            message:
+              type: string
+              example: Owners cannot be reassigned
+              description: Human-readable error message.
+    PointAlignmentResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Indicates the status of the response.
+        metadata:
+          type: array
+          items: {}
+        payload:
+          type: object
+          properties:
+            member:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 6604074cb8208607742492c7
+                customer_id:
+                  type: string
+                  example: 62cc313988befe60e3413e75
+                  description: The ID of the customer associated with the point alignment action.
+                club_id:
+                  type: string
+                  example: 65fc09f6cab4445deb626562
+                  description: The ID of the club.
+                role:
+                  type: string
+                  enum:
+                  - owner
+                  - member
+                  description: The role of the member within the club.
+                status:
+                  type: string
+                  enum:
+                  - applicant
+                  - active
+                  - kicked
+                  - banned
+                  description: The current status of the member in the club.
+                balance:
+                  type: object
+                  properties:
+                    contributed:
+                      type: integer
+                      example: 0
+                      description: The total points contributed by the member to the club.
+                    spent:
+                      type: integer
+                      example: 0
+                      description: The total points spent by the member in the club.
+            club:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 62cc313988befe60e3413e75
+                name:
+                  type: string
+                  example: Families & Friends
+                  description: The name of the club.
+                status:
+                  type: string
+                  enum:
+                  - active
+                  description: The current status of the club.
+                balance:
+                  type: object
+                  properties:
+                    spendable:
+                      type: integer
+                      example: 0
+                      description: The total spendable points in the club's balance.
+                    contributed:
+                      type: integer
+                      example: 0
+                      description: The total points contributed to the club.
+                    spent:
+                      type: integer
+                      example: 0
+                      description: The total points spent by the club.
+                    expired:
+                      type: integer
+                      example: 0
+                      description: The total points that have expired in the club.
+                member_count:
+                  type: integer
+                  example: 1
+                  description: The total number of members in the club.
+                owner_customer_id:
+                  type: string
+                  example: 62cc313988befe60e3413e75
+                  description: The ID of the customer who owns the club.
+    PointAlignmentNotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201099
+              description: Error code.
+            message:
+              type: string
+              example: Club not found or Club member not found
+              description: Human-readable error message.
+    PointAlignmentBadRequestErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201094
+              description: Error code.
+            message:
+              type: string
+              example: Property 'points' cannot be empty
+              description: Human-readable error message.
+    PointDonationRequest:
+      type: object
+      properties:
+        donated_account_points:
+          type: integer
+          minimum: 1
+          description: Number of account points to donate.
+          example: 100
+        account:
+          type: string
+          description: The account from which the points are donated.
+          example: default_account
+        reason:
+          type: string
+          maxLength: 500
+          description: Reason for the donation (optional).
+          example: Contributing points to help unlock the club's summer reward milestone.
+      required:
+      - donated_account_points
+    PointDonationSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: success
+        metadata:
+          type: array
+          items: {}
+          description: Contains detailed information about the donation, member, and club.
+        payload:
+          type: object
+          properties:
+            donated_account_points:
+              type: integer
+              example: 20
+              description: The number of account points donated.
+            point_conversion_rate:
+              type: number
+              example: 0.5
+              description: The conversion rate used to calculate club points from donated account points.
+            donated_club_points:
+              type: integer
+              example: 10
+              description: The number of club points received after conversion.
+            reason:
+              type: string
+              example: Contributing points to help unlock the club's summer reward milestone.
+              description: The reason provided for the donation (if any).
+            member:
+              type: object
+              description: Information about the donating club member.
+              properties:
+                id:
+                  type: string
+                  example: f23a1b48-4df6-4b12-b678-c9e768a4e45d
+                  description: The ID of the donating member.
+                donation_limit:
+                  type: integer
+                  example: 100
+                  description: The maximum amount of points the member can donate within the cycle.
+                used_from_donation_limit:
+                  type: integer
+                  example: 50
+                  description: The number of points already donated in the current cycle.
+                next_donation_limit_reset_date:
+                  type: string
+                  format: date
+                  example: '2026-01-05'
+                  description: The date when the donation limit will reset.
+                balance:
+                  type: object
+                  description: Member's club points balance.
+                  properties:
+                    contributed:
+                      type: integer
+                      example: 70
+                      description: Total points the member has contributed.
+                    spent:
+                      type: integer
+                      example: 0
+                      description: Total points the member has spent.
+            club:
+              type: object
+              description: The club's points balance overview.
+              properties:
+                balance:
+                  type: object
+                  description: Current state of the club's points.
+                  properties:
+                    contributed:
+                      type: integer
+                      example: 5600
+                      description: Total points contributed to the club.
+                    spent:
+                      type: integer
+                      example: 1000
+                      description: Total points spent by the club.
+                    expired:
+                      type: integer
+                      example: 0
+                      description: Total club points expired.
+                    spendable:
+                      type: integer
+                      example: 4600
+                      description: Points available for spending by the club.
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Indicates that an error occurred.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Error code.
+              example: 201094
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Property 'donated_account_points' cannot be empty
+    RemoveMemberResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          description: No additional payload in response to a successful removal.
+    RemoveMemberNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    RemoveMemberBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201094
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Property 'actor' cannot be empty
+    UnbanMemberResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          required:
+          - id
+          - customer_id
+          - club_id
+          - role
+          - status
+          - balance
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the membership.
+              example: 65dc4568e804ab70d405e678
+            customer_id:
+              type: string
+              description: The unique identifier of the customer.
+              example: 22cc313988befe60e3413e76
+            club_id:
+              type: string
+              description: The unique identifier of the club.
+              example: 65d758e7f9cb852e19212e15
+            role:
+              type: string
+              description: The role of the member.
+              example: member
+            status:
+              type: string
+              description: The status of the membership after unbanning.
+              example: removed
+            balance:
+              type: object
+              required:
+              - contributed
+              - spent
+              properties:
+                contributed:
+                  type: integer
+                  description: Total contributed amount.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total spent amount.
+                  example: 0
+            spend_limit:
+              type: object
+              description: Optional spend limit details.
+              nullable: true
+              properties:
+                from:
+                  type: number
+                  description: Starting limit amount.
+                to:
+                  type: number
+                  description: Maximum limit amount.
+                limit:
+                  type: number
+                  description: Overall spend limit.
+                spent:
+                  type: number
+                  description: Total spent against the limit.
+    UnbanMemberNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    UnbanMemberBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 300840
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Property 'actor' cannot be empty
+    PublicJoinResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          required:
+          - id
+          - club_id
+          - customer_id
+          - role
+          - status
+          - balance
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the membership.
+              example: 22cc313988befe60e3413e76
+            club_id:
+              type: string
+              description: The unique identifier of the club.
+              example: 33cc313988befe60e3413e76
+            customer_id:
+              type: string
+              description: The unique identifier of the customer.
+              example: 44cc313988befe60e3413e76
+            role:
+              type: string
+              description: The role of the member.
+              example: member
+            status:
+              type: string
+              description: The status of the membership after joining.
+              example: active
+            balance:
+              type: object
+              required:
+              - contributed
+              - spent
+              properties:
+                contributed:
+                  type: integer
+                  description: Total contributed amount.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total spent amount.
+                  example: 0
+            spend_limit:
+              type: object
+              description: Optional spend limit details.
+              nullable: true
+              properties:
+                from:
+                  type: number
+                  description: Starting limit amount.
+                to:
+                  type: number
+                  description: Maximum limit amount.
+                limit:
+                  type: number
+                  description: Overall spend limit.
+                spent:
+                  type: number
+                  description: Total spent against the limit.
+    PublicJoinNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    PublicJoinBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201087
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club Member not found
+    PrivateJoinResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          required:
+          - id
+          - club_id
+          - customer_id
+          - role
+          - status
+          - balance
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the membership.
+              example: 22cc313988befe60e3413e76
+            club_id:
+              type: string
+              description: The unique identifier of the club.
+              example: 33cc313988befe60e3413e76
+            customer_id:
+              type: string
+              description: The unique identifier of the customer.
+              example: 44cc313988befe60e3413e76
+            role:
+              type: string
+              description: The role of the member.
+              example: member
+            status:
+              type: string
+              description: The status of the membership.
+              example: applicant
+            balance:
+              type: object
+              required:
+              - contributed
+              - spent
+              properties:
+                contributed:
+                  type: integer
+                  description: Total contributed amount.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total spent amount.
+                  example: 0
+            spend_limit:
+              type: object
+              description: Optional spend limit details.
+              nullable: true
+              properties:
+                from:
+                  type: number
+                  description: Starting limit amount.
+                to:
+                  type: number
+                  description: Maximum limit amount.
+                limit:
+                  type: number
+                  description: Overall spend limit.
+                spent:
+                  type: number
+                  description: Total spent against the limit.
+    PrivateJoinNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 300891
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club invitation not found
+    PrivateJoinBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 300390
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Customer is already a member of a club
+    CreateClubSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          description: The status of the response, indicating success or failure.
+        metadata:
+          type: array
+          items: {}
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              example: 62cc313988befe60e3413e75
+              description: The ID of the newly created club.
+            name:
+              type: string
+              example: Family Moments Club
+              description: The name of the newly created club.
+            type:
+              type: string
+              enum:
+              - private
+              - public
+              description: The visibility type of the club, indicating whether it is private or public.
+            status:
+              type: string
+              enum:
+              - active
+              description: The current status of the club, indicating that it is active.
+            balance:
+              type: object
+              properties:
+                points_earned:
+                  type: integer
+                  example: 0
+                  description: The total points earned by the club.
+                points_spent:
+                  type: integer
+                  example: 0
+                  description: The total points spent by the club.
+                points_expired:
+                  type: integer
+                  example: 0
+                  description: The total points that have expired.
+                points_spendable:
+                  type: integer
+                  example: 0
+                  description: The total points available for spending by the club.
+            member_count:
+              type: integer
+              example: 1
+              description: The total number of members currently in the club.
+            owner_customer_id:
+              type: string
+              format: uuid
+              example: 62cc313988befe60e3413e75
+              description: The ID of the club owner.
+    CreateClubBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - error
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error that occurred.
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+  securitySchemes:
+    api_key:
+      type: apiKey
+      description: ''
+      name: api_key
+      in: query
+security:
+- api_key: []
+tags:
+- name: Clubs

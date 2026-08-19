@@ -1,0 +1,245 @@
+{
+  "item": [
+    {
+      "id": "0a15b70f-9ca8-4624-ac29-bd0f400eb39a",
+      "name": "Offers",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "57e8d2cf-7c83-40dd-b5e6-b52dcb30e0bf",
+          "name": "List customer-specific offers",
+          "request": {
+            "name": "List customer-specific offers",
+            "description": {
+              "content": "This API endpoint is used to submit the contents of a cart and receive any available offers on the products within.\nThe Offers API request body consists of 4 components:\n\n- `cart`: The intended purchase items, recorded in the same format as an Antavo checkout event.\n- `customer`: The Antavo ID of the customer.\n- `store`: The Antavo ID of the store. This may result in store-specific offers if configured.\n- `eligible_only`: Restricts the returned offers to those available to the customer.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "offers",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cart\": {\n    \"total\": \"<number>\",\n    \"items\": [\n      {\n        \"product_id\": \"<string>\",\n        \"quantity\": \"<number>\",\n        \"price\": \"<number>\",\n        \"discount\": \"<number>\",\n        \"subtotal\": \"<number>\"\n      },\n      {\n        \"product_id\": \"<string>\",\n        \"quantity\": \"<number>\",\n        \"price\": \"<number>\",\n        \"discount\": \"<number>\",\n        \"subtotal\": \"<number>\"\n      }\n    ],\n    \"discount\": \"<number>\",\n    \"shipping\": \"<number>\"\n  },\n  \"customer\": \"<string>\",\n  \"store\": \"<string>\",\n  \"eligible_only\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "72b572d4-7207-4257-a616-b4d7c5ddc575",
+              "name": "Successful cart submission",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "offers",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cart\": {\n    \"total\": 22.22,\n    \"items\": [\n      {\n        \"product_id\": \"prd_987654\",\n        \"quantity\": 2,\n        \"price\": 10,\n        \"discount\": 1,\n        \"subtotal\": 18\n      },\n      {\n        \"product_id\": \"prd_987654\",\n        \"quantity\": 2,\n        \"price\": 10,\n        \"discount\": 1,\n        \"subtotal\": 18\n      }\n    ],\n    \"discount\": 2.22,\n    \"shipping\": 4.44\n  },\n  \"customer\": \"9f3c82d6-288e-4361-aec0-039eb066a334\",\n  \"store\": \"3044\",\n  \"eligible_only\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"offer_12345\",\n      \"name\": \"10% off\",\n      \"type\": \"cart\",\n      \"weight\": 1,\n      \"min_total\": 20,\n      \"max_total\": 100,\n      \"required_match\": \"any\",\n      \"required_items\": [\n        {\n          \"type\": \"product\",\n          \"id\": \"prd_987654\",\n          \"name\": \"Vintage Leather Jacket\",\n          \"min_quantity\": \"1\"\n        }\n      ],\n      \"eligible_match\": \"all\",\n      \"eligible_items\": [\n        {\n          \"type\": \"product\",\n          \"id\": \"prd_987654\",\n          \"name\": \"Classic Denim Jeans\",\n          \"min_quantity\": \"1\"\n        }\n      ],\n      \"discount\": {\n        \"type\": \"percent_discount\",\n        \"value\": 10\n      },\n      \"is_exclusive\": true,\n      \"is_eligible\": true,\n      \"card_title\": \"10% Discount\",\n      \"card_description\": \"Get 10% off on your purchase\"\n    }\n  ],\n  \"eligible_only\": false,\n  \"customer\": {\n    \"id\": \"9f3c82d6-288e-4361-aec0-039eb066a334\"\n  },\n  \"cart\": {\n    \"total\": 22.22,\n    \"items\": [\n      {\n        \"product_id\": \"prd_987654\",\n        \"quantity\": 2,\n        \"price\": 13.6,\n        \"discount\": 1,\n        \"subtotal\": 18\n      }\n    ],\n    \"discount\": 2.5,\n    \"shipping\": 0\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1b36481-f79e-4567-8e06-711a7522df4a",
+              "name": "Missing required parameter",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "offers",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cart\": {\n    \"total\": 22.22,\n    \"items\": [\n      {\n        \"product_id\": \"prd_987654\",\n        \"quantity\": 2,\n        \"price\": 10,\n        \"discount\": 1,\n        \"subtotal\": 18\n      },\n      {\n        \"product_id\": \"prd_987654\",\n        \"quantity\": 2,\n        \"price\": 10,\n        \"discount\": 1,\n        \"subtotal\": 18\n      }\n    ],\n    \"discount\": 2.22,\n    \"shipping\": 4.44\n  },\n  \"customer\": \"9f3c82d6-288e-4361-aec0-039eb066a334\",\n  \"store\": \"3044\",\n  \"eligible_only\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"BadRequestException\",\n  \"code\": 0,\n  \"message\": \"Missing required parameter ‘customer’\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d4723061-5d0e-402a-8eca-d9ff8a5380bb",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "offers",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cart\": {\n    \"total\": 22.22,\n    \"items\": [\n      {\n        \"product_id\": \"prd_987654\",\n        \"quantity\": 2,\n        \"price\": 10,\n        \"discount\": 1,\n        \"subtotal\": 18\n      },\n      {\n        \"product_id\": \"prd_987654\",\n        \"quantity\": 2,\n        \"price\": 10,\n        \"discount\": 1,\n        \"subtotal\": 18\n      }\n    ],\n    \"discount\": 2.22,\n    \"shipping\": 4.44\n  },\n  \"customer\": \"9f3c82d6-288e-4361-aec0-039eb066a334\",\n  \"store\": \"3044\",\n  \"eligible_only\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 0,\n  \"message\": \"Not Found\",\n  \"type\": \"NotFoundException\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "809fe50b-225f-4fa4-8f4a-52dad725a41b",
+    "name": "Antavo Offers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Email: support@antavo.com",
+      "type": "text/plain"
+    }
+  }
+}

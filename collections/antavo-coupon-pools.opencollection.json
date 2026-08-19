@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Coupon Pools API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Coupon pools",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update a coupon pool",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/coupon-pools/:coupon_pool_id/update",
+            "params": [
+              {
+                "name": "coupon_pool_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the coupon pool to update which can be:\n- the ID of the coupon pool (`pool_id`) - a unique external attribute used to identify the coupon pool (`external_id`)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint can be used to update a coupon pool with the attributes provided in the request body."
+        },
+        {
+          "info": {
+            "name": "Create a new coupon pool",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/coupon-pools",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint can be used to create a new coupon pool with the attributes provided in the request body."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

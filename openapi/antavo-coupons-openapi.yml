@@ -1,0 +1,209 @@
+openapi: 3.0.0
+info:
+  contact: {}
+  title: Antavo Coupons API
+  version: '1.0'
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+paths:
+  /coupons:
+    get:
+      tags:
+      - Coupons
+      summary: Query coupons independent of customer
+      description: "Use this endpoint to query coupons within Antavo independently of customer data. \n\
+        This allows searching for coupons based on criteria such as coupon code and status, providing\
+        \ flexibility in managing coupon data.\n"
+      operationId: Coupons
+      parameters:
+      - name: code
+        in: query
+        description: The code used to search for a specific coupon.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: TC22341
+      - name: status
+        in: query
+        description: "The status of the coupons to search for. \nOptions: <code>claimed</code>, <code>redeemed</code>,\
+          \ <code>invalid</code>, <code>expired</code>, <code>unassigned</code>, <code>partially_redeemed</code>"
+        required: false
+        schema:
+          type: string
+          enum:
+          - claimed
+          - expired
+          - partially_redeemed
+          - redeemed
+          example: claimed
+      - name: limit
+        in: query
+        required: false
+        description: 'Limits the number of results to be returned in one response.
+
+          '
+        schema:
+          type: integer
+          example: 50
+          default: 100
+      - name: page
+        in: query
+        required: false
+        description: "This parameter gets a specific page of the coupon list if a limit has been set.\
+          \ This is used in pagination in conjunction with the limit query.\t\n"
+        schema:
+          type: number
+          default: 0
+          example: 2
+      responses:
+        '200':
+          description: A successful response containing the list of coupons matching the specific query
+            criteria.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Couponlist'
+              examples:
+                success:
+                  summary: Successful coupon search
+                  value:
+                    data:
+                    - code: TC22341
+                      name: 10% Discount Coupon
+                      status: claimed
+                      created_at: '2024-01-01T00:00:00Z'
+                      customer:
+                        id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      claimed_at: '2024-01-02T00:00:00Z'
+                      expires_at: '2024-12-31T23:59:59Z'
+                      currency: USD
+                      type: percentage
+                      value: 100
+                      balance: 50
+                      pool: 60b8bec0ce61d7c91b000014
+                      min_amount: 5
+                      min_redemption_value: 20
+                      purchase_threshold: 100
+                    - code: TS34523
+                      name: Free Shipping Coupon
+                      status: claimed
+                      created_at: '2021-10-29T12:15:53+01:00'
+                      customer:
+                        id: 280e674c-de2a-4a30-987a-d9267d1a119
+                      claimed_at: '2021-10-29T12:15:53+01:00'
+                      type: free_shipping
+                    next: /coupons?page=2&limit=0
+                no_match:
+                  summary: No matches found
+                  value:
+                    data: null
+        '400':
+          description: Empty search criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponError'
+              examples:
+                fail:
+                  summary: Empty search criteria
+                  value:
+                    type: BadRequestException
+                    code: 160311
+                    message: Empty search criteria
+      deprecated: false
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query
+  schemas:
+    Couponlist:
+      title: Couponlist
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coupon'
+          description: Array of coupons matching the query criteria.
+    Coupon:
+      title: Coupon
+      type: object
+      properties:
+        code:
+          type: string
+          description: The code used in external systems to redeem the coupon's benefit.
+        name:
+          type: string
+          description: The customer-facing name of the coupon.
+        status:
+          type: string
+          description: "The coupon status in Antavo. \nOptions: <code>claimed</code>, <code>redeemed</code>,\
+            \ <code>invalid</code>, <code>expired</code>, <code>unassigned</code>, <code>partially_redeemed</code>"
+        created_at:
+          type: string
+          description: Date timestamp of creation.
+        customer:
+          type: array
+          description: Lists all customers' IDs who have claimed the coupons.
+          items:
+            type: string
+            description: Unique Antavo customer IDs.
+            example: OB1
+        claimed_at:
+          type: string
+          description: Date timestamp of coupon claim.
+        expires_at:
+          type: string
+          description: Date timestamp of coupon expiration.
+        currency:
+          type: string
+          description: The base currency of the coupon.
+        type:
+          type: string
+          description: "Type of coupon. \nOptions: <code>amount</code>, <code>percent</code>, <code>free_shipping</code>\
+            \ and <code>gift_card</code>"
+        value:
+          type: number
+          description: The value of the coupon.
+        balance:
+          type: number
+          description: The remaining value of a gift card following a redemption. Only valid for gift
+            cards.
+        pool:
+          type: string
+          description: The associated coupon pool.
+        min_amount:
+          type: number
+          description: The minimum allowed balance on card. Lower values result in invalid status.
+        min_redemption_value:
+          type: number
+          description: The minimum amount of the gift card which can be used for a purchase.
+        purchase_threshold:
+          type: number
+          description: The minimum total purchase value that must be exceeded in order to use the card.
+    CouponError:
+      title: FAQ
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+          example: 160311
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Empty search criteria
+security:
+- api_key: []

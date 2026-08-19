@@ -1,0 +1,58 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Async Events API",
+    "version": "1.0.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Async Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Query the status of async event processing",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v1/async/events/:correlation_id",
+            "params": [
+              {
+                "name": "correlation_id",
+                "value": "2b137c65-7556-5833-39ef-513428e1f43e",
+                "type": "path",
+                "description": "Use the correlation_id provided in the response of the asynchronous event request."
+              }
+            ]
+          },
+          "docs": "Use this endpoint to query the processing status of an event sent through the `v1/async/events` endpoint.\nOnce the event has been processed, the response includes the customer information and the detailed event data.\n"
+        },
+        {
+          "info": {
+            "name": "Submit an async event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/v1/async/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this endpoint to submit a single event for a specified customer asyncronously. The event is accepted immediately and processed in the background.\nThis endpoint is compatible with the following event actions:\n  - `point_add`\n  - `checkout`\n  - `checkout_item`\n  - `checkout_update`\n  - `checkout_update_item`\n  - `checkout_accept`\n  - `checkout_accept_item`\n  - `checkout_reject`\n  - `partial_refund`\n  - `refund_item`\n  - `refund`\n  - `opt_in`\n  - `opt_out`\n  - `profile`\n\nThe attributes provided"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

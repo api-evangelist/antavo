@@ -1,0 +1,562 @@
+{
+  "item": [
+    {
+      "id": "1eaa7d4b-d591-4c84-85e2-0118a50daf82",
+      "name": "Rewards",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8dccf49c-1b2f-43d9-8023-0a78b49570a4",
+          "name": "Retrieve reward-specific information",
+          "request": {
+            "name": "Retrieve reward-specific information",
+            "description": {},
+            "url": {
+              "path": [
+                "rewards",
+                ":reward_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "reward_id",
+                  "description": "(Required) The unique ID of the reward."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "97c90489-a793-4e50-b377-25e77de1f141",
+              "name": "Reward data JSON object.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rewards",
+                    ":reward_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reward_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"63dcb7736123782ba6336425\",\n    \"name\": \"A 64GB pendrive with illuminating flashing logo.\",\n    \"category\": \"discounts\",\n    \"price\": 500,\n    \"image_url\": \"https://example.com/image_url.png\",\n    \"description\": \"Enjoy 10% off on any item of the Winter Collection.\"\n  },\n  {\n    \"id\": \"63dcb7736123782ba6336425\",\n    \"name\": \"A 64GB pendrive with illuminating flashing logo.\",\n    \"category\": \"discounts\",\n    \"price\": 500,\n    \"image_url\": \"https://example.com/image_url.png\",\n    \"description\": \"Enjoy 10% off on any item of the Winter Collection.\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0c7ca174-d347-4bd5-ac03-58553d1ddc6f",
+              "name": "Returned error object",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rewards",
+                    ":reward_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reward_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 404,\n  \"type\": \"NotFoundException\",\n  \"message\": \"Not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5907414b-2fea-4a93-98fe-b8701e8c2970",
+          "name": "List reward items",
+          "request": {
+            "name": "List reward items",
+            "description": {
+              "content": "This endpoint returns a list of available rewards based on various query parameters.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "rewards"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Limits the number of rewards returned per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "0",
+                  "description": "This parameter gets a specific page of the reward list if a limit has been set."
+                },
+                {
+                  "disabled": false,
+                  "key": "min_price",
+                  "value": "<number>",
+                  "description": "Lower point limit for returned eligible rewards."
+                },
+                {
+                  "disabled": false,
+                  "key": "max_price",
+                  "value": "<number>",
+                  "description": "Upper point limit for returned eligible rewards."
+                },
+                {
+                  "disabled": false,
+                  "key": "customer",
+                  "value": "<string>",
+                  "description": "An Antavo-recognized unique customer identifier."
+                },
+                {
+                  "disabled": false,
+                  "key": "external_id",
+                  "value": "<string>",
+                  "description": "External ID (requires [configuration](/docs/customers#external-identifiers))"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "50d4b941-82b7-4f4f-b37b-3c75a1d176e5",
+              "name": "Available rewards",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rewards"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "min_price",
+                      "value": "100"
+                    },
+                    {
+                      "key": "max_price",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "customer",
+                      "value": "280e674c-c4ea-4a30-987a-d9267d1a5018"
+                    },
+                    {
+                      "key": "external_id",
+                      "value": "CL003322913"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"63dcb7736123782ba6336425\",\n      \"name\": \"10% Discount.\",\n      \"category\": \"discounts\",\n      \"price\": 500,\n      \"description\": \"Enjoy 10% off on any item of the Winter Collection.\",\n      \"image_url\": \"https://example.com/reward.jpg\"\n    },\n    {\n      \"id\": \"63dcb7736123782ba6336425\",\n      \"name\": \"10% Discount.\",\n      \"category\": \"discounts\",\n      \"price\": 500,\n      \"description\": \"Enjoy 10% off on any item of the Winter Collection.\",\n      \"image_url\": \"https://example.com/reward.jpg\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e287b6ad-75c3-4ce8-a395-8a8949eb99a5",
+              "name": "Returned error object",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rewards"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "min_price",
+                      "value": "100"
+                    },
+                    {
+                      "key": "max_price",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "customer",
+                      "value": "280e674c-c4ea-4a30-987a-d9267d1a5018"
+                    },
+                    {
+                      "key": "external_id",
+                      "value": "CL003322913"
+                    },
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 0,\n  \"type\": \"NotFoundException\",\n  \"message\": \"Reward not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d131c074-abab-42f3-b019-971fbea29190",
+          "name": "Claims a specific reward (deprecated)",
+          "request": {
+            "name": "Claims a specific reward (deprecated)",
+            "description": {
+              "content": "This endpoint is used to register that a customer has claimed a specific reward.\nThis endpoint is not supported anymore. Please use the [reward endpoint](https://developers.antavo.com/reference/post_customers-customer-id-activities-rewards-reward-id-claim) of the Display API.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "rewards",
+                ":reward_id",
+                "claim"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "reward_id",
+                  "description": "(Required) The unique ID of the reward."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"<string>\",\n  \"external_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "87a2f343-35e9-4859-90cb-c1f4fb0f81ac",
+              "name": "Reward data JSON object",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rewards",
+                    ":reward_id",
+                    "claim"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reward_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"external_id\": \"CL003322913\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"spent\": 100,\n  \"coupon\": {\n    \"code\": \"TC22341\",\n    \"type\": \"percentage\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "88af29d6-b3e7-4904-9455-07674a3beda4",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rewards",
+                    ":reward_id",
+                    "claim"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "api_key",
+                      "value": "<API Key>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "reward_id",
+                      "description": "(Required) The unique ID of the reward."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customer\": \"280e674c-c4ea-4a30-987a-d9267d1a5018\",\n  \"external_id\": \"CL003322913\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 0,\n  \"type\": \"NotFoundException\",\n  \"message\": \"Not found\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.staging.antavo.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "query"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d271d7e9-fa2c-4981-8c80-a2a23de05f36",
+    "name": "Antavo Rewards API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Customer API provides another complementary access point to assist programs and integrations access the full potential of the Antavo Loyalty Management Platform. All Customer API requests should be made with a signed API.  In order to be compliant with GDPR standards, any searches for opted out customers will results in an empty search criteria as the  Antavo Loyalty Management Platform does not retain any customer identifiers upon un-enrollment.\n\nContact Support:\n Email: support@antavo.com",
+      "type": "text/plain"
+    }
+  }
+}

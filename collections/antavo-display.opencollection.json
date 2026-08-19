@@ -1,0 +1,1541 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Antavo Display API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "query"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Challenges",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all available challenges for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/challenges",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns all active challenges that are available for the customer to complete. To access a filtered result, please use the [v2 endpoint](/reference/get_v2-customers-customer-id-activities-challenges)."
+        },
+        {
+          "info": {
+            "name": "List a customer's completed challenges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/challenges",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns a customer's challenge completion history. Use the [v2 endpoint](/reference/get_v2-customers-customer-id-challenges) to get a more complete and filterable view."
+        },
+        {
+          "info": {
+            "name": "V2 List all available challenges for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v2/customers/:customer_id/activities/challenges",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "tags",
+                "value": "",
+                "type": "query",
+                "description": "Filtering based on tag(s) associated."
+              },
+              {
+                "name": "points",
+                "value": "",
+                "type": "query",
+                "description": "Filtering based on the points rewarded."
+              },
+              {
+                "name": "title",
+                "value": "",
+                "type": "query",
+                "description": "Filtering based on the title."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of active challenges to return. This is used in pagination in conjunction with the limit query.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of active challenges returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sorts the results by the selected value, which can be `ends_at`, `title` or `points`. This query can be used in conjunction with the order query.\n"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Used in conjunction with the sort query to list the results in ascending or descending order. The value can be `asc` for an ascending order or `desc` for a descending order.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns all active challenges that are available for the customer to complete. Results can be [filtered](/docs/pagination-filtering-and-ordering#filtering) with query parameters listed below."
+        },
+        {
+          "info": {
+            "name": "V2 List a customer's completed challenges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/v2/customers/:customer_id/challenges",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "created_at.lt",
+                "value": "",
+                "type": "query",
+                "description": "Filter by challenge creation date (less than)"
+              },
+              {
+                "name": "created_at.lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter by challenge creation date (less than or equal)"
+              },
+              {
+                "name": "created_at.gt",
+                "value": "",
+                "type": "query",
+                "description": "Filter by challenge creation date (greater than)"
+              },
+              {
+                "name": "created_at.gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter by challenge creation date (greater than or equal)"
+              },
+              {
+                "name": "last_completed_at.lt",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last challenge completion date/time (less than)"
+              },
+              {
+                "name": "last_completed_at.lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last challenge completion date/time (less than or equal)"
+              },
+              {
+                "name": "last_completed_at.gt",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last challenge completion date/time (greater than)"
+              },
+              {
+                "name": "last_completed_at.gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter by last challenge completion date/time (greater than or equal)"
+              },
+              {
+                "name": "id",
+                "value": "6720e8e7dba10ac31c055d1f",
+                "type": "query",
+                "description": "Filter to a specific challenge by id."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of challenges to return. This is used in pagination in conjunction with the limit query.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of challenges returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns a customer's challenge completion history. Results can be [filtered](/docs/pagination-filtering-and-ordering#filtering) with query parameters listed below."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Content consumption",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List available content consumption activities for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/content-consumption",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n   * The Antavo customer ID\n   * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns all content consumption activities that are available for a specific customer to complete."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all available contests for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/contests",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of custom attributes to include in the response."
+              }
+            ]
+          },
+          "docs": "This endpoint returns all contests that are available for a specific customer to enter."
+        },
+        {
+          "info": {
+            "name": "Submit a contest entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/contests/:contest_id/enter",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "contest_id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier of the contest."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a contest entry"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Activities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all earn activities visible for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/earn",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "Aggregates all earn activities relevant to the customer, provided by modules including:\n\n* [Challenges](https://docs.antavo.com/docs/challenges)\n\n* [Gamified profiling](https://docs.antavo.com/docs/gamified-profiling)\n\n* [Incentivized purchase](https://docs.antavo.com/docs/incentivized-purchase)\n\n* [Social follow](https://docs.antavo.com/docs/social-follow)\n\n* [Offline treasure hunt](https://docs.antavo.com/docs/offline-treasure-hunt)\n\n* [Content consumption](https://docs.antavo.com/docs/content"
+        },
+        {
+          "info": {
+            "name": "List all available spend activities for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/spend",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n   * The Antavo customer ID\n   * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "Aggregates available earn and spend options provided by modules including:\n\n* [Rewards](https://docs.antavo.com/docs/rewards)\n\n* [Contest lite](https://docs.antavo.com/docs/contest-lite)\n"
+        },
+        {
+          "info": {
+            "name": "List all available activities for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "activity_types",
+                "value": "",
+                "type": "query",
+                "description": "A comma-separated list of activity types to filter the results. Options:\n  * `challenge`\n  * `reward`\n  * `social_share`\n  * `profiling`\n  * `offer`\n  * `treasure`\n  * `offline_treasure`\n  * `contest`\n  * `incentivized_purchase`\n  * `content_consumption`\n  * `social_follow`\n  * `review`\n  * `friend_referral`\n  * `instagram_contests`\n  * `prize wheels`\n  * `quiz`\n  * `campaign`\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of custom attributes to include in the response."
+              }
+            ]
+          },
+          "docs": "Aggregates available earn and spend options provided by modules including:\n\n* [Challenges](https://docs.antavo.com/docs/challenges)\n\n* [Gamified profiling](https://docs.antavo.com/docs/gamified-profiling)\n\n* [Incentivized purchase](https://docs.antavo.com/docs/incentivized-purchase)\n\n* [Rewards](https://docs.antavo.com/docs/rewards)\n\n* [Social follow](https://docs.antavo.com/docs/social-follow)\n\n* [Social share](https://docs.antavo.com/docs/social-share)\n\n* [Offline treasure hunt](https://docs.a"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Offers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all offers available for the customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/offers",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "This endpoints provides the list of all available offers for a specific customer."
+        },
+        {
+          "info": {
+            "name": "Claim an offer for a specific customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/offers/:offer_id/claim",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "offer_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the offer to be claimed."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint allows for claiming an offer for a customer."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Profiling",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the next question to answer within a profiling flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/profiling/:flow_id/next",
+            "headers": [
+              {
+                "name": "Accept-language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "flow_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the profiling flow to complete."
+              }
+            ]
+          },
+          "docs": "This endpoints returns the next question within a profiling flow that the customer should answer. If there are no more questions left to answer in the given flow, the call will trigger the ``profiling_flow`` event, and any associated points will be awarded to the customer."
+        },
+        {
+          "info": {
+            "name": "List profiling flows available to the customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/profiling",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "This endpoints provides the list of all available profiling flow for a specific customer to complete."
+        },
+        {
+          "info": {
+            "name": "Submit an answer to a profiling question",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/profiling/:flow_id/questions/:question_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "flow_id",
+                "value": "",
+                "type": "path",
+                "description": "Flow ID."
+              },
+              {
+                "name": "question_id",
+                "value": "",
+                "type": "path",
+                "description": "Question ID."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "answer",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "This endpoint allows for submitting the customer's answers to profiling questions. Two types of events are recorded through this endpoint:\n* A `profiling_answer` event is recorded each time an answer is submitted to a profiling question.\n* A `profiling_flow` event is recorded once all answers in a flow have been successfully submitted in separate requests. This event indicates that the entire profiling sequence has been completed.\n\nLearn more about these events under the list of [Internal events"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Quizzes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List quiz details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/quizzes/:quiz_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "quiz_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the quiz."
+              }
+            ]
+          },
+          "docs": "This endpoint returns configured attributes of quiz questions."
+        },
+        {
+          "info": {
+            "name": "List all quizzes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/quizzes",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of quiz questions to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of quiz questions returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint returns all configured quiz questions that the customer may answer."
+        },
+        {
+          "info": {
+            "name": "Submit an answer to a quiz",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/quizzes/:quiz_id/earn",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "quiz_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the quiz."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "answer",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "This endpoint allows for the submission of answers to quiz questions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Rewards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a specific reward available for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/rewards/:reward_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique indentifier of the reward."
+              },
+              {
+                "name": "fields",
+                "value": "claims",
+                "type": "query",
+                "description": "Use the `claims` field to see the claimed rewards and associated information for each **currently** available reward.\n"
+              }
+            ]
+          },
+          "docs": "A endpoint provides detailed information about a specified reward available for a specific customer."
+        },
+        {
+          "info": {
+            "name": "List all available rewards for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/rewards",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n   * The Antavo customer ID\n   * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of non-standard fields to be included in the response. Accepted values: \n\n* `claims`: See the claimed rewards and associated information for each **currently** available reward.\n\n* `custom_data`: Access this field set in the reward configuration.\n\n* `gallery`: Provides, where available, image links specified in the reward configuration.\n\n* `instructions`: Access redeem instructions set in the reward configuration.\n\n* `terms`: Access terms and conditions set in the reward configuration.\n\n* Any custom attributes configued in the [Entities module](https://docs.antavo.com/docs/custom-entities#adding-custom-entity-attributes) with `cf_` prefix.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of rewards to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of rewards to return. This is used in pagination in conjunction with the limit query.\n"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sorts the results by the selected value, which can be `starts_at`, `ends_at`, or `order`. This query can be used in conjunction with the order query.\n"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Used in conjunction with the sort query to list the results in ascending or descending order. The value can be `asc` for an ascending order or `desc` for a descending order.\n"
+              }
+            ]
+          },
+          "docs": "This endpoints provides the list of all available rewards for a specific customer."
+        },
+        {
+          "info": {
+            "name": "List a customer's claimed rewards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/rewards",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of claimed rewards to be returned in one response. Additional claimed rewards can be accessed through pagination using the offset. \n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the starting number of claimed rewards to return. Used for pagination in combination with the limit query. \n"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Used in conjunction with the order query to sort the results in the selected order (ascending order by defualt).\n"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Used in conjunction with the sort query to list the results in ascending or descending order. The value can be `asc` for an ascending order or `desc` for a descending order.\n"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated list of non-standard fields to be included in the response. Accepted values: \n\n* `category`: Displays the reward's category, if assigned.\n\n* `custom_data`: Access fields set in the reward configuration under [Wehbook data](https://docs.antavo.com/docs/rewards#custom-fields).\n\n* `stock`: Access this field set in the reward configuration.\n\n* `gallery`: Provides, where available, image links specified in the reward configuration.\n\n* `instructions`: Access redeem instructions set in the reward configuration.\n\n* `terms`: Access terms and conditions set in the reward configuration.\n\n* `passes`: Access details for passes assigned to the customer through a reward claim.\n\n* Any custom attributes configued in the [Entities module](https://docs.antavo.com/docs/custom-entities#adding-custom-entity-attributes) with `cf_` prefix.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint provides the detailed list a customer's claimed rewards."
+        },
+        {
+          "info": {
+            "name": "Submit a bid for the customer on a specified bidding reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/rewards/:reward_id/bid",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique indentifier of the reward."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "amount",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "The endpoint automatically calculates and submits a bid for a specified customer on the specific bidding reward. The bid amount is based on the current highest bid and the [bid step](https://docs.antavo.com/docs/rewards#bidding-rewards), which is set in the Antavo Management UI.\n\nManually set value for bids is possible by submitting an amount in the request body.\n"
+        },
+        {
+          "info": {
+            "name": "Claim a reward for a specific customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/rewards/:reward_id/claim",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique reward ID."
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Returns additional objects in the response, using a comma separated list. Options: \n\n- **customer**: The complete customer response object with all customer attributes.\n- **reward**: The complete reward object with all reward attributes.\n"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "points",
+                  "value": ""
+                },
+                {
+                  "name": "count",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "This endpoint allows for claiming a reward for a customer."
+        },
+        {
+          "info": {
+            "name": "Revoke a previously claimed reward",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/rewards/:reward_id/revoke",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "reward_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique indentifier of the reward."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "event",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "This endpoint revokes a specific reward claim."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Treasure hunt",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all available treasure hunts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/activities/treasure-hunt",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns the list of all available online treasure hunts for a specific customer."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Coupons",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List coupons assigned to a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/coupons",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the coupon code"
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the name of the coupon"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by coupon status. Accepted values: `claimed`, `expired`, `partially_redeemed` and `redeemed`."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by  type of coupon. Accepted values: `amount`, `free_shipping`, `gift_card`, `percentage`."
+              },
+              {
+                "name": "value",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the value of coupon."
+              }
+            ]
+          },
+          "docs": "Returns all coupons that has been assigned to a specified customer."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Data extensions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve Antavo data extensions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/data/:data_extension",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "data_extension",
+                "value": "",
+                "type": "path",
+                "description": "Antavo data module.<br> Currently, the `profiling` extension is available which provides a customer's answers to profiling questions."
+              }
+            ]
+          },
+          "docs": "This endpoint allows for accesssing data of a specific customer stored in extensions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "History",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all Antavo events associated with a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/events",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "280e674c-c4ea-4a30-987a-d9267d1a5018",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of events returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of events to return. Used for pagination in conjunction with the limit query.\n"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Used to sort and order the results in ascending or descending order. The value can be `asc` for sorting the results by `_id` in an ascending order, or `desc` for sorting the results by `date` and `_id` in a descending order.\n"
+              },
+              {
+                "name": "actions",
+                "value": "checkout,checkout_accept",
+                "type": "query",
+                "description": "A legacy field consisting of comma separated list of actions to filters the type of returned Antavo events."
+              },
+              {
+                "name": "action",
+                "value": "",
+                "type": "query",
+                "description": "The events history can be filtered by submitted event actions using operators. Refer to [API events](/docs/api-events) and [internal events](/docs/internal-events) lists. \nThis filter query can be used in conjunction with [operators](/docs/pagination-filtering-and-ordering#query-operators). The filter should be submitted as a parameter in the following format: `field.operator(optional)=value`.\n\nFiltering of events containing a `transaction_id` is also possible. This requires the action query to contain all related events and for an additional query using `properties.transaction_id`.\nExample: \n`action.in=checkout,checkout_accept&properties.transaction_id.in=c078c162-88af-4369-89a4-408958a8cb75`. \nThese combined filters can also use [filtering operators](/docs/pagination-filtering-and-ordering#query-operators). \nThe `transaction_id` field in any custom event must be set as filterable.\n"
+              },
+              {
+                "name": "date",
+                "value": "date.gt=2023-01-01",
+                "type": "query",
+                "description": "The events history can be filtered by a specific date. Specific start and/or end dates can be stated by using multiple operators (e.g., `date.gt=2020-01-01&date.lt=2022-02-01`).\nThe UTC timezone should be considered when sending the request.\t\n"
+              },
+              {
+                "name": "points_only",
+                "value": "false",
+                "type": "query",
+                "description": "Filter to only show non-zero points events (events that award or subtract points)."
+              },
+              {
+                "name": "references",
+                "value": "true",
+                "type": "query",
+                "description": "Include the ID and name of any associated challenges/rewards in the response."
+              }
+            ]
+          },
+          "docs": "This endpoint returns a detailed list of events and the corresponding actions recorded with the specified customer ID. This information can be used as a customer activity source and can also be accessed using the `/history`endpoint.\nThe event history/log/stream can be pre-filtered by specific event actions and paginated by limiting and offsetting the number of returned events. The response also includes event expiration dates, if set.\n\nThis endpoint was historically known as `/customers/{custome"
+        },
+        {
+          "info": {
+            "name": "Retrieve a time-filtered list of every event for all customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/-/events",
+            "params": [
+              {
+                "name": "timestamp.gt",
+                "value": "",
+                "type": "query",
+                "description": "Filter events with timestamp greater than the specified value."
+              },
+              {
+                "name": "timestamp.lt",
+                "value": "",
+                "type": "query",
+                "description": "Filter events with timestamp less than the specified value."
+              },
+              {
+                "name": "timestamp.gte",
+                "value": "",
+                "type": "query",
+                "description": "Filter events with timestamp greater than or equal to the specified value."
+              },
+              {
+                "name": "timestamp.lte",
+                "value": "",
+                "type": "query",
+                "description": "Filter events with timestamp less than or equal to the specified value."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of events returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of events to return. Used for pagination in conjunction with the limit query.\n"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Used to sort and order the results in ascending or descending order. The value can be `asc` for sorting the results by `_id` in an ascending order, or `desc` for sorting the results by `date` and `_id` in a descending order.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint returns all events for all customers that match the specified datetime timestamp query.\nThe returned object contains the total number of matching events and an array of every matching event.\t\n\nThe datetime filter accepts the following operators and can be combined to generate a time window:\n\n* `gt` - greater than\n\n* `lt` - less than \n\n* `gte` - greater than or equal\n\n * `lte` - less than or equal\n\n The timestamp filter must be in ISODate format. Example: ``timestamp.gt=2023-01-05``"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Prize wheels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve all slices for a specific prize wheel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/prize-wheels/:pw_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "pw_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the prize wheel."
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Use the options.reward field for detailed information of rewards associated with winning slices."
+              }
+            ]
+          },
+          "docs": "This endpoint provides all information regarding each individual slice of the prize wheel.\n\n\nConfigured rewards can be used in a slice, and the full reward information can be returned with the slice information using the `fields` query.\n"
+        },
+        {
+          "info": {
+            "name": "Enters a customer into a specific prize wheel draw",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/prize-wheels/:pw_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "pw_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the prize wheel."
+              }
+            ]
+          },
+          "docs": "Enters a customer into a specific prize wheel draw"
+        },
+        {
+          "info": {
+            "name": "List all available prize wheels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/prize-wheels",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID \n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of prize wheels to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of prize wheels returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint returns the list of all available prize wheels for a specific customer."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search transactions for a specific customer using criteria",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/transactions/-/search",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n * The Antavo customer ID\n * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "The target transaction ID of the specified customer. This example uses a simple match, but complex filtering is possible using generic entity [filter parameters](/docs/pagination-filtering-and-ordering#filtering)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Transactions can be filtered by status. This example uses a simple match but complex filtering is possible using  generic entity [filter parameters](/docs/pagination-filtering-and-ordering#filtering)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of transactions to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of transactions returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint provides transactional-based searches for a specific customer. Customer transactions can be filtered by transaction ID and status, and highly selective queries can be generated using the generic entity [filtering](/docs/pagination-filtering-and-ordering#filtering).\nExample:\n`GET /customers/001/transactions/-/search?id.in=trx01,trx02,trx03&status=pending`\n\nAll inline examples within this documentation uses simple matching.\n\nThis endpoint has a 8k request URI limit, this corresponds "
+        },
+        {
+          "info": {
+            "name": "Perform bulk transaction search for a specific customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/transactions/-/search",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint provides the option of high-volume transaction-based searching.\n\nCustomer transactions can be filtered by transaction ID and status provide in the request body.\nHighly selective queries can be generated using the generic entity [filtering](/docs/pagination-filtering-and-ordering#filtering).\n"
+        },
+        {
+          "info": {
+            "name": "List all events associated with a specified transaction for a specific customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/transactions/:transaction_id/events",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "transaction_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique transaction ID"
+              },
+              {
+                "name": "action",
+                "value": "checkout",
+                "type": "query",
+                "description": "\"The events history can be filtered by submitted event actions using operators. Refer to [API events](/docs/api-events) and [internal events](/docs/internal-events) lists. \nThis filter query can be used in conjunction with the operators listed here. The filter should be submitted as a parameter in the following format: `field.operator(optional)=value`.\n  \nFiltering of events containing a `transaction_id` is also possible. This requires the action query to contain all related events and for an additional query using `properties.transaction_id`.\nExample: \n`action.in=checkout,checkout_accept&properties.transaction_id.in=c078c162-88af-4369-89a4-408958a8cb75`. \nThese combined filters can also use [filtering operators](/docs/pagination-filtering-and-ordering#query-operators). \nThe `transaction_id` field in any custom event must be set as filterable.\"\n"
+              },
+              {
+                "name": "date",
+                "value": "2022-01-01",
+                "type": "query",
+                "description": "The events history can be filtered by a specific date. Specific start and/or end dates can be stated by using multiple [operators](/docs/pagination-filtering-and-ordering#query-operators). E.g.,\n\n<code>date.gt=2020-01-01&date.lt=2022-02-01</code>\n\nUTC timezone should be considered when sending the request.\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of events to return. This is used in pagination in conjunction with the limit query."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of events returned in one response. Other values are accessible by pagination made accessible via the offset."
+              }
+            ]
+          },
+          "docs": "This endpoint provides a detailed breakdown of a specified customer's transaction.\n\nThe following events are returned by this endpoint:\n\n* [checkout](/docs/api-events#checkout), [checkout_item](/docs/api-events#checkout_item).\n\n* [checkout_update](/docs/api-events#checkout_update), [checkout_update_item](/docs/api-events#checkout_update_item).\n\n* [checkout_accept](/docs/api-events#checkout_accept), [checkout_reject](/docs/api-events#checkout_accept_item).\n\n* [point_add](/docs/api-events#point_ad"
+        },
+        {
+          "info": {
+            "name": "Retrieve a specified transaction for a specific customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/transactions/:transaction_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "transaction_id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction ID."
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Include non-standard fields in the response. Accepted values:\n\n* `events`: Display events related to the specified transaction.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint provides a detailed breakdown of a customer's transaction.\nIf you need to retrieve the event ID that created the transaction, use the [/transactions](/reference/get_customers-customer-id-transactions) endpoint with the ``id`` query parameter to access the corresponding event information.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve the transaction history for a specific customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/transactions",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limits the number of transactions to be returned in one response. Other values are accessible by pagination made accessible via the offset.\n"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offsets the starting number of transactions to return. This is used in pagination in conjunction with the limit query. \n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "Filters transactions by their unique transaction ID. You can use this parameter to retrieve a specific transaction based on the ID.\n"
+              }
+            ]
+          },
+          "docs": "This endpoint provides a detailed list of a customer's transactions. \nEach returned transaction contains the transaction ID, transaction status and all other related transaction information submitted in the initial event.\n\nThe list of returned transactions can also be subsequently paginated by limiting the number of returned transactions and subsequently offsetting the returned transactions.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Wallet",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve download URLs for assigned wallet passes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/wallet",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filters available passes based on status. Accepted values: `assigned` and `archived`"
+              }
+            ]
+          },
+          "docs": "This endpoint returns all wallet passes for a specific customer. A new access token is generated every time the endpoint is called."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Customers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Verify credentials provided during registration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.staging.antavo.com/customers/-/verify/",
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "This endpoint is used to confirm registration.\n\nA successful verification will change the status of the customer to `active` and enable them to log in and engage with the loyalty program. Failure will leave the customer in an `inactive` status.\n\nThe verification process occurs using a token.\n\nThis requires the Custom login module with the verification option enabled (disabled by default).\n"
+        },
+        {
+          "info": {
+            "name": "Create a new customer with log-in credentials",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/:customer_id/opt-in",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint creates customer within Antavo according to the specified opt-in parameters stated in the body. \n\nThis interface is primarily used as a customer-driven registration process which also generates login credentials, enabling the new customer to log into Antavo systems. This endpoint complements the [opt-in](https://developers.antavo.com/docs/api-events#opt_in) event.\n"
+        },
+        {
+          "info": {
+            "name": "Log in a specific customer to Antavo",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/-/login",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint logs the specified customer into Antavo and a successful login returns the customer object.\n\nThe username attribute can be specified in the Antavo Management UI from any available profile attribute.\nThe customer ID can then be accessed and used for subsequent calls using Antavo Display API endpoints.\n\nA successful log-in will also create a ``daily_login`` event for the customer.\nThis event will only be written once to the customer's event stream per calendar day.\n\nThis requires the"
+        },
+        {
+          "info": {
+            "name": "Request a new password for Antavo login",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/-/password/request",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "A forgotten password can be reset through this endpoint.\nThe username can be set in the Customer login module in the Management UI and can be any customer profile attribute.\nThe `url` string is a URL which can be extended with the reset token.\n"
+        },
+        {
+          "info": {
+            "name": "Reset the password of the current customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.staging.antavo.com/customers/-/password/reset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This provides a customer interface for changing a password. The token is captured from the link provided by the password reset email. A simple check is provided to ensure that the two passwords match.\nThis requires the Custom login module to be enabled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
