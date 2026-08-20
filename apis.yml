@@ -34,6 +34,22 @@ tags:
 - Engagement
 - Promotions
 - Gamification
+- Event
+- E-Commerce
+- Coupons
+- Points
+- Membership
+tags_raw:
+- Loyalty
+- Customer Loyalty
+- Rewards
+- Enterprise
+- Headless
+- Retail
+- Marketing
+- Engagement
+- Promotions
+- Gamification
 - Events
 - eCommerce
 - Coupons
@@ -46,6 +62,10 @@ apis:
 - aid: antavo:antavo-events-api
   name: Antavo Events API
   tags:
+  - Event
+  - Ingestion
+  - Interactions
+  tags_raw:
   - Events
   - Ingestion
   - Interactions
@@ -69,6 +89,10 @@ apis:
 - aid: antavo:antavo-async-events-api
   name: Antavo Async Events API
   tags:
+  - Event
+  - Async
+  - Queue
+  tags_raw:
   - Events
   - Async
   - Queue
@@ -92,6 +116,10 @@ apis:
 - aid: antavo:antavo-customer-api
   name: Antavo Customer API
   tags:
+  - Customers
+  - Profiles
+  - Account
+  tags_raw:
   - Customers
   - Profiles
   - Accounts
@@ -161,6 +189,10 @@ apis:
 - aid: antavo:antavo-rewards-api
   name: Antavo Rewards API
   tags:
+  - Rewards
+  - Redemptions
+  - Claims
+  tags_raw:
   - Rewards
   - Redemption
   - Claims
@@ -391,6 +423,10 @@ apis:
 - aid: antavo:antavo-loyalty-read-api
   name: Antavo Loyalty Read API
   tags:
+  - Reporting
+  - Customers
+  - Analytics
+  tags_raw:
   - Read
   - Reporting
   - Customers
