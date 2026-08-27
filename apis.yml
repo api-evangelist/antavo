@@ -59,427 +59,682 @@ created: '2026-07-10'
 modified: '2026-08-13'
 specificationVersion: '0.23'
 apis:
-- aid: antavo:antavo-events-api
-  name: Antavo Events API
-  tags:
-  - Event
-  - Ingestion
-  - Interactions
-  tags_raw:
-  - Events
-  - Ingestion
-  - Interactions
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: antavo:antavo-activities-api
+  name: Antavo Activities API
+  description: This endpoint collects and aggregates all activities, provided by all modules
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
+  tags:
+  - Activities
   properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-events-openapi.yml
-    type: OpenAPI
-    name: Antavo Events API OpenAPI
-  - url: overlays/antavo-events-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Events API
-  description: Records customer interactions from e-commerce, POS, websites, and mobile apps as loyalty
-    events (for example point_add, checkout_accept), driving the rules and workflows of the loyalty
-    program. Supports single and bulk event submission and reading a customer's event history.
+  - type: OpenAPI
+    url: openapi/antavo-activities-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
 - aid: antavo:antavo-async-events-api
   name: Antavo Async Events API
-  tags:
-  - Event
-  - Async
-  - Queue
-  tags_raw:
-  - Events
-  - Async
-  - Queue
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  description: The Async Events API from Antavo — 2 operation(s) for async events.
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-async-events-openapi.yml
-    type: OpenAPI
-    name: Antavo Async Events API OpenAPI
-  - url: overlays/antavo-async-events-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Async Events API
-  description: Queues events for reliable background processing during high-traffic periods, returning
-    a correlation id that can be polled for status. Uses token-based authentication via the /v1/auth/token
-    endpoint.
-- aid: antavo:antavo-customer-api
-  name: Antavo Customer API
   tags:
-  - Customers
-  - Profiles
-  - Account
-  tags_raw:
-  - Customers
-  - Profiles
-  - Accounts
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  - Async Events
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-async-events-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-authentication-api-api
+  name: Antavo Authentication API
+  description: The Authentication API API from Antavo — 1 operation(s) for authentication api.
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-customer-openapi.yml
-    type: OpenAPI
-    name: Antavo Customer API OpenAPI
-  - url: overlays/antavo-customer-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Customer API
-  description: Search, retrieve, and manage loyalty member profiles - including login, opt-in registration,
-    password reset, verification, account merging, and active-customer counts - while maintaining
-    member privacy.
-- aid: antavo:antavo-display-api
-  name: Antavo Display API
   tags:
-  - Headless
-  - Display
-  - Experience
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  - Authentication API
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-authentication-api-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-cart-api
+  name: Antavo Cart API
+  description: Cart endpoints collection
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-display-openapi.yml
-    type: OpenAPI
-    name: Antavo Display API OpenAPI
-  - url: overlays/antavo-display-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Display API
-  description: The primary headless API for building the member-facing loyalty experience - listing
-    earn and spend activities, challenges, rewards, offers, coupons, transactions, wallet passes,
-    quizzes, contests, prize wheels, and profiling flows, plus claiming and revoking rewards.
-- aid: antavo:antavo-entities-api
-  name: Antavo Entities API
   tags:
-  - Entities
-  - Configuration
-  - CRUD
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/docs/antavo-apis
-  baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-entities-openapi.yml
-    type: OpenAPI
-    name: Antavo Entities API OpenAPI
-  - url: overlays/antavo-entities-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Entities API
-  description: Generic CRUD surface for the foundational building blocks of a program - rewards,
-    challenges, stores, products, transactions, and customer lists - addressed as entities under
-    a module namespace, with list, create, retrieve, update, archive, and bulk submission.
-- aid: antavo:antavo-rewards-api
-  name: Antavo Rewards API
-  tags:
-  - Rewards
-  - Redemptions
-  - Claims
-  tags_raw:
-  - Rewards
-  - Redemption
-  - Claims
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/docs/antavo-apis
-  baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-rewards-openapi.yml
-    type: OpenAPI
-    name: Antavo Rewards API OpenAPI
-  - url: overlays/antavo-rewards-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Rewards API
-  description: Manage the reward catalog and redemptions - create, list, retrieve, update, and archive
-    rewards via the entities surface, and claim rewards. Legacy /rewards claim endpoints are superseded
-    by the Display API.
-- aid: antavo:antavo-coupons-api
-  name: Antavo Coupons and Coupon Pools API
-  tags:
-  - Coupons
-  - Codes
-  - Pools
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/docs/antavo-apis
-  baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-coupons-openapi.yml
-    type: OpenAPI
-    name: Antavo Coupons API OpenAPI
-  - url: overlays/antavo-coupons-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Coupons API
-  - url: openapi/antavo-coupon-pools-openapi.yml
-    type: OpenAPI
-    name: Antavo Coupon Pools API OpenAPI
-  - url: overlays/antavo-coupon-pools-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Coupon Pools API
-  description: Query coupon usage independent of a customer and create or manage coupon pools - configuring
-    value, expiration, and code patterns - with bulk import of codes and status/error reporting on
-    the batch operations.
-- aid: antavo:antavo-offers-api
-  name: Antavo Offers API
-  tags:
-  - Offers
-  - Promotions
   - Cart
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-cart-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-challenges-api
+  name: Antavo Challenges API
+  description: Endpoints provided by the _Challenges_ module
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-offers-openapi.yml
-    type: OpenAPI
-    name: Antavo Offers API OpenAPI
-  - url: overlays/antavo-offers-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Offers API
-  description: Submit a cart and retrieve applicable pre-purchase offers used for customer acquisition
-    and engagement, and list a member's available offers through the Display surface.
-- aid: antavo:antavo-points-preview-api
-  name: Antavo Points Preview API
   tags:
-  - Points
-  - Preview
-  - Workflows
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/docs/antavo-apis
-  baseURL: https://api.antavo.com
+  - Challenges
   properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-points-preview-openapi.yml
-    type: OpenAPI
-    name: Antavo Points Preview API OpenAPI
-  - url: overlays/antavo-points-preview-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Points Preview API
-  description: Preview the loyalty points a transaction would earn, including bonus points assigned
-    by the Workflows module, before the transaction is committed.
-- aid: antavo:antavo-leaderboard-api
-  name: Antavo Leaderboard API
-  tags:
-  - Leaderboard
-  - Rankings
-  - Gamification
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/docs/antavo-apis
-  baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-leaderboard-openapi.yml
-    type: OpenAPI
-    name: Antavo Leaderboard API OpenAPI
-  - url: overlays/antavo-leaderboard-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Leaderboard API
-  description: Retrieve ranked lists of top customers with their scores for display in mobile apps,
-    websites, and CRMs.
-- aid: antavo:antavo-bulk-operations-api
-  name: Antavo Bulk Operations API
-  tags:
-  - Bulk
-  - Batch
-  - Async
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/docs/antavo-apis
-  baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-bulk-operations-openapi.yml
-    type: OpenAPI
-    name: Antavo Bulk Operations API OpenAPI
-  - url: overlays/antavo-bulk-operations-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Bulk Operations API
-  description: Batch processing for reward claims across many customers and for adding or removing
-    customers from lists, each returning a batch id with status and error reporting endpoints.
+  - type: OpenAPI
+    url: openapi/antavo-challenges-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
 - aid: antavo:antavo-clubs-api
   name: Antavo Clubs API
+  description: The Clubs API from Antavo — 21 operation(s) for clubs.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
   tags:
   - Clubs
-  - Communities
-  - Membership
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-clubs-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-content-consumption-api
+  name: Antavo Content consumption API
+  description: The Content consumption API from Antavo — 1 operation(s) for content consumption.
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-clubs-openapi.yml
-    type: OpenAPI
-    name: Antavo Clubs API OpenAPI
-  - url: overlays/antavo-clubs-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Clubs API
-  description: Create and administer member clubs and communities - templates, membership, invitations,
-    applicants, bans, ownership, point adjustments and donations, history, and disbanding.
-- aid: antavo:antavo-promotion-engine-api
-  name: Antavo Promotion Engine API
   tags:
-  - Promotions
-  - Cart
-  - Checkout
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  - Content consumption
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-content-consumption-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-contests-api
+  name: Antavo Contests API
+  description: Endpoints provided by the _Contests Lite_ module
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-promotion-engine-openapi.yml
-    type: OpenAPI
-    name: Antavo Promotion Engine API OpenAPI
-  - url: overlays/antavo-promotion-engine-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Promotion Engine API
-  description: List and manage promotions and apply them at checkout - submit a cart to retrieve
-    applicable promotions and finalize the checkout with the resulting discounts.
-- aid: antavo:antavo-authentication-api
-  name: Antavo Authentication API
   tags:
-  - Authentication
-  - Tokens
-  - Security
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/docs/api-signing
-  baseURL: https://api.antavo.com
+  - Contests
   properties:
-  - url: https://developers.antavo.com/docs/api-signing
-    type: Documentation
-  - url: https://apidocs.antavo.com/api/index.html
-    type: APIReference
-  - url: openapi/antavo-authentication-openapi.yml
-    type: OpenAPI
-    name: Antavo Authentication API OpenAPI
-  - url: overlays/antavo-authentication-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Authentication API
-  description: Generate short-lived access tokens for credential clients configured in the Authentication
-    Manager, used for token-based authentication such as the Async Events API.
+  - type: OpenAPI
+    url: openapi/antavo-contests-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-coupon-pools-api
+  name: Antavo Coupon pools API
+  description: The Coupon pools API from Antavo — 2 operation(s) for coupon pools.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Coupon pools
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-coupon-pools-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-coupons-api
+  name: Antavo Coupons API
+  description: Bulk Coupons API endpoints
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Coupons
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-coupons-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-customer-lists-api
+  name: Antavo Customer lists API
+  description: Bulk Customer List API endpoints
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Customer lists
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-customer-lists-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-customers-api
+  name: Antavo Customers API
+  description: The Customers API from Antavo — 11 operation(s) for customers.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-customers-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-data-extensions-api
+  name: Antavo Data extensions API
+  description: Endpoints for probing data extensions
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Data extensions
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-data-extensions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-events-api
+  name: Antavo Events API
+  description: The Events API from Antavo — 3 operation(s) for events.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-events-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
 - aid: antavo:antavo-faq-api
   name: Antavo FAQ API
+  description: The FAQ API from Antavo — 1 operation(s) for faq.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
   tags:
   - FAQ
-  - Content
-  - Support
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/reference/about-faq-api
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-faq-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-generic-api
+  name: Antavo Generic API
+  description: A general method for creating, accessing and modifying an Antavo entity.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
-  properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://developers.antavo.com/reference/about-faq-api
-    type: APIReference
-  - url: openapi/antavo-faq-openapi.yml
-    type: OpenAPI
-    name: Antavo FAQ API OpenAPI
-  - url: overlays/antavo-faq-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo FAQ API
-  description: Read-only access to the questions and answers configured and managed in the Antavo
-    FAQ module. A valid request returns an array of FAQ entries and, by design, includes no personally
-    identifiable customer data - making it the safest read on the Antavo surface for a public or
-    agent-facing client.
-- aid: antavo:antavo-loyalty-read-api
-  name: Antavo Loyalty Read API
   tags:
-  - Reporting
-  - Customers
-  - Analytics
-  tags_raw:
-  - Read
-  - Reporting
-  - Customers
-  - Analytics
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/reference/about-loyalty-read-api
-  baseURL: https://read-api.{environment}.antavo.com
+  - Generic
   properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://developers.antavo.com/reference/about-loyalty-read-api
-    type: APIReference
-  - url: openapi/antavo-loyalty-read-openapi.yml
-    type: OpenAPI
-    name: Antavo Loyalty Read API OpenAPI
-  - url: overlays/antavo-loyalty-read-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Loyalty Read API
-  description: A dedicated read-optimised API served from its own per-environment host (read-api.<environment>.antavo.com)
-    for pulling loyalty data at volume. Returns paginated, filterable and sortable lists of customers,
-    and per customer their coupons, events and transactions - including custom customer attributes
-    configured in the workspace. This is the only Antavo surface whose operations all declare stable
-    operationIds (listCustomers, getCustomer, listCustomerCoupons, listCustomerEvents, listCustomerTransactions).
-  x-base-url-note: Antavo publishes this base as the literal template https://read-api.<environment>.antavo.com
-    in the spec's servers[] block; the customer's assigned environment identifier fills it. read-api.antavo.com
-    does not resolve (verified 2026-08-13), so no concrete host is recorded rather than guessing
-    one.
+  - type: OpenAPI
+    url: openapi/antavo-generic-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-history-api
+  name: Antavo History API
+  description: >-
+    Endpoints providing information regarding the customers interactions with the loyalty cloud
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - History
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-history-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-leaderboard-api
+  name: Antavo Leaderboard API
+  description: The Leaderboard API from Antavo — 1 operation(s) for leaderboard.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Leaderboard
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-leaderboard-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-offers-api
+  name: Antavo Offers API
+  description: Endpoints provided by the _Offers_ module
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Offers
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-offers-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-points-preview-api-api
+  name: Antavo Points Preview API
+  description: The Points Preview API API from Antavo — 1 operation(s) for points preview api.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Points Preview API
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-points-preview-api-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-prize-wheels-api
+  name: Antavo Prize wheels API
+  description: The Prize wheels API from Antavo — 2 operation(s) for prize wheels.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Prize wheels
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-prize-wheels-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-profiling-api
+  name: Antavo Profiling API
+  description: Endpoints provided by the _Gamified Profiling_ module
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Profiling
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-profiling-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-promotion-api
+  name: Antavo Promotion API
+  description: Promotion endpoints collection
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Promotion
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-promotion-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-quizzes-api
+  name: Antavo Quizzes API
+  description: Endpoints provided by the _Quizzes_ module
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Quizzes
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-quizzes-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-rewards-api
+  name: Antavo Rewards API
+  description: Bulk Reward Claim API endpoints
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Rewards
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-rewards-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
 - aid: antavo:antavo-social-share-campaigns-api
   name: Antavo Social Share Campaigns API
-  tags:
-  - Social
-  - Campaigns
-  - Referral
-  - Engagement
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.antavo.com/reference/social-share-campaigns-api
+  description: The Social Share Campaigns API from Antavo — 1 operation(s) for social share campaigns.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
+  tags:
+  - Social Share Campaigns
   properties:
-  - url: https://developers.antavo.com/docs/antavo-apis
-    type: Documentation
-  - url: https://developers.antavo.com/reference/social-share-campaigns-api
-    type: APIReference
-  - url: openapi/antavo-social-share-campaigns-openapi.yml
-    type: OpenAPI
-    name: Antavo Social Share Campaigns API OpenAPI
-  - url: overlays/antavo-social-share-campaigns-overlay.yaml
-    type: Overlay
-    name: API Evangelist enhancements for Antavo Social Share Campaigns API
-  description: Registers a customer's intent to share content for an active campaign configured in
-    the Social Share Campaigns module. Called when a member clicks a share button on a content page
-    with the customer ID, target platform and URL to be shared; a campaign match triggers the share_intent_success
-    event and any associated point award.
+  - type: OpenAPI
+    url: openapi/antavo-social-share-campaigns-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-transactions-api
+  name: Antavo Transactions API
+  description: Endpoints providing customer information regarding specified transaction ids.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-treasure-hunt-api
+  name: Antavo Treasure hunt API
+  description: The Treasure hunt API from Antavo — 1 operation(s) for treasure hunt.
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Treasure hunt
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-treasure-hunt-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
+- aid: antavo:antavo-wallet-api
+  name: Antavo Wallet API
+  description: Endpoints provided by the _Wallet_ module
+  humanURL: https://developers.antavo.com/docs/antavo-apis
+  baseURL: https://api.antavo.com
+  tags:
+  - Wallet
+  properties:
+  - type: OpenAPI
+    url: openapi/antavo-wallet-api-openapi.yml
+  - type: Documentation
+    url: https://developers.antavo.com/docs/antavo-apis
+  - type: APIReference
+    url: https://apidocs.antavo.com/api/index.html
+  - type: Documentation
+    url: https://developers.antavo.com/docs/api-signing
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-faq-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/about-loyalty-read-api
+  - type: APIReference
+    url: https://developers.antavo.com/reference/social-share-campaigns-api
 common:
+- type: Overlay
+  url: overlays/antavo-events-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-async-events-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-customer-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-display-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-entities-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-rewards-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-coupons-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-coupon-pools-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-offers-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-points-preview-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-leaderboard-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-bulk-operations-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-clubs-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-promotion-engine-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-authentication-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-faq-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-loyalty-read-overlay.yaml
+- type: Overlay
+  url: overlays/antavo-social-share-campaigns-overlay.yaml
 - type: Authentication
   url: authentication/antavo-authentication.yml
 - type: DomainSecurity
