@@ -711,6 +711,9 @@ apis:
   - type: APIReference
     url: https://developers.antavo.com/reference/social-share-campaigns-api
 common:
+- type: CapabilityMap
+  url: capabilities/antavo-capability-edges.yml
+  name: Antavo Business Capability Map
 - type: Overlay
   url: overlays/antavo-events-overlay.yaml
 - type: Overlay

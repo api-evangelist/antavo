@@ -1,0 +1,165 @@
+slug: antavo
+provider: Antavo
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Retail & Consumer Goods
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 15
+edges:
+- tag: Activities
+  spec_file: antavo-activities-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.9
+  evidence: GET /customers/{customer_id}/activities/earn — List all earn activities visible for a customer;
+    schemas Challenge, IncentivizedPurchase, SpendActivity
+  reason: Earn/spend activity aggregation for a loyalty member on an enterprise loyalty platform; this
+    realises loyalty programme management.
+- tag: Rewards
+  spec_file: antavo-rewards-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.9
+  evidence: '"List a customer''s claimed rewards"; "Claim a reward for a specific customer"; schemas CouponClaim,
+    RedeemInstructions'
+  reason: Reward catalogue, claiming, bidding and revocation per customer is the core redemption surface
+    of a loyalty programme.
+- tag: Challenges
+  spec_file: antavo-challenges-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.85
+  evidence: GET /customers/{customer_id}/challenges — List a customer's completed challenges; schema V2ChallengeCompletionProgress
+  reason: Gamified loyalty challenges and completion tracking for members of a loyalty programme — loyalty
+    & retention management.
+- tag: Clubs
+  spec_file: antavo-clubs-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.85
+  evidence: GET /v1/clubs/{club_id}/members — List members of a specific club; GET /v1/clubs/{club_id}/point-expiry
+    — List expiring points by date
+  reason: Membership groups with point balances/expiry inside a loyalty platform; clearly loyalty programme
+    mechanics rather than generic customer data.
+- tag: Points Preview API
+  spec_file: antavo-points-preview-api-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.85
+  evidence: '"Preview loyalty points based on submitted transaction data" — POST /extensions/automation/campaign-bonus'
+  reason: Explicit loyalty point calculation against campaign bonus rules; unambiguously loyalty programme
+    management.
+- tag: Promotion
+  spec_file: antavo-promotion-api-openapi.yml
+  capability_id: BC-440.30
+  capability_id_l1: BC-440
+  capability_name: Discount & Promotion Management
+  confidence: 0.85
+  evidence: 'schemas: discountBuyXGetYFree, discountPromoCode, discountPriceReduction, restrictionBundle;
+    "Update the status of a promotion"'
+  reason: Operations manage promotion definitions whose schemas are discount constructs (promo codes,
+    buy-X-get-Y, price reductions, bundles) — squarely Discount & Promotion Management.
+- tag: Contests
+  spec_file: antavo-contests-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.78
+  evidence: POST /customers/{customer_id}/activities/contests/{contest_id}/enter — Submit a contest entry
+    (Contests Lite module)
+  reason: Member-facing contest participation within the loyalty engagement programme, i.e. loyalty &
+    retention mechanics rather than marketing campaign management.
+- tag: Async Events
+  spec_file: antavo-async-events-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.75
+  evidence: POST /v1/async/events — Submit an async event; schemas SubmittedLoyaltyEvent, PointAddRequestBody,
+    CheckoutRequestBody
+  reason: Although framed as an async submission channel, the payload schemas are loyalty events (point
+    add, checkout) feeding the loyalty engine, so it serves loyalty programme operation. Some plumbing
+    character reduces confidence.
+- tag: Content consumption
+  spec_file: antavo-content-consumption-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.75
+  evidence: GET /customers/{customer_id}/activities/content-consumption — List available content consumption
+    activities for a customer
+  reason: A loyalty earning activity type (rewarding content consumption) exposed on the loyalty Display
+    surface; supports the loyalty programme. Thin surface, so moderate confidence.
+- tag: Customers
+  spec_file: antavo-customers-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.75
+  evidence: '"Returns detailed customer data using the Antavo unique ID", "Merges the current customer
+    into the target account", "Search Antavo database using customer filters"'
+  reason: Customer profile records, search and merge (identity resolution) constitute customer master
+    data management. Login/password endpoints are ancillary member authentication rather than the core
+    of the tag.
+- tag: Prize wheels
+  spec_file: antavo-prize-wheels-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.75
+  evidence: POST /customers/{customer_id}/prize-wheels/{pw_id} - "Enters a customer into a specific prize
+    wheel draw"
+  reason: Gamified prize-wheel draw exposed per customer inside an enterprise loyalty platform; it is
+    a loyalty-programme engagement mechanic, so Loyalty & Retention Management is the best fit rather
+    than any generic marketing capability.
+- tag: Coupons
+  spec_file: antavo-coupons-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.7
+  evidence: '"List coupons assigned to a customer"; schemas AssignCouponsRequest, UnassignCouponsRequest,
+    CustomerCouponSortEntry'
+  reason: Coupons are assigned to and queried per loyalty customer, i.e. issuance and tracking of member
+    incentives — loyalty programme operation. Bulk import endpoints are plumbing around the same business
+    object.
+- tag: Customer lists
+  spec_file: antavo-customer-lists-api-openapi.yml
+  capability_id: BC-420.20
+  capability_id_l1: BC-420
+  capability_name: Customer Segmentation Management
+  confidence: 0.7
+  evidence: '"Add customers to a customer list", "Create a new customer list"; schemas SegmentResponse,
+    SegmentError'
+  reason: Named lists of customers used as targeting groups, with segment-flavoured schemas — this is
+    customer segmentation/list management rather than a technical construct.
+- tag: Events
+  spec_file: antavo-events-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.7
+  evidence: '"Submit an Antavo event"; schemas PointAddRequestBody, CheckoutRequestBody, CustomerEventSortEntry'
+  reason: Loyalty engine event ingestion (checkouts, point additions) that drives programme accrual and
+    member history — loyalty programme operation, not generic telemetry.
+- tag: Quizzes
+  spec_file: antavo-quizzes-api-openapi.yml
+  capability_id: BC-420.40
+  capability_id_l1: BC-420
+  capability_name: Loyalty & Retention Management
+  confidence: 0.7
+  evidence: POST /customers/{customer_id}/activities/quizzes/{quiz_id}/earn - "Submit an answer to a quiz"
+  reason: Quizzes are customer loyalty activities where answering earns loyalty value ('/earn'), i.e.
+    a loyalty-programme engagement mechanic.
