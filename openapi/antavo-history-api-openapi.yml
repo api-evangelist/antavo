@@ -1,0 +1,333 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display History API
+  version: 1.0.0
+  description: Endpoints providing information regarding the customers interactions with the loyalty cloud
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: History
+  description: Endpoints providing information regarding the customers interactions with the loyalty cloud
+paths:
+  /customers/{customer_id}/events:
+    get:
+      tags:
+      - History
+      summary: List all Antavo events associated with a customer
+      description: 'This endpoint returns a detailed list of events and the corresponding actions recorded with the specified customer ID. This information can be used as a customer activity source and can also be accessed using the `/history`endpoint.
+
+        The event history/log/stream can be pre-filtered by specific event actions and paginated by limiting and offsetting the number of returned events. The response also includes event expiration dates, if set.
+
+
+        This endpoint was historically known as `/customers/{customer_id}/history`. This endpoint is still valid and all options listed below are also applicable.
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: 'Limits the number of events returned in one response. Other values are accessible by pagination made accessible via the offset.
+
+          '
+        schema:
+          type: integer
+          default: 100
+          example: 50
+      - name: offset
+        in: query
+        description: 'Offsets the starting number of events to return. Used for pagination in conjunction with the limit query.
+
+          '
+        schema:
+          type: integer
+          default: 0
+      - name: order
+        in: query
+        description: 'Used to sort and order the results in ascending or descending order. The value can be `asc` for sorting the results by `_id` in an ascending order, or `desc` for sorting the results by `date` and `_id` in a descending order.
+
+          '
+        schema:
+          type: string
+          example: desc
+      - name: actions
+        in: query
+        description: A legacy field consisting of comma separated list of actions to filters the type of returned Antavo events.
+        example: checkout,checkout_accept
+        schema:
+          type: string
+      - name: action
+        in: query
+        schema:
+          type: string
+        description: "The events history can be filtered by submitted event actions using operators. Refer to [API events](/docs/api-events) and [internal events](/docs/internal-events) lists. \nThis filter query can be used in conjunction with [operators](/docs/pagination-filtering-and-ordering#query-operators). The filter should be submitted as a parameter in the following format: `field.operator(optional)=value`.\n\nFiltering of events containing a `transaction_id` is also possible. This requires the action query to contain all related events and for an additional query using `properties.transaction_id`.\nExample: \n`action.in=checkout,checkout_accept&properties.transaction_id.in=c078c162-88af-4369-89a4-408958a8cb75`. \nThese combined filters can also use [filtering operators](/docs/pagination-filtering-and-ordering#query-operators). \nThe `transaction_id` field in any custom event must be set as filterable.\n"
+      - name: date
+        in: query
+        example: date.gt=2023-01-01
+        schema:
+          type: string
+        description: "The events history can be filtered by a specific date. Specific start and/or end dates can be stated by using multiple operators (e.g., `date.gt=2020-01-01&date.lt=2022-02-01`).\nThe UTC timezone should be considered when sending the request.\t\n"
+      - name: points_only
+        in: query
+        schema:
+          type: boolean
+        example: false
+        description: Filter to only show non-zero points events (events that award or subtract points).
+      - name: references
+        in: query
+        schema:
+          type: boolean
+        example: true
+        description: Include the ID and name of any associated challenges/rewards in the response.
+      responses:
+        '200':
+          description: Customer event history data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  prev:
+                    type: string
+                    format: uri
+                    description: Links to the previous page of the event feed; present only when `limit` is set.
+                    example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/events?limit=100&offset=200
+                  next:
+                    type: string
+                    format: uri
+                    description: Links to the next page of the event feed; present only when `limit` is set.
+                    example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/events?limit=100&offset=400
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomernotfoundErrorResponse'
+  /customers/-/events:
+    get:
+      tags:
+      - History
+      summary: Retrieve a time-filtered list of every event for all customers
+      description: "This endpoint returns all events for all customers that match the specified datetime timestamp query.\nThe returned object contains the total number of matching events and an array of every matching event.\t\n\nThe datetime filter accepts the following operators and can be combined to generate a time window:\n\n* `gt` - greater than\n\n* `lt` - less than \n\n* `gte` - greater than or equal\n\n * `lte` - less than or equal\n\n The timestamp filter must be in ISODate format. Example: ``timestamp.gt=2023-01-05``,``timestamp.gt=2023-01-05T13:28:55`` or ``timestamp.gt=2023-01-05T13:28:55.233+0000``.\n\n **Note**: The timezone offset optional parameter (e.g., +0000) must be URL-encoded.        \n"
+      parameters:
+      - in: query
+        name: timestamp.gt
+        description: Filter events with timestamp greater than the specified value.
+        schema:
+          type: string
+          example: '2023-01-01T00:00:00.000Z'
+      - in: query
+        name: timestamp.lt
+        description: Filter events with timestamp less than the specified value.
+        schema:
+          type: string
+          example: '2024-01-01T00:00:00.000Z'
+      - in: query
+        name: timestamp.gte
+        description: Filter events with timestamp greater than or equal to the specified value.
+        schema:
+          type: string
+          example: '2023-01-01T00:00:00.000Z'
+      - in: query
+        name: timestamp.lte
+        description: Filter events with timestamp less than or equal to the specified value.
+        schema:
+          type: string
+          example: '2023-01-01T00:00:00.000Z'
+      - name: limit
+        in: query
+        description: 'Limits the number of events returned in one response. Other values are accessible by pagination made accessible via the offset.
+
+          '
+        schema:
+          type: integer
+          default: 100
+          example: 50
+      - name: offset
+        in: query
+        description: 'Offsets the starting number of events to return. Used for pagination in conjunction with the limit query.
+
+          '
+        schema:
+          type: integer
+          default: 0
+      - name: order
+        in: query
+        description: 'Used to sort and order the results in ascending or descending order. The value can be `asc` for sorting the results by `_id` in an ascending order, or `desc` for sorting the results by `date` and `_id` in a descending order.
+
+          '
+        schema:
+          type: string
+          example: desc
+      responses:
+        '200':
+          description: Time-filtered events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: number
+                    description: The number of events that matched the specified datetime timestamp query.
+                    example: 150
+                  data:
+                    type: array
+                    description: An array of all events matched the specified datetime timestamp query.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Event reference ID.
+                          example: 5defe3e1e710bd9b018b45c7
+                        action:
+                          type: string
+                          description: Describes the properties and behavior when processing an event.
+                          example: point_add
+                        label:
+                          type: string
+                          description: Event action display name.
+                          example: Point add
+                        Customer:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: The Antavo unique customer ID.
+                              example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                        points:
+                          type: integer
+                          description: Number of points earned (positive) or spent (negative) with the event.
+                          example: 100
+                        timestamp:
+                          type: string
+                          format: date-time
+                          description: The timestamp of the event.
+                          example: '2022-12-25T18:28:49.000Z'
+                        properties:
+                          type: array
+                          description: The actual list of properties is defined by the action.
+                          items:
+                            $ref: '#/components/schemas/EventProperty2'
+                        expdate:
+                          type: string
+                          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+                          description: The point expiry date stored as a YYYY-MM-DD string.
+                          example: '2023-12-25'
+components:
+  schemas:
+    EventProperty2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Attribute name used internally.
+          example: points
+        label:
+          type: string
+          description: Display name of the attribute.
+          example: Points
+        value:
+          type: number
+          description: Attribute value.
+          example: 100
+    CustomernotfoundErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: NotFoundException
+            code:
+              type: number
+              description: A 6-digit number to uniquely identify the place the error. occurred
+              example: 160212
+            message:
+              type: string
+              description: Human readable error message.
+              example: Customer not found
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Event reference ID.
+          example: 5defe3e1e710bd9b018b45c7
+        action:
+          type: string
+          description: Describes the properties and behavior when processing an event.
+          example: opt_in
+        label:
+          type: string
+          description: Event action display name.
+          example: Opt-in
+        points:
+          type: integer
+          description: Number of points earned (positive) or spent (negative) through the event.
+          example: 10
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the event.
+          example: '2024-06-01T12:00:00.000Z'
+        properties:
+          type: array
+          description: The actual list of attributes is defined by the action.
+          items:
+            $ref: '#/components/schemas/EventProperty'
+        expdate:
+          type: string
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          description: The point expiry date stored as a YYYY-MM-DD string.
+          example: '2022-12-25'
+        account:
+          type: object
+          description: The specific account which the event's points are associated with (only available with Points economy module).
+          properties:
+            id:
+              type: string
+              description: ID of the account.
+              example: main_account
+            name:
+              type: string
+              description: Label of the account.
+              example: Main account
+    EventProperty:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Attribute name used internally.
+          example: email
+        label:
+          type: string
+          description: Display name of the attribute.
+          example: Email address
+        value:
+          type: string
+          description: Attribute value.
+          example: john.smith@example.com
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

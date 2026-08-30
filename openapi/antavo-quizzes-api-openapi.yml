@@ -1,0 +1,344 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Quizzes API
+  version: 1.0.0
+  description: Endpoints provided by the _Quizzes_ module
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Quizzes
+  description: Endpoints provided by the _Quizzes_ module
+paths:
+  /customers/{customer_id}/activities/quizzes/{quiz_id}:
+    get:
+      tags:
+      - Quizzes
+      summary: List quiz details
+      description: This endpoint returns configured attributes of quiz questions.
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: quiz_id
+        in: path
+        description: Unique identifier of the quiz.
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 6689b5735aa0eb191451a2f5
+      responses:
+        '200':
+          description: Quiz details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizDetailsResponse'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Customer not found
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not Found
+      deprecated: false
+  /customers/{customer_id}/activities/quizzes:
+    get:
+      tags:
+      - Quizzes
+      summary: List all quizzes
+      description: This endpoint returns all configured quiz questions that the customer may answer.
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: offset
+        in: query
+        description: Offsets the starting number of quiz questions to return. This is used in pagination in conjunction with the limit query.
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Limits the number of quiz questions returned in one response. Other values are accessible by pagination made accessible via the offset.
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: List of all quiz questions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizActivity'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Customer not found
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not Found
+      deprecated: false
+  /customers/{customer_id}/activities/quizzes/{quiz_id}/earn:
+    post:
+      tags:
+      - Quizzes
+      summary: Submit an answer to a quiz
+      description: This endpoint allows for the submission of answers to quiz questions.
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: quiz_id
+        in: path
+        description: Unique identifier of the quiz.
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 6689b5735aa0eb191451a2f5
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - answer
+              type: object
+              properties:
+                answer:
+                  type: integer
+                  description: The answer as an index of the possible answers array.
+                  example: 0
+        required: false
+      responses:
+        '200':
+          description: Request submitted
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/AnsweringaQuizResponse'
+                - $ref: '#/components/schemas/AnsweringaQuizResponseError'
+              examples:
+                successResponse:
+                  summary: Successful answer
+                  value:
+                    correct_answer: true
+                    message: Well done! You've just earned 100 points!
+                errorResponse:
+                  summary: Error in answer
+                  value:
+                    error:
+                      type: RuntimeException
+                      code: 0
+                      message: This quiz is already answered by the customer.
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    message: Customer not found
+                    code: 160212
+                Quiz not found:
+                  value:
+                    type: NotFoundException
+                    message: Not found
+                    code: 0
+      deprecated: false
+components:
+  schemas:
+    QuizActivity:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              image:
+                $ref: '#/components/schemas/Image'
+              description:
+                type: string
+                description: Description associated with the question.
+                example: Select the correct answer.
+              quiz_url:
+                type: string
+                format: uri
+                description: Endpoint to retrieve quiz details.
+                example: /customers/testcustomer/activities/quizzes/6689b5735aa0eb191451a2f5
+              id:
+                type: string
+                description: ID of the quiz question
+                example: 6689b5735aa0eb191451a2f5
+              title:
+                type: string
+                description: Name of the quiz.
+                example: Fashion quiz
+              status:
+                type: string
+                description: Status of the quiz question.
+                enum:
+                - active
+                - inactive
+                example: active
+              points:
+                type: integer
+                description: Points awarded upon completion of the quiz.
+                example: 100
+        total:
+          type: integer
+          description: Number of available quiz questions.
+          example: 1
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    AnsweringaQuizResponse:
+      title: Successful answer
+      type: object
+      properties:
+        correct_answer:
+          type: boolean
+          description: A boolean value indicating whether the submitted answer was correct or not.
+          example: true
+        message:
+          type: string
+          description: Success message if the submitted answer is correct, or an error message if the submitted answer is incorrect.
+          example: Well done! You've just earned 100 points!
+    AnsweringaQuizResponseError:
+      title: Error in answer
+      type: object
+      description: This describes the structure returned if an error occurred at the challenges endpoint.
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: The type of error that occurred.
+              example: RuntimeException
+            code:
+              type: integer
+              description: Numeric code representing the error.
+              example: 0
+            message:
+              type: string
+              description: Detailed message about the error.
+              example: This quiz is already answered by the customer.
+    QuizDetailsResponse:
+      title: QuizDetailsResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique quiz ID.
+          example: 5c17c37f71f86e7f798b4579
+        title:
+          type: string
+          description: Name of the quiz.
+          example: Fashion quiz
+        description:
+          type: string
+          description: Description of the quiz question.
+          example: Select the correct answer
+        status:
+          type: string
+          description: Status of the quiz question.
+          example: active
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Points rewarded if the customer provides the correct answer.
+          example: 100
+        quiz_url:
+          type: string
+          format: uri
+          description: Endpoint to submit an answer to the quiz.
+          example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/quizzes/6689b5735aa0eb191451a2f5/earn
+        answers:
+          type: array
+          items:
+            type: string
+          description: List of possible answers.
+          example:
+          - Coco Chanel
+          - Gianni Versace
+          - Ralph Lauren
+          - Christian Dior
+        correct_answer:
+          type: string
+          description: The correct answer.
+          example: Coco Chanel
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

@@ -1,0 +1,581 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo Async Events API
+  version: 1.0.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- bearerAuth: []
+tags:
+- name: Async Events
+paths:
+  /v1/async/events/{correlation_id}:
+    get:
+      tags:
+      - Async Events
+      summary: Query the status of async event processing
+      description: 'Use this endpoint to query the processing status of an event sent through the `v1/async/events` endpoint.
+
+        Once the event has been processed, the response includes the customer information and the detailed event data.
+
+        '
+      parameters:
+      - in: path
+        name: correlation_id
+        schema:
+          type: string
+        required: true
+        description: Use the correlation_id provided in the response of the asynchronous event request.
+        example: 2b137c65-7556-5833-39ef-513428e1f43e
+      responses:
+        '200':
+          description: 'The request was successfully received and processed. The processing result of the asynchronous event is returned in the payload. Business-level errors are also returned with HTTP 200 status.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CorrelationIDResponse'
+              examples:
+                Processed:
+                  summary: Event processed successfully
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      status: processed
+                      response:
+                        success:
+                          id: testcustomer
+                          created_at: 1657106644
+                          email: john.doe@example.com
+                          first_name: John
+                          last_name: Doe
+                          handler: ''
+                          status: active
+                          score: 34170
+                          spent: 12167
+                          expired: 0
+                          level: 64b647cd257f93741550d3e4
+                          pending: 34511
+                          language: ''
+                          currency: JPY
+                          mobile_phone: ''
+                          image_url: null
+                          spendable: 21953
+                          events:
+                          - id: 69736bd56967744fd607d673
+                            action: point_add
+                            points: 15
+                            expdate: '2025-06-01T00:00:00.000Z'
+                            account:
+                              id: family_account
+                              name: Family account
+                        error: []
+                Business Error:
+                  summary: Event processed with an error
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      status: error
+                      response:
+                        success: []
+                        error:
+                          type: RuntimeException
+                          code: 112101
+                          message: Customer has already been opted-in.
+        '400':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - error
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: BadRequestException
+                      code:
+                        type: integer
+                        example: 203408
+                      message:
+                        type: string
+                        example: Correlation ID not found.
+  /v1/async/events:
+    post:
+      tags:
+      - Async Events
+      summary: Submit an async event
+      description: "Use this endpoint to submit a single event for a specified customer asyncronously. The event is accepted immediately and processed in the background.\nThis endpoint is compatible with the following event actions:\n  - `point_add`\n  - `checkout`\n  - `checkout_item`\n  - `checkout_update`\n  - `checkout_update_item`\n  - `checkout_accept`\n  - `checkout_accept_item`\n  - `checkout_reject`\n  - `partial_refund`\n  - `refund_item`\n  - `refund`\n  - `opt_in`\n  - `opt_out`\n  - `profile`\n\nThe attributes provided in the `data` object are examples of `point_add` and `checkout` events. Refer to the [complete list of events](/docs/api-events) for all the attributes of the mentioned actions.\n\nExamples of event submission:\n\n- **Standard event submission**: Submit an event for the customer without any additional identifiers.\n- **Event submission with an external ID**: Include the `external_id` attribute to link the event with an external identifier of the customer from another system or database.\n- **Event submission with multiple accounts**: Specify multiple accounts by including their IDs in the 'account' attribute. This requires the Points economy module to be enabled.<br>\n*Note*: if no account is specified, the event will be assigned to the default account.\n"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PointAddRequestBody'
+              - $ref: '#/components/schemas/CheckoutRequestBody'
+            examples:
+              Point add Standard:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: point_add
+                  data:
+                    points: 325
+              Point add with External ID:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: point_add
+                  external_id: ASeab0cbaa181a
+                  data:
+                    points: 325
+              Point add with Multi-accounts:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: point_add
+                  account: main_account
+                  data:
+                    points: 325
+              Checkout Standard:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: cehckout
+                  data:
+                    transaction_id: 64b647cd257f93741550d3e4
+                    total: 100
+                    total_quantity: 1
+                    currency: EUR
+                    points_burned: 0
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 100
+                      quantity: 1
+                      discount: 0
+                      subtotal: 50
+              Checkout with External ID:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: checkout
+                  external_id: ASeab0cbaa181a
+                  data:
+                    transaction_id: 64b647cd257f93741550d3e4
+                    total: 100
+                    total_quantity: 1
+                    currency: EUR
+                    points_burned: 0
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 100
+                      quantity: 1
+                      discount: 0
+                      subtotal: 50
+              Checkout with Multi-accounts:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: checkout
+                  account: main_account
+                  data:
+                    transaction_id: 64b647cd257f93741550d3e4
+                    total: 100
+                    total_quantity: 1
+                    currency: EUR
+                    points_burned: 0
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 100
+                      quantity: 1
+                      discount: 0
+                      subtotal: 50
+      responses:
+        '200':
+          description: 'Indicates a successful event submission.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event_response'
+        '400':
+          description: Bad Request. The request is invalid for one of several reasons.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - error
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: BadRequestException
+                      code:
+                        type: integer
+                        enum:
+                        - 203404
+                        - 203401
+                        example: 203401
+                      message:
+                        type: string
+                        enum:
+                        - Property '' cannot be empty
+                        - 'Invalid action:'
+                        example: Property '' cannot be empty
+        '401':
+          description: Unauthorized. Token authentication failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: UnauthorizedException
+                      code:
+                        type: integer
+                        example: 220052
+                      message:
+                        type: string
+                        example: Bearer token authentication failed
+components:
+  schemas:
+    PointAddRequestBody:
+      title: Point add event request
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        callback_url:
+          type: string
+          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
+          example: https://antavo.com
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+          enum:
+          - point_add
+          example: point_add
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/PointAddData'
+    CorrelationIDResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the successful submission of the request. Always `success` here.
+          example: success
+        metadata:
+          type: array
+          description: Reserved for future use, currently returns an empty object.
+          items:
+            type: object
+        payload:
+          $ref: '#/components/schemas/CorrelationIDResponsePayload'
+      required:
+      - status
+      - payload
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    CorrelationIDResponsePayload:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Processing status of the asynchronous event.
+          enum:
+          - processed
+          - error
+          - exported
+          - failed
+          - retried
+          example: processed
+        response:
+          oneOf:
+          - $ref: '#/components/schemas/ProcessingSuccess'
+          - $ref: '#/components/schemas/ProcessingError'
+      required:
+      - status
+      - response
+    CheckoutRequestBody:
+      title: Checkout event request
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        callback_url:
+          type: string
+          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
+          example: https://antavo.com
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+          enum:
+          - checkout
+          example: checkout
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/CheckoutData'
+    ProcessingError:
+      type: object
+      required:
+      - success
+      - error
+      properties:
+        success:
+          type: array
+          description: Empty when the event processing resulted in an error.
+          maxItems: 0
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              example: RuntimeException
+            code:
+              type: integer
+              example: 112101
+            message:
+              type: string
+              example: Customer has already been opted-in.
+    ProcessingSuccess:
+      type: object
+      properties:
+        success:
+          $ref: '#/components/schemas/CorrelationIDResponseCustomer'
+        error:
+          type: array
+          description: Empty when the event was processed successfully.
+      required:
+      - success
+      - error
+    CorrelationIDResponseCustomer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique customer identifier.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of customer creation.
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        handler:
+          type: string
+          description: Optional customer handler identifier.
+        status:
+          type: string
+          description: Customer account status.
+        score:
+          type: integer
+          description: Total loyalty points earned.
+        spent:
+          type: integer
+          description: Total amount spent.
+        expired:
+          type: integer
+          description: Expired points.
+        level:
+          type: string
+          description: Loyalty level identifier.
+        pending:
+          type: integer
+          description: Pending points not yet credited.
+        language:
+          type: string
+        currency:
+          type: string
+          description: Customer currency.
+        mobile_phone:
+          type: string
+        image_url:
+          type:
+          - string
+          - 'null'
+        spendable:
+          type: integer
+          description: Currently spendable points.
+        events:
+          type: array
+          description: Events generated as a result of processing.
+          items:
+            $ref: '#/components/schemas/SubmittedLoyaltyEvent'
+    Event_response:
+      type: object
+      description: Successful event submission
+      properties:
+        status:
+          type: string
+          example: success
+        metadata:
+          type: object
+          description: Reserved for future use, currently returns an empty object.
+        payload:
+          properties:
+            correlation_id:
+              type: string
+              example: 62cc313988befe60e3413e75
+              description: Correlation ID provided in the request or if empty automatically generated by the system. Use for query status through the `v1/async/events/correlation_id` endpoint.
+            status:
+              type: string
+              example: queued
+              description: Indicates that the event request is successfully queued for processing.
+    CheckoutData:
+      title: data
+      required:
+      - transaction_id
+      type: object
+      properties:
+        callback_url:
+          type: string
+          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
+          example: https://antavo.com
+        transaction_id:
+          type: string
+          example: 64b647cd257f93741550d3e4
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
+        total:
+          type: number
+          description: This attribute is required if purchases are rewarded on the transaction level.
+          example: 100
+        total_quantity:
+          type: number
+          example: 1
+        currency:
+          type: string
+          example: EUR
+        points_burned:
+          type: number
+          example: 0
+        items:
+          type: array
+          description: This attribute is required if purchases are rewarded on the item level.
+          properties:
+            product_id:
+              type: string
+              example: prd_987654
+            product_name:
+              type: string
+              example: Vintage Leather Jacket
+            product_url:
+              type: string
+              example: https://example.com/products/vintage-leather-jacket
+            price:
+              type: number
+              example: 100
+            quantity:
+              type: number
+              example: 1
+            discount:
+              type: number
+              example: 0
+            subtotal:
+              type: number
+              example: 50
+            points_rewarded:
+              type: number
+    SubmittedLoyaltyEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+          description: Action type.
+        points:
+          type: integer
+        expdate:
+          type: string
+          format: date
+          description: Expiration date of the event.
+        account:
+          $ref: '#/components/schemas/Account'
+          description: Included for Multi-account loyalty program setups.
+    PointAddData:
+      title: data
+      required:
+      - points
+      type: object
+      properties:
+        callback_url:
+          type: string
+          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
+          example: https://antavo.com
+        points:
+          type: integer
+          description: Number of points to be added or subtracted.
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

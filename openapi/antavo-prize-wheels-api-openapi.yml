@@ -1,0 +1,444 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Prize wheels API
+  version: 1.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Prize wheels
+paths:
+  /customers/{customer_id}/prize-wheels/{pw_id}:
+    get:
+      tags:
+      - Prize wheels
+      summary: Retrieve all slices for a specific prize wheel
+      description: 'This endpoint provides all information regarding each individual slice of the prize wheel.
+
+
+
+        Configured rewards can be used in a slice, and the full reward information can be returned with the slice information using the `fields` query.
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: pw_id
+        in: path
+        required: true
+        description: Unique identifier of the prize wheel.
+        schema:
+          type: string
+          example: 63fdccaca88ac11c347af899
+      - name: fields
+        in: query
+        required: false
+        description: Use the options.reward field for detailed information of rewards associated with winning slices.
+        schema:
+          type: string
+          example: options.reward
+      responses:
+        '200':
+          description: List all prize wheel slices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrizeWheelOption'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Prize wheel not found
+                  value:
+                    type: NotFoundException
+                    code: 0
+                    message: Prize wheel not Found
+                fail2:
+                  summary: Customer not found
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not Found
+    post:
+      tags:
+      - Prize wheels
+      summary: Enters a customer into a specific prize wheel draw
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: pw_id
+        in: path
+        required: true
+        description: Unique identifier of the prize wheel.
+        schema:
+          type: string
+          example: 63fdccaca88ac11c347af899
+      responses:
+        '200':
+          description: Get random slice from options
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrizeWheelsOptions_ind'
+              examples:
+                success:
+                  summary: Slice provided
+                  value:
+                    id: 6406f75976c1691b981ec5dd
+                    type: reward
+                    label: 20% coupon
+                    weight: 0.99
+                    win_text: Congrats! You won a 20% coupon!
+                    _actions:
+                      claim:
+                        method: POST
+                        url: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/rewards/6070545656bfb26685000017/claim
+                      enter:
+                        method: POST
+                        url: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/prize-wheels/63fdccaca88ac11c347af899
+                fail:
+                  summary: 'Segment claim/Reward limit reached '
+                  value:
+                    type: LockedException
+                    code: 120219
+                    message: Claim temporally locked
+                fail2:
+                  summary: 'No More available reward coupons '
+                  value:
+                    type: RuntimeException
+                    code: 123771
+                    message: Ran out of coupons
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Spin repeat restriction reached
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: 'You can''t spin, try again in:  17 minutes'
+                fail2:
+                  summary: Not enough points
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: You don't have enough points
+                fail3:
+                  summary: No prizes available
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Not found any slice
+                fail5:
+                  summary: Prize wheel already ended
+                  value:
+                    type: BadRequestException
+                    code: 160907
+                    message: The prize wheel already ended
+        '404':
+          description: Missing/wrong input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Prize wheel  not found
+                  value:
+                    type: NotFoundException
+                    code: 0
+                    message: Prize wheel not Found
+                fail2:
+                  summary: Customer not found
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not Found
+  /customers/{customer_id}/prize-wheels:
+    get:
+      tags:
+      - Prize wheels
+      summary: List all available prize wheels
+      description: This endpoint returns the list of all available prize wheels for a specific customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID \n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: offset
+        in: query
+        description: Offsets the starting number of prize wheels to return. This is used in pagination in conjunction with the limit query.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Limits the number of prize wheels returned in one response. Other values are accessible by pagination made accessible via the offset.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 100
+      responses:
+        '200':
+          description: List all prize wheels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrizeWheelsOptions'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Customer not found
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not Found
+components:
+  schemas:
+    PrizeWheelsOptions_ind:
+      type: object
+      properties:
+        _actions:
+          type: object
+          properties:
+            claim:
+              type: object
+              description: Endpoint to claim the associated reward.
+              required:
+              - method
+              - url
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/rewards/63dcb791eb80ef351838fdfb/claim
+            enter:
+              type: object
+              description: Endpoint to spin the wheel again.
+              required:
+              - method
+              - url
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/prize-wheels/63fdccaca88ac11c347af899
+        win_text:
+          type: string
+          description: Text to display after the customer has landed on this slice.
+        weight:
+          type: number
+          description: Percentage chance to land on this slice.
+        id:
+          type: string
+          description: ID of the slice.
+        label:
+          type: string
+          description: Name of the slice.
+        type:
+          type: string
+          enum:
+          - reward
+          - points
+          - empty
+    PrizeWheelsOptions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the prize wheel.
+                example: 63fdccaca88ac11c347af899
+              status:
+                type: string
+                description: Status of the prize wheel.
+                example: active
+        total:
+          type: number
+          description: The number of prize wheel available to the customer.
+          example: 1
+    PrizeWheelOption:
+      type: object
+      properties:
+        _actions:
+          type: object
+          description: Endpoint to enter the customer in the prize wheel.
+          properties:
+            enter:
+              type: object
+              properties:
+                method:
+                  type: string
+                  example: POST
+                  description: HTTP method for the enter action.
+                url:
+                  type: string
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/prize-wheels/63fdccaca88ac11c347af899
+                  description: Endpoint to enter the prize wheel.
+        button_color:
+          type: string
+          example: rgb(219, 186, 57)
+          description: Color of the button in RGB format.
+        center_logo:
+          type: object
+          properties:
+            small:
+              type: string
+              example: https://antavo.{environment}.com/brands/26729/media/1677577388-Vs6ZW.png
+              description: URL of the small center logo image.
+            large:
+              type: string
+              example: https://antavo.{environment}.com/brands/26729/media/1677577388-MgTpM.png
+              description: URL of the large center logo image.
+            medium:
+              type: string
+              example: https://antavo.{environment}.com/brands/26729/media/1677577388-MHFa6.png
+              description: URL of the medium center logo image.
+        background_color:
+          type: string
+          example: rgb(255, 255, 255)
+          description: Background color in RGB format.
+        button_text_color:
+          type: string
+          example: rgb(219, 186, 57)
+          description: Color of the button text in RGB format.
+        font_color:
+          type: string
+          example: ''
+          description: Color of the font.
+        main_logo:
+          type: object
+          properties:
+            small:
+              type: string
+              example: https://antavo.{environment}.com/brands/26729/media/1677577387-1DyAa.jpeg
+              description: URL of the small main logo image.
+            large:
+              type: string
+              example: https://antavo.{environment}.com/brands/26729/media/1677577387-wPvPE.jpeg
+              description: URL of the large main logo image.
+            medium:
+              type: string
+              example: https://antavo.{environment}.com/brands/26729/media/1677577387-xxn9O.jpeg
+              description: URL of the medium main logo image.
+        options:
+          type: array
+          description: List of possible rewards on the prize wheel.
+          items:
+            type: object
+            properties:
+              win_text:
+                type: string
+                description: Text displayed when this slice is landed on.
+              bgcolor:
+                type: string
+                description: Background color of the slice in RGB format.
+              color:
+                type: string
+                description: Font color of the slice in RGB format.
+              weight:
+                type: number
+                description: The percentage chance to land on this slice.
+              label:
+                type: string
+                description: Label for the slice.
+              id:
+                type: string
+                description: Unique identifier for the slice.
+              type:
+                type: string
+                description: Type of the slice (e.g., reward, empty).
+          example:
+          - win_text: Sorry, you were not lucky this time.
+            bgcolor: rgb(255, 255, 255)
+            color: rgb(0, 0, 0)
+            weight: 0.99
+            label: Oooops.. not this time
+            id: 6406f75976c1691b981ec5dc
+            type: empty
+          - win_text: Congrats! You won a 20% coupon!
+            bgcolor: rgb(219, 186, 57)
+            color: rgb(0, 0, 0)
+            weight: 99.01
+            label: 20% coupon
+            id: 6406f75976c1691b981ec5dd
+            type: reward
+        name:
+          type: string
+          example: Use your points to spin the wheel for a chance to win a 20% coupon
+          description: Name of the prize wheel.
+        center_rotation:
+          type: boolean
+          example: true
+          description: Indicates whether the center of the wheel rotates.
+        points:
+          type: integer
+          example: 100
+          description: Number of points required to spin the wheel.
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

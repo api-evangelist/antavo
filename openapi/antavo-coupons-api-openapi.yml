@@ -1,0 +1,1296 @@
+openapi: 3.2.0
+info:
+  title: Antavo Coupons API
+  version: '1.0'
+  description: 'Operations tagged Coupons across 4 of this provider''s published API definitions: antavo-bulk-operations-openapi.yml, antavo-coupons-openapi.yml, antavo-display-openapi.yml, antavo-loyalty-read-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+- url: https://read-api.<environment>.antavo.com
+tags:
+- name: Coupons
+  description: Bulk Coupons API endpoints
+paths:
+  /v1/bulk-operation/coupons/{batch_id}/status/error:
+    get:
+      tags:
+      - Coupons
+      summary: Query the list of errors related to a coupon import
+      description: This endpoint allows you to query information about any errors or issues encountered during a coupon import. It provides details about failures that may have occurred during the process.
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        example: batch001
+        description: The batch ID associated with the coupon import operation.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Returned after the coupon import operation has been processed. Provides information about errors, if any, that occurred during the operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponsStatusResponse'
+              examples:
+                Errors were found:
+                  description: Returned if errors were found during the processing of the batch.
+                  value:
+                    status: success
+                    metadata:
+                      pagination:
+                        total: 42
+                        next: https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status/error?offset=40&limit=20
+                        previous: https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status/error?offset=0&limit=20
+                    payload:
+                      number_of_errors: 42
+                      coupons:
+                      - coupon_code: CODE1
+                        pool_id: 146cb226c3d47e4d6a28176b
+                        error_message: Error message
+                        error_code: 123456
+                      - coupon_code: CODE2
+                        pool_id: 146cb226c3d47e4d6a28176b
+                        error_message: Error message
+                        error_code: 123456
+                      - '...'
+                No errors were found:
+                  description: Returned if no errors were found during the processing of the batch.
+                  value:
+                    status: success
+                    metadata:
+                      pagination:
+                        total: 0
+                    payload:
+                      number_of_errors: 0
+                      coupons: {}
+        '404':
+          description: The batch ID provided as a parameter does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorResponse'
+              examples:
+                Bulk operation request queue is not found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 320504
+                      message: Bulk operation request queue is not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/bulk-operation/coupons/{batch_id}/status:
+    get:
+      tags:
+      - Coupons
+      summary: Query the status of a coupon import
+      description: This endpoint allows you to query the status of a coupon batch import. It provides information about the current processing status of the operation, which can be `queued`, `processing` or `done`.
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        example: batch001
+        description: The batch ID associated with the coupon import operation.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Returned after the batch has been successfully added to the queue.
+
+            Provides information about the batch status, including whether it is `queued`, `processing`, or `done`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponsStatusResponse'
+              examples:
+                Batch status - queued:
+                  description: Returned if the batch is queued for processing
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 0
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status
+                    payload:
+                      batch_status: queued
+                      number_of_coupons: 0
+                Batch status - processing:
+                  description: Returned if the batch is currently being processed
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 0
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status
+                    payload:
+                      batch_status: processing
+                      number_of_coupons: 0
+                Batch status - done:
+                  description: Returned if the batch has been processed and the results are available
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 60
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/coupons/batch001/status
+                      payload:
+                        batch_status: done
+                        number_of_coupons: 1000
+        '404':
+          description: The batch ID provided as a path parameter does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBatchNotFound'
+              examples:
+                Batch ID is not found:
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 202004
+                      message: Batch ID is not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/bulk-operation/coupons/{coupon_pool_id}/{action}:
+    post:
+      tags:
+      - Coupons
+      summary: Manage coupon codes in coupon pools
+      description: 'This endpoint allows you to upload, assign, and unassign coupons in Coupon Pools in batches. It supports both pre-assigned and unassigned coupons. Uploaded coupon batches are processed asynchronously.
+
+        Each request can process up to 50,000 coupon codes.'
+      parameters:
+      - name: coupon_pool_id
+        in: path
+        description: The ID of an existing coupon pool for which the source is set to `uploaded`.
+        required: true
+        schema:
+          type: string
+          example: 146cb226c3d47e4d6a28176b
+      - name: action
+        in: path
+        description: The action carried on the coupons, which can be `add`, `assign`, or `unassign`.
+        required: true
+        schema:
+          type: string
+          example: add
+      requestBody:
+        required: true
+        description: Request body to import coupons to the specified coupon pool.
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/AddCouponsRequest'
+              - $ref: '#/components/schemas/AssignCouponsRequest'
+              - $ref: '#/components/schemas/UnassignCouponsRequest'
+            examples:
+              Add coupons:
+                summary: Request body for the Add action
+                value:
+                  coupons:
+                  - CODE1
+                  - CODE2
+              Assign coupons:
+                summary: Request body for the Assign action
+                value:
+                  coupons:
+                  - coupon_code: CODE1
+                    customer_id: 30114810-8340-4144-a193-7699f66d184d
+                  - coupon_code: CODE2
+                    customer_id: e9e5a706-b785-405a-bcf3-2e7859fd59d3
+                  - coupon_code: CODE3
+              Unassign coupons:
+                summary: Request body for the Unassign action
+                value:
+                  coupons:
+                  - coupon_code: CODE1
+                    customer_id: 30114810-8340-4144-a193-7699f66d184d
+                  - coupon_code: CODE2
+                    customer_id: e9e5a706-b785-405a-bcf3-2e7859fd59d3
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponsResponse'
+              examples:
+                Success:
+                  value:
+                    status: success
+                    metadata:
+                      external_batch_id: batch_001
+                    payload:
+                      batch_id: batch001
+        '400':
+          description: 400 Bad Request Exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+              examples:
+                Payload is not found or is empty:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202002
+                      message: The 'payload' field is not found or empty
+                Coupon codes exceed the limit:
+                  value:
+                    status: error
+                    error:
+                      type: BadRequestException
+                      code: 202003
+                      message: The list of codes exceeds the size limitation of the endpoint
+        '404':
+          description: 404 Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorResponse'
+              examples:
+                Coupon pool not found:
+                  summary: The coupon pool ID provided in the path does not match the ID or external ID of an existing coupon pool
+                  value:
+                    status: error
+                    error:
+                      type: NotFoundException
+                      code: 202001
+                      message: Coupon Pool not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /coupons:
+    get:
+      tags:
+      - Coupons
+      summary: Query coupons independent of customer
+      description: "Use this endpoint to query coupons within Antavo independently of customer data. \nThis allows searching for coupons based on criteria such as coupon code and status, providing flexibility in managing coupon data.\n"
+      operationId: Coupons
+      parameters:
+      - name: code
+        in: query
+        description: The code used to search for a specific coupon.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: TC22341
+      - name: status
+        in: query
+        description: "The status of the coupons to search for. \nOptions: <code>claimed</code>, <code>redeemed</code>, <code>invalid</code>, <code>expired</code>, <code>unassigned</code>, <code>partially_redeemed</code>"
+        required: false
+        schema:
+          type: string
+          enum:
+          - claimed
+          - expired
+          - partially_redeemed
+          - redeemed
+          example: claimed
+      - name: limit
+        in: query
+        required: false
+        description: 'Limits the number of results to be returned in one response.
+
+          '
+        schema:
+          type: integer
+          example: 50
+          default: 100
+      - name: page
+        in: query
+        required: false
+        description: "This parameter gets a specific page of the coupon list if a limit has been set. This is used in pagination in conjunction with the limit query.\t\n"
+        schema:
+          type: number
+          default: 0
+          example: 2
+      responses:
+        '200':
+          description: A successful response containing the list of coupons matching the specific query criteria.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Couponlist'
+              examples:
+                success:
+                  summary: Successful coupon search
+                  value:
+                    data:
+                    - code: TC22341
+                      name: 10% Discount Coupon
+                      status: claimed
+                      created_at: '2024-01-01T00:00:00Z'
+                      customer:
+                        id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      claimed_at: '2024-01-02T00:00:00Z'
+                      expires_at: '2024-12-31T23:59:59Z'
+                      currency: USD
+                      type: percentage
+                      value: 100
+                      balance: 50
+                      pool: 60b8bec0ce61d7c91b000014
+                      min_amount: 5
+                      min_redemption_value: 20
+                      purchase_threshold: 100
+                    - code: TS34523
+                      name: Free Shipping Coupon
+                      status: claimed
+                      created_at: '2021-10-29T12:15:53+01:00'
+                      customer:
+                        id: 280e674c-de2a-4a30-987a-d9267d1a119
+                      claimed_at: '2021-10-29T12:15:53+01:00'
+                      type: free_shipping
+                    next: /coupons?page=2&limit=0
+                no_match:
+                  summary: No matches found
+                  value:
+                    data: null
+        '400':
+          description: Empty search criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CouponError'
+              examples:
+                fail:
+                  summary: Empty search criteria
+                  value:
+                    type: BadRequestException
+                    code: 160311
+                    message: Empty search criteria
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/coupons:
+    get:
+      tags:
+      - Coupons
+      summary: List coupons assigned to a customer
+      description: Returns all coupons that has been assigned to a specified customer.
+      parameters:
+      - in: path
+        name: customer_id
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - in: query
+        name: code
+        description: Filter by the coupon code
+        required: false
+        schema:
+          type: string
+          example: TC22341
+      - in: query
+        name: name
+        description: Filter by the name of the coupon
+        required: false
+        schema:
+          type: string
+          example: 10% off
+      - in: query
+        name: status
+        description: 'Filter by coupon status. Accepted values: `claimed`, `expired`, `partially_redeemed` and `redeemed`.'
+        required: false
+        schema:
+          type: string
+          enum:
+          - claimed
+          - expired
+          - partially_redeemed
+          - redeemed
+      - in: query
+        name: type
+        description: 'Filter by  type of coupon. Accepted values: `amount`, `free_shipping`, `gift_card`, `percentage`.'
+        required: false
+        schema:
+          type: string
+          enum:
+          - amount
+          - free_shipping
+          - gift_card
+          - percentage
+      - in: query
+        name: value
+        description: Filter by the value of coupon.
+        required: false
+        schema:
+          type: integer
+          example: 10
+      responses:
+        '200':
+          description: Coupon list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Coupon_2'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/customers/{customer_id}/coupons:
+    get:
+      operationId: listCustomerCoupons
+      summary: Retrieve the list of a customer's coupons
+      description: 'Returns a paginated list of coupons associated with a specific customer.
+
+        Results can be filtered by `status`, `claimed_at`, `redeemed_at`, `expiration_date` coupon attribute values, and sorted by `claimed_at`, `redeemed_at`, `expiration_date` values.
+
+        '
+      tags:
+      - Coupons
+      parameters:
+      - $ref: '#/components/parameters/CustomerIdParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: filter
+        in: query
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/CouponsFilter'
+      - name: sort
+        in: query
+        style: deepObject
+        explode: true
+        description: 'Sorts results by one or more fields in the specified order. Each field can be used only once.
+
+          When multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.
+
+          Example: `?sort[0][field]=claimed_at&sort[0][direction]=asc&sort[1][field]=redeemed_at&sort[1][direction]=desc`
+
+          '
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCouponSortEntry'
+      responses:
+        '200':
+          description: Success - Coupon data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                    example: success
+                  metadata:
+                    allOf:
+                    - $ref: '#/components/schemas/CollectionMetadata'
+                    example:
+                      pagination:
+                        next: /v1/customers/55e5d4dc2cf1901e688b45d3/coupons?offset=0&limit=20
+                        previous: null
+                  payload:
+                    type: object
+                    required:
+                    - coupons
+                    properties:
+                      coupons:
+                        type: array
+                        description: Coupons associated with the customer.
+                        items:
+                          $ref: '#/components/schemas/CouponEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+    servers:
+    - url: https://read-api.<environment>.antavo.com
+components:
+  schemas:
+    BadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          description: Error details.
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of the error.
+            code:
+              type: number
+              example: 330502
+              description: Error code.
+            message:
+              type: string
+              example: The 'payload' field is not found or empty
+              description: Human-readable error message.
+    AddCouponsRequest:
+      type: object
+      properties:
+        coupons:
+          type: array
+          description: Coupon codes to be added to the coupon pool
+          items:
+            type: string
+    NotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of the error.
+            code:
+              type: string
+              example: 330531
+              description: Error code.
+            message:
+              type: string
+              example: Batch ID is not found
+              description: Human-readable error message.
+    AssignCouponsRequest:
+      type: object
+      required:
+      - coupons
+      properties:
+        coupons:
+          type: array
+          description: Coupon codes to be assigned and the customer IDs to which they are assigned. If `customer_id` is not provided, the coupon is handled as unassigned.
+          items:
+            type: object
+            required:
+            - coupon_code
+            properties:
+              coupon_code:
+                description: Coupon codes, which must be unique in each batch
+                type: string
+              customer_id:
+                description: If the `customer_id` is provided, the coupon is assigned to the specified customer. If left empty, the coupon is handled as unassigned.
+                type: string
+    UnassignCouponsRequest:
+      type: object
+      required:
+      - coupons
+      properties:
+        coupons:
+          type: array
+          description: Coupon codes to be unassigned and the customer IDs from which to unassign them.
+          items:
+            type: object
+            required:
+            - coupon_code
+            - customer_id
+            properties:
+              coupon_code:
+                description: Coupon codes, which must be unique in each batch.
+                type: string
+              customer_id:
+                description: The ID of the customer from which the coupon code is unassigned.
+                type: string
+    CouponsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the request.
+          example: success
+        metadata:
+          type: object
+          properties:
+            external_batch_id:
+              type: string
+              description: The external identifier of the batch.
+        payload:
+          type: object
+          properties:
+            batch_id:
+              type: string
+              description: The identifier of the batch.
+    CouponsStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Status of the request.
+        metadata:
+          type: object
+          description: Metadata related to the bulk operation.
+          properties:
+            bulk_operation_error:
+              type: object
+              description: Any errors encountered during the bulk operation.
+              properties:
+                number_of_errors:
+                  type: number
+                  description: The number of encountered errors.
+                url:
+                  type: string
+                  description: URL to retrieve detailed error information.
+        payload:
+          type: object
+          description: Details of the bulk operation payload.
+          properties:
+            batch_status:
+              type: string
+              description: The status of the current batch.
+            number_of_coupons:
+              type: number
+              description: The number of processed coupons.
+    ListBatchNotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          description: Error details.
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of the error.
+            code:
+              type: number
+              example: 330521
+              description: Error code.
+            message:
+              type: string
+              example: Batch ID is not found
+              description: Human-readable error message.
+    Couponlist:
+      title: Couponlist
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coupon'
+          description: Array of coupons matching the query criteria.
+    Coupon:
+      title: Coupon
+      type: object
+      properties:
+        code:
+          type: string
+          description: The code used in external systems to redeem the coupon's benefit.
+        name:
+          type: string
+          description: The customer-facing name of the coupon.
+        status:
+          type: string
+          description: "The coupon status in Antavo. \nOptions: <code>claimed</code>, <code>redeemed</code>, <code>invalid</code>, <code>expired</code>, <code>unassigned</code>, <code>partially_redeemed</code>"
+        created_at:
+          type: string
+          description: Date timestamp of creation.
+        customer:
+          type: array
+          description: Lists all customers' IDs who have claimed the coupons.
+          items:
+            type: string
+            description: Unique Antavo customer IDs.
+            example: OB1
+        claimed_at:
+          type: string
+          description: Date timestamp of coupon claim.
+        expires_at:
+          type: string
+          description: Date timestamp of coupon expiration.
+        currency:
+          type: string
+          description: The base currency of the coupon.
+        type:
+          type: string
+          description: "Type of coupon. \nOptions: <code>amount</code>, <code>percent</code>, <code>free_shipping</code> and <code>gift_card</code>"
+        value:
+          type: number
+          description: The value of the coupon.
+        balance:
+          type: number
+          description: The remaining value of a gift card following a redemption. Only valid for gift cards.
+        pool:
+          type: string
+          description: The associated coupon pool.
+        min_amount:
+          type: number
+          description: The minimum allowed balance on card. Lower values result in invalid status.
+        min_redemption_value:
+          type: number
+          description: The minimum amount of the gift card which can be used for a purchase.
+        purchase_threshold:
+          type: number
+          description: The minimum total purchase value that must be exceeded in order to use the card.
+    CouponError:
+      title: FAQ
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+          example: 160311
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Empty search criteria
+    Coupon_2:
+      type: object
+      properties:
+        code:
+          description: The coupon code.
+          type: string
+          example: TC22341
+        status:
+          description: The status of the coupon, whether it was only claimed by the customer or redeemed (used at checkout).
+          type: string
+          enum:
+          - claimed
+          - redeemed
+        type:
+          description: Type of the coupon.
+          type: string
+          enum:
+          - percentage
+          - amount
+          - free_shipping
+          - gift_card
+        value:
+          description: Arbitrary number as coupon value for amount type coupons, or a percentage number (0-100).
+          type: number
+          example: 10
+        currency:
+          description: ISO 4217 alphabetic code of the coupon currency, if defined.
+          type: string
+          example: EUR
+        created_at:
+          description: The date of coupon creation.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        claimed_at:
+          description: The date of coupon assignment.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        redeemed_at:
+          description: The date when the coupon was used at checkout.
+          type: string
+          format: date-time
+          example: '2022-02-21T10:24:45.000Z'
+        expires_at:
+          description: The date until which the coupon is usable.
+          type: string
+          format: date-time
+          example: '2022-11-23T08:34:59.000Z'
+        name:
+          description: Name of the coupon, which is inherited from the coupon pool.
+          type: string
+          example: 10% coupon codes
+        pool:
+          description: The original coupon pool from which the coupon was sourced.
+          type: string
+          example: 62c7f20687632a561f16499b
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+    PaginationLinks:
+      type: object
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    DateTimeFilter:
+      type: object
+      description: 'Filters a date or date-time field. The following formats are accepted:
+
+        - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+        - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+        - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
+
+        - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC for comparison)
+
+
+        Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+        '
+      properties:
+        eq:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Equals.
+        lt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than.
+        lte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than or equal to.
+        gt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than.
+        gte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than or equal to.
+    CollectionMetadata:
+      type: object
+      required:
+      - pagination
+      properties:
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
+    CustomerCouponSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - claimed_at
+          - redeemed_at
+          - expiration_date
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    CouponsFilter:
+      type: object
+      description: 'Filter by allowed fields and operators.
+
+        '
+      properties:
+        status:
+          type: object
+          description: 'Filters coupons by their current status. Only the `eq` operator is supported.
+
+            '
+          properties:
+            eq:
+              $ref: '#/components/schemas/CouponStatus'
+        claimed_at:
+          description: 'Filters coupons by the date and time when the coupon was claimed.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        redeemed_at:
+          description: 'Filters coupons by the date and time when the coupon was redeemed.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        expiration_date:
+          description: 'Filters coupons by the date and time when the coupon expires.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+    CouponEntity:
+      type: object
+      description: "Coupon entity. The fields returned depend on the coupon data configured for the workspace. \nIn addition to the standard fields listed below, custom coupon attributes may also be returned as additional properties.\n"
+      properties:
+        _id:
+          type: string
+          description: Unique identifier of the coupon.
+          example: coupon_01J2X9M7QK5A8F3C6D1E4B7N9P
+        code:
+          type: string
+          description: Coupon code used for redemption.
+          example: SUMMER-2026-ABCD
+        name:
+          description: 'Coupon display name. The value can be a plain string or contain translations keyed by locale. (e.g.
+
+            `{"en": "...", "de": "..."}`).
+
+            '
+          oneOf:
+          - type: string
+            example: Summer discount
+          - type: object
+            additionalProperties:
+              type: string
+            example:
+              en: Summer discount
+              de: Sommerrabatt
+        type:
+          type: string
+          description: Coupon type.
+          example: percentage
+        value:
+          type: number
+          description: Coupon value.
+          example: 20
+        currency:
+          type: string
+          description: Currency associated with the coupon value. Only applicable to gift card coupons.
+          example: EUR
+        balance:
+          type: number
+          description: The remaining value of a gift card after redemption. Only applicable to gift card coupons.
+          example: 15.5
+        min_amount:
+          type: number
+          description: 'The minimum balance allowed on a gift card. A lower balance causes the coupon to become invalid.
+
+            Only applicable to gift card coupons.
+
+            '
+          example: 0
+        min_redemption_value:
+          type: number
+          description: 'The minimum gift card amount that can be used in a single purchase.
+
+            Only applicable to gift card coupons.
+
+            '
+          example: 0
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the coupon was created.
+          example: '2026-06-01T10:15:30Z'
+        claimed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date and time when the coupon was claimed.
+          example: '2026-06-05T14:30:00Z'
+        redeemed_at:
+          description: 'The date and time when the coupon was redeemed. Coupons that can be redeemed multiple times may contain multiple timestamps.
+
+            The value is `null` if the coupon has not been redeemed.
+
+            Only applicable if the coupon has been redeemed.
+
+            '
+          example:
+          - '2026-06-10T09:45:00Z'
+          - '2026-06-15T16:20:00Z'
+        expiration_date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The date and time when the coupon expires.
+
+            Only applicable if the coupon has an expiration date.
+
+            '
+          example: '2026-12-31T23:59:59Z'
+        expires_in:
+          type: string
+          description: 'The period after activation or claim when the coupon expires.
+
+            Only applicable if the coupon has an expiration date.
+
+            '
+          example: 2 months
+        invalidated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: 'The date and time when the coupon was invalidated.
+
+            Only applicable if the coupon has been invalidated.
+
+            '
+          example: '2026-12-01T23:59:59Z'
+        invalidated_by:
+          type:
+          - integer
+          - 'null'
+          description: 'The ID of the user that invalidated the coupon.
+
+            Only applicable if the coupon has been invalidated.
+
+            '
+          example: 100012233
+        pool:
+          type: string
+          description: The ID of the original coupon pool from which the coupon was sourced, if any.
+          example: summer-campaign-2026
+        parent:
+          type: string
+          description: 'The ID of the reward that assigned the coupon if the coupon was issued through a reward claim.
+
+            '
+          example: 679780ec13fa8bdd1d0345c8
+        original:
+          type: string
+          description: 'The ID of the customer who originally claimed the coupon.
+
+            This value remains unchanged if the customer is later merged or the coupon is transferred.
+
+            '
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        aggregated:
+          type: boolean
+          description: 'Indicates whether the same coupon code is reused whenever the coupon pool issues a coupon to the same customer.
+
+            '
+          example: false
+        claims:
+          type: integer
+          description: The number of times the coupon has been claimed.
+          example: 1
+        redeems:
+          type: integer
+          description: The number of times the coupon has been redeemed.
+          example: 2
+        transfers:
+          type: integer
+          description: The number of times the coupon has been transferred.
+          example: 0
+        status:
+          $ref: '#/components/schemas/CouponStatus'
+        stores:
+          type: array
+          items:
+            type: string
+          description: "The store IDs where the coupon can be redeemed. \nThis field applies only when stores configured in the Stores module are assigned to the coupon pool.\n"
+          example:
+          - store-vienna
+          - store-berlin
+        products:
+          type: array
+          items:
+            type: string
+          description: 'The product IDs for which the coupon can be redeemed.
+
+            Returned only when stores configured in the Stores module are assigned to the coupon pool.
+
+            '
+          example:
+          - product-1001
+          - product-1002
+      additionalProperties: true
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          description: Contains details about the error.
+          required:
+          - message
+          - code
+          - resendable
+          properties:
+            message:
+              type: string
+              description: Human-readable description of the error.
+              example: Unauthorized
+            code:
+              type: integer
+              description: Numeric code identifying the error.
+              example: 2132
+            resendable:
+              type: boolean
+              description: Indicates whether the request can be retried.
+              example: false
+    CouponStatus:
+      type: string
+      enum:
+      - claimed
+      - redeemed
+      - expired
+      - partially_redeemed
+      - invalid
+      description: 'The coupon status to match. The status is determined from the coupon’s claim, redemption, expiration, invalidation, and balance data.
+
+        '
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      description: 'Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 20
+    OffsetParam:
+      name: offset
+      in: query
+      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    CustomerIdParam:
+      name: customer_id
+      in: path
+      required: true
+      description: Customer identifier. Using an external ID is not supported.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      description: Provides API Key access to the endpoint.
+      name: api_key
+      in: query
+x-refined-from:
+- antavo-bulk-operations-openapi.yml
+- antavo-coupons-openapi.yml
+- antavo-display-openapi.yml
+- antavo-loyalty-read-openapi.yml

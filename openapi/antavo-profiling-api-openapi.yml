@@ -1,0 +1,385 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Profiling API
+  version: 1.0.0
+  description: Endpoints provided by the _Gamified Profiling_ module
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Profiling
+  description: Endpoints provided by the _Gamified Profiling_ module
+paths:
+  /customers/{customer_id}/activities/profiling/{flow_id}/next:
+    get:
+      tags:
+      - Profiling
+      summary: Retrieve the next question to answer within a profiling flow
+      description: This endpoints returns the next question within a profiling flow that the customer should answer. If there are no more questions left to answer in the given flow, the call will trigger the ``profiling_flow`` event, and any associated points will be awarded to the customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: flow_id
+        in: path
+        required: true
+        description: The ID of the profiling flow to complete.
+        schema:
+          type: string
+          example: 63d8d8cc17572c6ec15e688c
+      - name: Accept-language
+        in: header
+        description: 'If set in the Antavo Management UI, this header will ensure the response returns translated values for the following question attributes:
+
+
+          * title
+
+          * description
+
+          * possible answers
+
+          '
+        required: false
+        schema:
+          type: string
+          description: ISO639 code of the language.
+          example: de
+      responses:
+        '200':
+          description: The next question to answer.<br> The information returned in the response depends on the type of answer and its configured attributes. This example shows the attributes of a **text_options** question.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfilingQuestionOptions'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                No more questions to answer:
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: There are no more questions
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+  /customers/{customer_id}/activities/profiling:
+    get:
+      tags:
+      - Profiling
+      summary: List profiling flows available to the customer
+      description: This endpoints provides the list of all available profiling flow for a specific customer to complete.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      responses:
+        '200':
+          description: List of profiling flows activities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Activity'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+  /customers/{customer_id}/activities/profiling/{flow_id}/questions/{question_id}:
+    post:
+      tags:
+      - Profiling
+      summary: Submit an answer to a profiling question
+      description: 'This endpoint allows for submitting the customer''s answers to profiling questions. Two types of events are recorded through this endpoint:
+
+        * A `profiling_answer` event is recorded each time an answer is submitted to a profiling question.
+
+        * A `profiling_flow` event is recorded once all answers in a flow have been successfully submitted in separate requests. This event indicates that the entire profiling sequence has been completed.
+
+
+        Learn more about these events under the list of [Internal events](/docs/internal-events#profiling_answer).
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: flow_id
+        in: path
+        required: true
+        description: Flow ID.
+        schema:
+          type: string
+      - name: question_id
+        in: path
+        required: true
+        description: Question ID.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                answer:
+                  description: Answer ID where available, or the answer text. For multiple answers an array should be passed. This should be a boolean value for `like` questions.
+                  type: string
+              required:
+              - answer
+      responses:
+        '200':
+          description: Answer accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Flow completion message. Returned only when the flow is completed.
+                    example: Congratulations! You just finished our survey.
+                  cta_label:
+                    type: string
+                    description: CTA button label to dismiss completion message. Returned only when the flow is completed.
+                    example: Back to my activities
+        '400':
+          description: Invalid answer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of the error occurred.
+                    example: BadRequestException
+                  code:
+                    type: number
+                    description: Error code.
+                    example: 0
+                  message:
+                    type: string
+                    description: Human readable error message.
+                    example: Invalid answer
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Type of the error occurred.
+                    example: NotFoundException
+                  code:
+                    type: number
+                    description: Error code.
+                    example: 160212
+                  message:
+                    type: string
+                    description: Human readable error message.
+                    example: Customer not found
+components:
+  schemas:
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    Activity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the profiling flow to complete.
+          example: 6331b62a60265969697786
+        title:
+          type: string
+          description: Title of the profiling flow.
+          example: Earn points by sharing your product preferences.
+        description:
+          type: string
+          description: Detailed description of the activity.
+          example: Click Start and answer all the questions related to xour product preferences.
+        status:
+          type: string
+          description: Status of the profiling flow.
+          enum:
+          - active
+          - scheduled
+          - expired
+          - restricted
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Number of points to earn.
+          example: 100
+        activity_type:
+          type: string
+          description: Type of the activity.
+          example: profiling
+        questions:
+          type: integer
+          description: Number of questions within the profiling flow.
+          example: 5
+        _actions:
+          type: object
+          properties:
+            next:
+              type: object
+              description: Endpoint to retrieve the next question in the flow to answer.
+              properties:
+                method:
+                  type: string
+                  example: GET
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/c987654/activities/profiling/6331b62a60265969697786/next
+    ProfilingQuestionOptions:
+      type: object
+      description: The profiling question to be answered.
+      properties:
+        type:
+          type: string
+          enum:
+          - like
+          - text_options
+          - image_options
+          - color_options
+          - text_input
+          - datepicker
+          - numeric_slider
+          - feedback
+          example: text_options
+        title:
+          type: string
+          description: The title of the question.
+          example: What type of clothing do you most frequently shop for?
+        description:
+          type: string
+          description: Additional information for answering the question.
+          example: Please select one category that you shop for the most often.
+        position:
+          type: integer
+          description: Question's position in the flow.
+          example: '2'
+        multi-choice:
+          type: boolean
+          description: Indicates whether the customer can select multiple answers.
+          example: false
+        answers:
+          type: array
+          description: Provided answer options. <br> Answers are **not present** for `numeric-slider`, `text-input`, `date-picker` and `feedback` type of questions.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the answer options.
+              text:
+                type: string
+                description: Answer itself.
+            example:
+            - id: 668966f298ce866bba0a3539
+              text: Casual
+            - id: 668966f298ce866bba0a353a
+              text: Formal
+            - id: 668966f298ce866bba0a353b
+              text: Workwear
+            - id: 668966f298ce866bba0a353c
+              text: Loungewear
+            - id: 668966f298ce866bba0a353d
+              text: Activewear
+        _actions:
+          type: object
+          properties:
+            answer:
+              type: object
+              description: The endpoint to submit the answer to the question.
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/c987654/activities/profiling/63d8d8cc17572c6ec15e688c/questions/6644deb1d959c7036f1875fd
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

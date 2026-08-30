@@ -1,0 +1,1892 @@
+openapi: 3.2.0
+info:
+  title: Antavo Customers API
+  version: '1.0'
+  description: 'Operations tagged Customers across 3 of this provider''s published API definitions: antavo-customer-openapi.yml, antavo-display-openapi.yml, antavo-loyalty-read-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+- url: https://read-api.<environment>.antavo.com
+tags:
+- name: Customers
+paths:
+  /customers/-/count:
+    get:
+      tags:
+      - Customers
+      summary: Returns the number of active customers
+      description: This endpoint returns the number of customers with active status within Antavo.
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+              examples:
+                Success:
+                  value:
+                    active: 24120
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}:
+    get:
+      tags:
+      - Customers
+      summary: Returns detailed customer data using the Antavo unique ID
+      description: "This endpoint returns detailed information for a specific customer. \n"
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo unique ID e.g., `280e674c-c4ea-4a30-987a-d9267d1a5018`\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): `{external_field:external_id_value}`\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a501
+      - name: fields
+        in: query
+        required: false
+        description: "Returns additional optional fields: \n\n* Groups: Returns associated groups (requires [User groups module](https://docs.antavo.com/docs/user-groups) for selected customer in the form of an object with the following properties:\n  \n  - `ID` - integer\n\n  - `Name` - string, optional (not returned for non-existing groups)\n  \n  - `external_id` - string, optional (not returned if empty)\n\n* Purchases: A summary of purchase statistics. Options are [here](https://developers.antavo.com/docs/customers#purchases).\n\n* Expiring points: A summary of expiration statistics. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).\n\n* Expiration points history: An array of dates and number of points that have expired or will expire. Options are [here](https://developers.antavo.com/docs/customers#expiring-points).          \n"
+        schema:
+          type: string
+          enum:
+          - groups
+          - purchases.ytd
+          - expiring_points
+          - expiring_points.history
+      responses:
+        '200':
+          description: Successful customer search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                failed:
+                  summary: Error - search field is empty or missing
+                  value:
+                    code: 160211
+                    message: Empty search criteria
+                    type: BadRequestException
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                failed:
+                  summary: Error - customer not found
+                  value:
+                    code: 160212
+                    message: Customer not found
+                    type: NotFoundException
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers:
+    get:
+      tags:
+      - Customers
+      summary: Search Antavo database using customer filters
+      description: 'This endpoint allows you to search the Antavo database for customers based on specific criteria and returns the Antavo Customer ID. Note that the filtering is case-sensitive and does not support partial matches.
+
+        The filtering query requires that the filter parameter has been tagged as [searchable](https://docs.antavo.com/customers#add-a-new-field) in the Antavo Management UI.
+
+        '
+      parameters:
+      - in: query
+        name: Filtering
+        description: 'Customers can be filtered upon any configured customer field (marked as ``searchable``). Results are case-sensitive and return exact matches.
+
+
+          It''s possible to query multiple customers based on the last update date. Customer IDs are returned if the  ``updated_at`` customer attribute is greater than a specified datetime using the format ``updated_at.gt=<datetime>``.
+
+          '
+        schema:
+          type: object
+          example:
+            first_name: John
+            updated_at.gt: '2022-01-01'
+      - name: search
+        in: query
+        required: false
+        description: Perform searches using key fields such as `first_name`, `last_name`,  `email`, `mobile_phone`, or `membership_id`.
+        schema:
+          type: string
+          example: first_name=John
+      - name: fields
+        in: query
+        required: false
+        description: 'Returns additional optional attributes from the customer object.
+
+
+          **Note**: Separating commas must be percentage encoded for [API signing](/api-signing).
+
+          '
+        schema:
+          type: string
+      - name: match
+        in: query
+        required: false
+        description: 'Enables querying specific customer data. Currently only works with the following attributes: `_id`, `email`, and `membership_id`. Example usage: `&match=exact&membership_id=33492206-ba75-4487-8047-a9d78a135ce9`'
+        schema:
+          type: string
+          enum:
+          - exact
+      - name: limit
+        in: query
+        description: 'Limits the number of events to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+
+          '
+        schema:
+          type: integer
+          example: 50
+          default: 100
+      - name: offset
+        in: query
+        description: 'Offsets the starting number of items for pagination.
+
+          '
+        schema:
+          type: integer
+          example: 10
+          default: 0
+      responses:
+        '200':
+          description: Successful customer search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customers'
+              examples:
+                Success:
+                  value:
+                    id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                Success 2:
+                  summary: Success with fields=groups query
+                  value:
+                    id: a280e674c-c4ea-4a30-987a-d9267d1a5018nakin
+                    groups:
+                    - id: 331
+                      name: USA-Department
+                      external_id: AG331
+        '404':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Error - search field is empty or missing
+                  value:
+                    code: 160211
+                    message: Empty search criteria
+                    type: BadRequestException
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/merge:
+    post:
+      tags:
+      - Customers
+      summary: Merges the current customer into the target account
+      description: This endpoint permanently merges the current customer into the target account.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n\n* An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+              - target
+              type: object
+              properties:
+                target:
+                  type: string
+                  example: a280e674c-de2a-4a30-987a-d9267d1a119bc123
+                  description: "The target account to merge into.  This can be \n\n*  The Antavo unique ID e.g., ``280e674c-c4ea-4a30-987a-d9267d1a5018``\n*  An external ID (requires [configuration](https://developers.antavo.com/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+      responses:
+        '200':
+          description: Merge successful
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failure:
+                  value:
+                    type: BadRequestException
+                    code: 160216
+                    message: Customer is not active
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failure:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      deprecated: false
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/-/verify/:
+    get:
+      tags:
+      - Customers
+      summary: Verify credentials provided during registration
+      description: 'This endpoint is used to confirm registration.
+
+
+        A successful verification will change the status of the customer to `active` and enable them to log in and engage with the loyalty program. Failure will leave the customer in an `inactive` status.
+
+
+        The verification process occurs using a token.
+
+
+        This requires the Custom login module with the verification option enabled (disabled by default).
+
+        '
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+          description: The access token from the link, provided in the verfication email used to verify the customer.
+          example: ZTM4Mjk4YTk5ZTkyZTg5NWE5N2UzNWViNjlhNGYyZDMxZmZkNGU1M2ExOGNmZTNiOWE3Y2YzZmE2ZTMyNjdiOQ.eyJjdXN0b21lciI6Im5vdF9hX3ZhbGlkX2N1c3RvbWVyIiwiZXhwaXJlc19hdCI6ImxvbmdfYWdvIn0
+      - name: redirect_url
+        in: query
+        schema:
+          type: string
+          description: If provided, the user will be redirected to this URL after successful confirmation.
+      responses:
+        '200':
+          description: Customer registration confirmed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                fail:
+                  summary: Invalid token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This request token is not valid
+                fail2:
+                  summary: Used Token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This token has already been used
+                fail3:
+                  summary: Expired token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This token has been expired
+                fail4:
+                  summary: Deactivated token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This token is already deactivated
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/opt-in:
+    post:
+      tags:
+      - Customers
+      summary: Create a new customer with log-in credentials
+      description: "This endpoint creates customer within Antavo according to the specified opt-in parameters stated in the body. \n\nThis interface is primarily used as a customer-driven registration process which also generates login credentials, enabling the new customer to log into Antavo systems. This endpoint complements the [opt-in](https://developers.antavo.com/docs/api-events#opt_in) event.\n"
+      parameters:
+      - name: customer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      requestBody:
+        description: Customer opt-in parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Optin'
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer_2'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                fail:
+                  summary: Customer already exists
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Customer already exists
+                fail2:
+                  summary: Missing Path parameter
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: 'Missing path param: customer_id'
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/-/login:
+    post:
+      tags:
+      - Customers
+      summary: Log in a specific customer to Antavo
+      description: 'This endpoint logs the specified customer into Antavo and a successful login returns the customer object.
+
+
+        The username attribute can be specified in the Antavo Management UI from any available profile attribute.
+
+        The customer ID can then be accessed and used for subsequent calls using Antavo Display API endpoints.
+
+
+        A successful log-in will also create a ``daily_login`` event for the customer.
+
+        This event will only be written once to the customer''s event stream per calendar day.
+
+
+        This requires the Custom login module to be enabled.
+
+        '
+      requestBody:
+        description: Login request parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer_2'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                fail:
+                  summary: Wrong username/password
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Invalid username or password
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/-/password/request:
+    post:
+      tags:
+      - Customers
+      summary: Request a new password for Antavo login
+      description: 'A forgotten password can be reset through this endpoint.
+
+        The username can be set in the Customer login module in the Management UI and can be any customer profile attribute.
+
+        The `url` string is a URL which can be extended with the reset token.
+
+        '
+      requestBody:
+        description: Password reset request parameters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordRequest'
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                fail:
+                  summary: Customer not found
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Customer not found
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/-/password/reset:
+    post:
+      tags:
+      - Customers
+      summary: Reset the password of the current customer
+      description: 'This provides a customer interface for changing a password. The token is captured from the link provided by the password reset email. A simple check is provided to ensure that the two passwords match.
+
+        This requires the Custom login module to be enabled.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+        required: false
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: The token used for password reset.
+                    example: ZTM4Mjk4YTk5ZTkyZTg5NWE5N2UzNWViNjlhNGYyZDMxZmZkNGU1M2ExOGNmZTNiOWE3Y2YzZmE2ZTMyNjdiOQ.eyJjdXN0b21lciI6Im5vdF9hX3ZhbGlkX2N1c3RvbWVyIiwiZXhwaXJlc19hdCI6ImxvbmdfYWdvIn0
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                fail:
+                  summary: Invalid token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This request token is not valid
+                fail2:
+                  summary: Used Token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This token has already been used
+                fail3:
+                  summary: Expired token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This token has been expired
+                fail4:
+                  summary: Deactivated token
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: This token is already deactivated
+                fail5:
+                  summary: Non-matching Passwords
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Passwords do not match
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/customers/{customer_id}:
+    get:
+      operationId: getCustomer
+      summary: Retrieve detailed customer data of a single customer
+      description: Retrieves a customer by customer ID and returns the data associated with the customer.
+      tags:
+      - Customers
+      parameters:
+      - $ref: '#/components/parameters/CustomerIdParam'
+      responses:
+        '200':
+          description: Success - Customer data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                    example: success
+                  metadata:
+                    type: object
+                  payload:
+                    $ref: '#/components/schemas/CustomerEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Error - Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+    servers:
+    - url: https://read-api.<environment>.antavo.com
+  /v1/customers:
+    get:
+      operationId: listCustomers
+      summary: Retrieve the list of customers
+      description: 'Returns a paginated list of customers, including standard customer fields and any custom customer attributes configured in the workspace.
+
+        Results can be filtered and sorted by `created_at` and `status` customer attribute values.
+
+        '
+      tags:
+      - Customers
+      parameters:
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: filter
+        in: query
+        style: deepObject
+        explode: true
+        description: Use the supported fields and operators to filter the results.
+        schema:
+          $ref: '#/components/schemas/CustomersFilter'
+      - name: sort
+        in: query
+        style: deepObject
+        explode: true
+        description: 'Sorts results by one or more fields in the specified order. Each field can be used only once.
+
+          When multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.
+
+          Example: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=created_at&sort[1][direction]=desc`
+
+          '
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerSortEntry'
+      responses:
+        '200':
+          description: Success - Customer data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                  metadata:
+                    allOf:
+                    - $ref: '#/components/schemas/CollectionMetadata'
+                    example:
+                      pagination:
+                        next: /v1/customers/55e5d4dc2cf1901e688b45d3/customers?offset=0&limit=20
+                        previous: null
+                  payload:
+                    type: object
+                    required:
+                    - customers
+                    properties:
+                      customers:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CustomerEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+    servers:
+    - url: https://read-api.<environment>.antavo.com
+components:
+  schemas:
+    Customers:
+      type: object
+      description: Returns Customer unique id which match the search criteria
+      properties:
+        id:
+          type: string
+          description: The unique customer identifier.
+          example: 55e5d4dc2cf1901e688b45d3
+    TierStructure:
+      type: object
+      description: The overall structure in which the current tier is located.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the current tier structure.
+          example: standard_tiers
+        name:
+          type: string
+          description: The tier structure label.
+          example: Standard tiers
+    Customer:
+      type: object
+      description: Detailed customer information for a given Customer unique id.
+      properties:
+        id:
+          type: string
+          description: The unique customer identifier.
+          example: 55e5d4dc2cf1901e688b45d3
+        first_name:
+          type: string
+          description: Customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: Customer's last name.
+          example: Smith
+        nickname:
+          type: string
+          description: Customer's nickname.
+          example: Johnny
+        email:
+          type: string
+          description: Customer's email address.
+          example: jsmith@example.com
+        birth_date:
+          type: string
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          description: Customer language code (ISO-639-1 format).
+          format: date
+          example: '1969-12-25'
+        gender:
+          type: string
+          description: Customer's date of birth.
+          example: Male
+        language:
+          type: string
+          description: Customer's gender
+          example: en
+        currency:
+          type: string
+          description: The ISO 3-Letter Currency Code for the last currency used.
+          example: GBP
+        status:
+          description: The status of the customer.
+          type: string
+          example: Active
+        score:
+          description: The total number of points ever earned by the customer.
+          type: number
+          example: 100
+        spent:
+          description: The points spent by the customer.
+          type: number
+          example: 20
+        reserved:
+          description: The amount of points reserved on bids or discounts.
+          type: number
+          example: 0
+        expired:
+          description: The number of points expired.
+          type: number
+          example: 100
+        spendable:
+          description: The amount of points currently spendable.
+          type: number
+          example: 50
+        pending:
+          description: The number of pending points for non-finalized actions. Typically given when the purchase is in its refund/return period.
+          type: number
+          example: 20
+        image_url:
+          description: The URL of the customer profile picture, if it’s available
+          type: string
+          example: https://example.com/image.png
+        optin_at:
+          description: The unix timestamp of the enrollment of the customer.
+          type: number
+          example: 1577836800
+        last_login_at:
+          description: The unix timestamp of the last login of the customer.
+          type: number
+          example: 1593561600
+        updated_at:
+          description: The unix timestamp of the last time customer data was updated.
+          type: number
+          example: 1593561623
+        properties:
+          $ref: '#/components/schemas/Properties'
+        purchase_total:
+          description: The money spent on purchases by the customer since enrolling into the program.
+          type: number
+          example: 100
+        purchase_count:
+          description: The number of purchases made by the customer since enrolling into the program.
+          type: number
+          example: 2
+        purchase_last_date:
+          type: string
+          description: Last time the customer made a purchase since enrolling into the program.
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2020-10-01'
+        mobile_phone:
+          type: string
+          description: The member's mobile phone number.
+          example: 123 456 789
+        accounts:
+          type: array
+          description: Sorted by ``account_id`` that contains the customer's accounts.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the account.
+                example: main_account
+              name:
+                type: string
+                description: The label of the account.
+                example: Main account
+              earned:
+                type: number
+                description: The total numbers of points earned in this account.
+                example: 1000
+              spent:
+                type: number
+                description: The total number of points spent in this account.
+                example: 500
+              pending:
+                type: number
+                description: The total number of pending points in this account.
+                example: 50
+              reserved:
+                type: number
+                description: The total number of reserved points in this account.
+                example: 200
+              expired:
+                type: number
+                description: The total number of expired points in this account.
+                example: 50
+              spendable:
+                type: number
+                description: The total number of spendable  points in this account.
+                example: 800
+              burn_rates:
+                type: object
+                description: The currency-dependent burn rates set in the Management UI.
+                properties:
+                  amount:
+                    type: number
+                    description: The value of the points.
+                    example: 100
+                  points:
+                    type: number
+                    description: The number of points to be burnt.
+                    example: 50
+                  currency:
+                    type: string
+                    description: The selected currency.
+                    example: USD
+        campaigns:
+          type: object
+          description: Tiered campaign-related information.
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the current tiered campaign.
+              example: 63772885e9af5b34933d4aa6
+            occurrences:
+              type: object
+              description: Detailed description and data for all the scheduled occurrences configured in the current tiered campaign.
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier of the current occurrence.
+                  example: 662bac7c0e76787c9b75c80b
+                pending_points:
+                  type: number
+                  description: The number of pending points in the current occurrence.
+                  example: 100
+                awarded_points:
+                  type: number
+                  description: The number of points awarded the current occurrence.
+                  example: 50
+                status:
+                  type: string
+                  description: 'The current status of the current occurrence: Values: `active`, `completed`, `grace period`, `scheduled`.'
+                  example: cactive
+                start_date:
+                  type: string
+                  description: The start date of the current occurrence.
+                  example: '2022-11-01T07:36:00+01:00'
+                end_date:
+                  type: string
+                  description: The end date of the the current occurrence.
+                  example: '2022-12-01T07:36:00+01:00'
+                evaluation_date:
+                  type: string
+                  description: The date when the current occurrence challenge instance was evaluated.
+                  example: '2022-12-01T07:36:00+01:00'
+        tiers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the current tier.
+                example: tier1
+              name:
+                type: string
+                description: The tier label.
+                example: Gold
+              since:
+                type: string
+                description: The datetime at which the member joined this tier.
+                example: '2022-05-02T12:57:41+02:00'
+              threshold:
+                type: number
+                description: The point threshold for joining this tier.
+                example: 1000
+              expdate:
+                type: string
+                description: The date when the tier expires and the customers' tier is recalculated.
+                example: '2023-01-11T00:00:00+01:00'
+              points:
+                type: number
+                description: The number of tier-status points the customer has earned. These may not be the same as the customer's earned points.
+                example: 1100
+              points_after_expiration:
+                type: number
+                description: The number of points remaining after the current tier has expired.
+                example: 1000
+              structure:
+                $ref: '#/components/schemas/TierStructure'
+              next:
+                $ref: '#/components/schemas/TierNext'
+        groups:
+          type: array
+          description: An array of groups which to which the customer belongs.
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+                description: The numerical group ID.
+                example: 330
+              name:
+                type: string
+                description: The name of the group (not returned for non-existent groups).
+                example: USA-Department
+              external_id:
+                type: string
+                description: The external ID of the user group, if any.
+                example: AG331
+    Count:
+      type: object
+      description: Number of customers
+      properties:
+        active:
+          type: number
+          description: The number of active customers.
+          example: 123456
+    Properties:
+      type: object
+      description: Custom attributes you track about the customer. Data returned in this object depends on profiling questions or custom data recorded by custom events (may require additional modules enabled).
+      properties:
+        city:
+          type: string
+          example: London
+    TierNext:
+      type: object
+      description: Information about the next available loyalty tier.
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the tier.
+          example: tier2
+        name:
+          type: string
+          description: Name of the next tier.
+          example: Platinum
+        points:
+          type: string
+          description: Number of points to collect to reach the next tier.
+          example: 900
+    ErrorResponse:
+      type: object
+      description: occurred
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            code:
+              type: number
+              description: Error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            type:
+              type: string
+              description: Type of the error.
+    Gender:
+      title: Gender
+      enum:
+      - female
+      - male
+      - other
+      type: string
+      description: Gender of the customer.
+    PasswordRequest:
+      title: PasswordRequest
+      type: object
+      properties:
+        username:
+          type: string
+          description: Customer's username.
+          example: john.doe
+        url:
+          type: string
+          description: URL which will be extended with password reset token.
+          example: https://loyalty.{environment}.antavo.com/{workspace_id}/customers/280e674c-c4ea-4a30-987a-d9267d1a5018
+    PasswordReset:
+      title: PasswordReset
+      type: object
+      properties:
+        token:
+          type: string
+          description: Password reset token obtained from [password request](https://developers.antavo.com/reference/post_customers-password-request).
+          example: null
+        password:
+          type: string
+          description: Password
+        confirm_password:
+          type: string
+          description: Confirm password - should be same as Password above.
+    Status9:
+      title: Status9
+      enum:
+      - active
+      - inactive
+      - opted_out
+      - banned
+      - suspended
+      type: string
+      description: Status of the customer.
+    token:
+      title: token
+      type: string
+      description: Token needed for [password reset](https://developers.antavo.com/reference/post_customers-password-reset).
+      example: ZTM4Mjk4YTk5ZTkyZTg5NWE5N2UzNWViNjlhNGYyZDMxZmZkNGU1M2ExOGNmZTNiOWE3Y2YzZmE2ZTMyNjdiOQ.eyJjdXN0b21lciI6Im5vdF9hX3ZhbGlkX2N1c3RvbWVyIiwiZXhwaXJlc19hdCI6ImxvbmdfYWdvIn0
+    Optin:
+      title: Optin
+      required:
+      - password
+      - confirm_password
+      type: object
+      properties:
+        password:
+          type: string
+          description: Customer's password.
+        confirm_password:
+          type: string
+          description: Confirm password - should be same as Password above.
+        first_name:
+          type: string
+          description: First name of the customer.
+          example: John
+        last_name:
+          type: string
+          description: Last name of the customer.
+          example: Doe
+        email:
+          type: string
+          description: E-mail address of the customer.
+          example: john.doe@antavo.com
+        birth_date:
+          type: string
+          description: Birth date of the customer.
+          format: date
+          example: '1990-01-01'
+        gender:
+          $ref: '#/components/schemas/Gender'
+        language:
+          type: string
+          description: Language of the customer.
+          example: en
+        phone:
+          type: string
+          description: Phone number the customer.
+          example: 212-555-1234
+        mobile_phone:
+          type: string
+          description: Mobile phone number the customer.
+          example: 212-555-1234
+        handler:
+          type: string
+          description: Customer's publicly displayed handler (nickname).
+          example: john.doe
+      description: Customer opt-in properties
+    PasswordResponse:
+      title: PasswordResponse
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/token'
+      description: This describes the structure returned if an error occurred.
+    Customer_2:
+      title: Customer
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the customer.
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        optin_at:
+          type: number
+          description: Timestamp of customer optin.
+          example: 1720425804
+        last_login_at:
+          type: number
+          description: Timestamp of customer last login.
+          example: 1720425804
+        updated_at:
+          type: number
+          description: Timestamp of customer last updated date.
+          example: 1720425804
+        first_name:
+          type: string
+          description: First name of the customer.
+          example: John
+        last_name:
+          type: string
+          description: Last name of the customer.
+          example: Doe
+        email:
+          type: string
+          description: E-mail address of the customer.
+          example: john.doe@test.com
+        birth_date:
+          type: string
+          description: Birth date of the customer.
+          format: date
+          example: '1990-01-01'
+        gender:
+          $ref: '#/components/schemas/Gender'
+        language:
+          type: string
+          description: Language of the customer.
+          example: en
+        nickname:
+          type: string
+          description: Nickname of the customer.
+          example: john.doe
+        status:
+          $ref: '#/components/schemas/Status9'
+        score:
+          type: number
+          description: Current score of the customer.
+          example: 100
+        spent:
+          type: number
+          description: Number of spent points of the customer.
+          example: 10
+        reserved:
+          type: number
+          description: Number of reserved points of the customer.
+          example: 20
+        spendable:
+          type: number
+          description: Number of spendable points of the customer.
+          example: 30
+        pending:
+          type: number
+          description: Number of pending points of the customer.
+          example: 20
+        properties:
+          type: object
+          description: Additional customer properties.
+        purchase_total:
+          type: number
+          description: Sum of customer's purchase totals.
+          example: 20
+        purchase_count:
+          type: number
+          description: Count of customer's purchases.
+          example: 10
+        purchase_last_date:
+          type: string
+          description: Customer's last purchase date.
+          format: date
+          example: '2024-01-01T00:00:00.000Z'
+      description: Customer object
+    Login:
+      title: Login
+      type: object
+      properties:
+        username:
+          type: string
+          description: Customer's username.
+          example: john.doe
+        password:
+          type: string
+          description: Customer's password.
+    ErrorResponse_2:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    NextCustomerTier:
+      type: object
+      description: Information about the next tier available to the customer. The object is empty when no higher tier is available.
+      properties:
+        id:
+          type: string
+          description: The ID of the next tier.
+          example: Fashion_Royalty
+        name:
+          type: string
+          description: The customer-facing name of the next tier.
+          example: Fashion Royalty
+        points:
+          type: number
+          description: The number of additional points required to reach the next tier.
+          example: 900
+    PaginationLinks:
+      type: object
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    CustomersFilter:
+      type: object
+      description: 'Filter object for `GET /v1/customers`. URL form:
+
+        `?filter[<field>][<op>]=<value>`. Multiple operators on the
+
+        same field are allowed.
+
+        '
+      properties:
+        created_at:
+          description: 'Filters customers by the date and time when the customer profile was created.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        status:
+          type: object
+          description: 'Filters customers by their current loyalty program status.
+
+            Customers with an `opted_out` status are not returned by the API.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+              enum:
+              - active
+              - inactive
+              - banned
+              - merged
+              - suspended
+              - pending
+              example: active
+    DateTimeFilter:
+      type: object
+      description: 'Filters a date or date-time field. The following formats are accepted:
+
+        - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+        - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+        - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
+
+        - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC for comparison)
+
+
+        Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+        '
+      properties:
+        eq:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Equals.
+        lt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than.
+        lte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than or equal to.
+        gt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than.
+        gte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than or equal to.
+    CollectionMetadata:
+      type: object
+      required:
+      - pagination
+      properties:
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
+    CustomerEntity:
+      type: object
+      description: 'Customer entity. The fields and values returned may differ based on workspace configuration.
+
+        '
+      properties:
+        _id:
+          type: string
+          description: The unique customer identifier.
+          example: 55e5d4dc2cf1901e688b45d3
+        external_ids:
+          type: object
+          description: 'External IDs associated with the customer.
+
+            Omitted when the customer has no external ID.
+
+            '
+          properties:
+            crm_id:
+              type: string
+              description: 'The ID of the customer field [configured](https://docs.antavo.com/docs/customers#add-a-new-field) az external_id.
+
+                The `crm_id` property name is shown as an example. The list of external ids returned depend on the fields configured in the workspace.
+
+                '
+              example: 1749RRCT23
+          example:
+            crm_id: 1749RRCT23
+        email:
+          type: string
+          description: Customer's email address.
+          example: jsmith@example.com
+        first_name:
+          type: string
+          description: Customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: Customer's last name.
+          example: Smith
+        handler:
+          type: string
+          description: Nickname displayed on the customer's profile.
+          example: John
+        status:
+          description: 'The current loyalty program status of the customer.
+
+            Customers with an `opted_out` status are not returned by the API.
+
+            '
+          type: string
+          enum:
+          - active
+          - inactive
+          - banned
+          - merged
+          - suspended
+          example: active
+        gender:
+          type: string
+          description: Customer's gender.
+          enum:
+          - male
+          - female
+          example: male
+        language:
+          type: string
+          description: Customer language code (ISO-639-1 format).
+          example: en
+        image_url:
+          description: The URL of the customer profile picture, if available.
+          type: string
+          example: https://example.com/image.png
+        currency:
+          type: string
+          description: The ISO 3-Letter Currency Code for the last currency used.
+          example: GBP
+        mobile_phone:
+          type: string
+          description: The member's mobile phone number.
+          example: 123 456 789
+        country:
+          type: string
+          description: The ISO 3166-1 alpha-2 country code associated with the customer.
+          example: GB
+        membership_id:
+          type: array
+          description: A unique identifier for membership, used across platforms including mobile apps. This ID may function as a range of IDs in specific contexts.
+          items:
+            type: string
+          example:
+          - MA465927t85w
+          - DA465927t85w
+        group_id:
+          type: array
+          description: 'The IDs of the user groups assigned to the customer.
+
+            Returned only when the customer is assigned to at least one user group.
+
+            '
+          items:
+            type: string
+          example:
+          - '146'
+          - '126'
+        src:
+          type: string
+          description: 'The source through which the customer was created. For customers created
+
+            through an import, the value contains the import ID.
+
+            '
+          example: import:672b564c4219e3a65b0f43a0
+        referrer:
+          type: string
+          description: 'The unique account ID of the customer who referred the member to the loyalty program.
+
+            Returned only when the customer has a referrer.
+
+            '
+          example: 557e5d4eg2cf1461e688b45e8
+        score:
+          description: The total number of points ever earned by the customer.
+          type: number
+          example: 100
+        spent:
+          description: The points spent by the customer.
+          type: number
+          example: 20
+        reserved:
+          description: The amount of points reserved on bids or discounts.
+          type: number
+          example: 0
+        expired:
+          description: The number of points expired.
+          type: number
+          example: 100
+        pending:
+          description: The number of pending points for non-finalized actions. Typically given when the purchase is in its refund/return period.
+          type: number
+          example: 20
+        purchase_total:
+          description: 'The money spent on purchases by the customer since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          type: number
+          example: 100
+        purchase_count:
+          description: 'The number of purchases made by the customer since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          type: integer
+          example: 1
+        purchase_item_count:
+          description: 'The number of items purchased since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          type: integer
+          example: 2
+        created_at:
+          description: The date and time when the customer was created.
+          type: string
+          format: date-time
+          example: '2026-07-14T19:41:35+00:00'
+        updated_at:
+          description: The date and time when the customer data was last updated.
+          type: string
+          format: date-time
+          example: '2026-07-14T19:41:35+00:00'
+        birth_date:
+          type: string
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          description: Customer's date of birth.
+          format: date
+          example: '1969-12-25'
+        purchase_first_date:
+          type: string
+          description: 'First time the customer made a purchase since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2020-10-01'
+        purchase_last_date:
+          type: string
+          description: 'Last time the customer made a purchase since enrolling into the program.
+
+            Can be `null` or omitted when the customer has no recorded purchases.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2020-10-01'
+        last_earn_date:
+          type: string
+          description: 'Last time the customer earned points since enrolling into the program.
+
+            Omitted if the customer has not been earned yet.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2026-04-27'
+        last_spend_date:
+          type: string
+          description: 'Last time the customer spent points since enrolling into the program.
+
+            Omitted if the customer has not spent yet.
+
+            '
+          format: date
+          pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+          example: '2025-10-28'
+        last_login_at:
+          description: The date of the last login of the customer.
+          type: string
+          format: date-time
+          example: '2026-06-28T10:27:03+00:00'
+        optin_at:
+          description: The date of the enrollment of the customer.
+          type: string
+          format: date-time
+          example: '2026-06-28T10:27:03+00:00'
+        optout_at:
+          description: 'The date when the customer was unenrolled.
+
+            Omitted if the customer has not been opted-out.
+
+            '
+          type: string
+          format: date-time
+          example: '2026-06-28T10:27:03+00:00'
+        labels:
+          type: array
+          items:
+            type: string
+          description: 'Labels associated with the customer.
+
+            Can be empty or omitted when the customer has no recorded purchases.
+
+            '
+          example:
+          - Elite member
+          - Frequent flyer
+        properties:
+          type: object
+          description: '[Custom attributes](https://developers.antavo.com/docs/customers#attribute-types) that are stored on the customer object.
+
+            The `city` property name is shown as an example. The custom attributes returned depend on the fields configured in the workspace.
+
+            '
+          properties:
+            city:
+              type: string
+              example: London
+        tiers:
+          type: object
+          description: 'The customer''s current tier information within tier structures.
+
+            Only available is the Tiers module is used.
+
+            '
+          properties:
+            fashion_tiers:
+              type: object
+              description: 'Tier information for a specific tier structure.
+
+                The `fashion_tiers` property name is shown as an example of a tier structure ID. The list of tier strucures returned depend on the Tiers module configuration in the workspace.
+
+                '
+              properties:
+                history:
+                  type: object
+                  description: Historical tier point values keyed by date.
+                  additionalProperties:
+                    type: number
+                  example:
+                    '2025-06-24': 1010
+                points:
+                  type: number
+                  description: The number of points currently used to determine the customer's tier.
+                  example: 1010
+                next:
+                  $ref: '#/components/schemas/NextCustomerTier'
+                points_after_expiration:
+                  type: number
+                  description: The number of tier points remaining after the next point expiration.
+                  example: 1010
+                _id:
+                  type: string
+                  description: The ID of the customer's current tier.
+                  example: Couture_Elite
+                event:
+                  type: string
+                  description: The ID of the event associated with the customer's current tier assignment.
+                  example: 685a9c5abe38329c6501bf87
+                expdate:
+                  type: string
+                  format: date
+                  description: The date when the tier expires and the customers' tier is recalculated.
+                  example: '2025-06-30'
+                manual:
+                  type: boolean
+                  description: Indicates whether the customer was manually assigned to the current tier by a Management UI user.
+                  example: false
+                name:
+                  description: The customer-facing name of the current tier.
+                  oneOf:
+                  - type: string
+                  - type: object
+                    additionalProperties:
+                      type: string
+                  example:
+                    en: Couture Elite
+                since:
+                  type: string
+                  format: date-time
+                  description: The date and time when the customer entered the current tier.
+                  example: '2025-06-24T12:38:50+00:00'
+                threshold:
+                  type: number
+                  description: The number of points required to reach the current tier.
+                  example: 1000
+        accounts:
+          type: object
+          description: 'Point accounts information associated with the customer.
+
+            Only availabe if the Multi-accounts module is used.
+
+            '
+          properties:
+            family_account:
+              type: object
+              description: 'Point balance information for a specific account.
+
+                The `family_account` property name is added as an example of an account ID. The list of accounts returned depend on the Mult-accounts module configuration in the workspace.
+
+                workspaces.
+
+                '
+              properties:
+                name:
+                  type: string
+                  description: The display name of the account.
+                  example: Family account
+                type:
+                  type: string
+                  description: The account type.
+                  enum:
+                  - standard
+                  - status_points
+                  example: standard
+                earned:
+                  type: number
+                  description: The total number of points earned on the account.
+                  example: 9271
+                reserved:
+                  type: number
+                  description: The number of points currently reserved on the account.
+                  example: 0
+                spent:
+                  type: number
+                  description: The total number of points spent from the account.
+                  example: 85
+                pending:
+                  type: number
+                  description: The number of points currently pending on the account.
+                  example: 34401
+                expired:
+                  type: number
+                  description: The total number of points expired from the account.
+                  example: 0
+                negative_points:
+                  type: boolean
+                  description: Indicates whether the account allows a negative point balance.
+                  example: false
+        clubs:
+          type: array
+          description: 'The IDs of the clubs the customer belongs to.
+
+            Can be `null` or omitted when the customer is not a member of any club.
+
+            '
+          items:
+            type: string
+          example:
+          - 67ed4632108c1ad747028c3d
+        activities:
+          type: object
+          description: 'Completed challenges associated with the customer. Each property is keyed
+
+            by the challenge ID, and its value is the Unix timestamp of completion.
+
+            Can be empty or omitted when the customer has no completed challenges.
+
+            '
+          additionalProperties:
+            type: integer
+            format: int64
+          example:
+            63eaabe8b0fe6815c91425b6: 1712134211
+        rewards:
+          type: object
+          description: 'Rewards claimed by the customer. Each property is keyed by the reward ID,
+
+            and its value is the number of times the reward has been claimed.
+
+            Can be empty or omitted when the customer has not claimed any rewards.
+
+            '
+          additionalProperties:
+            type: integer
+            minimum: 1
+          example:
+            63dcc15e59127f05634bf80c: 2
+            63dcb791eb80ef351838fdfb: 8
+        referrals:
+          type: array
+          description: 'The IDs of the customers referred by this customer.
+
+            Returned as an empty array when the customer has no referrals.
+
+            '
+          items:
+            type: string
+          example:
+          - 8a302ca1-337b-4de9-8070-12d6fe669ef3
+    CustomerSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - created_at
+          - status
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          description: Contains details about the error.
+          required:
+          - message
+          - code
+          - resendable
+          properties:
+            message:
+              type: string
+              description: Human-readable description of the error.
+              example: Unauthorized
+            code:
+              type: integer
+              description: Numeric code identifying the error.
+              example: 2132
+            resendable:
+              type: boolean
+              description: Indicates whether the request can be retried.
+              example: false
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      description: 'Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 20
+    OffsetParam:
+      name: offset
+      in: query
+      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    CustomerIdParam:
+      name: customer_id
+      in: path
+      required: true
+      description: Customer identifier. Using an external ID is not supported.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query
+x-refined-from:
+- antavo-customer-openapi.yml
+- antavo-display-openapi.yml
+- antavo-loyalty-read-openapi.yml

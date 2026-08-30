@@ -1,0 +1,683 @@
+openapi: 3.2.0
+info:
+  title: Antavo Customer lists API
+  version: 1.0.0
+  contact: {}
+  description: 'Operations tagged Customer lists across 2 of this provider''s published API definitions: antavo-bulk-operations-openapi.yml, antavo-entities-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Customer lists
+  description: Bulk Customer List API endpoints
+paths:
+  /v1/bulk-operation/customer-list/{batch_id}/status/errors:
+    get:
+      tags:
+      - Customer lists
+      summary: Query the erronous list operation attempts
+      description: This endpoint allows you to query information about any errors or issues encountered during a list operation process. It provides details about errors, if any, that occurred during the operation.
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        example: batch001
+        description: The external batch ID associated with the list operation.
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: 'Offsets the starting number of errors to return. This is used in pagination in conjunction with the limit query.
+
+          '
+        schema:
+          type: integer
+          example: 10
+          default: 0
+      - name: limit
+        in: query
+        description: 'Limits the number of errors to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+
+          '
+        schema:
+          type: integer
+          example: 50
+          default: 100
+      responses:
+        '200':
+          description: Returned after the list operation request has been processed. Provides information about errors, if any, that occurred during the operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListErrorResponse'
+              examples:
+                Errors listed:
+                  value:
+                    status: success
+                    metadata:
+                      pagination:
+                        total: 42
+                        next: https://api.{environment}.antavo.com/customer-list/batch001/status/error?offset=40&limit=20
+                        previous: https://api.{environment}.antavo.com/customer-list/batch001/status/error?offset=0&limit=20
+                    payload:
+                      number of errors: 42
+                      customers:
+                        customer_01:
+                          customer_list: {}
+                          error message: {}
+                          error code: {}
+                No errors:
+                  value:
+                    status: success
+                    metadata:
+                      pagination:
+                        total: 0
+                    payload:
+                      number_of_errors: 0
+                      customers: {}
+        '404':
+          description: The batch ID provided as a parameter does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorResponse'
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/bulk-operation/customer-list/{batch_id}/status:
+    get:
+      tags:
+      - Customer lists
+      summary: Query the status of a list operation process
+      description: This endpoint allows you to query the status of a list operation process, such as adding or removing customers from a customer list. It provides information about the current processing status of the operation.
+      parameters:
+      - in: path
+        name: batch_id
+        required: true
+        example: batch001
+        description: The external batch ID associated with the list operation.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Returned after the batch has been successfully added to the queue.
+
+            Provides information about the batch status, including whether it is `queued`, `processing`, or `done`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListStatusResponse'
+              examples:
+                Batch status - queued:
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 0
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/customer-list/batch001/status/error
+                    payload:
+                      batch_status: queued
+                      number_of_customers: 0
+                Batch status - processing:
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 0
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/customer-list/batch001/status/error
+                    payload:
+                      batch_status: processing
+                      number_of_customers: 0
+                Batch status - done:
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 60
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/customer-list/batch001/status/error
+                      payload:
+                        batch_status: done
+                        number_of_customers: 1000
+        '404':
+          description: The batch ID provided as a path parameter does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBatchNotFound'
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/bulk-operation/customer-list/add/{customer_list_id}:
+    post:
+      tags:
+      - Customer lists
+      summary: Add customers to a customer list
+      description: 'This API endpoint allows you to add a group of customers to a customer list all at once.
+
+        It accepts a single customer list ID and an array of customer IDs as input.
+
+
+        This API endpoint operates asynchronously, so customer list updates are processed separately.
+
+        '
+      parameters:
+      - in: path
+        name: customer_list_id
+        required: true
+        description: The ID of the customer list to which customers will be added to.
+        schema:
+          type: string
+          example: 63f2cc942d6ef241c0167e6c
+      responses:
+        '200':
+          description: Successful response with batch details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccesfulResponse'
+        '400':
+          description: Bad request, indicates missing or empty payload or exceeding payload size limitations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '404':
+          description: Thrown in case there is no Customer list registered in Antavo with the ID provided in the path as customerListId.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNotFoundResponseAdd'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerList'
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/bulk-operation/customer-list/remove/{customer_list_id}:
+    post:
+      tags:
+      - Customer lists
+      summary: Remove customers from a customer list
+      description: 'This endpoint supports the removal of customers from a customer list in batches.
+
+        It operates asynchronously, processing customer list updates separately.'
+      parameters:
+      - in: path
+        name: customer_list_id
+        example: 63f2cc942d6ef241c0167e6c
+        required: true
+        description: The ID of the customer list from which customers will be removed.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response with batch details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccesfulResponse'
+        '400':
+          description: Bad request, indicates missing or empty payload or exceeding payload size limitations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '404':
+          description: Thrown in case there is no Customer list registered in Antavo with the ID provided in the path as customer_list_id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNotFoundResponseRemove'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerListRemove'
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /entities/core/customer-list/{entity_id}:
+    delete:
+      tags:
+      - Customer lists
+      summary: Archive a customer list
+      description: This endpoint allows archiving a customer list and removing users from it. Only inactive lists can be archived. Once archived, lists cannot be restored.
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        description: The ID of the customer list.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Customer list archived
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: ok
+        '400':
+          description: Customer list not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentError'
+    get:
+      tags:
+      - Customer lists
+      summary: Retrieve information of a specific customer list
+      description: This endpoint returns a specific customer list.
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        description: The ID of the customer list.
+        example: 66810d9683aeae307b712d43
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+        '400':
+          description: Customer list not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentErrorResponse'
+      deprecated: false
+    post:
+      tags:
+      - Customer lists
+      summary: Update a customer list
+      description: This endpoint allows you to update a customer list.
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        description: The ID of the customer list.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: VIP members
+                  description: New name of the customer list.
+                status:
+                  type: string
+                  example: inactive
+                  description: New status of the customer list.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+        '400':
+          description: Customer list not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentErrorResponse'
+      deprecated: false
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /entities/core/customer-list:
+    get:
+      tags:
+      - Customer lists
+      summary: List all available customer lists
+      description: This endpoint returns all available customer lists.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+    put:
+      tags:
+      - Customer lists
+      summary: Create a new customer list
+      description: This endpoint allows you to create a new customer list.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: VIP members
+                  description: New name of the customer list.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PUTlistresponse'
+      deprecated: false
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+components:
+  schemas:
+    BadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          description: Error details.
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of the error.
+            code:
+              type: number
+              example: 330502
+              description: Error code.
+            message:
+              type: string
+              example: The 'payload' field is not found or empty
+              description: Human-readable error message.
+    ListNotFoundResponseAdd:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          description: Error details.
+          properties:
+            type:
+              type: string
+              description: Type of the error.
+              example: NotFoundException
+            code:
+              type: number
+              description: Error code.
+              example: 330501
+            message:
+              type: string
+              description: Human-readable error message.
+              example: Customer List not found
+    CustomerList:
+      type: object
+      required:
+      - customers
+      properties:
+        customers:
+          type: array
+          description: An array of strings representing unique customer IDs. Antavo will add customers associated with these IDs to the customer list.
+          items:
+            type: string
+            example:
+            - 280e674c-c4ea-4a30-987a-d9267d1a5018
+            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
+    NotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of the error.
+            code:
+              type: string
+              example: 330531
+              description: Error code.
+            message:
+              type: string
+              example: Batch ID is not found
+              description: Human-readable error message.
+    CustomerListRemove:
+      type: object
+      required:
+      - customers
+      properties:
+        customers:
+          type: array
+          description: List of customers to be removed.
+          items:
+            type: string
+            example:
+            - 280e674c-c4ea-4a30-987a-d9267d1a5018
+            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
+    ListNotFoundResponseRemove:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          description: Error details.
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of the error.
+            code:
+              type: number
+              example: 330511
+              description: Error code.
+            message:
+              type: string
+              example: Customer List not found
+              description: Human-readable error message.
+    ListErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: The current status of the process.
+        metadata:
+          type: object
+          description: Metadata related to the bulk operation.
+          properties:
+            pagination:
+              type: object
+              properties:
+                total:
+                  type: number
+                  description: Total number of entries.
+                  example: 42
+                next:
+                  type: string
+                  description: Link to access the next series of entries.
+                  example: https://api.{environment}.antavo.com/v1/bulk-operation/customer-list/batch001/status/error?offset=40&limit=20
+                previous:
+                  type: string
+                  description: Link to access the previous series of entries.
+                  example: https://api.{environment}.antavo.com/v1/bulk-operation/customer-list/batch001/status/error?offset=0&limit=20
+        payload:
+          type: object
+          properties:
+            number_of_errors:
+              type: number
+              example: 42
+            customers:
+              type: object
+              properties:
+                customer_01:
+                  type: object
+                  properties:
+                    customer list:
+                      type: string
+                      example: null
+                    error_message:
+                      type: string
+                      example: null
+                    error_code:
+                      type: number
+                      example: null
+    metadatalist:
+      type: object
+      properties:
+        external_batch_id:
+          type: string
+          example: batch001
+        payload:
+          type: object
+    SuccesfulResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: The status of the request.
+        metadata:
+          $ref: '#/components/schemas/metadatalist'
+          description: Metadata related to the bulk operation.
+        payload:
+          type: object
+          description: Details of the bulk operation.
+    ListStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: The current status of the bulk process.
+        metadata:
+          type: object
+          description: Metadata related to the bulk operation.
+          properties:
+            bulk_operation_error:
+              type: object
+              description: Errors occurred.
+              properties:
+                number_of_errors:
+                  description: The number of errors encountered during the process.
+                  type: number
+                url:
+                  type: string
+                  description: URL to retrieve detailed error information.
+            pagination:
+              type: object
+              properties:
+                total:
+                  type: number
+                  description: Total number of entries.
+                next:
+                  type: string
+                  description: Link to access the next series of entries.
+                previous:
+                  type: string
+                  description: Link to access the previous series of entries.
+    ListBatchNotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          description: Error details.
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of the error.
+            code:
+              type: number
+              example: 330521
+              description: Error code.
+            message:
+              type: string
+              example: Batch ID is not found
+              description: Human-readable error message.
+    SegmentError:
+      title: Error
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the error occurred.
+          example: BadRequestException
+        code:
+          type: number
+          description: A 6-digit number to uniquely identify the place the error occurred.
+          example: 300400
+        message:
+          type: string
+          description: Human readable error message.
+          example: Customer List not found
+    PUTlistresponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the list.
+          example: draft
+        id:
+          type: string
+          example: 63f2cc942d6ef241c0167e6c
+          description: ID of the list.
+    SegmentErrorResponse:
+      title: SegmentErrorResponse
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/SegmentError'
+      description: This describes the generic structure returned if an error occurred - A reward entity has been used as an example.
+    SegmentResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the list.
+          example: VIP list
+        id:
+          type: string
+          example: 63f2cc942d6ef241c0167e6c
+          description: ID of the list.
+        status:
+          type: string
+          example: active
+          description: Status of the list.
+  securitySchemes:
+    api_key:
+      type: apiKey
+      description: Provides API Key access to the endpoint.
+      name: api_key
+      in: query
+x-refined-from:
+- antavo-bulk-operations-openapi.yml
+- antavo-entities-openapi.yml

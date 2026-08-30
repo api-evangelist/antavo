@@ -1,0 +1,108 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Content consumption API
+  version: 1.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Content consumption
+paths:
+  /customers/{customer_id}/activities/content-consumption:
+    get:
+      tags:
+      - Content consumption
+      summary: List available content consumption activities for a customer
+      description: This endpoint returns all content consumption activities that are available for a specific customer to complete.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n   * The Antavo customer ID\n   * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      responses:
+        '200':
+          description: List of content consumption activities for the specific customer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ContentConsumptionActivityEndpoint'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    ContentConsumptionActivityEndpoint:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the activity
+          example: Learn about our Summer Campaign!
+        activity_type:
+          type: string
+          description: Type of the point-earning activity.
+          example: content_consumption
+        status:
+          type: string
+          enum:
+          - active
+          description: Status of the content-type activity. This endpoint will always return `active` status.
+          example: active
+        points:
+          type: integer
+          description: Points to earn.
+          example: 100
+        type:
+          type: string
+          enum:
+          - visit
+          - video
+        url:
+          type: string
+          description: URL of the content to visit.
+          example: https://example.com/summer-campaign
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

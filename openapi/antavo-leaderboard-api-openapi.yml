@@ -1,0 +1,102 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo Leaderboard API
+  version: 1.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Leaderboard
+paths:
+  /customers/leaderboard:
+    get:
+      tags:
+      - Leaderboard
+      summary: List best-performing customers
+      description: 'The Leaderboard API allows you to retrieve rankings and scores of customers based on various metrics within the Antavo Loyalty Cloud.
+
+        This API provides a way to showcase top performers, track progress, and foster competition among participants in your loyalty program.'
+      parameters:
+      - name: limit
+        in: query
+        description: The number of results to return. Values outside the acceptable range will be adjusted to the nearest boundary value.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      responses:
+        '200':
+          description: List of top performing customers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SuccessResponse'
+        '401':
+          description: UnauthorizedException
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      description: UnauthorizedException
+      type: object
+      required:
+      - type
+      - code
+      - message
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: UnauthorizedException
+        code:
+          type: number
+          description: Error code.
+          example: 0
+        message:
+          type: string
+          description: Human-readable error message.
+          example: No api_key provided
+    SuccessResponse:
+      type: object
+      description: Array of reward entries.
+      properties:
+        id:
+          type: string
+          description: The unique customer identifier.
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        handler:
+          type: string
+          description: The customer's handler (nickname). If not set, this will return the customer's first name or null.
+          example: john_doe
+        image_url:
+          type: string
+          description: The avatar of the customer. Returns null if not set.
+          example: https://example.com/avatar.jpg
+        score:
+          type: number
+          description: The points earned by the customer in the given interval.
+          example: 1500
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

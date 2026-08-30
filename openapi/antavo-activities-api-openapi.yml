@@ -1,0 +1,821 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Activities API
+  version: 1.0.0
+  description: This endpoint collects and aggregates all activities, provided by all modules
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Activities
+  description: This endpoint collects and aggregates all activities, provided by all modules
+paths:
+  /customers/{customer_id}/activities/earn:
+    get:
+      tags:
+      - Activities
+      summary: List all earn activities visible for a customer
+      description: 'Aggregates all earn activities relevant to the customer, provided by modules including:
+
+
+        * [Challenges](https://docs.antavo.com/docs/challenges)
+
+
+        * [Gamified profiling](https://docs.antavo.com/docs/gamified-profiling)
+
+
+        * [Incentivized purchase](https://docs.antavo.com/docs/incentivized-purchase)
+
+
+        * [Social follow](https://docs.antavo.com/docs/social-follow)
+
+
+        * [Offline treasure hunt](https://docs.antavo.com/docs/offline-treasure-hunt)
+
+
+        * [Content consumption](https://docs.antavo.com/docs/content-consumption)
+
+
+        * [Gamified reviews](https://docs.antavo.com/docs/gamified-reviews)
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      responses:
+        '200':
+          description: List of earn activities for the specific customer.<br> The list of information returned in the response depends on the type of the activity and its configured attributes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: List of activities available to the customer
+                    items:
+                      oneOf:
+                      - $ref: '#/components/schemas/GamifiedReviews'
+                      - $ref: '#/components/schemas/SocialFollow'
+                      - $ref: '#/components/schemas/Challenge'
+                      - $ref: '#/components/schemas/ContentConsumption'
+                      - $ref: '#/components/schemas/IncentivizedPurchase'
+                      - $ref: '#/components/schemas/OfflineTreasure'
+                      - $ref: '#/components/schemas/GamifiedProfiling'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+  /customers/{customer_id}/activities/spend:
+    get:
+      tags:
+      - Activities
+      summary: List all available spend activities for a customer
+      description: 'Aggregates available earn and spend options provided by modules including:
+
+
+        * [Rewards](https://docs.antavo.com/docs/rewards)
+
+
+        * [Contest lite](https://docs.antavo.com/docs/contest-lite)
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n   * The Antavo customer ID\n   * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of earn activities for the specific customer. <br> The list of information returned in the response depends on the type of the spend activity and its configured attribute. This example shows the attributes of **claiming a coupon reward**.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SpendActivity'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+  /customers/{customer_id}/activities:
+    get:
+      tags:
+      - Activities
+      summary: List all available activities for a customer
+      description: 'Aggregates available earn and spend options provided by modules including:
+
+
+        * [Challenges](https://docs.antavo.com/docs/challenges)
+
+
+        * [Gamified profiling](https://docs.antavo.com/docs/gamified-profiling)
+
+
+        * [Incentivized purchase](https://docs.antavo.com/docs/incentivized-purchase)
+
+
+        * [Rewards](https://docs.antavo.com/docs/rewards)
+
+
+        * [Social follow](https://docs.antavo.com/docs/social-follow)
+
+
+        * [Social share](https://docs.antavo.com/docs/social-share)
+
+
+        * [Offline treasure hunt](https://docs.antavo.com/docs/offline-treasure-hunt)
+
+
+        * [Contest lite](https://docs.antavo.com/docs/contest-lite)
+
+
+        * [Content consumption](https://docs.antavo.com/docs/content-consumption)
+
+
+        * [Gamified reviews](https://docs.antavo.com/docs/gamified-reviews)
+
+
+        * [Friend referral](https://docs.antavo.com/docs/friend-referral)
+
+
+        * [Instagram contests](https://docs.antavo.com/docs/instagram-contests)
+
+
+        * [Offers](https://docs.antavo.com/docs/offers)
+
+
+        * [Quizzes](https://docs.antavo.com/docs/quizzes)
+
+
+        * [Online treasure hunt](https://docs.antavo.com/docs/online-treasure-hunt)
+
+
+        * [Prize wheels](https://docs.antavo.com/docs/prize-wheels)
+
+
+        * [Workflow campaigns](https://docs.antavo.com/docs/workflow-configuration#configure-campaign-settings)
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: activity_types
+        in: query
+        description: "A comma-separated list of activity types to filter the results. Options:\n  * `challenge`\n  * `reward`\n  * `social_share`\n  * `profiling`\n  * `offer`\n  * `treasure`\n  * `offline_treasure`\n  * `contest`\n  * `incentivized_purchase`\n  * `content_consumption`\n  * `social_follow`\n  * `review`\n  * `friend_referral`\n  * `instagram_contests`\n  * `prize wheels`\n  * `quiz`\n  * `campaign`\n"
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: reward,profiling
+      - name: fields
+        in: query
+        description: Comma separated list of custom attributes to include in the response.
+        schema:
+          type: string
+          example: cf_prize_cost
+      responses:
+        '200':
+          description: List of all activities for the specific customer.<br> The list of information returned in the response depends on the type of the activity and its configured attribute. This example shows the attributes of a **profiling** activity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListofallActivitiesResponse'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      deprecated: false
+components:
+  schemas:
+    OfflineTreasure:
+      type: object
+      description: Activities where users participate in offline treasure hunts.
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the treasure hunt activity.
+          example: 63eaabe8b0fe6815c91425b6
+        status:
+          type: string
+          description: Current status of the activity. Always `active`.
+          example: active
+        title:
+          type: string
+          description: The title of the treasure hunt.
+          example: Find the Hidden Treasure
+        description:
+          type: string
+          description: A description of the offline treasure.
+          example: Find the hidden treasure in the store to win!
+        image:
+          $ref: '#/components/schemas/ImageSet'
+        points:
+          description: The number of points awarded for completing the activity.
+          example: 50
+        activity_type:
+          type: string
+          enum:
+          - offline_treasure
+          description: Type of activity. Always `offline_treasure`.
+          example: offline_treasure
+    Progress:
+      type: object
+      description: Progress details of the customer's challenge completion.
+      properties:
+        overall:
+          type: number
+          description: Overall progress percentage.
+          example: 33.3
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgressCriterion'
+          description: Challenge criteria details.
+        last_completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Timestamp of the customer's last completion of the challenge, if any.
+          example: '2025-05-12T10:30:00Z'
+    IncentivizedPurchase:
+      type: object
+      description: Activity where users complete a purchase to earn points.
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the activity. Currently always `null`.
+          example: 'null'
+        status:
+          type: string
+          description: Status of the activity. Always `active`.
+          example: active
+        title:
+          type: string
+          description: The title of the activity.
+          example: Earn points with your purchase
+        description:
+          type: string
+          description: A description of the activity.
+          example: Earn loyalty points by purchasing items.
+        image:
+          $ref: '#/components/schemas/ImageSet'
+        points:
+          type: string
+          description: Multiplier applied to the product’s purchase value to calculate the awarded points. For example, "1.00" means 100% of the value. The returned value reflects the default percentage and does not include currency-specific overrides.
+          example: 1
+        activity_type:
+          type: string
+          enum:
+          - incentivized_purchase
+          description: Type of activity. Always `incentivized_purchase`.
+          example: incentivized_purchase
+    Challenge:
+      type: object
+      description: Activity where users participate in a challenge.
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the challenge.
+          example: 63eaabe8b0fe6815c91425b6
+        status:
+          type: string
+          description: Current status of the activity.
+          example: active
+        title:
+          type: string
+          description: The title of the activity.
+          example: Summer Style Challenge
+        description:
+          type: string
+          description: A brief description of the challenge.
+          example: Embrace the season with our exclusive Summer Style Challenge! Purchase a full set from our vibrant summer clothing line and showcase your fashion-forward look. Complete the challenge to earn special rewards and make this summer your most stylish one yet.
+        image:
+          $ref: '#/components/schemas/ImageSet'
+        points:
+          type: number
+          description: The number of points awarded for completing the challenge.
+          example: 20
+        activity_type:
+          type: string
+          enum:
+          - challenge
+          description: Type of activity. Always `challenge`.
+          example: challenge
+        cta_label:
+          type: string
+          description: The call-to-action label for the challenge.
+          example: Join the Challenge
+        url:
+          type: string
+          description: The URL where the user is redirected after clicking the call-to-action.
+          example: https://antavo.com/summer-items
+        starts_at:
+          type: string
+          format: date-time
+          description: The start date and time of the challenge.
+          example: '2025-01-01T00:00:00+09:30'
+        ends_at:
+          type: string
+          format: date-time
+          description: The end date and time of the challenge.
+          example: '2025-10-31T14:52:00+09:30'
+        max_completions:
+          type: integer
+          description: The maximum number of times the customer can complete the challenge.
+          example: 1
+        completions:
+          type: integer
+          description: The customer's current number of challenge completions.
+          example: 0
+        tags:
+          type: array
+          description: List of tags assigned to the challenge.
+          items:
+            type: string
+          example:
+          - summer-line
+          - checkout_item
+        progress:
+          $ref: '#/components/schemas/Progress'
+        category:
+          type: string
+          description: Category assigned to the challenge.
+          example: Purchase-related challenges
+    GamifiedReviews:
+      type: object
+      description: Activity encouraging users to leave reviews. If the Multi-accounts module is used, the response includes point logic settings for all configured accounts.
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the activity. Currently always `null`.
+          example: null
+        status:
+          type: string
+          description: Status of the activity. Always `active`.
+          enum:
+          - active
+          example: active
+        title:
+          type: string
+          description: Title of the review writing activity.
+          example: Leave a review
+        description:
+          type: string
+          description: Description shown to the user.
+          example: Share your thoughts about your recent purchase and earn points.
+        image:
+          $ref: '#/components/schemas/ImageSet'
+        points:
+          type: string
+          description: Number of points awarded for writing a review. If Multi-accounts is enabled, this refers to the point vaule applied to the default account.
+          example: 50
+        activity_type:
+          type: string
+          enum:
+          - review
+          description: Type of the activity. Always `review`.
+          example: review
+        default_account:
+          type: string
+          description: ID of the default account.
+          example: default_account
+        accounts:
+          type: object
+          description: Object containing all point logic settings for each specific account.
+          additionalProperties:
+            type: object
+            properties:
+              points:
+                description: Number of points awarded for each review.
+                type: integer
+                example: 10
+              weekly_limit:
+                description: The number of reviews that are awarded by points each week.
+                type: integer
+                example: 1
+          example:
+            default_account:
+              points: 10
+              weekly_limit: 1
+    Activity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the profiling flow to complete.
+          example: 6331b62a60265969697786
+        title:
+          type: string
+          description: Title of the profiling flow.
+          example: Earn points by sharing your product preferences.
+        description:
+          type: string
+          description: Detailed description of the activity.
+          example: Click Start and answer all the questions related to xour product preferences.
+        status:
+          type: string
+          description: Status of the profiling flow.
+          enum:
+          - active
+          - scheduled
+          - expired
+          - restricted
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Number of points to earn.
+          example: 100
+        activity_type:
+          type: string
+          description: Type of the activity.
+          example: profiling
+        questions:
+          type: integer
+          description: Number of questions within the profiling flow.
+          example: 5
+        _actions:
+          type: object
+          properties:
+            next:
+              type: object
+              description: Endpoint to retrieve the next question in the flow to answer.
+              properties:
+                method:
+                  type: string
+                  example: GET
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/c987654/activities/profiling/6331b62a60265969697786/next
+    GamifiedProfiling:
+      type: object
+      description: Activity where users answer questions for gamified profiling flows.
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Unique identifier of the profiling question flow.
+          example: 63eaabe8b0fe6815c91425b6
+        status:
+          type: string
+          description: Current status of the profiling flow.
+          example: status
+        title:
+          type: string
+          description: The title of the profiling flow.
+          example: Complete your profile
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the flow (e.g. explaining what the customer should do).
+          example: Complete the profiling questions to earn points.
+        image:
+          $ref: '#/components/schemas/ImageSet'
+        points:
+          oneOf:
+          - type: string
+          - type: number
+          description: The number of points awarded for completing the the flow.
+          example: 10
+        activity_type:
+          type: string
+          enum:
+          - profiling
+          description: Type of activity. Always `profiling`.
+          example: profiling
+        questions:
+          type: integer
+          description: Number of questions to answer within the flow.
+          example: 3
+        _actions:
+          type: object
+          properties:
+            next:
+              type: object
+              properties:
+                method:
+                  type: string
+                  description: The HTTP method for accessing the next question in the flow the customer should answer.
+                  example: GET
+                url:
+                  type: string
+                  description: The URL to access the next question.
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/profiling/63d8d8cc17572c6ec15e688c/next
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    ListofallActivitiesResponse:
+      title: ListofallActivitiesResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+          description: ''
+    SpendActivity:
+      type: object
+      properties:
+        activity_type:
+          type: string
+          description: Type of the point-spending activity.
+          example: reward
+        id:
+          type: string
+          description: The unique identifier of the reward.
+          example: 5c17c37f71f86e7f798b4576
+        title:
+          type: string
+          description: Name of the reward.
+          example: 20% Off on Winter Collection
+        description:
+          type: string
+          description: Description of the reward.
+          example: Example reward description
+        status:
+          type: string
+          description: The current status of the reward.
+          enum:
+          - active
+          - scheduled
+          - expired
+          - inactive
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Point price of the reward in different currencies.
+          example: 700
+        type:
+          type: string
+          description: The type of the reward.
+          enum:
+          - bidding
+          - content
+          - coupon
+          - custom
+          - download
+          - physical
+          - promotion
+          - virtual
+        starts_at:
+          type: string
+          format: date-time
+          description: The start date of reward availability.
+          example: '2020-07-21T12:00:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: The end date of reward availability.
+          example: '2020-12-21T12:00:00.000Z'
+          items:
+            $ref: '#/components/schemas/Image'
+        _actions:
+          type: object
+          properties:
+            complete:
+              type: object
+              description: Endpoint to claim the reward.
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: url
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/rewards/5c17c37f71f86e7f798b4576/claim
+        coupon_pool:
+          type: string
+          description: ID of the coupon pool assiciated (coupon-type rewards only).
+          example: 5b22a37f71f92e7f798q4186
+        transferable:
+          type: boolean
+          description: Indicates whether the reward can be transferred to another customer.
+          example: true
+        transfer_points:
+          type: integer
+          description: The number of points to add to the customer when the reward is transferred.
+          example: 0
+        transfer_limit:
+          type: integer
+          description: The number of times the reward can be transferred to another customer.
+          example: 1
+        transfer_coupon_expiration:
+          type: string
+          description: 'Method to calculate the expiration date of the transferred coupon. Options: `remain`, `modify`, `extend`.'
+          example: modify
+        transfer_coupon_expires_in:
+          type: string
+          description: The expiration time of the transferred coupon.
+          example: 2 weeks
+    ContentConsumption:
+      type: object
+      description: Activity where users consume content (videos or articles).
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the content consumption activity.
+          example: 63eaabe8b0fe6815c91425b6
+        status:
+          type: string
+          description: Current status of the activity. Always `active`.
+          example: active
+        title:
+          type: string
+          description: The title of the activity.
+          example: Watch the latest tutorial
+        description:
+          type: string
+          description: A brief description of the content consumption activity.
+          example: Watch the full tutorial to earn points.
+        image:
+          $ref: '#/components/schemas/ImageSet'
+        points:
+          type: number
+          description: The number of points awarded for visiting/watching.
+          example: 15
+        activity_type:
+          type: string
+          enum:
+          - content_consumption
+          description: Type of activity. Always `content_consumption`.
+          example: content_consumption
+        type:
+          type: string
+          description: The type of content (`video` or `visit`).
+          example: video
+        url:
+          type: string
+          description: The URL to the content.
+          example: https://www.example.com/watch?v=XcfywT_7wkw
+    SocialFollow:
+      type: object
+      description: Activity encouraging users to follow a social media profile.
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the activity. Currently always `null`.
+          example: null
+        status:
+          type: string
+          description: Current status of the activity. Always `active`.
+          example: active
+        title:
+          type: string
+          description: The title of the social follow activity.
+          example: Follow us on Twitter
+        description:
+          type:
+          - string
+          - 'null'
+          description: A brief description of the activity.
+          example: Let's connect on Twitter!
+        image:
+          $ref: '#/components/schemas/ImageSet'
+        points:
+          type: number
+          description: The number of points awarded for following a social media profile.
+          example: 10
+        activity_type:
+          type: string
+          enum:
+          - social_follow
+          description: Type of activity. Always `social_follow`.
+          example: social_follow
+        network:
+          type: string
+          description: The social network where the follow action occurs (e.g., `facebook`, `twitter`)
+          example: twitter
+        url:
+          type: string
+          description: The URL used to complete the social follow action.
+          example: https://example.com/connect/twitter
+    ProgressCriterion:
+      type: object
+      description: Individual criterion contributing to the overall progress.
+      properties:
+        action:
+          type: string
+          description: Action to complete (e.g., `checkout_item`, `visit`)
+          example: checkout_item
+        message:
+          type: string
+          description: Criterion description.
+          example: Complete your look by purchasing 3 items from our summer clothing line and unlock 100 loyalty points as a reward!
+        threshold:
+          type: integer
+          description: Number of actions required to complete this criterion.
+          example: 3
+        current:
+          type: integer
+          description: Number of actions already completed.
+          example: 1
+        is_completed:
+          type: boolean
+          description: Indicates whether the action criterion has been met.
+          example: false
+    ImageSet:
+      type: object
+      description: Object containing image URLs of various sizes.
+      properties:
+        small:
+          description: URL of the small-sized image, or false/null if not available.
+          example: https://example.com/images/small.jpg
+        medium:
+          description: URL of the medium-sized image, or false/null if not available.
+          example: https://example.com/images/medium.jpg
+        large:
+          description: URL of the large-sized image, or false/null if not available.
+          example: https://example.com/images/large.jpg
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

@@ -1,0 +1,152 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Data extensions API
+  version: 1.0.0
+  description: Endpoints for probing data extensions
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Data extensions
+  description: Endpoints for probing data extensions
+paths:
+  /customers/{customer_id}/data/{data_extension}:
+    get:
+      tags:
+      - Data extensions
+      summary: Retrieve Antavo data extensions
+      description: This endpoint allows for accesssing data of a specific customer stored in extensions.
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: data_extension
+        in: path
+        required: true
+        description: Antavo data module.<br> Currently, the `profiling` extension is available which provides a customer's answers to profiling questions.
+        schema:
+          type: string
+          enum:
+          - profiling
+      responses:
+        '200':
+          description: Returned data structure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfilingExtension'
+        '400':
+          description: Bad request - extension is not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                value:
+                  type: BadRequestException
+                  message: Not found
+                  code: 160401
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                value:
+                  type: NotFoundException
+                  message: Customer not found
+                  code: 160212
+components:
+  schemas:
+    ProfilingExtension:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            type: object
+            properties:
+              answers:
+                type: array
+                description: Customer's answers to profiling questions.
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID of the answer.
+                    text:
+                      type: string
+                      description: Answer provided.
+              id:
+                type: string
+                description: ID of the profiling question.
+              title:
+                type: string
+                description: Question title.
+              flow:
+                type: object
+                description: The profiling flow that the question is associated with, if any.
+                properties:
+                  title:
+                    type: string
+                    description: Flow title.
+                  id:
+                    type: string
+                    description: ID of the profiling flow.
+      example:
+        questions:
+        - answers:
+          - id: 63d8dfb4d8ae5c1cc0342958
+            text: Dress with stilettos
+          id: 63d8dfb6d8ae5c1cc034295e
+          title: How do you dress on an average day?
+          flow:
+            title: Product preferences
+            id: 63d8d8cc17572c6ec15e688c
+        - answers:
+          - id: 668966f298ce866bba0a3539
+            text: Casual
+          id: 6644de7e0404c52b512f2be8
+          title: What type of clothing do you most frequently shop for?
+          flow:
+            title: Product preferences
+            id: 63d8d8cc17572c6ec15e688c
+        - answers:
+          - 3
+          id: 6644df66e95cbe2c3e4bdc8a
+          title: How satisfied are you with your overall shopping experience?
+          flow: []
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

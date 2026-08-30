@@ -1,0 +1,1296 @@
+openapi: 3.2.0
+info:
+  title: Antavo Transactions API
+  version: '1.0'
+  description: 'Operations tagged Transactions across 2 of this provider''s published API definitions: antavo-display-openapi.yml, antavo-loyalty-read-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+- url: https://read-api.<environment>.antavo.com
+tags:
+- name: Transactions
+  description: Endpoints providing customer information regarding specified transaction ids.
+paths:
+  /customers/{customer_id}/transactions/-/search:
+    get:
+      tags:
+      - Transactions
+      summary: Search transactions for a specific customer using criteria
+      description: 'This endpoint provides transactional-based searches for a specific customer. Customer transactions can be filtered by transaction ID and status, and highly selective queries can be generated using the generic entity [filtering](/docs/pagination-filtering-and-ordering#filtering).
+
+        Example:
+
+        `GET /customers/001/transactions/-/search?id.in=trx01,trx02,trx03&status=pending`
+
+
+        All inline examples within this documentation uses simple matching.
+
+
+        This endpoint has a 8k request URI limit, this corresponds to approximately 5000 transaction IDs which are less than 15 character in length.
+
+        Higher volumes of filtering are possible using the [POST Method](/post_customers-customer-id-transactions-search).
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n * The Antavo customer ID\n * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: id
+        in: query
+        description: The target transaction ID of the specified customer. This example uses a simple match, but complex filtering is possible using generic entity [filter parameters](/docs/pagination-filtering-and-ordering#filtering)
+        schema:
+          type: string
+          example: TR37882412
+      - name: status
+        in: query
+        description: Transactions can be filtered by status. This example uses a simple match but complex filtering is possible using  generic entity [filter parameters](/docs/pagination-filtering-and-ordering#filtering)
+        schema:
+          type: string
+          enum:
+          - accepted
+          - pending
+          - refunded
+          - rejected
+          - draft
+        required: false
+      - name: offset
+        in: query
+        description: Offsets the starting number of transactions to return. This is used in pagination in conjunction with the limit query.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Limits the number of transactions returned in one response. Other values are accessible by pagination made accessible via the offset.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 100
+      responses:
+        '200':
+          description: The transaction history data for a specific transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionHistoryResponse'
+      security:
+      - api_key: []
+    post:
+      tags:
+      - Transactions
+      summary: Perform bulk transaction search for a specific customer
+      description: 'This endpoint provides the option of high-volume transaction-based searching.
+
+
+        Customer transactions can be filtered by transaction ID and status provide in the request body.
+
+        Highly selective queries can be generated using the generic entity [filtering](/docs/pagination-filtering-and-ordering#filtering).
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      requestBody:
+        description: "Generally, the `id` field will be used in conjunction with the `in` operator to search a JSON array or comma separated values in a string. \n"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transrequest'
+            example:
+              id.in:
+              - trx01
+              - trx02
+              - trx03
+              status: pending
+      responses:
+        '200':
+          description: The transaction history data for a specific transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionHistoryResponse'
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/transactions/{transaction_id}/events:
+    get:
+      tags:
+      - Transactions
+      summary: List all events associated with a specified transaction for a specific customer
+      description: 'This endpoint provides a detailed breakdown of a specified customer''s transaction.
+
+
+        The following events are returned by this endpoint:
+
+
+        * [checkout](/docs/api-events#checkout), [checkout_item](/docs/api-events#checkout_item).
+
+
+        * [checkout_update](/docs/api-events#checkout_update), [checkout_update_item](/docs/api-events#checkout_update_item).
+
+
+        * [checkout_accept](/docs/api-events#checkout_accept), [checkout_reject](/docs/api-events#checkout_accept_item).
+
+
+        * [point_add](/docs/api-events#point_add),[point_spend](/docs/api-events#point_spend),[point_unspend](/docs/api-events#point_unspend).
+
+
+        * [refund](/docs/api-events#refund), [partial_refund](/docs/api-events#partial_refund), [refund_item](/docs/api-events#refund_item).
+
+
+        * [release_points](/docs/api-events#release_points), [reserve_points](/docs/api-events#reserve_points).
+
+
+        * any other event with a transaction ID.
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: transaction_id
+        in: path
+        description: Unique transaction ID
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: TR37882412
+      - name: action
+        in: query
+        schema:
+          type: string
+        example: checkout
+        description: "\"The events history can be filtered by submitted event actions using operators. Refer to [API events](/docs/api-events) and [internal events](/docs/internal-events) lists. \nThis filter query can be used in conjunction with the operators listed here. The filter should be submitted as a parameter in the following format: `field.operator(optional)=value`.\n  \nFiltering of events containing a `transaction_id` is also possible. This requires the action query to contain all related events and for an additional query using `properties.transaction_id`.\nExample: \n`action.in=checkout,checkout_accept&properties.transaction_id.in=c078c162-88af-4369-89a4-408958a8cb75`. \nThese combined filters can also use [filtering operators](/docs/pagination-filtering-and-ordering#query-operators). \nThe `transaction_id` field in any custom event must be set as filterable.\"\n"
+      - name: date
+        in: query
+        schema:
+          type: string
+        example: '2022-01-01'
+        description: 'The events history can be filtered by a specific date. Specific start and/or end dates can be stated by using multiple [operators](/docs/pagination-filtering-and-ordering#query-operators). E.g.,
+
+
+          <code>date.gt=2020-01-01&date.lt=2022-02-01</code>
+
+
+          UTC timezone should be considered when sending the request.
+
+          '
+      - name: offset
+        in: query
+        description: Offsets the starting number of events to return. This is used in pagination in conjunction with the limit query.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Limits the number of events returned in one response. Other values are accessible by pagination made accessible via the offset.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 100
+      responses:
+        '200':
+          description: The event history data of a specific transaction
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionEventsHistoryResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+                Transaction not found:
+                  value:
+                    type: NotFoundException
+                    code: 0
+                    message: Transaction not found
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/transactions/{transaction_id}:
+    get:
+      tags:
+      - Transactions
+      summary: Retrieve a specified transaction for a specific customer
+      description: 'This endpoint provides a detailed breakdown of a customer''s transaction.
+
+        If you need to retrieve the event ID that created the transaction, use the [/transactions](/reference/get_customers-customer-id-transactions) endpoint with the ``id`` query parameter to access the corresponding event information.
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: transaction_id
+        in: path
+        description: Transaction ID.
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: TR37882412
+      - name: fields
+        in: query
+        description: 'Include non-standard fields in the response. Accepted values:
+
+
+          * `events`: Display events related to the specified transaction.
+
+          '
+        schema:
+          type: string
+          example: events
+      responses:
+        '200':
+          description: The event history data for a specific transaction.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionPerTransactionResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+                Transaction not found:
+                  value:
+                    type: NotFoundException
+                    code: 0
+                    message: Transaction not found
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/transactions:
+    get:
+      tags:
+      - Transactions
+      summary: Retrieve the transaction history for a specific customer
+      description: "This endpoint provides a detailed list of a customer's transactions. \nEach returned transaction contains the transaction ID, transaction status and all other related transaction information submitted in the initial event.\n\nThe list of returned transactions can also be subsequently paginated by limiting the number of returned transactions and subsequently offsetting the returned transactions.\n"
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: limit
+        in: query
+        description: 'Limits the number of transactions to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+
+          '
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 100
+      - name: offset
+        in: query
+        description: "Offsets the starting number of transactions to return. This is used in pagination in conjunction with the limit query. \n"
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: id
+        in: query
+        description: 'Filters transactions by their unique transaction ID. You can use this parameter to retrieve a specific transaction based on the ID.
+
+          '
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: T10000024
+      responses:
+        '200':
+          description: Customer transaction history data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionHistoryResponse2'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomernotfoundErrorResponse'
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/customers/{customer_id}/transactions:
+    get:
+      operationId: listCustomerTransactions
+      summary: Retrieve the list of a customer's transactions
+      description: 'Returns a paginated list of transactions registered for the customer, including their items, associated events, point values, and current processing status.
+
+        Results can be filtered and sorted by `status`, `checkout_date`, `auto_accept`, `account`, `points_rewarded`, `earned`, and `burned` transaction attribute values.
+
+        '
+      tags:
+      - Transactions
+      parameters:
+      - $ref: '#/components/parameters/CustomerIdParam'
+      - $ref: '#/components/parameters/OffsetParam'
+      - $ref: '#/components/parameters/LimitParam'
+      - name: filter
+        in: query
+        style: deepObject
+        explode: true
+        schema:
+          $ref: '#/components/schemas/TransactionsFilter'
+      - name: sort
+        description: 'Sorts results by one or more fields in the specified order. Each field can be used only once.
+
+          When multiple sort instructions are provided, the first field is used as the primary sort field. Each additional field determines the order of results that have the same value for the preceding field.
+
+          Example: `?sort[0][field]=status&sort[0][direction]=asc&sort[1][field]=earned&sort[1][direction]=desc`
+
+          '
+        in: query
+        style: deepObject
+        explode: true
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerTransactionSortEntry'
+      responses:
+        '200':
+          description: Success - Transaction data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - metadata
+                - payload
+                properties:
+                  status:
+                    type: string
+                    const: success
+                  metadata:
+                    allOf:
+                    - $ref: '#/components/schemas/CollectionMetadata'
+                    example:
+                      pagination:
+                        next: /v1/customers/55e5d4dc2cf1901e688b45d3/transactions?offset=0&limit=20
+                        previous: null
+                  payload:
+                    type: object
+                    required:
+                    - transactions
+                    properties:
+                      transactions:
+                        type: array
+                        description: Transactions associated with the customer.
+                        items:
+                          $ref: '#/components/schemas/TransactionEntity'
+              example:
+                status: success
+                metadata:
+                  pagination:
+                    next: /v1/customers/55e5d4dc2cf1901e688b45d3/transactions?offset=0&limit=20
+                    previous: null
+                payload:
+                  transactions:
+                  - _id: txn_8f3c2a91d7b64e5a
+                    created_at: '2025-11-13T13:10:19+00:00'
+                    updated_at: '2025-11-13T13:10:20+00:00'
+                    customer: 55e5d4dc2cf1901e688b45d3
+                    status: accepted
+                    event: 6734a53c8bd9da0c85066e1b
+                    items:
+                    - transaction_id: txn_8f3c2a91d7b64e5a
+                      total: 100
+                      product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      quantity: 1
+                      points_rewarded: 50
+                      subtotal: 50
+                      price: 50
+                      discount: 0
+                      currency: EUR
+                      total_quantity: 2
+                    - transaction_id: txn_8f3c2a91d7b64e5a
+                      total: 100
+                      product_id: prd_123456
+                      product_name: Classic Denim Jeans
+                      product_url: https://example.com/products/classic-denim-jeans
+                      quantity: 1
+                      points_rewarded: 50
+                      subtotal: 50
+                      price: 50
+                      discount: 0
+                      currency: EUR
+                      total_quantity: 2
+                    total: 100
+                    earned: 0
+                    burned: 0
+                    events:
+                    - _id: 6734a53c8bd9da0c85066e1b
+                      action: checkout
+                      points: 0
+                    - _id: 6734a53c8bd9da0c85066e1c
+                      action: checkout_item
+                      points: 0
+                    - _id: 6734a53c8bd9da0c85066e1d
+                      action: checkout_item
+                      points: 0
+                    - _id: 6734a53c8bd9da0c85066e1e
+                      action: pending_campaign_bonus
+                      points: 0
+                    currency: EUR
+                    points_rewarded: 100
+                    account: family_account
+                    auto_accept: '2025-12-13'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        5XX:
+          $ref: '#/components/responses/ServerError'
+    servers:
+    - url: https://read-api.<environment>.antavo.com
+components:
+  schemas:
+    Transaction:
+      title: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          description: Transaction ID.
+          example: TR37882412
+        status:
+          $ref: '#/components/schemas/Status8'
+        event:
+          type: string
+          description: Event reference ID.
+          example: 5e7a80e264f2c53cac000005
+        created_at:
+          type: string
+          description: Timestamp of creation of the transaction.
+          format: date-time
+          example: '2020-04-01T10:41:10.000Z'
+        updated_at:
+          type: string
+          description: Timestamp of last update of the transaction.
+          format: date-time
+          example: '2020-06-01T10:41:10.000Z'
+        total:
+          type: number
+          description: Total value of the transaction.
+          example: 99.9
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: string
+                description: Product ID.
+                example: prd_987654
+              quantity:
+                type: number
+                description: Number of items purchased.
+                example: 3
+              subtotal:
+                type: number
+                description: Amount actually paid for the item(s).
+                example: 99.9
+          description: Array of items in the transaction.
+        earned:
+          type: number
+          description: Number of points earned from the transaction.
+          example: 99
+        burned:
+          type: number
+          description: Number of points burned in the transaction.
+          example: 12
+        bonus:
+          type: number
+          description: Total number of associated campaign bonus points.
+          example: 23
+    Transaction2:
+      title: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          description: Transaction ID.
+          example: T10000024
+        status:
+          $ref: '#/components/schemas/Status8'
+        event:
+          type: string
+          description: Event reference ID.
+          example: 5e7a80e264f2c53cac000005
+        created_at:
+          type: string
+          description: Timestamp of creation of the transaction.
+          format: date-time
+          example: '2020-04-01T10:41:10.000Z'
+        updated_at:
+          type: string
+          description: Timestamp of last update of the transaction.
+          format: date-time
+          example: '2020-06-01T10:41:10.000Z'
+        total:
+          type: number
+          description: Total value of the transaction.
+          example: 99.9
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: string
+                description: Product ID.
+                example: prd_987654
+              quantity:
+                type: number
+                description: Number of items purchased.
+                example: 3
+              subtotal:
+                type: number
+                description: Amount actually paid for the item(s).
+                example: 99.9
+          description: Array of items in the transaction.
+    transrequest:
+      title: Transaction Request
+      type: object
+      properties:
+        id:
+          type: string
+          description: The target transaction IDs. The keyword is commonly used with the `in` operator
+          example: null
+        status:
+          type: string
+          description: The status of the target transactions.
+        limit:
+          type: number
+          description: Limits the number of transactions to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+          default: 100
+        offset:
+          type: number
+          description: Offsets the starting number of transactions to return. This is used in pagination in conjunction with the limit query.
+          default: 0
+    Status8:
+      title: Status8
+      description: 'Transaction status. Can be one of:'
+      enum:
+      - accepted
+      - pending
+      - rejected
+      - refunded
+      - draft
+      type: string
+    TransactionPerTransactionContent:
+      title: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          description: Transaction ID.
+          example: T10000024
+        status:
+          $ref: '#/components/schemas/Status8'
+        created_at:
+          type: string
+          description: Timestamp of creation of the transaction.
+          format: date-time
+          example: '2020-04-01T10:41:10.000Z'
+        updated_at:
+          type: string
+          description: Timestamp of last update of the transaction.
+          format: date-time
+          example: '2020-06-01T10:41:10.000Z'
+        total:
+          type: number
+          description: Total value of the transaction.
+          example: 99.9
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: string
+                description: Product ID.
+                example: prd_987654
+              quantity:
+                type: number
+                description: Number of items purchased.
+                example: 3
+              subtotal:
+                type: number
+                description: Amount actually paid for the item(s).
+                example: 99.9
+          description: Array of items in the transaction.
+        earned:
+          type: number
+          description: Number of points earned from the transaction.
+          example: 99
+        burned:
+          type: number
+          description: Number of points burned in the transaction.
+          example: 12
+        bonus:
+          type: number
+          description: Total number of associated campaign bonus points. This attribute is not included in the response if no bonus points were added.
+          example: 23
+        refunded:
+          type: boolean
+          description: Number of points deducted from the customer's balance due to a refund.
+          example: 0
+    CustomernotfoundErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: NotFoundException
+            code:
+              type: number
+              description: A 6-digit number to uniquely identify the place the error. occurred
+              example: 160212
+            message:
+              type: string
+              description: Human readable error message.
+              example: Customer not found
+    TransactionHistoryResponse2:
+      title: TransactionHistoryResponse2
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction2'
+          description: ''
+    TransactionPerTransactionResponse:
+      title: TransactionPerTransactionResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionPerTransactionContent'
+          description: ''
+    TransactionHistoryResponse:
+      title: TransactionHistoryResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+          description: ''
+    TransactionEventsHistoryResponse:
+      title: TransactionEventsHistoryResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionEvents'
+          description: ''
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    TransactionEvents:
+      title: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          description: Event ID.
+          example: 62cbe9a1da5ab02a8176625d
+        action:
+          type: string
+          description: Event action.
+          example: checkout
+        label:
+          type: string
+          description: Event label.
+          example: Checkout
+        timestamp:
+          type: string
+          description: Timestamp of creation of the event.
+          format: date-time
+          example: '2020-04-01T10:41:10.000Z'
+        points:
+          type: number
+          description: Points rewarded for the event.
+          example: 100
+        properties:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: ID of the attribute.
+                example: transaction_id
+              value:
+                type: number
+                description: Attribute value.
+                example: TR37882412
+              label:
+                type: string
+                description: Label of the attribute.
+                example: Transaction ID
+          description: Array of event attributes.
+    PaginationLinks:
+      type: object
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    TransactionItem:
+      type: object
+      description: An item included in the transaction.
+      properties:
+        transaction_id:
+          type: string
+          description: The ID of the transaction containing the item.
+          example: txn_8f3c2a91d7b64e5a
+        total:
+          type: number
+          description: The total monetary value of the item.
+          example: 100
+        product_id:
+          type: string
+          description: The ID of the product.
+          example: prd_987654
+        product_name:
+          type: string
+          description: The name of the product.
+          example: Vintage Leather Jacket
+        product_url:
+          type: string
+          format: uri
+          description: The URL of the product.
+          example: https://example.com/products/vintage-leather-jacket
+        quantity:
+          type: number
+          description: The quantity of the product included in this item.
+          example: 1
+        points_rewarded:
+          type: number
+          description: The number of points assigned to this transaction item.
+          example: 50
+        subtotal:
+          type: number
+          description: The monetary value of the item after applying discounts.
+          example: 50
+        price:
+          type: number
+          description: The unit price of the product.
+          example: 50
+        discount:
+          type: number
+          description: The discount applied to the item.
+          example: 0
+        currency:
+          type: string
+          description: The currency used for the item values.
+          example: EUR
+        total_quantity:
+          type: number
+          description: The total number of purchased products.
+          example: 2
+    CollectionMetadata:
+      type: object
+      required:
+      - pagination
+      properties:
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
+    CustomerTransactionSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - status
+          - checkout_date
+          - auto_accept
+          - account
+          - points_rewarded
+          - earned
+          - burned
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    TransactionsFilter:
+      type: object
+      description: 'Filter by allowed fields and operators.
+
+        '
+      properties:
+        status:
+          type: object
+          enum:
+          - draft
+          - pending
+          - accepted
+          - rejected
+          - refunded
+          description: 'Filters transactions by their current transaction lifecycle status. The comparison operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        checkout_date:
+          type: object
+          description: 'Filters transactions by the date when the checkout transaction was registered, as recorded in the `checkout_date` property. The comparison operators compare values alphabetically.
+
+            Typed as string values (as shown in the example response) even though they are date-like in storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        auto_accept:
+          type: object
+          description: 'Filters transactions by the date and time when they are scheduled to be automatically accepted. This value is calculated from the pending period configured in the [Checkout accept module](https://docs.antavo.com/docs/checkout-accept#interval).
+
+            Typed as string values (as shown in the example response) even though they are date-like in storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        account:
+          type: object
+          description: 'Filters transactions by customer accounts configured in the [Multi-accounts module](https://docs.antavo.com/docs/multi-accounts). The comparison operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        points_rewarded:
+          type: object
+          description: 'Filters transactions by the number of points assigned to the transaction.
+
+            This value may be calculated based on the point calculation settings configured in the workspace or provided explicitly in the `points_rewarded` property of the registered checkout event.
+
+            Only whole numbers are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+        earned:
+          type: object
+          description: 'Filters transactions by the number of points actually earned from the transaction.
+
+            This value reflects the points credited to the customer after transaction processing, based on the workspace configuration and applicable point calculation rules.
+
+            Only whole numbers are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+        burned:
+          type: object
+          description: 'Filters transactions by the number of points spent as part of the transaction. This value reflects the points deducted from the customer''s balance during transaction processing.
+
+            Only whole numbers are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          description: Contains details about the error.
+          required:
+          - message
+          - code
+          - resendable
+          properties:
+            message:
+              type: string
+              description: Human-readable description of the error.
+              example: Unauthorized
+            code:
+              type: integer
+              description: Numeric code identifying the error.
+              example: 2132
+            resendable:
+              type: boolean
+              description: Indicates whether the request can be retried.
+              example: false
+    TransactionEventReference:
+      type: object
+      description: A summary of an event associated with the transaction.
+      properties:
+        _id:
+          type: string
+          description: The unique ID of the event.
+          example: 6734a53c8bd9da0c85066e1b
+        action:
+          type: string
+          description: The action that identifies the event type.
+          example: checkout
+        points:
+          type: number
+          description: The number of points added or deducted by the event.
+          example: 0
+    TransactionEntity:
+      type: object
+      description: 'A transaction registered for the customer, including its items, associated events, point values, and current processing status.
+
+        The fields returned may vary depending on the data submitted with the transaction, the custom attributes configured for the corresponding events, and the transaction processing applied in the workspace.
+
+        '
+      properties:
+        _id:
+          type: string
+          description: The unique ID of the transaction.
+          example: txn_8f3c2a91d7b64e5a
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was created.
+          example: '2025-11-13T13:10:19+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was last updated.
+          example: '2025-11-13T13:10:20+00:00'
+        customer:
+          type: string
+          description: The ID of the customer associated with the transaction.
+          example: 55e5d4dc2cf1901e688b45d3
+        status:
+          type: string
+          description: The current status of the transaction.
+          enum:
+          - draft
+          - pending
+          - accepted
+          - rejected
+          - refunded
+          example: accepted
+        event:
+          type: string
+          description: The ID of the checkout event associated with the transaction.
+          example: 6734a53c8bd9da0c85066e1b
+        items:
+          type: array
+          description: The items included in the transaction.
+          items:
+            $ref: '#/components/schemas/TransactionItem'
+        total:
+          type: number
+          description: The total monetary value of the transaction.
+          example: 100
+        earned:
+          type: number
+          description: 'The number of points credited to the customer after transaction
+
+            processing, according to the configured point calculation rules.
+
+            '
+          example: 0
+        burned:
+          type: number
+          description: 'The number of points deducted from the customer''s balance as part of
+
+            the transaction.
+
+            '
+          example: 0
+        events:
+          type: array
+          description: Events associated with the transaction.
+          items:
+            $ref: '#/components/schemas/TransactionEventReference'
+        currency:
+          type: string
+          description: The currency used for the transaction.
+          example: EUR
+        points_rewarded:
+          type: number
+          description: 'The number of points assigned to the transaction. This value may be
+
+            calculated based on the point calculation settings configured in the
+
+            workspace or provided explicitly in the `points_rewarded` property of
+
+            the registered checkout event.
+
+            '
+          example: 100
+        account:
+          type: string
+          description: The ID of the point account associated with the transaction. Point accounts can be defined in the [Multi-accounts module](https://docs.antavo.com/docs/multi-accounts).
+          example: family_account
+        auto_accept:
+          type: string
+          format: date
+          description: 'The date when the transaction is scheduled to be automatically accepted.
+
+            This value is calculated from the pending period configured in the
+
+            [Checkout accept module](https://docs.antavo.com/docs/checkout-accept).
+
+            Omitted if no pending period applies.
+
+            '
+          example: '2025-12-13'
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      description: 'Sets the maximum number of items to return from the sorted result set. Used for pagination together with the `offset` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 20
+    OffsetParam:
+      name: offset
+      in: query
+      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    CustomerIdParam:
+      name: customer_id
+      in: path
+      required: true
+      description: Customer identifier. Using an external ID is not supported.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query
+x-refined-from:
+- antavo-display-openapi.yml
+- antavo-loyalty-read-openapi.yml

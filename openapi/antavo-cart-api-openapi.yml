@@ -1,0 +1,840 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Promotion Engine Cart API
+  version: 1.0.0
+  description: Cart endpoints collection
+servers:
+- url: https://promotion.test.antavo.com/api
+  description: The Promotion Engine test environtment
+tags:
+- name: Cart
+  description: Cart endpoints collection
+paths:
+  /v1/cart/finalize:
+    post:
+      tags:
+      - Cart
+      summary: Finalize checkout with applied promotions
+      description: 'Submit a cart to apply final promotion calculations and complete the checkout process.
+
+
+        Similar to [/cart](https://developers.antavo.com/reference/post_v1-cart), the engine will:
+
+        - Calculate applicable promotions
+
+        - Apply relevant discounts to items
+
+        - Return the adjusted cart with pricing breakdowns
+
+
+        Additionally, when submitting to the this endpoint, any promotion usage limits (if any) are enforced — meaning:
+
+        - The promotions are applied and counted toward their application limits
+
+        - The cart cannot be resubmitted with the same `cartId`
+
+
+        This endpoint can be used directly without first calling the `/cart` endpoint if you don''t require prior simulation.
+
+        '
+      security:
+      - bearerAuth: []
+      requestBody:
+        description: Cart request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cartModel'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                    description: Indicates the success of the request. Always `success` here.
+                  metadata:
+                    type: object
+                    description: Reserved for future use; currently returns an empty object.
+                  payload:
+                    type: object
+                    $ref: '#/components/schemas/cartResponse'
+                    description: ''
+              examples:
+                itemDiscount:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '1.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW4M2FS0CX9DQETDV142JB4M
+                        promotionMetaData:
+                          name: Sneakers promotional price
+                          description: Sneakers at €70 during promotion.
+                          type: promotionalPricing
+                        discountType: itemDiscount
+                        discountedItems:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '1.000'
+                          unitPriceBeforeTax: '70.00'
+                          tax: '14.00'
+                        totalPriceBeforeTaxDiscount: '130.00'
+                        taxDiscount: '26.00'
+                itemAddition:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '1.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW4KR347PV2MA9943TD38YQS
+                        promotionMetaData:
+                          name: Free perfume sample
+                          description: Try a free perfume sample with any order.
+                          type: freeSample
+                        discountType: itemAddition
+                        addedItems:
+                        - productId: '87654'
+                          productCategoryId: ''
+                          quantity: '1'
+                          unitPriceBeforeTax: '0'
+                          tax: '0'
+                        value: '10.00'
+                groupDiscount:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '1.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW4M2FS0CX9DQETDV142JB4M
+                        promotionMetaData:
+                          name: Sneaker Duo Discount
+                          description: Buy 2 pairs of sneakers and get 20% off the total price.
+                          type: buyXForTotalAmount
+                        discountType: groupDiscount
+                        itemGroup:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '2.000'
+                          unitPriceBeforeTax: '200.00'
+                          tax: '40.00'
+                        totalPriceBeforeTaxDiscount: '50.00'
+                        taxDiscount: '10.00'
+                multipleDiscounts:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '2.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW760RMASG1P1MPYKRV8W3W4
+                        promotionMetaData:
+                          name: Sneaker Duo Discount
+                          description: Buy 2 pairs of sneakers and get 20% off the total price.
+                          type: buyXForTotalAmount
+                        discountType: groupDiscount
+                        itemGroup:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '2.000'
+                          unitPriceBeforeTax: '200.00'
+                          tax: '40.00'
+                        totalPriceBeforeTaxDiscount: '50.00'
+                        taxDiscount: '10.00'
+                      - promotionId: 01JW4M2FS0CX9DQETDV142JB4M
+                        promotionMetaData:
+                          name: Sneakers promotional price
+                          description: Sneakers at €70 during promotion.
+                          type: promotionalPricing
+                        discountType: itemDiscount
+                        discountedItems:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '2.000'
+                          unitPriceBeforeTax: '70.00'
+                          tax: '14.00'
+                        totalPriceBeforeTaxDiscount: '260.00'
+                        taxDiscount: '52.00'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/AuthorizationError'
+  /v1/cart:
+    post:
+      tags:
+      - Cart
+      summary: Submit cart details and retrieve applicable promotions
+      description: 'Submit a cart to simulate promotion calculations based on its current contents and applied conditions.
+
+
+        The engine will calculate which promotions are applicable to the provided cart and return:
+
+        - Cart object
+
+        - All matched promotions
+
+        - The exact discounts applied
+
+        - Adjusted unit prices (after discount)
+
+        - Updated tax amounts
+
+        - Total discount values
+
+
+        The same `cartId` can be submitted multiple times to recalculate promotions when the cart changes.
+
+
+        If any promotions have [application limits](https://docs.antavo.com/docs/configuring-promotions#application-limit-and-reset) and [locking periods](https://docs.antavo.com/docs/promotion-general-settings#locking-period), a reservation is made when the promotion is found applicable.
+
+        If the cart is not checked out via the [/cart/finalize](https://developers.antavo.com/reference/post_v1-cart-finalize) endpoint before the lock expires, the reservation is released automatically.
+
+        '
+      security:
+      - bearerAuth: []
+      requestBody:
+        description: Cart request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cartModel'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                    description: Indicates the success of the request. Always `success` here.
+                  metadata:
+                    type: object
+                    description: Reserved for future use; currently returns an empty object.
+                  payload:
+                    type: object
+                    $ref: '#/components/schemas/cartResponse'
+                    description: ''
+              examples:
+                itemDiscount:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '1.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW4M2FS0CX9DQETDV142JB4M
+                        promotionMetaData:
+                          name: Sneakers promotional price
+                          description: Sneakers at €70 during promotion.
+                          type: promotionalPricing
+                        discountType: itemDiscount
+                        discountedItems:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '1.000'
+                          unitPriceBeforeTax: '70.00'
+                          tax: '14.00'
+                        totalPriceBeforeTaxDiscount: '130.00'
+                        taxDiscount: '26.00'
+                itemAddition:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '1.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW4KR347PV2MA9943TD38YQS
+                        promotionMetaData:
+                          name: Free perfume sample
+                          description: Try a free perfume sample with any order.
+                          type: freeSample
+                        discountType: itemAddition
+                        addedItems:
+                        - productId: '87654'
+                          productCategoryId: ''
+                          quantity: '1'
+                          unitPriceBeforeTax: '0'
+                          tax: '0'
+                        value: '10'
+                groupDiscount:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '1.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW4M2FS0CX9DQETDV142JB4M
+                        promotionMetaData:
+                          name: Sneaker Duo Discount
+                          description: Buy 2 pairs of sneakers and get 20% off the total price.
+                          type: buyXForTotalAmount
+                        discountType: groupDiscount
+                        itemGroup:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '2.000'
+                          unitPriceBeforeTax: '200.00'
+                          tax: '40.00'
+                        totalPriceBeforeTaxDiscount: '50.00'
+                        taxDiscount: '10.00'
+                multipleDiscounts:
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                      cartId: '66512'
+                      workspaceId: '500'
+                      storeId: 5077595177C60923
+                      storeGroupId: Austria
+                      customerId: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                      timezone: Europe/Budapest
+                      promotionSelectionStrategy: biggestDiscount
+                      promotionApplicationMethod: automatic
+                      rounding: mathematical
+                      precision: 2
+                      promoCode: PROMO10
+                      currency: EUR
+                      cartItems:
+                      - productId: '8675645322'
+                        productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                        quantity: '2.000'
+                        unitPriceBeforeTax: '200.00'
+                        tax: '40.00'
+                      discounts:
+                      - promotionId: 01JW760RMASG1P1MPYKRV8W3W4
+                        promotionMetaData:
+                          name: Sneaker Duo Discount
+                          description: Buy 2 pairs of sneakers and get 20% off the total price.
+                          type: buyXForTotalAmount
+                        discountType: groupDiscount
+                        itemGroup:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '2.000'
+                          unitPriceBeforeTax: '200.00'
+                          tax: '40.00'
+                        totalPriceBeforeTaxDiscount: '50.00'
+                        taxDiscount: '10.00'
+                      - promotionId: 01JW4M2FS0CX9DQETDV142JB4M
+                        promotionMetaData:
+                          name: Sneakers promotional price
+                          description: Sneakers at €70 during promotion.
+                          type: promotionalPricing
+                        discountType: itemDiscount
+                        discountedItems:
+                        - productId: '8675645322'
+                          productCategoryId: Apparel & Accessories > Clothing > Shoes > Sneakers
+                          quantity: '2.000'
+                          unitPriceBeforeTax: '70.00'
+                          tax: '14.00'
+                        totalPriceBeforeTaxDiscount: '260.00'
+                        taxDiscount: '52.00'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '403':
+          $ref: '#/components/responses/AuthorizationError'
+components:
+  schemas:
+    cartResponse:
+      type: object
+      description: The calculated cart object with applied promotions.
+      properties:
+        cartId:
+          type: string
+          description: The unique identifier of the submitted cart.
+          example: '66512'
+        workspaceId:
+          type: string
+          description: The ID of the workspace that is used for running promotions.
+          example: '500'
+        storeId:
+          type: string
+          description: The store identifier where the cart originates.
+          example: 5077595177C60923
+        storeGroupId:
+          type: string
+          description: The store group identifier where the cart originates.
+          example: Austria
+        customerId:
+          type: string
+          description: Unique identifier of the customer.
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        timezone:
+          type: string
+          description: Timezone used for evaluating promotion start/end dates.
+          example: Europe/Budapest
+        promotionSelectionStrategy:
+          type: string
+          description: Strategy used to select from multiple applicable promotions (e.g., `"biggestDiscount"`).
+          example: biggestDiscount
+        promotionApplicationMethod:
+          type: string
+          description: Method by which promotions are applied. Currently supports'automatic', meaning that promotions are applied without manual intervention.
+          example: automatic
+        rounding:
+          type: string
+          description: Rounding strategy used when calculating prices.
+          example: mathematical
+          enum:
+          - mathematical
+          - ceiling
+          - floor
+        precision:
+          type: integer
+          description: Number of decimal places used in rounding.
+          example: 2
+        promoCode:
+          type:
+          - string
+          - 'null'
+          description: Promotional code submitted with the cart (if any).
+          example: PROMO10
+        currency:
+          type: string
+          description: Currency used in price calculations.
+          example: EUR
+        cartItems:
+          type: array
+          description: The original cart items before discounts.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: Product identifier.
+                example: '8675645322'
+              productCategoryId:
+                type: string
+                description: Product category.
+                example: Apparel & Accessories > Clothing > Shoes > Sneakers
+              quantity:
+                type: string
+                description: Quantity of the product in the cart.
+                example: '1.000'
+              unitPriceBeforeTax:
+                type: string
+                description: Unit price of the product before applying tax.
+                example: '200.00'
+              tax:
+                type: string
+                description: Tax amount associated with the product.
+                example: '40.00'
+        discounts:
+          type: array
+          description: List of applicable discounts to the cart.
+          items:
+            type: object
+            properties:
+              promotionId:
+                type: string
+                description: Unique identifier of the applied promotion.
+                example: 01JW4M2FS0CX9DQETDV142JB4M
+              promotionMetaData:
+                type: object
+                description: Metadata about the promotion.
+                properties:
+                  name:
+                    type: string
+                    description: Display name of the promotion.
+                    example: Sneakers promotional price
+                  description:
+                    type: string
+                    description: Textual description of the promotion.
+                    example: Sneakers at €70 during promotion.
+                  type:
+                    type: string
+                    description: Type of the promotion (e.g., `"promotionalPricing"`).
+                    enum:
+                    - bonusProducts
+                    - bundle
+                    - buyXForTotalAmount
+                    - buyXGetOneFree
+                    - crossSelling
+                    - priceReduction
+                    - freeSample
+                    - productSet
+                    - promoCode
+                    - promotionalPricing
+                    example: promotionalPricing
+              discountType:
+                type: string
+                description: Type of discount applied.
+                example: itemDiscount
+                enum:
+                - itemDiscount
+                - itemAddition
+                - groupDiscont
+              discountedItems:
+                type: array
+                description: The items affected by `itemDiscount` type discount. Applicable to `crossSelling`, `priceReduction`, ` promoCode`, and ` promotionalPricing` promotion types.
+                items:
+                  type: object
+                  properties:
+                    productId:
+                      type: string
+                      description: Product ID of the discounted item.
+                      example: '8675645322'
+                    productCategoryId:
+                      type: string
+                      description: Product category of the discounted item.
+                      example: Apparel & Accessories > Clothing > Shoes > Sneakers
+                    quantity:
+                      type: string
+                      description: Quantity of discounted items.
+                      example: '1.000'
+                    unitPriceBeforeTax:
+                      type: string
+                      description: Discounted unit price before tax.
+                      example: '70.00'
+                    tax:
+                      type: string
+                      description: Tax amount after discount. This value is proportionally adjusted based on the discounted item price compared to the original price.
+                      example: '14.00'
+              itemGroup:
+                type: array
+                description: The items affected by `groupDiscont` type discount. Applicable to  `bundle`, `productSet`, `buyXForTotalAmount`, and `promoCode` promotion types.
+                items:
+                  type: object
+                  properties:
+                    productId:
+                      type: string
+                      description: Product ID of the discounted item.
+                      example: '8675645322'
+                    productCategoryId:
+                      type: string
+                      description: Product category of the discounted item.
+                      example: Apparel & Accessories > Clothing > Shoes > Sneakers
+                    quantity:
+                      type: string
+                      description: Quantity of discounted items.
+                      example: '1.000'
+                    unitPriceBeforeTax:
+                      type: string
+                      description: Discounted unit price before tax.
+                      example: '70.00'
+                    tax:
+                      type: string
+                      description: Tax amount after discount. This value is proportionally adjusted based on the discounted item price compared to the original price.
+                      example: '14.00'
+              addedItems:
+                type: array
+                description: The items added to the cart by `itemAddition` type discount. Applicable to `freeSample`, `buyXGetOneFree` and ˇbonusProductsˇ promotion types.
+                items:
+                  type: object
+                  properties:
+                    productId:
+                      type: string
+                      description: Product ID of the free item.
+                      example: '8675645322'
+                    productCategoryId:
+                      type: string
+                      description: Product category of the free item. Only available if the item has been added to cart with a product category.
+                      example: Apparel & Accessories > Clothing > Shoes > Sneakers
+                    quantity:
+                      type: string
+                      description: Number of items added.
+                      example: '1.000'
+                    unitPriceBeforeTax:
+                      type: string
+                      description: Price of the iten before tax.
+                      example: '70.00'
+                    tax:
+                      type: string
+                      description: Tax amount. This value is proportionally adjusted based on the discounted item price compared to the original price.
+                      example: '14.00'
+              value:
+                type: string
+                description: Total value of items added to the cart by free by `itemAddition` type discount. Applicable to `freeSample`,`buyXGetOneFree`and ˇbonusProductsˇ promotion types.
+                example: '100.00'
+              totalPriceBeforeTaxDiscount:
+                type: string
+                description: Total value of discount before tax. Applicable to `itemDiscount`and `groupDiscont` type discount.
+                example: '130.00'
+              taxDiscount:
+                type: string
+                description: Amount of tax saved due to the promotion. Applicable to `itemDiscount`and `groupDiscont` type discount.
+                example: '26.00'
+    cartModel:
+      required:
+      - cartId
+      - storeId
+      - storeGroupId
+      - rounding
+      - precision
+      - currency
+      - cart
+      type: object
+      properties:
+        cartId:
+          type: string
+          example: 66512
+          description: Unique identifier for the cart, used to track and recalculate promotions across multiple requests.
+        storeId:
+          type: string
+          example: 47847307C1652044
+          description: Identifier of the specific store where the cart originates.
+        storeGroupId:
+          type: string
+          example: GreaterLondon
+          description: Identifier for the group of the store where the cart originates.
+        customerId:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+          description: Optional customer identifier.
+        promotionSelectionStrategy:
+          type: string
+          enum:
+          - biggestDiscount
+          example: biggestDiscount
+          default: biggestDiscount
+          description: Defines how promotions are selected when multiple apply. Currently supports selecting the promotion offering the biggest discount.
+        promotionApplicationMethod:
+          type: string
+          enum:
+          - automatic
+          example: automatic
+          default: automatic
+          description: Method by which promotions are applied. Currently supports 'automatic', meaning that promotions are applied without manual intervention.
+        rounding:
+          type: string
+          enum:
+          - mathematical
+          - floor
+          - ceiling
+          example: mathematical
+          description: 'Specifies the rounding strategy to apply on price calculations: standard mathematical rounding, always down (floor), or always up (ceiling).'
+        precision:
+          type: integer
+          minimum: 0
+          maximum: 10
+          example: 2
+          default: 2
+          description: Number of decimal places to use in price and discount calculations.
+        promoCode:
+          type: string
+          example: PROMO10
+          description: Optional promo code to apply specific promotions tied to codes.
+        currency:
+          type: string
+          example: USD
+          maxLength: 3
+          description: ISO currency code for monetary values in the cart.
+        cart:
+          type: object
+          properties:
+            cartItems:
+              type: array
+              description: List of items currently in the cart to be evaluated for promotions.
+              items:
+                $ref: '#/components/schemas/cartItem'
+    cartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: 8675645322
+          description: Unique identifier of the product.
+        productCategoryId:
+          type: string
+          example: Apparel & Accessories > Clothing > Shoes > Sneakers
+          description: Category ID the product belongs to, used for category-based promotions.
+        quantity:
+          type: number
+          example: 1
+          description: Number of units of the product in the cart.
+        unitPriceBeforeTax:
+          type: number
+          description: Price per unit of the product before taxes are applied.
+          example: 200
+        tax:
+          type: number
+          example: 40
+          description: Tax amount applicable per unit.
+  responses:
+    BadRequestError:
+      description: Bad Request error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: Indicates the result of the request. Always `error` for failed requests.
+                example: error
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: The category or class of the error.
+                    example: Validation error
+                  code:
+                    type: integer
+                    example: 577
+                    description: A numeric code representing the specific error.
+                  message:
+                    type: string
+                    description: Human-readable message describing the reason for the denial.
+                    example: The cart id field is required.
+    AuthorizationError:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: Indicates the result of the request. Always `error` for failed requests.
+                example: error
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: The category or class of the error.
+                    example: AuthorizationException
+                  code:
+                    type: integer
+                    description: A numeric code representing the specific error.
+                    example: 674
+                  message:
+                    type: string
+                    description: Human-readable message describing the reason for the denial.
+                    example: Token has expired.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

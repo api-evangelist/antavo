@@ -1,0 +1,2404 @@
+openapi: 3.2.0
+info:
+  title: Antavo Rewards API
+  version: '1.0'
+  description: 'Operations tagged Rewards across 4 of this provider''s published API definitions: antavo-bulk-operations-openapi.yml, antavo-display-openapi.yml, antavo-entities-openapi.yml, antavo-rewards-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+tags:
+- name: Rewards
+  description: Bulk Reward Claim API endpoints
+paths:
+  /v1/bulk-operation/reward/claim/{batch_id}/status/error:
+    get:
+      tags:
+      - Rewards
+      summary: Query the failed reward claim attempts
+      description: This endpoint returns the error occured while processing the batch.
+      parameters:
+      - in: path
+        name: batch_id
+        description: The ID of the batch.
+        required: true
+        schema:
+          type: string
+          example: batch001
+      - name: offset
+        in: query
+        description: 'Offsets the starting number of errors to return. This is used in pagination in conjunction with the limit query.
+
+          '
+        schema:
+          type: integer
+          example: 10
+          default: 0
+      - name: limit
+        in: query
+        description: 'Limits the number of errors to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+
+          '
+        schema:
+          type: integer
+          example: 50
+          default: 100
+      responses:
+        '200':
+          description: Returned after the batch claim request has been processed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The batch ID provided as parameter does not exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchNotFound'
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/bulk-operation/reward/claim/{batch_id}/status:
+    get:
+      tags:
+      - Rewards
+      summary: Query the status of the reward claim process
+      description: This API endpoint allows you to query the status of a bulk reward claim process, providing details on the processing status, any errors encountered, and the overall completion status.
+      parameters:
+      - in: path
+        name: batch_id
+        description: The ID of the batch.
+        required: true
+        schema:
+          type: string
+          example: batch001
+      responses:
+        '200':
+          description: Returned after the batch has been successfully added to the queue.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+              examples:
+                Batch status - queued:
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 0
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error
+                      pagination:
+                        total: 0
+                    payload:
+                      batch_status: queued
+                      customers: []
+                Batch status - processing:
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 0
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error
+                      pagination:
+                        total: 0
+                    payload:
+                      batch_status: processing
+                      customers: []
+                Batch status - done:
+                  value:
+                    status: success
+                    metadata:
+                      bulk_operation_error:
+                        number_of_errors: 60
+                        url: https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error
+                      pagination:
+                        total: 60
+                        next: https://api.{environment}.antavo.com}/v1/bulk-operation/reward/claim/batch001/status?offset=40&limit=20
+                        previous: https://api.{environment}.antavo.com}/v1/bulk-operation/reward/claim/batch001/status?offset=0&limit=20
+                    payload:
+                      batch_status: done
+                      customers:
+                      - claimed_at: 2023-07-25T15:15:16+01:0
+                        code: 318-ogj-393
+                        created_at: 2023-07-25T15:15:16+01:0
+                        reward_id: 6275010c75c54b7810090000
+                        id: 63dcb791eb80ef351838fdfb:318-ogj-393
+                        type: gift_card
+                        value: 100
+                        customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                        batch_id: batch001
+                        status: claimed
+                        custom_attributes:
+                          country: DE
+                          purchase_treshold: 100
+                          campaign: 23F/W
+        '404':
+          description: The batch ID provided as parameter does not exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchNotFound'
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /v1/bulk-operation/reward/claim/{reward_id}:
+    post:
+      tags:
+      - Rewards
+      summary: Claim a specific reward to multiple customers
+      description: 'Submit reward claim requests for a batch of customers. Each request can include a maximum of 100,000 customers.
+
+        Please note that only one bulk reward claim process can run at a time for one specific reward. If additional batches are submitted while the current one is still processing, they will be added to the queue and processed once the ongoing batch is completed.
+
+        By the end of the process, the reward events get registered in each customer''s event history.'
+      parameters:
+      - in: path
+        name: reward_id
+        required: true
+        description: The ID of the reward to be claimed.
+        schema:
+          type: string
+          example: 63dcb7736123782ba6336425
+      responses:
+        '200':
+          description: The batch claim request has been submitted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseBadRequest'
+        '404':
+          description: Reward not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardNotFound'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRewardClaim'
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/activities/rewards/{reward_id}:
+    get:
+      tags:
+      - Rewards
+      summary: Retrieve a specific reward available for a customer
+      description: A endpoint provides detailed information about a specified reward available for a specific customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: reward_id
+        in: path
+        required: true
+        description: Unique indentifier of the reward.
+        schema:
+          type: string
+          example: 668434f93d963535a513bf37
+      - name: fields
+        in: query
+        description: 'Use the `claims` field to see the claimed rewards and associated information for each **currently** available reward.
+
+          '
+        schema:
+          type: string
+        example: claims
+      responses:
+        '200':
+          description: The list of attributes of the reward. The list of information returned in the response depends on the type of the reward and its configured attribute. This example shows the attributes of claiming a **dynamic coupon** reward.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicCouponRewardActivity'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Reward is not active:
+                  value:
+                    type: BadRequestException
+                    code: 160321
+                    message: Reward is not active
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/activities/rewards:
+    get:
+      tags:
+      - Rewards
+      summary: List all available rewards for a customer
+      description: This endpoints provides the list of all available rewards for a specific customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n   * The Antavo customer ID\n   * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: fields
+        in: query
+        description: "Comma separated list of non-standard fields to be included in the response. Accepted values: \n\n* `claims`: See the claimed rewards and associated information for each **currently** available reward.\n\n* `custom_data`: Access this field set in the reward configuration.\n\n* `gallery`: Provides, where available, image links specified in the reward configuration.\n\n* `instructions`: Access redeem instructions set in the reward configuration.\n\n* `terms`: Access terms and conditions set in the reward configuration.\n\n* Any custom attributes configued in the [Entities module](https://docs.antavo.com/docs/custom-entities#adding-custom-entity-attributes) with `cf_` prefix.\n"
+        schema:
+          type: string
+          enum:
+          - claims
+          - custom_data
+          - events
+          - gallery
+          - instructions
+          - terms
+      - name: limit
+        in: query
+        description: 'Limits the number of rewards to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+
+          '
+        schema:
+          type: integer
+          default: 100
+      - name: offset
+        in: query
+        description: 'Offsets the starting number of rewards to return. This is used in pagination in conjunction with the limit query.
+
+          '
+        schema:
+          type: integer
+          default: 0
+      - name: sort
+        in: query
+        description: 'Sorts the results by the selected value, which can be `starts_at`, `ends_at`, or `order`. This query can be used in conjunction with the order query.
+
+          '
+        schema:
+          type: string
+          example: starts_at
+      - name: order
+        in: query
+        description: 'Used in conjunction with the sort query to list the results in ascending or descending order. The value can be `asc` for an ascending order or `desc` for a descending order.
+
+          '
+        schema:
+          type: string
+          example: desc
+      responses:
+        '200':
+          description: List of rewards <br> The list of information returned in the response depends on the type of the reward and its configured attributes. This example shows the attributes of a **coupon** reward.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CouponPoolRewardActivity'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/rewards:
+    get:
+      tags:
+      - Rewards
+      summary: List a customer's claimed rewards
+      description: This endpoint provides the detailed list a customer's claimed rewards.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: limit
+        in: query
+        description: "Limits the number of claimed rewards to be returned in one response. Additional claimed rewards can be accessed through pagination using the offset. \n"
+        schema:
+          type: integer
+          default: 100
+      - name: offset
+        in: query
+        description: "Specifies the starting number of claimed rewards to return. Used for pagination in combination with the limit query. \n"
+        schema:
+          type: integer
+          default: 0
+      - name: sort
+        in: query
+        description: 'Used in conjunction with the order query to sort the results in the selected order (ascending order by defualt).
+
+          '
+        schema:
+          type: string
+      - name: order
+        in: query
+        description: 'Used in conjunction with the sort query to list the results in ascending or descending order. The value can be `asc` for an ascending order or `desc` for a descending order.
+
+          '
+        schema:
+          type: string
+          example: desc
+      - name: fields
+        in: query
+        description: "Comma separated list of non-standard fields to be included in the response. Accepted values: \n\n* `category`: Displays the reward's category, if assigned.\n\n* `custom_data`: Access fields set in the reward configuration under [Wehbook data](https://docs.antavo.com/docs/rewards#custom-fields).\n\n* `stock`: Access this field set in the reward configuration.\n\n* `gallery`: Provides, where available, image links specified in the reward configuration.\n\n* `instructions`: Access redeem instructions set in the reward configuration.\n\n* `terms`: Access terms and conditions set in the reward configuration.\n\n* `passes`: Access details for passes assigned to the customer through a reward claim.\n\n* Any custom attributes configued in the [Entities module](https://docs.antavo.com/docs/custom-entities#adding-custom-entity-attributes) with `cf_` prefix.\n"
+        schema:
+          type: string
+          enum:
+          - category
+          - custom_data
+          - stock
+          - gallery
+          - instructions
+          - terms
+          - passes
+      responses:
+        '200':
+          description: List of reward claims
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardClaimA'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    message: Customer not found
+                    code: 160212
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/activities/rewards/{reward_id}/bid:
+    post:
+      tags:
+      - Rewards
+      summary: Submit a bid for the customer on a specified bidding reward
+      description: 'The endpoint automatically calculates and submits a bid for a specified customer on the specific bidding reward. The bid amount is based on the current highest bid and the [bid step](https://docs.antavo.com/docs/rewards#bidding-rewards), which is set in the Antavo Management UI.
+
+
+        Manually set value for bids is possible by submitting an amount in the request body.
+
+        '
+      parameters:
+      - name: customer_id
+        in: path
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+      - name: reward_id
+        in: path
+        schema:
+          type: string
+          example: 668477027cad34756c6cf005
+        required: true
+        description: Unique indentifier of the reward.
+      requestBody:
+        required: false
+        description: 'A specific bidding amount has to be added to the request.  If no bid is submitted, the new bid amount will be the current bid + step size defined in the Management UI. '
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  description: A specific value for a bid. If empty, the automatic bid with a value <code>current value</code> + <code>bid step</code> will be submitted.
+            example:
+              amount: 160
+      responses:
+        '200':
+          description: Bid successfully submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BidResponse'
+        '400':
+          description: Reward is not active
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Reward is not active:
+                  value:
+                    type: BadRequestException
+                    message: Reward is not active
+                    code: 160321
+        '404':
+          description: Customer or reward not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+                Reward not found:
+                  value:
+                    type: NotFoundException
+                    message: Not Found
+                    code: 0
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/activities/rewards/{reward_id}/claim:
+    post:
+      tags:
+      - Rewards
+      summary: Claim a reward for a specific customer
+      description: This endpoint allows for claiming a reward for a customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: reward_id
+        in: path
+        required: true
+        description: Unique reward ID.
+        schema:
+          type: string
+          example: 63dcb7736123782ba6336425
+      - name: fields
+        in: query
+        schema:
+          type: string
+          enum:
+          - customer
+          - reward
+        description: "Returns additional objects in the response, using a comma separated list. Options: \n\n- **customer**: The complete customer response object with all customer attributes.\n- **reward**: The complete reward object with all reward attributes.\n"
+      requestBody:
+        required: false
+        description: "A request body is **only** required for specific scenarios. \n\n1. Dynamic rewards: The stated points are used to calculate the value of the generated dynamic coupon.  \n\n2. Making multiple claims in a single API request: Repeated identical reward claims can be combined into an single request, reducing API traffic.\n"
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                points:
+                  type: integer
+                  description: Points to be used when claiming a dynamic type of reward.
+                  example: 700
+                count:
+                  type: integer
+                  description: The number of times that the reward is claimed in a single API request. This is only needed for multiple claims.
+                  example: 2
+      responses:
+        '200':
+          description: Claim result. A coupon object is returned only for coupon rewards.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - spent
+                properties:
+                  spent:
+                    type: integer
+                    description: The number or points spent to claim the reward.
+                    example: 700
+                  id:
+                    type: string
+                    description: ID of the reward claim event
+                  last_claimed_at:
+                    type: string
+                    format: date-type
+                    description: The last time the customer claimed the reward.
+                    example: '2021-11-23T08:34:59.000Z'
+                  coupon:
+                    $ref: '#/components/schemas/CouponClaim'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              example:
+                Reward is not active:
+                  value:
+                    type: BadRequestException
+                    message: Reward is not active
+                    code: 160321
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/activities/rewards/{reward_id}/revoke:
+    post:
+      tags:
+      - Rewards
+      summary: Revoke a previously claimed reward
+      description: This endpoint revokes a specific reward claim.
+      parameters:
+      - name: customer_id
+        in: path
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+      - name: reward_id
+        in: path
+        schema:
+          type: string
+          example: 668434f93d963535a513bf37
+        required: true
+        description: Unique indentifier of the reward.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                  description: The unique indentifier of the reward claim event.
+                  example: 66676986c688963c28608f0c
+      responses:
+        '200':
+          description: Successful revoke
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        '400':
+          description: Claim cannot be revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Claim already revoked:
+                  value:
+                    type: BadRequestException
+                    code: 160344
+                    message: Claim event already revoked
+                Event not found:
+                  value:
+                    type: BadRequestException
+                    code: 160340
+                    message: Event not found
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /entities/rewards/reward/{entity_id}:
+    delete:
+      tags:
+      - Rewards
+      summary: Archive an inactive reward
+      description: This endpoint archives a specific deactivated reward, effectively removing it from the system. The reward will be completely non-visible and inaccessible for members and Management UI users as well.
+      operationId: Rewarddelete
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        description: The unique ID of the reward.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Reward archived
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: OK
+        '400':
+          description: Reward not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_3'
+              examples:
+                Failure:
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Entity not found
+      deprecated: false
+      security:
+      - api_key: []
+    post:
+      tags:
+      - Rewards
+      summary: Update specific reward attributes
+      description: An attribute of a reward can be updated via this endpoint.
+      operationId: Rewardupdate
+      parameters:
+      - name: entity_id
+        in: path
+        description: The unique identifier of the reward.
+        example: 63dcb7736123782ba6336425
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: The attributes of the reward to be updated. These must match attributes available in the Management UI.
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                name: Reward name
+                description: This is the description field
+                price: 100
+                type: coupon
+        required: true
+      responses:
+        '200':
+          description: Successful update - updated reward
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRewardResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_3'
+              examples:
+                Error:
+                  value:
+                    type: BadRequestException
+                    message: '''<attribute>'' property is required'
+                    code: 0
+      security:
+      - api_key: []
+    get:
+      tags:
+      - Rewards
+      summary: Returns all information regarding a specific reward
+      description: A detailed breakdown of all parameters for the specific reward is returned.
+      operationId: Rewardget
+      parameters:
+      - name: entity_id
+        in: path
+        required: true
+        description: The unique ID of the reward.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRewardResponse'
+        '400':
+          description: Reward not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_3'
+              examples:
+                Failure:
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Entity not found
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /entities/rewards/reward:
+    get:
+      tags:
+      - Rewards
+      summary: List all available rewards
+      description: This endpoint lists all available rewards.<br>It allows filtering by stores configured in the Stores module.
+      parameters:
+      - name: stores
+        in: query
+        required: false
+        description: Filters the return rewards by stores, using a store ID.
+        schema:
+          type: string
+          example: 667f3f88527d2e6c00319373
+      responses:
+        '200':
+          description: List of all rewards - this example includes translations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRewardResponse'
+      deprecated: false
+      security:
+      - api_key: []
+    put:
+      tags:
+      - Rewards
+      summary: Create a new reward
+      description: This endpoint facilitates the creation of rewards.
+      operationId: Rewardcreate
+      parameters: []
+      requestBody:
+        description: The attributes of the reward to be created. These must match attributes available in the Management UI.
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: 20% Off on Winter Collection
+                description: Enjoy a 20% discount on our Winter Collection items.
+                price: 100
+                type: coupon
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardPut'
+        '400':
+          description: Bad request - a required attribute is not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PUTError'
+              examples:
+                Failure:
+                  summary: Bad request - a required attribute is not provided
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: '''<attribute>'' property is required'
+      deprecated: false
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /rewards/{reward_id}:
+    get:
+      tags:
+      - Rewards
+      summary: Retrieve reward-specific information
+      parameters:
+      - name: reward_id
+        in: path
+        required: true
+        description: The unique ID of the reward.
+        schema:
+          type: string
+          example: 63dcb7736123782ba6336425
+      responses:
+        '200':
+          description: Reward data JSON object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reward'
+        '404':
+          description: Returned error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                fail:
+                  summary: Error - Wrong endpoint is called
+                  value:
+                    code: 404
+                    type: NotFoundException
+                    message: Not found
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /rewards:
+    get:
+      tags:
+      - Rewards
+      summary: List reward items
+      description: This endpoint returns a list of available rewards based on various query parameters.
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        description: Limits the number of rewards returned per page.
+        schema:
+          type: number
+          default: 10
+      - name: page
+        in: query
+        required: false
+        description: This parameter gets a specific page of the reward list if a limit has been set.
+        schema:
+          type: number
+          default: 0
+          example: 2
+      - name: min_price
+        in: query
+        required: false
+        description: Lower point limit for returned eligible rewards.
+        schema:
+          type: number
+          example: 100
+      - name: max_price
+        in: query
+        required: false
+        description: Upper point limit for returned eligible rewards.
+        schema:
+          type: number
+          example: 1000
+      - name: customer
+        in: query
+        description: An Antavo-recognized unique customer identifier.
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: external_id
+        in: query
+        description: External ID (requires [configuration](/docs/customers#external-identifiers))
+        required: false
+        schema:
+          type: string
+          example: CL003322913
+      responses:
+        '200':
+          description: Available rewards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rewards'
+        '404':
+          description: Returned error object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                fail7:
+                  summary: Error - Reward not found
+                  value:
+                    code: 0
+                    type: NotFoundException
+                    message: Reward not found
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /rewards/{reward_id}/claim:
+    post:
+      tags:
+      - Rewards
+      deprecated: true
+      summary: Claims a specific reward (deprecated)
+      description: 'This endpoint is used to register that a customer has claimed a specific reward.
+
+        This endpoint is not supported anymore. Please use the [reward endpoint](https://developers.antavo.com/reference/post_customers-customer-id-activities-rewards-reward-id-claim) of the Display API.'
+      parameters:
+      - name: reward_id
+        in: path
+        required: true
+        description: The unique ID of the reward.
+        schema:
+          type: string
+          example: 63dcb7736123782ba6336425
+      responses:
+        '200':
+          description: Reward data JSON object
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/Success'
+                - $ref: '#/components/schemas/Error'
+              examples:
+                success:
+                  summary: Successful submission
+                  value:
+                    spent: 100
+                    coupon:
+                      code: TC22341
+                      type: percentage
+                fail2:
+                  summary: Error - Customer is not enrolled in the loyalty program. Status is “inactive”
+                  value:
+                    code: 1606023
+                    type: null
+                    message: Customer is not active
+                fail3:
+                  summary: Error - Customer already claimed the maximum number of rewards
+                  value:
+                    code: 120211
+                    type: null
+                    message: Customer can’t claim this reward more times
+                fail4:
+                  summary: Error - Reward stock is 0. Check reward settings.
+                  value:
+                    code: 120212
+                    type: null
+                    message: Reward stock ran out
+                fail6:
+                  summary: Error - Customer point balance is less than the price of the reward
+                  value:
+                    code: 120241
+                    type: null
+                    message: Customer does not have enough points
+                fail7:
+                  summary: Error - Rewards extension is not enabled
+                  value:
+                    code: 160600
+                    type: null
+                    message: Rewards extension is not enabled
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                fail:
+                  summary: Error - Customer not found
+                  value:
+                    code: 0
+                    type: NotFoundException
+                    message: Not found
+                fail2:
+                  summary: Error - Reward not found
+                  value:
+                    code: 0
+                    type: NotFoundException
+                    message: Not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer
+              properties:
+                customer:
+                  type: string
+                  description: Unique customer identifier.
+                  example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                external_id:
+                  type: string
+                  description: External ID (requires [configuration](/docs/customers#external-identifiers)).
+                  example: CL003322913
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+components:
+  schemas:
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Status of the request.
+        metadata:
+          type: object
+          description: Metadata related to the bulk operation.
+          properties:
+            bulk_operation_error:
+              type: object
+              description: Any errors encountered during the bulk operation.
+              properties:
+                number_of_errors:
+                  type: number
+                  description: The number of errors encountered.
+                url:
+                  type: string
+                  description: URL to retrieve detailed error information.
+            pagination:
+              type: object
+              description: Pagination details for the bulk operation status.
+              properties:
+                total:
+                  type: number
+                  description: Total number of entries.
+                  example: 100
+        payload:
+          type: object
+          description: Details of the bulk operation payload.
+          properties:
+            batch_status:
+              type: string
+              description: The status of the current batch.
+            customers:
+              type: object
+              description: List of customer-specific reward claim statuses.
+              properties:
+                customer_id:
+                  type: string
+                  description: The ID of the customer.
+                reward_id:
+                  type: number
+                  description: The ID of the reward.
+                batch_id:
+                  type: string
+                  description: The ID of the batch.
+                code:
+                  type: string
+                  description: Status code of the reward claim for the customer.
+                status:
+                  type: string
+                  description: Status of the reward claim for the customer.
+                assigned_date:
+                  type: string
+                  format: timestamp
+                  description: .
+                expired_date:
+                  type: string
+                  format: timestamp
+                  description: .
+                type:
+                  type: string
+                  example: percentage
+                  description: Type of the coupon.
+                value:
+                  type: number
+                  description: Value of the coupon.
+                custom_attributes:
+                  type: object
+                  description: Custom attributes associated with the reward.
+                  properties:
+                    country:
+                      type: string
+                      example: DE
+                    purchase_treshold:
+                      type: number
+                      example: 100
+                    campaign:
+                      type: string
+                      example: 23F/W
+                      description: You can include any context variable here which you would like to associate with this batch.
+    BulkRewardClaim:
+      type: object
+      required:
+      - customers
+      properties:
+        customers:
+          type: array
+          description: An array of strings representing unique customer IDs. If any of the customer IDs don't exist in the database, the batch will still be processed and the unknown customer IDs will be provided in the payload of the `/error` endpoint.
+          items:
+            type: string
+            example:
+            - 280e674c-c4ea-4a30-987a-d9267d1a5018
+            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
+        callback_url:
+          type: string
+          example: https://webservices.yourapi.com/callback_url
+          description: Antavo will attempt to call this URL once the batch processing is finished. The webhook message sent to this URL provides the API URL to the /status endpoint to query the status of the batch claim process and any custom data that has been added to the bulk reward claim request. The `schema://hostname` of the callback URL must be configured in the [Trusted sites](https://docs.antavo.com/docs/trusted-sites#adding-a-new-site) module and able to handle REST API calls with JSON payload.
+        metadata:
+          $ref: '#/components/schemas/metadata'
+          description: Metadata of key-value pairs.
+        force_claim:
+          type: boolean
+          description: When set to `true`, the reward point price is treated as zero and the reward can be claimed without applying validation rules, except for stock restrictions.
+    ResponseBadRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of the error.
+            code:
+              type: number
+              example: 320503
+              description: Error code.
+            message:
+              type: string
+              example: The unique batch id provided already exists
+              description: Human-readable error message.
+    RewardNotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of the error.
+            code:
+              type: number
+              example: 320501
+              description: Error code.
+            message:
+              type: string
+              example: Reward not found
+              description: Human-readable error message.
+    BatchNotFound:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: The status of the error.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error.
+              example: NotFoundException
+            code:
+              type: number
+              description: Error code.
+              example: 320510
+            message:
+              type: string
+              description: Human-readable error message.
+              example: Batch ID is not found
+    metadata:
+      type: object
+      properties:
+        external_batch_id:
+          type: string
+          example: batch001
+          description: The batch ID specified in the request.
+        custom_attributes:
+          type: object
+          description: Any context variable that is associated with this submitted batch. Custom attributes are recorded on the coupon entity assigned to the customer during the bulk reward claim procedure.
+          properties:
+            id:
+              type: string
+              description: ID of the custom attribute
+              example: country
+            value:
+              type: string
+              description: Value of the custom attribute.
+              example: DE
+    response:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Status of the batch claim request.
+        metadata:
+          $ref: '#/components/schemas/metadata'
+        payload:
+          type: object
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Status of the request.
+        metadata:
+          type: object
+          description: Metadata related to the bulk operation.
+          properties:
+            pagination:
+              type: object
+              properties:
+                total:
+                  description: Total number of entries.
+                  type: number
+                  example: 42
+                next:
+                  description: Link to access the next series of entries.
+                  type: string
+                  example: https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error?offset=40&limit=20
+                previous:
+                  description: Link to access the previous series of entries.
+                  type: string
+                  example: https://api.{environment}.antavo.com/v1/bulk-operation/reward/claim/batch001/status/error?offset=0&limit=20
+        payload:
+          description: Details of the bulk operation payload.
+          type: object
+          properties:
+            number_of_errors:
+              description: The number of errors encountered during the process.
+              type: number
+              example: 42
+            customers:
+              description: List of customers with erroneous reward claim attempts.
+              type: object
+              properties:
+                customer_01:
+                  type: object
+                  properties:
+                    reward:
+                      type: string
+                      example: 6275010c75c54b7810090000
+                    error_message:
+                      type: string
+                      example: Sorry, you can't claim this reward, as it's currently out of stock
+                    error_code:
+                      type: number
+                      example: 156156
+    RewardClaimA:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              image:
+                $ref: '#/components/schemas/Image'
+              transfer_coupon_expires_in:
+                type: string
+                description: The expiration time of the transferred coupon.
+              spent:
+                type: integer
+                description: Total points spent on the reward.
+                example: 450
+              transferable:
+                type: boolean
+                description: Indicates whether the reward can be transferred to another customer.
+                example: true
+              description:
+                type: string
+                description: Description of the reward.
+                example: Spend points to claim a free shipping coupon.
+              created_at:
+                type: string
+                format: date-time
+                description: Timestamp of configuring the reward.
+                example: '2012-12-15T09:12:53.000Z'
+              transfer_limit:
+                type: integer
+                description: The number of times the reward can be transferred to another customer.
+                example: 1
+              type:
+                type: string
+                description: Type of the reward to claim.
+                enum:
+                - bidding
+                - content
+                - coupon
+                - custom
+                - download
+                - physical
+                - promotion
+                - virtual
+              title:
+                type: string
+                description: Name of the reward.
+                example: Free shipping
+              transfer_coupon_expiration:
+                type: string
+                description: 'Method to calculate the expiration date of the transferred coupon. Options: `remain`, `modify`, `extend`.'
+                example: remains
+              points:
+                type: integer
+                description: Point price of the reward.
+                example: 450
+              _actions:
+                type: object
+                properties:
+                  complete:
+                    type: object
+                    description: Endpoint to claim the reward. It is only included if the reward is currently available for the customer to claim.
+                    properties:
+                      method:
+                        type: string
+                        example: POST
+                      url:
+                        type: string
+                        format: url
+                        example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/rewards/62cc0d5809d6a65e880d7165/claim
+              coupons:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    redeemed_at:
+                      type: string
+                      format: date-time
+                      description: Timestamp of the coupon redemption.
+                      example: '2024-06-27T10:41:41.000Z'
+                    claimed_at:
+                      type: string
+                      format: date-time
+                      description: Timestamp of claiming the reward.
+                      example: '2024-06-19T00:47:23.000Z'
+                    code:
+                      type: string
+                      description: The coupon code.
+                      example: TC22341
+                    pool:
+                      type: string
+                      description: ID of the coupon pool assiciated (coupon-type rewards only).
+                      example: 62c7f20687632a561f16499b
+                    name:
+                      type: string
+                      description: Name of the coupon pool.
+                      example: Free shipping coupons
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Timestamp of coupon generation.
+                      example: '2024-06-19T00:47:23.000Z'
+                    type:
+                      type: string
+                      description: Type of the coupon.
+                      enum:
+                      - amount
+                      - percentage
+                      - free_shipping
+                      - gift_card
+                      example: free_shipping
+                    customer:
+                      type: array
+                      items:
+                        type: string
+                      properties:
+                        id:
+                          type: string
+                          description: Customer ID of the assingee.
+                          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    status:
+                      type: string
+                      description: Status of the coupon
+                      example: invalid
+              last_claimed_at:
+                type: string
+                format: date-time
+                description: Timestamp of last claiming the reward.
+                example: '2024-06-19T00:47:23.000Z'
+              claims:
+                type: integer
+                description: Number of times the customer claimed the reward.
+                example: 1
+              first_claimed_at:
+                type: string
+                format: date-time
+                description: Timestamp of first claiming the reward.
+                example: '2024-06-19T00:47:23.000Z'
+              id:
+                type: string
+                description: Unique identifier of the reward.
+                example: 62cc0d5809d6a65e880d7165
+              transfer_points:
+                type: integer
+                description: The number of points to add to the customer when the reward is transferred.
+                example: 0
+              coupon_pool:
+                type: string
+                description: The coupon pool from which this coupon codes are generated.
+                example: 6671a296f30e8a1a0f2f3815
+              status:
+                type: string
+                description: Status of the reward.
+                enum:
+                - active
+                - scheduled
+                - expired
+                - inactive
+        total:
+          type: integer
+          description: Number of claims returned.
+          example: 1
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    CouponClaim:
+      type: object
+      properties:
+        code:
+          description: The coupon code.
+          type: string
+          example: TC22341
+        status:
+          description: The status of the coupon, whether it was only claimed by the customer or redeemed (used at checkout).
+          type: string
+          enum:
+          - claimed
+          - redeemed
+        type:
+          description: Type of the coupon.
+          type: string
+          enum:
+          - percentage
+          - amount
+          - free_shipping
+          - gift_card
+        value:
+          description: Arbitrary number as coupon value for amount type coupons, or a percentage number (0-100).
+          type: number
+          example: 10
+        created_at:
+          description: The date of coupon creation.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        claimed_at:
+          description: The date of coupon assignment.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        name:
+          description: Name of the coupon, which is inherited from the coupon pool.
+          type: string
+          example: 10% coupon codes
+        pool:
+          description: The original coupon pool from which the coupon was sourced.
+          type: string
+          example: 62c7f20687632a561f16499b
+        customer:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the customer who is assigned to the coupon.
+              example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+    BidResponse:
+      type: object
+      properties:
+        instructions:
+          type: string
+          description: Instructions on how to bid for the reward.
+          example: Enter your bid amount and confirm your bid.
+        terms:
+          type: string
+          description: Terms and conditions of reward redemption.
+          example: Starting bid is 0 point, minimum increment of 50 points, the highest bid at the end of the auction wins the reward.
+        type:
+          type: string
+          description: Type of the reward. This endpoint always returns `bidding` type.
+          example: bidding
+        _actions:
+          type: object
+          properties:
+            complete:
+              type: object
+              description: Endpoint to submit another bid.
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  example: /customers/[customer_id]/activities/rewards/613d1e0615d3b87b0b000004/bid
+        starts_at:
+          type: string
+          format: date-time
+          description: Start date of bidding, if defined.
+          example: '2021-09-10T21:21:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: End date of bidding, if defined.
+          example: '2021-09-30T21:21:00.000Z'
+        bid_step:
+          type: integer
+          format: int32
+          description: The number of points used for the bid.
+          example: 10
+        highest_bid:
+          type: object
+          properties:
+            own:
+              type: boolean
+              description: Indicates whether the customer has the highest bid at the moment.
+              example: true
+            points:
+              type: integer
+              description: The point value of the highest bid.
+              example: 50
+        category:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Unique identifier of the reward category.
+              example: 64c0d6457fba49389344e065
+            name:
+              type: string
+              description: Description of the reward category.
+              example: Bidding rewards
+        id:
+          type: string
+          description: Unique identifier of the reward.
+          example: 613d1e0615d3b87b0b000004
+        status:
+          type: string
+          description: Status of the reward.
+          example: active
+        title:
+          type: string
+          description: Title of the reward.
+          example: Exclusive Designer Handbag Auction
+        description:
+          type: string
+          description: Description of the reward.
+          example: Bid on an exclusive designer handbag and make it yours! This high-value fashion reward is available to the highest bidder, so use your points wisely.
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          format: int32
+          description: Point price of the reward. This value is for administrative purposes only. The actual price depends on the highest bid amount.
+          example: 0
+        transferable:
+          type: boolean
+          description: Indicates whether the reward can be transferred to another customer.
+          example: true
+        transfer_points:
+          type: integer
+          description: The number of points to add to the customer when the reward is transferred.
+          example: null
+        transfer_limit:
+          type: integer
+          description: The number of times the reward can be transferred to another customer.
+          example: 1
+    CouponPoolRewardActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the reward.
+          example: 5c17c37f71f86e7f798b4576
+        title:
+          type: string
+          description: Name of the reward.
+          example: 20% Off on Winter Collection
+        description:
+          type: string
+          description: Description of the reward.
+          example: Example reward description
+        status:
+          type: string
+          description: The current status of the reward.
+          enum:
+          - active
+          - scheduled
+          - expired
+          - inactive
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Point price of the reward in different currencies.
+          example: 700
+        type:
+          type: string
+          description: The type of the reward.
+          enum:
+          - bidding
+          - content
+          - coupon
+          - custom
+          - download
+          - physical
+          - promotion
+          - virtual
+        starts_at:
+          type: string
+          format: date-time
+          description: The start date of reward availability.
+          example: '2020-07-21T12:00:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: The end date of reward availability.
+          example: '2020-12-21T12:00:00.000Z'
+        gallery:
+          type: array
+          description: Image gallery. This field is returned only when explicitly requested via the 'fields' query parameter.
+          items:
+            $ref: '#/components/schemas/Image'
+        terms:
+          type: string
+          description: Terms and conditions of reward redemption. This field is returned only when explicitly requested via the 'fields' query parameter.
+        instructions:
+          type: string
+          description: Instructions on how to redeem the reward. This field is returned only when explicitly requested via the 'fields' query parameter.
+        _actions:
+          type: object
+          properties:
+            complete:
+              type: object
+              description: Endpoint to claim the reward.
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: url
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/rewards/5c17c37f71f86e7f798b4576/claim
+        stock:
+          type: integer
+          description: Number of items available.
+          example: 42
+        coupon_pool:
+          type: string
+          description: ID of the coupon pool assiciated (coupon-type rewards only).
+          example: 5b22a37f71f92e7f798q4186
+        transferable:
+          type: boolean
+          description: Indicates whether the reward can be transferred to another customer.
+          example: true
+        transfer_points:
+          type: integer
+          description: The number of points to add to the customer when the reward is transferred.
+          example: 0
+        transfer_limit:
+          type: integer
+          description: The number of times the reward can be transferred to another customer.
+          example: 1
+        transfer_coupon_expiration:
+          type: string
+          description: 'Method to calculate the expiration date of the transferred coupon. Options: `remain`, `modify`, `extend`.'
+          example: modify
+        transfer_coupon_expires_in:
+          type: string
+          description: The expiration time of the transferred coupon.
+          example: 2 weeks
+    DynamicCouponRewardActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the reward.
+          example: 5c17c37f71f86e7f798b4576
+        type:
+          type: string
+          description: Type of the reward.
+          enum:
+          - bidding
+          - content
+          - coupon
+          - custom
+          - download
+          - physical
+          - promotion
+          - virtual
+          - bundle
+          - dynamic
+          - dynamic_coupon
+        title:
+          type: string
+          description: Title of the reward.
+          example: Summer Splash Discount
+        description:
+          type: string
+          description: Description of the reward.
+          example: Convert your points into summer savings—redeem 100 points for €1 each.
+        terms:
+          type: string
+          description: Terms and conditions of reward redemption.
+          example: 'Minimum 100 points, minimum purchase: €20, no sale items, gift cards, or other promotions.'
+        instructions:
+          type: string
+          description: Instructions on how to redeem the reward.
+          example: Enter points to redeem for the coupon, and click Claim.
+        category:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Unique identifier of the reward category.
+              example: 64c0d6457fba49389604e065
+            name:
+              type: string
+              description: Description of the reward category.
+              example: Coupon rewards
+        stock:
+          type: integer
+          description: Number of items available.
+          example: 42
+        max_claims:
+          type: integer
+          description: Then number of times a customer can claim the reward.
+          example: 10
+        max_price:
+          type: integer
+          description: Maximum points that can be spent for a coupon.
+          example: 500
+        price_step:
+          type: integer
+          description: The number of points between two prices.
+        status:
+          type: string
+          enum:
+          - active
+          - scheduled
+          - expired
+          - inactive
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Point price of the reward. This value is for administrative purposes only. The actual price depends on the number of points spent.
+          example: 0
+        coupon_pool:
+          type: string
+          description: The coupon pool from which this coupon codes are generated.
+          example: 6671a296f30e8a1a0f2f3815
+        starts_at:
+          type: string
+          format: date-time
+          description: Start date of the reward, if defined.
+          example: '2024-06-30T12:00:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: End date of the reward, if defined.
+          example: '2024-07-25T12:00:00.000Z'
+        exchange_rate:
+          type: number
+          description: 'The conversion percentage of points to the coupon value.<br>Example: if the exchange_rate value is `1`, the 100 points will be transated to 1 EUR discount.'
+          example: 1
+        transferable:
+          type: boolean
+          description: Indicates whether the reward can be transferred to another customer.
+          example: true
+        transfer_points:
+          type: integer
+          description: The number of points to add to the customer when the reward is transferred.
+          example: null
+        transfer_limit:
+          type: integer
+          description: The number of times the reward can be transferred to another customer.
+          example: 1
+        transfer_coupon_expiration:
+          type: string
+          description: 'Method to calculate the expiration date of the transferred coupon. Options: `remain`, `modify`, `extend`.'
+          example: modify
+        transfer_coupon_expires_in:
+          type: string
+          description: The expiration time of the transferred coupon.
+          example: 2 weeks
+        custom_data:
+          type: object
+          description: Any custom data set in reward configurations.
+        stores:
+          type: object
+          description: The list of stores where the coupon can be redeemed.
+          properties:
+            id:
+              type: string
+              description: ID of the store.
+              example: I004
+            name:
+              type: string
+              description: Name of the store.
+              example: 004 Dublin
+        _actions:
+          type: object
+          properties:
+            complete:
+              type: object
+              description: Endpoint to claim the reward. It is only included if the reward is currently available for the customer to claim.
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: url
+                  example: /customers/c987654/activities/rewards/5c17c37f71f86e7f798b4576/claim
+        claims:
+          type: object
+          description: The list of claims that the customer has already submitted. <br>This field is returned only when explicitly requested via the 'fields' query parameter.
+          properties:
+            created_at:
+              type: string
+              format: date-time
+              description: The date when the the first claim was registered.
+              example: '2024-07-02T17:59:10.000Z'
+            first_claimed_at:
+              type: string
+              format: date-time
+              description: The date when the customer claimed the reward for the first time.
+              example: '2024-07-02T17:59:10.000Z'
+            last_claimed_at:
+              type: string
+              format: date-time
+              description: The date when the customer claimed the reward for the last time.
+              example: '2024-07-02T17:59:10.000Z'
+            claims:
+              type: integer
+              description: The number of times the customer has claimed the reward.
+              example: 1
+            spent:
+              type: integer
+              description: The total number of points the customer has spent to claim the reward.
+              example: 300
+            coupons:
+              type: object
+              description: The coupons assigned to the customer.
+              properties:
+                code:
+                  type: string
+                  description: The coupon code.
+                status:
+                  type: string
+                  description: 'The current status of the coupon.  Options: <code>claimed</code>, <code>redeemed</code>, <code>invalid</code>, <code>expired</code>, <code>unassigned</code>, <code>partially_redeemed</code>.'
+                created_at:
+                  type: string
+                  format: date-type
+                  description: The date when the coupon code was generated.
+                  example: '2024-07-02T17:59:10.000Z'
+                customer:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID of the customer who is assigned to the coupon.
+                      example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                name:
+                  type: string
+                  description: The customer-facing name of the coupon.
+                  example: Summer Splash Discount
+                claimed_at:
+                  type: string
+                  format: date-time
+                  description: The date when the coupon was assigned to the customer.
+                  example: '2024-07-02T17:59:10.000Z'
+                type:
+                  type: string
+                  description: Type of coupon. Typically <code>amount</code>.
+                pool:
+                  type: string
+                  description: The associated coupon pool.
+                value:
+                  type: number
+                  description: The value of the coupon.
+    ErrorResponse_2:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    Category:
+      title: Category
+      type: object
+      description: Reward category associated with the reward.
+      properties:
+        id:
+          type: string
+          example: 5ef1ad79a44b5e15008b456e
+    Account:
+      title: account
+      type: object
+      description: Account assiciated with the reward.
+      properties:
+        id:
+          type: string
+          example: Main account
+        name:
+          type: string
+          example: main_account
+    RedeemInstructions:
+      title: RedeemInstructions
+      type: object
+      description: Instructions on how to redeem the reward.
+      properties:
+        en:
+          type: string
+          example: Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.
+        de:
+          type: string
+          example: Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.
+    Description:
+      title: Description
+      type: object
+      description: Description of the reward.
+      properties:
+        en:
+          type: string
+          example: Enjoy a 20% discount on our Winter Collection items.
+        de:
+          type: string
+          example: Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.
+    RestrictedMessage:
+      title: RestrictedMessage
+      type: object
+      description: Message displayed to customer who cannot claim the reward.
+      properties:
+        en:
+          type: string
+          example: This offer is currently unavailable. Please visit us again later.
+        de:
+          type: string
+          example: Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.
+    RewardPut:
+      title: RewardPut
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6479d9e55a48f71fca4cda22
+          description: The unique identifier of the reward.
+        status:
+          type: string
+          example: inactive
+          description: The status of the reward.
+        type:
+          type: string
+          example: coupon
+          description: The type of the reward.
+        name:
+          type: string
+          example: 20% Off on Winter Collection
+          description: The name of the reward.
+        description:
+          type: string
+          example: Enjoy a 20% discount on our Winter Collection items.
+          description: Description of the reward.
+        claim_button_label:
+          type: string
+          example: Get Discount
+          description: Label of the claim button.
+        price:
+          type: string
+          example: 100
+          description: Point price of the reward.
+        hide_restricted:
+          type: string
+          example: false
+          description: Indicates whether the reward is hidden from restricted users.
+        notifications:
+          type: string
+          example: false
+          description: Indicates whether a reward claim notification to the customer is sent by Antavo.
+        user_notification:
+          type: string
+          example: false
+          description: Indicates whether a reward claim notification to the workspace admin is sent by Antavo.
+        transferable:
+          type: string
+          example: false
+          description: Indicates whether the reward can be transferred to another customer.
+    ClaimButtonLabel:
+      title: ClaimButtonLabel
+      type: object
+      description: Label of the claim button.
+      properties:
+        en:
+          type: string
+          example: Get Discount
+        de:
+          type: string
+          example: Rabatt Sichern
+    Segment:
+      title: Segment
+      type: object
+      description: Segments associated with the reward.
+      properties:
+        id:
+          type: string
+          example: 5ef1ad79a44b5e15008b456e
+        name:
+          type: string
+          example: Returning Customers
+        status:
+          type: string
+          example: active
+    Name:
+      title: Name
+      type: object
+      description: The name of the reward.
+      properties:
+        en:
+          type: string
+          example: 20% Off on Winter Collection
+        de:
+          type: string
+          example: 20% Rabatt auf die Winterkollektion
+    Terms:
+      title: Terms
+      type: object
+      description: Terms and conditions of reward redemption.
+      properties:
+        en:
+          type: string
+          example: Cannot be combined with other offers.
+        de:
+          type: string
+          example: Nicht mit anderen Angeboten kombinierbar.
+    GetRewardResponse:
+      title: RewardResponse
+      type: object
+      properties:
+        id:
+          type: string
+          example: 5f05b989a44bc1c44008b4590
+          description: The unique identifier of the reward.
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        redeem_instructions:
+          $ref: '#/components/schemas/RedeemInstructions'
+        terms:
+          $ref: '#/components/schemas/Terms'
+        account:
+          $ref: '#/components/schemas/Account'
+        type:
+          type: string
+          example: coupon
+          description: The type of the reward.
+        starts_at:
+          type: string
+          format: date-time
+          example: '2020-07-21T12:00:00+00:00'
+          description: The start date of reward availability.
+        ends_at:
+          type: string
+          format: date-time
+          example: '2020-12-21T12:00:00+00:00'
+          description: The end date of reward availability.
+        claim_button_label:
+          $ref: '#/components/schemas/ClaimButtonLabel'
+        category:
+          $ref: '#/components/schemas/Category'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+        cost:
+          type: string
+          example: '150.5'
+          description: Business cost of the reward.
+        hide_restricted:
+          type: boolean
+          example: false
+          description: Whether the reward is hidden from restricted users.
+        hidden:
+          type: boolean
+          example: false
+          description: Whether the reward is hidden.
+        restricted_message:
+          $ref: '#/components/schemas/RestrictedMessage'
+        repeat_interval:
+          type: string
+          example: 1 week
+          description: The interval after which the reward can be claimed again.
+        stock:
+          type: integer
+          format: int32
+          example: 42
+          description: Number of items available.
+        max_claims:
+          type: integer
+          format: int32
+          example: 90
+          description: Number of times a customer can claim the reward.
+        notifications:
+          type: boolean
+          example: false
+          description: Indicates if a reward claim notification is sent to the customer by Antavo.
+        user_notifications:
+          type: boolean
+          example: false
+          description: Indicates if a reward claim notification to the workspace admin is sent by Antavo.
+        status:
+          type: string
+          example: inactive
+          description: The current status of the reward.
+        price:
+          $ref: '#/components/schemas/Price'
+        coupon_pool:
+          type: string
+          example: 5b22a37f71f92e7f798q4186
+          description: ID of the coupon pool associated (coupon-type rewards only).
+    PUTError:
+      title: Error
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+          example: 0
+        message:
+          type: string
+          description: Human-readable error message.
+          example: '''<attribute>'' property is required'
+    Price:
+      title: Price
+      type: object
+      description: Price of the reward in different currencies.
+      properties:
+        EUR:
+          type: integer
+          format: int32
+          example: 500
+        USD:
+          type: integer
+          format: int32
+          example: 500
+    ErrorResponse_3:
+      title: Error
+      type: object
+      properties:
+        type:
+          description: Type of the error occurred.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+        message:
+          type: string
+          description: Human readable error message.
+    Rewards:
+      type: object
+      description: Array of reward entries.
+      properties:
+        id:
+          type: string
+          description: Reward ID.
+          example: 63dcb7736123782ba6336425
+        name:
+          type: string
+          description: Name of the reward.
+          example: 10% Discount.
+        category:
+          type: string
+          description: Category of the reward. It must correlate with category set on the Management UI.
+          example: discounts
+        price:
+          type: number
+          description: Point price of the reward.
+          example: 500
+        description:
+          type: string
+          description: Description of the reward.
+          example: Enjoy 10% off on any item of the Winter Collection.
+        image_url:
+          type: string
+          description: URL of the reward image.
+          example: https://example.com/reward.jpg
+    Reward:
+      type: object
+      description: A reward item
+      properties:
+        id:
+          type: string
+          description: Reward ID.
+          example: 63dcb7736123782ba6336425
+        name:
+          type: string
+          description: Name of the reward.
+          example: A 64GB pendrive with illuminating flashing logo.
+        category:
+          type: string
+          description: Category of the reward. It must correlate with category set on the Management UI.
+          example: discounts
+        price:
+          type: number
+          description: Point price of the reward.
+          example: 500
+        image_url:
+          type: string
+          description: URL of the reward image.
+          example: https://example.com/image_url.png
+        description:
+          type: string
+          description: Description of the reward.
+          example: Enjoy 10% off on any item of the Winter Collection.
+    Error:
+      type: object
+      description: Errors occured.
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            code:
+              type: number
+              description: "Error code.\t"
+              example: 404
+            type:
+              type: string
+              description: Type of the error.
+              example: NotFoundException
+            message:
+              type: string
+              description: Human-readable error message.
+    Success:
+      type: object
+      description: A successful reward claim.
+      properties:
+        spent:
+          type: number
+          description: The number of points spent by the customer.
+          example: 500
+        coupon:
+          type: object
+          description: The assigned coupon (if any).
+          properties:
+            code:
+              type: string
+              description: Assigned coupon code.
+              example: TC22341
+            type:
+              type: string
+              description: Type of the assigned coupon.
+              example: percentage
+  securitySchemes:
+    api_key:
+      type: apiKey
+      description: Provides API Key access to the endpoint.
+      name: api_key
+      in: query
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+x-refined-from:
+- antavo-bulk-operations-openapi.yml
+- antavo-display-openapi.yml
+- antavo-entities-openapi.yml
+- antavo-rewards-openapi.yml

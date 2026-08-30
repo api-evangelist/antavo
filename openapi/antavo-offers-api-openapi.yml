@@ -1,0 +1,646 @@
+openapi: 3.2.0
+info:
+  title: Antavo Offers API
+  version: '1.0'
+  description: 'Operations tagged Offers across 2 of this provider''s published API definitions: antavo-display-openapi.yml, antavo-offers-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+tags:
+- name: Offers
+  description: Endpoints provided by the _Offers_ module
+paths:
+  /customers/{customer_id}/activities/offers:
+    get:
+      tags:
+      - Offers
+      summary: List all offers available for the customer
+      description: This endpoints provides the list of all available offers for a specific customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      responses:
+        '200':
+          description: List of all available offers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OfferActivity'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /customers/{customer_id}/activities/offers/{offer_id}/claim:
+    post:
+      tags:
+      - Offers
+      summary: Claim an offer for a specific customer
+      description: This endpoint allows for claiming an offer for a customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n  * The Antavo customer ID\n  * An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: offer_id
+        in: path
+        required: true
+        description: The ID of the offer to be claimed.
+        schema:
+          type: string
+          example: 63e95c4d0c12a2615822e913
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The result of the claim action. The offer is claimed and a coupon object is returned if the customer has met the requirements of the offer. If the offer is available for the customer but the requirements are not met, an empty object is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  coupon:
+                    $ref: '#/components/schemas/CouponClaim'
+              examples:
+                Offer is claimed:
+                  value:
+                    code: '193'
+                    status: claimed
+                    created_at: '2025-02-25T10:30:01+09:30'
+                    customer:
+                      id: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                    name: Friday 20% off
+                    claimed_at: '2025-02-28T00:27:01+09:30'
+                    type: amount
+                    value: 10
+                    pool: 62c7f20687632a561f16499b
+        '404':
+          description: Customer or offer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+                Offer not found:
+                  value:
+                    type: NotFoundException
+                    code: 0
+                    message: Offer not found
+      security:
+      - api_key: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+  /offers/:
+    post:
+      tags:
+      - Offers
+      summary: List customer-specific offers
+      description: 'This API endpoint is used to submit the contents of a cart and receive any available offers on the products within.
+
+        The Offers API request body consists of 4 components:
+
+
+        - `cart`: The intended purchase items, recorded in the same format as an Antavo checkout event.
+
+        - `customer`: The Antavo ID of the customer.
+
+        - `store`: The Antavo ID of the store. This may result in store-specific offers if configured.
+
+        - `eligible_only`: Restricts the returned offers to those available to the customer.
+
+        '
+      responses:
+        '200':
+          description: Successful cart submission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+              examples:
+                success:
+                  summary: Successful submission
+                  value:
+                    data:
+                    - id: offer_12345
+                      name: 10% off
+                      type: cart
+                      weight: 1
+                      min_total: 20
+                      max_total: 100
+                      required_match: any
+                      required_items:
+                      - type: product
+                        id: prd_987654
+                        name: Vintage Leather Jacket
+                        min_quantity: '1'
+                      eligible_match: all
+                      eligible_items:
+                      - type: product
+                        id: prd_987654
+                        name: Classic Denim Jeans
+                        min_quantity: '1'
+                      discount:
+                        type: percent_discount
+                        value: 10
+                      is_exclusive: true
+                      is_eligible: true
+                      card_title: 10% Discount
+                      card_description: Get 10% off on your purchase
+                    eligible_only: false
+                    customer:
+                      id: 9f3c82d6-288e-4361-aec0-039eb066a334
+                    cart:
+                      total: 22.22
+                      items:
+                      - product_id: prd_987654
+                        quantity: 2
+                        price: 13.6
+                        discount: 1
+                        subtotal: 18
+                      discount: 2.5
+                      shipping: 0
+                fail:
+                  summary: Error - Customer is not in the system or opted out
+                  value:
+                    code: 160602
+                    message: Invalid customer ID
+        '400':
+          description: Missing required parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                fail:
+                  summary: Error - Customer parameter is missing
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Missing required parameter ‘customer’
+                fail2:
+                  summary: Error - invalid Cart structure
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Cart structure validation Error
+                fail3:
+                  summary: Error - Cart item errors
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: cart.items.1.quantity should be greater than or equal to 1
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse_2'
+              examples:
+                fail:
+                  summary: Error - Not found
+                  value:
+                    code: 0
+                    message: Not Found
+                    type: NotFoundException
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferListRequest'
+      security:
+      - ApiKeyAuth: []
+    servers:
+    - url: https://api.staging.antavo.com
+      description: The Antavo staging environment
+components:
+  schemas:
+    CouponClaim:
+      type: object
+      properties:
+        code:
+          description: The coupon code.
+          type: string
+          example: TC22341
+        status:
+          description: The status of the coupon, whether it was only claimed by the customer or redeemed (used at checkout).
+          type: string
+          enum:
+          - claimed
+          - redeemed
+        type:
+          description: Type of the coupon.
+          type: string
+          enum:
+          - percentage
+          - amount
+          - free_shipping
+          - gift_card
+        value:
+          description: Arbitrary number as coupon value for amount type coupons, or a percentage number (0-100).
+          type: number
+          example: 10
+        created_at:
+          description: The date of coupon creation.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        claimed_at:
+          description: The date of coupon assignment.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        name:
+          description: Name of the coupon, which is inherited from the coupon pool.
+          type: string
+          example: 10% coupon codes
+        pool:
+          description: The original coupon pool from which the coupon was sourced.
+          type: string
+          example: 62c7f20687632a561f16499b
+        customer:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the customer who is assigned to the coupon.
+              example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    OfferActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the offer.
+          example: 5c17c37f71f86e7f798b4576
+        title:
+          type: string
+          description: Title of the offer.
+          example: Bundle & Save 20%
+        starts_at:
+          type: string
+          format: date-time
+          description: Start date of the offer, if defined.
+          example: '2024-07-01T04:22:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: End date of the offer, if defined.
+          example: '2024-07-31T11:59:00.000Z'
+        description:
+          type: string
+          description: Description of the offer.
+          example: Get 20% off when you add two or more items from our featured collection to your cart.
+        status:
+          type: string
+          enum:
+          - scheduled
+          - active
+          description: ''
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: As points cannot be spent or earned for offers, this property is always set to zero.
+          example: 0
+        card_title:
+          type: string
+          description: Title of the offer configured for the loyalty card to display.
+          example: Bundle & Save 20%!
+        card_description:
+          type: string
+          description: Description of the offer configured for the loyalty card to display.
+          example: Shop now and save on your favorite styles!
+        stores:
+          type: array
+          description: Stores where the offer is claimable, if defined.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the store
+                example: '004'
+              name:
+                type: string
+                description: Name of the store.
+                example: 004 Dublin
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    Item:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - product
+          - category
+          - list
+          description: "Type of item:\n - `product`\n - `category`\n - `list`\n"
+          example: product
+        id:
+          type: string
+          description: Category ID or Product SKU. An array of Product IDs or SKUs can also be returned.
+          example: prd_987654
+        name:
+          type: string
+          description: Name of the category or product.
+          example: Classic Denim Jeans
+        min_quantity:
+          type: number
+          description: Minimum quantity required to qualify for the offer. Defaults to 1 if not specified.
+          example: 1
+      required:
+      - type
+      - id
+    data:
+      type: array
+      description: An array of Offer objects
+      items:
+        $ref: '#/components/schemas/offer'
+    Cart:
+      type: object
+      description: Cart content to check against available offers.
+      required:
+      - total
+      - items
+      properties:
+        total:
+          type: number
+          description: The total value of the customer's cart including all items.
+          example: 22.22
+        items:
+          $ref: '#/components/schemas/CartItems'
+        discount:
+          type: number
+          description: Cart discount, already subtracted from total.
+          example: 2.22
+        shipping:
+          type: number
+          description: Shipping fee, already subtracted from total.
+          example: 4.44
+    response:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/data'
+        eligible_only:
+          type: boolean
+          description: Indicates if the response includes offers that the customer is eligible for.
+          example: false
+        customer:
+          type: object
+          description: Information about the customer.
+          properties:
+            id:
+              type: string
+              description: The Antavo Customer ID.
+              example: 9f3c82d6-288e-4361-aec0-039eb066a334
+        cart:
+          type: object
+          description: Contains information about the content of the customer's cart.
+          properties:
+            total:
+              type: string
+              description: The total value of the customer's cart including all items.
+              example: 22.22
+            items:
+              $ref: '#/components/schemas/CartItems'
+    CartItems:
+      type: array
+      description: Cart content to check against available offers.
+      items:
+        description: Cart content to check against available offers.
+        $ref: '#/components/schemas/CartItem'
+    CartItem:
+      type: object
+      description: Cart content to check against available offers.
+      required:
+      - product_id
+      - quantity
+      properties:
+        product_id:
+          type: string
+          description: Product ID or SKU.
+          example: prd_987654
+        quantity:
+          type: number
+          description: Number of items purchased.
+          example: 2
+        price:
+          type: number
+          description: Unit price of the product.
+          example: 10
+        discount:
+          type: number
+          description: Product discount value for given quantity.
+          example: 1
+        subtotal:
+          type: number
+          description: 'Product subtotal: price × quantity - discount'
+          example: 18
+    offer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The Antavo ID for the specific offer.
+          example: offer_12345
+        name:
+          type: string
+          description: The name of the offer.
+          example: 10% off
+        type:
+          type: string
+          description: "The type of the offer:\n * `cart`\n * `item`\n * `combined`\n"
+        weight:
+          type: number
+          description: Value from 1-10 with a lower number resulting in higher priority.
+          example: 1
+        min_total:
+          type: number
+          description: Minimum cart total eligible for the offer.
+          example: 20
+        max_total:
+          type: number
+          description: Maximum cart total eligible for the offer.
+          example: 100
+        required_match:
+          type: string
+          description: "Defines if all or at least one of the required items should be added to the cart (`cart` and `combined` offers):\n  - `any`\n  - `all` \n"
+        required_items:
+          type: array
+          description: 'List of required items for eligibility (`cart` and `combined` offers).
+
+            '
+          items:
+            $ref: '#/components/schemas/Item'
+        eligible_match:
+          type: string
+          description: "Defines if all or at least one of the required items should be added to the cart (`cart` and `combined` offers).\n  - `any`\n  - `all` \n"
+        eligible_items:
+          type: array
+          description: 'List of eligible items (`cart` and `combined` offers).
+
+            '
+          items:
+            $ref: '#/components/schemas/Item'
+        discount:
+          type: object
+          description: List of Offer objects.
+          required:
+          - type
+          - value
+          - target
+          properties:
+            type:
+              type: string
+              description: "Discount type:\n  - `fixed_price` -  Set price for targeted eligible items (`item` or `combined`).\n  - `fixed_discount` - Currency amount to be subtracted from target (`item` or `cart`)\n  - `percent_discount` - Percentage to be subtracted from target (`items` or `cart`)  \n"
+              example: percent_discount
+            value:
+              type: number
+              description: "Value of the offer depending on to discount type:\n  - `fixed_price` and `fixed_discount` - currency amount\n  - `percent_discount` - percentage value (0-100)\n"
+              example: 10
+        is_exclusive:
+          type: boolean
+          description: Incidates if this offer can be used with other offers.
+          example: true
+        is_eligible:
+          type: boolean
+          description: Indicates if the customer is eligible to redeem the offer.
+          example: true
+        card_title:
+          type: string
+          description: The title of the offer.
+          example: 10% Discount
+        card_description:
+          type: string
+          description: The description of the offer.
+          example: Get 10% off on your purchase.
+    OfferListRequest:
+      type: object
+      required:
+      - cart
+      - customer
+      properties:
+        cart:
+          $ref: '#/components/schemas/Cart'
+        customer:
+          type: string
+          example: 9f3c82d6-288e-4361-aec0-039eb066a334
+          description: An Antavo-recognized unique customer identifier. This is used to determine customer eligibility. Providing a valid attribute will result in the return of possible loyalty and non-loyalty offers.
+        store:
+          type: string
+          example: '3044'
+          description: An Antavo identifier of the store where the purchase is made. Used to determine if there are any applicable offers.
+        eligible_only:
+          type: boolean
+          default: true
+          example: true
+          description: Filters out non-eligible offers based on the current context (cart, customer, date, etc.)
+    ErrorResponse_2:
+      type: object
+      description: occurred
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of the message.
+              example: BadRequestException
+            code:
+              type: number
+              description: "Error code.\t"
+              example: 404
+            message:
+              type: string
+              description: Human-readable error message.
+              example: cart.total should be numeric
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+x-refined-from:
+- antavo-display-openapi.yml
+- antavo-offers-openapi.yml

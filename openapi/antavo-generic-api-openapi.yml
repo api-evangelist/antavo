@@ -1,0 +1,924 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Entities Generic API
+  version: 1.0.0
+  description: A general method for creating, accessing and modifying an Antavo entity.
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Generic
+  description: A general method for creating, accessing and modifying an Antavo entity.
+paths:
+  /entities/{module}/{entity}/{entity_id}:
+    delete:
+      tags:
+      - Generic
+      summary: Archive an inactive entity
+      description: This endpoint archives a specific deactivated entity, effectively removing it from the system. The reward will be completely non-visible and inaccessible for member and Management UI users as well.
+      operationId: Entitydelete
+      parameters:
+      - in: path
+        name: module
+        required: true
+        description: Name of the entity module e.g., rewards, accounts, custom (for custom entities).
+        example: wardsre
+        schema:
+          type: string
+      - in: path
+        name: entity
+        required: true
+        description: The  entity's unique ID - typically the singular form of the entity module.
+        example: reward
+        schema:
+          type: string
+      - in: path
+        name: entity_id
+        required: true
+        description: The unique ID of a specific entity.
+        example: 63eaabe8b0fe6815c91425b6
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Entity archived
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: OK
+        '404':
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failure:
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Entity not found
+      deprecated: false
+    get:
+      tags:
+      - Generic
+      summary: Retrieve all information regarding a specific entity
+      description: This endpoint returns all information regarding a specific entity item.
+      operationId: entityget
+      parameters:
+      - name: module
+        in: path
+        required: true
+        description: Name of the entity module e.g., rewards, accounts, custom (for custom entities).
+        example: rewards
+        schema:
+          type: string
+      - name: entity
+        in: path
+        required: true
+        description: The entity's unique ID - typically the singular form of the entity module name.
+        example: reward
+        schema:
+          type: string
+      - name: entity_id
+        in: path
+        required: true
+        description: The unique ID of a specific entity.
+        example: 63eaabe8b0fe6815c91425b6
+        schema:
+          type: string
+      - name: additional queries
+        in: query
+        description: '
+
+          Custom queries can be added here.
+
+          '
+        schema:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            query_field: query_text
+      responses:
+        '200':
+          description: Entity indformation provided - example data is based on a reward entity with translations included.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardResponse'
+        '400':
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failure:
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Entity not found
+      deprecated: false
+    post:
+      tags:
+      - Generic
+      summary: Update a specific entity
+      description: Any pre-configured attribute in an entity itek can be modified using this API endpoint. Modification requires the use of  attribute's unique ID, set in the Management UI.
+      operationId: entityupdate
+      parameters:
+      - in: path
+        name: module
+        required: true
+        description: Name of the entity module e.g., rewards, accounts, custom (for custom entities).
+        example: rewards
+        schema:
+          type: string
+      - in: path
+        name: entity
+        required: true
+        description: The  entity's unique ID - typically the singular form of the entity module.
+        example: reward
+        schema:
+          type: string
+      - in: path
+        name: entity_id
+        required: true
+        description: The unique id for the specific entity item.
+        example: 63eaabe8b0fe6815c91425b6
+        schema:
+          type: string
+      requestBody:
+        description: The entities and corresponding attributes to be modified. Required attributes depend on the configuration of the entity in the Management UI.
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                name: test entity
+                description: This is the description field
+        required: true
+      responses:
+        '200':
+          description: Entity has been successfully updated -  example data is based on a reward entity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardPut'
+        '400':
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Failure:
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: Entity not found
+    put:
+      tags:
+      - Generic
+      summary: Create a new entity with a specific entity ID
+      description: An entity item with a specified ID can be created in an entity module using this endpoint. Any parameter can be set as long as there is the corresponding attribute pre-configured in the Management UI.
+      operationId: Genericspeccreate
+      parameters:
+      - in: path
+        name: module
+        required: true
+        description: Name of the entity module e.g., rewards, accounts, custom (for custom entities).
+        example: rewards
+        schema:
+          type: string
+      - in: path
+        name: entity
+        required: true
+        description: The  entity's unique ID - typically the singular form of the entity module.
+        example: reward
+        schema:
+          type: string
+      - in: path
+        name: entity_id
+        required: true
+        description: The unique ID for the new entity.
+        example: 63eaabe8b0fe6815c91425b6
+        schema:
+          type: string
+      requestBody:
+        description: The entities and corresponding attributes to be created. Required attributes depend on the configuration of the entity in the Management UI.
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                name: test entity
+                description: This is the description field
+        required: true
+      responses:
+        '200':
+          description: Successful entity creation - example data is based a reward entity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardPut'
+        '400':
+          description: Bad request - A required attribute is not provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Error:
+                  value:
+                    type: BadRequestException
+                    message: '''<attribute>'' property is required'
+                    code: 0
+  /entities/{module}/{entity}:
+    get:
+      tags:
+      - Generic
+      summary: List all available entity of an entity module
+      description: This endpoint lists all available entity items within the specified entity module. This interaction is customer-independent.
+      parameters:
+      - name: module
+        in: path
+        required: true
+        description: Name of the entity module e.g., rewards, accounts, custom (for custom entities).
+        example: rewards
+        schema:
+          type: string
+      - name: entity
+        in: path
+        required: true
+        description: The entity's unique ID - typically the singular form of the entity module name.
+        example: reward
+        schema:
+          type: string
+      - name: offset
+        in: query
+        required: false
+        description: Offsets the starting number of entity items to return. This is used in pagination in conjunction with the limit query.
+        schema:
+          type: integer
+          default: 0
+          example: 10
+      - name: limit
+        in: query
+        required: false
+        description: Limits the number of entity items to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+        schema:
+          type: integer
+          default: 100
+          example: 50
+      - name: additional queries
+        in: query
+        description: '
+
+          Custom queries can be added here.
+
+          '
+        schema:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            query_field: query_text
+      responses:
+        '200':
+          description: Lists all entities - Example data is based on a reward entity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRewardsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Entity type does not exist
+                  value:
+                    type: BadRequestException
+                    message: Entity type does not exist
+                    code: 350300
+      deprecated: false
+    put:
+      tags:
+      - Generic
+      summary: Create a new entity
+      description: This endpoint created an entity in an entity module. Any parameter can be set as long as there is the corresponding attribute pre-configured in the Management UI.
+      operationId: Genericcreate
+      parameters:
+      - name: module
+        in: path
+        required: true
+        description: Name of the entity module e.g., rewards, accounts, custom (for custom entities).
+        example: rewards
+        schema:
+          type: string
+      - name: entity
+        in: path
+        required: true
+        description: The  entity's unique ID - typically the singular form of the module.
+        example: reward
+        schema:
+          type: string
+      requestBody:
+        description: The entities and corresponding attributes to be created. Required attributes depend on the configuration of the entity in the Management UI.
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                name: test entity
+                description: This is the description field
+        required: true
+      responses:
+        '200':
+          description: Successful entity creation - example data is based on a reward entity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RewardPut'
+        '400':
+          description: Bad request - a required attribute is not provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PUTError'
+              examples:
+                Failure:
+                  summary: Bad request
+                  value:
+                    type: BadRequestException
+                    code: 0
+                    message: The ID is required and needs to be unique
+      deprecated: false
+  /entities:
+    post:
+      tags:
+      - Generic
+      summary: Submit entities in bulk
+      description: 'Multiple calls to various entity endpoints can be made by submitting a request with data in array format. The following options are available for error checking the submitted data:
+
+        - `skip`: Erroneous data is not added, and the whole entry is skipped.
+
+        - `pre-check`: The submitted data is checked for validity but not entered into the Antavo system. Any error messages are returned.
+
+        - `fail`: The submission is stopped when an error is encountered.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                entities:
+                  type: array
+                  description: Name of the entity module e.g., rewards, accounts, custom (for custom entities).
+                  items:
+                    $ref: '#/components/schemas/Entity'
+                    description: Array containing all data to be processed by the request.
+                error_handling:
+                  type: string
+                  description: 'Error processing protocol for submitted functions: Options: `skip`, `pre-check` and `fail`.'
+              example:
+                entities:
+                - method: PUT
+                  type: custom/demo_entity
+                  id: 63eaabe8b0fe6815c91425b6
+                  data:
+                    name: Test Entity
+                - method: GET
+                  type: custom/demo_entity
+                  id: 63eaabe8b0fe6815c91425b6
+                error_handling: pre-check
+      responses:
+        '200':
+          description: Successful pre-check response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bulkentityone'
+                  total:
+                    type: number
+                    description: Number of processed entity calls.
+                    example: 2
+                  errors:
+                    type: number
+                    description: Number of errors.
+                    example: 0
+                example:
+                  results:
+                  - method: PUT
+                    type: custom/demo_entity
+                    id: 63eaabe8b0fe6815c91425b6
+                  - method: GET
+                    type: custom/demo_entity
+                    id: 6679a7fd6348cc7c466f27b4
+                    entity:
+                      id: i6679a7fd6348cc7c466f27b1
+                      name: 10% coupon
+                  total: 2
+                  errors: 0
+        '404':
+          description: Erroneous pre-check response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bulkentitytwo'
+                  total:
+                    type: number
+                    description: Number of processed entity calls.
+                    example: 2
+                  errors:
+                    type: number
+                    description: Number of errors.
+                    example: 1
+                example:
+                  results:
+                  - method: PUT
+                    type: custom/demo_entity
+                    id: 63eaabe8b0fe6815c91425b6
+                  - method: GET
+                    type: custom/demo_entity
+                    id: 63eaabe8b0fe6815c91425b6
+                    error:
+                      error:
+                        type: RuntimeException
+                        code: 0
+                        message: Entity not found
+                  total: 2
+                  errors: 1
+components:
+  schemas:
+    RestrictedMessage:
+      title: RestrictedMessage
+      type: object
+      description: Message displayed to customer who cannot claim the reward.
+      properties:
+        en:
+          type: string
+          example: This offer is currently unavailable. Please visit us again later.
+        de:
+          type: string
+          example: Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.
+    RewardResponse:
+      title: RewardResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the reward.
+          example: 5f05b989a44bc1c44008b4590
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        redeem_instructions:
+          $ref: '#/components/schemas/RedeemInstructions'
+        terms:
+          $ref: '#/components/schemas/Terms'
+        account:
+          $ref: '#/components/schemas/Account'
+        type:
+          type: string
+          description: Type of the reward.
+          example: coupon
+        starts_at:
+          type: string
+          format: date-time
+          description: Start date for claiming the reward.
+          example: '2020-07-21T12:00:00+00:00'
+        ends_at:
+          type: string
+          format: date-time
+          description: End date for claiming the reward.
+          example: '2020-12-21T12:00:00+00:00'
+        claim_button_label:
+          $ref: '#/components/schemas/ClaimButtonLabel'
+        category:
+          $ref: '#/components/schemas/Category'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+          description: ''
+        cost:
+          type: string
+          description: Business cost of the reward.
+          example: '150.5'
+        hide_restricted:
+          type: boolean
+          description: Indicates whether the reward should be displayed for customer outside of selected segments.
+          example: false
+        hidden:
+          type: boolean
+          description: Indicates whether the reward should be displayed to customers.
+          example: false
+        restricted_message:
+          $ref: '#/components/schemas/RestrictedMessage'
+        repeat_interval:
+          type: string
+          description: The time between two reward claims.
+          example: 1 week
+        stock:
+          type: integer
+          description: Number of reward items available.
+          example: 42
+        max_claims:
+          type: integer
+          description: Number of times a customer can claim the reward.
+          example: 90
+        notifications:
+          type: boolean
+          description: Deprecated. Indicates whether customers should be notified by Antavo when the reward is claimed.
+          example: false
+        user_notifications:
+          type: boolean
+          description: Indicates whether a workspace admin should be notified by Antavo when the reward is claimed.
+          example: false
+        status:
+          type: string
+          description: Status of the reward.
+          example: inactive
+        price:
+          $ref: '#/components/schemas/Price'
+    GetRewardResponse:
+      title: RewardResponse
+      type: object
+      properties:
+        id:
+          type: string
+          example: 5f05b989a44bc1c44008b4590
+          description: The unique identifier of the reward.
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        redeem_instructions:
+          $ref: '#/components/schemas/RedeemInstructions'
+        terms:
+          $ref: '#/components/schemas/Terms'
+        account:
+          $ref: '#/components/schemas/Account'
+        type:
+          type: string
+          example: coupon
+          description: The type of the reward.
+        starts_at:
+          type: string
+          format: date-time
+          example: '2020-07-21T12:00:00+00:00'
+          description: The start date of reward availability.
+        ends_at:
+          type: string
+          format: date-time
+          example: '2020-12-21T12:00:00+00:00'
+          description: The end date of reward availability.
+        claim_button_label:
+          $ref: '#/components/schemas/ClaimButtonLabel'
+        category:
+          $ref: '#/components/schemas/Category'
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Segment'
+        cost:
+          type: string
+          example: '150.5'
+          description: Business cost of the reward.
+        hide_restricted:
+          type: boolean
+          example: false
+          description: Whether the reward is hidden from restricted users.
+        hidden:
+          type: boolean
+          example: false
+          description: Whether the reward is hidden.
+        restricted_message:
+          $ref: '#/components/schemas/RestrictedMessage'
+        repeat_interval:
+          type: string
+          example: 1 week
+          description: The interval after which the reward can be claimed again.
+        stock:
+          type: integer
+          format: int32
+          example: 42
+          description: Number of items available.
+        max_claims:
+          type: integer
+          format: int32
+          example: 90
+          description: Number of times a customer can claim the reward.
+        notifications:
+          type: boolean
+          example: false
+          description: Indicates if a reward claim notification is sent to the customer by Antavo.
+        user_notifications:
+          type: boolean
+          example: false
+          description: Indicates if a reward claim notification to the workspace admin is sent by Antavo.
+        status:
+          type: string
+          example: inactive
+          description: The current status of the reward.
+        price:
+          $ref: '#/components/schemas/Price'
+        coupon_pool:
+          type: string
+          example: 5b22a37f71f92e7f798q4186
+          description: ID of the coupon pool associated (coupon-type rewards only).
+    PUTError:
+      title: Error
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+          example: 0
+        message:
+          type: string
+          description: Human-readable error message.
+          example: '''<attribute>'' property is required'
+    Price:
+      title: Price
+      type: object
+      description: Price of the reward in different currencies.
+      properties:
+        EUR:
+          type: integer
+          format: int32
+          example: 500
+        USD:
+          type: integer
+          format: int32
+          example: 500
+    RedeemInstructions:
+      title: RedeemInstructions
+      type: object
+      description: Instructions on how to redeem the reward.
+      properties:
+        en:
+          type: string
+          example: Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.
+        de:
+          type: string
+          example: Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.
+    Description:
+      title: Description
+      type: object
+      description: Description of the reward.
+      properties:
+        en:
+          type: string
+          example: Enjoy a 20% discount on our Winter Collection items.
+        de:
+          type: string
+          example: Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.
+    Bulkentitytwoitems:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of error.
+          example: RuntimeException
+        code:
+          type: number
+          description: The associated Antavo error code.
+          example: 0
+        message:
+          type: string
+          description: The user-friendly error description.
+          example: Entity not found
+    ClaimButtonLabel:
+      title: ClaimButtonLabel
+      type: object
+      description: Label of the claim button.
+      properties:
+        en:
+          type: string
+          example: Get Discount
+        de:
+          type: string
+          example: Rabatt Sichern
+    Segment:
+      title: Segment
+      type: object
+      description: Segments associated with the reward.
+      properties:
+        id:
+          type: string
+          example: 5ef1ad79a44b5e15008b456e
+        name:
+          type: string
+          example: Returning Customers
+        status:
+          type: string
+          example: active
+    Entity:
+      title: Entity
+      type: object
+      description: A specified API call for a defined entity
+      properties:
+        method:
+          type: string
+          description: Type of the API call
+          example: PUT
+        type:
+          type: string
+          description: Entity type
+          example: custom/demo_entity
+        id:
+          type: string
+          description: Entity ID
+          example: 63eaabe8b0fe6815c91425b6
+        data:
+          type: array
+          description: Array containing all data to be processed by request
+          items:
+            type: object
+          example: []
+    Bulkentityone:
+      type: object
+      description: An API response for an error-free defined bulk entity call.
+      properties:
+        method:
+          type: string
+          description: API call type.
+          example: PUT
+        type:
+          type: string
+          description: Entity type.
+          example: custom/demo_entity
+        id:
+          type: string
+          description: Entity ID.
+          example: 63eaabe8b0fe6815c91425b6
+    Terms:
+      title: Terms
+      type: object
+      description: Terms and conditions of reward redemption.
+      properties:
+        en:
+          type: string
+          example: Cannot be combined with other offers.
+        de:
+          type: string
+          example: Nicht mit anderen Angeboten kombinierbar.
+    Category:
+      title: Category
+      type: object
+      description: Reward category associated with the reward.
+      properties:
+        id:
+          type: string
+          example: 5ef1ad79a44b5e15008b456e
+    Bulkentitytwo:
+      type: object
+      description: An API response containing an erroneous bulk entity call.
+      properties:
+        method:
+          type: string
+          description: Type of the API call.
+          example: PUT
+        type:
+          type: string
+          description: Entity type.
+          example: custom/demo_entity
+        id:
+          type: string
+          description: Entity ID.
+          example: 63eaabe8b0fe6815c91425b6
+        error:
+          type: array
+          description: An array of all associated errors with API submission.
+          items:
+            $ref: '#/components/schemas/Bulkentitytwoitems'
+    RewardPut:
+      title: RewardPut
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6479d9e55a48f71fca4cda22
+          description: The unique identifier of the reward.
+        status:
+          type: string
+          example: inactive
+          description: The status of the reward.
+        type:
+          type: string
+          example: coupon
+          description: The type of the reward.
+        name:
+          type: string
+          example: 20% Off on Winter Collection
+          description: The name of the reward.
+        description:
+          type: string
+          example: Enjoy a 20% discount on our Winter Collection items.
+          description: Description of the reward.
+        claim_button_label:
+          type: string
+          example: Get Discount
+          description: Label of the claim button.
+        price:
+          type: string
+          example: 100
+          description: Point price of the reward.
+        hide_restricted:
+          type: string
+          example: false
+          description: Indicates whether the reward is hidden from restricted users.
+        notifications:
+          type: string
+          example: false
+          description: Indicates whether a reward claim notification to the customer is sent by Antavo.
+        user_notification:
+          type: string
+          example: false
+          description: Indicates whether a reward claim notification to the workspace admin is sent by Antavo.
+        transferable:
+          type: string
+          example: false
+          description: Indicates whether the reward can be transferred to another customer.
+    GetRewardsResponse:
+      title: GetRewardsResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetRewardResponse'
+          description: ''
+    ErrorResponse:
+      title: Error
+      type: object
+      properties:
+        type:
+          description: Type of the error occurred.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+        message:
+          type: string
+          description: Human readable error message.
+    Account:
+      title: account
+      type: object
+      description: Account assiciated with the reward.
+      properties:
+        id:
+          type: string
+          example: Main account
+        name:
+          type: string
+          example: main_account
+    Name:
+      title: Name
+      type: object
+      description: The name of the reward.
+      properties:
+        en:
+          type: string
+          example: 20% Off on Winter Collection
+        de:
+          type: string
+          example: 20% Rabatt auf die Winterkollektion
+  securitySchemes:
+    api_key:
+      type: apiKey
+      description: Provides API Key access to the endpoint
+      name: api_key
+      in: query

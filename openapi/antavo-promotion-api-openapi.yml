@@ -1,0 +1,1657 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Engine Promotion API
+  version: 1.0.0
+  description: Promotion endpoints collection
+servers:
+- url: https://promotion.test.antavo.com/api
+  description: The Promotion Engine test environtment
+tags:
+- name: Promotion
+  description: Promotion endpoints collection
+paths:
+  /v1/promotion/{promotionId}:
+    get:
+      tags:
+      - Promotion
+      summary: Retrieve a specific promotion by ID
+      description: The endpoint provides detailed information about a specific promotion.
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: path
+        name: promotionId
+        schema:
+          type: string
+        required: true
+        description: Unique indentifier of the promotion.
+        example: 01JW4M2FS0CX9DQETDV142JB4M
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                    description: Indicates the success of the request. Always `success` here.
+                  metadata:
+                    type: object
+                    description: Reserved for future use; currently returns an empty object.
+                  payload:
+                    $ref: '#/components/schemas/promotionModel'
+                    description: Details of the promotion object.
+              examples:
+                bonusProducts:
+                  summary: Bonus product promotion
+                  value:
+                    id: 01JVYEHFT9559EHVCMF3WPNNER
+                    workspaceId: '500'
+                    name: Denim 3+1
+                    status: archived
+                    description: Denim 3+1
+                    type: bonusProducts
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: true
+                        limit: 2
+                      stackingType: exclusive
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-05-01 13:29
+                        end: 2025-05-10 13:29
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: '10'
+                      maxTotalBeforeTax: '14'
+                      storeRestriction:
+                        stores:
+                        - 5077595177C60923
+                        storeGroups:
+                        - Germany
+                        - Austria
+                      bonusProducts:
+                        products: []
+                        categories:
+                        - categoryId: Apparel & Accessories > Clothing > Pants
+                          quantity: 3
+                        itemMatchingRule: any
+                    discount:
+                      bonusProducts:
+                        products:
+                        - productId: '2235462'
+                          quantity: 1
+                        value: '50.00'
+                priceReduction:
+                  summary: Price reduction promotion
+                  value:
+                    id: 01JW462QYYXJVFTMT91BPXTBBQ
+                    workspaceId: '500'
+                    name: €10 OFF on Skirts
+                    status: active
+                    description: €10 OFF on Skirts
+                    type: priceReduction
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: false
+                        limit: 0
+                      stackingType: selectiveStackable
+                      excludedPromotionIds:
+                      - 01JVYEHFT9559EHVCMF3WPNNER
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-05-18 18:56
+                        end: 2025-05-24 00:00
+                        recurringSchedule: FREQ=DAILY;DTSTART=20250518T185600;DTEND=20250524T185600;INTERVAL=4
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: '10'
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores:
+                        - 5077595177C60923
+                        storeGroups:
+                        - Austria
+                      priceReduction:
+                        productIds: []
+                        categoryIds:
+                        - Apparel & Accessories > Clothing > Skirts
+                    discount:
+                      priceReduction:
+                        type: fixed
+                        amount: '1.00'
+                promoCode:
+                  summary: Promo code promotion
+                  value:
+                    id: 01JW46XJ530J9Z4Y3PKYC3MCST
+                    workspaceId: '500'
+                    name: Spring 15% Promotion
+                    status: active
+                    description: Celebrate the spring season with 15% off on each product.
+                    type: promoCode
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: false
+                        limit: 0
+                      stackingType: stackable
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-03-01 19:10
+                        end: 2025-05-31 22:34
+                        recurringSchedule: FREQ=WEEKLY;DTSTART=20250301T191000;DTEND=20250531T191000;INTERVAL=1
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: '5'
+                      maxTotalBeforeTax: '100'
+                      storeRestriction:
+                        stores: []
+                        storeGroups:
+                        - Austria
+                      promoCode:
+                        promoCode: SPRING15
+                        excludedProducts: []
+                    discount:
+                      promoCode:
+                        type: percentage
+                        amount: '15.00'
+                bundle:
+                  summary: Bundle promotion
+                  value:
+                    id: 01JW4K0FSPZ3GHKN5TWRKJZ5DV
+                    workspaceId: '500'
+                    name: Summer Skincare Bundle
+                    status: draft
+                    description: Curated skincare products bundle for summer glow and hydration.
+                    type: bundle
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: false
+                        limit: 0
+                      stackingType: exclusive
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-06-01 22:37
+                        end: 2025-08-30 22:37
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: ''
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores:
+                        - 47847307C1652044
+                        storeGroups:
+                        - Austria
+                      bundle:
+                        productIds:
+                        - '32087'
+                        - '89412'
+                        - '16532'
+                        categoryIds:
+                        - Skincare
+                    discount:
+                      bundle:
+                        type: groupPriceBeforeTax
+                        amount: '149.99'
+                BuyXForTotalAmount:
+                  summary: Buy X for total Y promotion
+                  value:
+                    id: 01JW4K7MJJKJB1C58F1CP3K2ZQ
+                    workspaceId: '500'
+                    name: Buy 4 pens total for €10.
+                    status: active
+                    description: Buy any 4 pens for a total price of €10.
+                    type: buyXForTotalAmount
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: true
+                        limit: 5
+                      stackingType: stackable
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-08-01 22:45
+                        end: 2025-09-30 22:45
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: '10'
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores: []
+                        storeGroups:
+                        - Germany
+                      buyXForTotalAmount:
+                        quantity: 4
+                        item: Stationery
+                        itemType: category
+                    discount:
+                      buyXForTotalAmount:
+                        groupPriceBeforeTax: '10.00'
+                        itemSelectionStrategy: cheapest
+                buyXGet1free:
+                  summary: Buy X get 1 free (BOGO) promotion
+                  value:
+                    id: 01JW4KAXA32N9ZGEERG7MHMR0X
+                    workspaceId: '500'
+                    name: Buy 3 get 1 free bundle
+                    status: active
+                    description: Buy 3 shirts, get 1 free.
+                    type: buyXGetYFree
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: true
+                        limit: 3
+                      stackingType: exclusive
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-03-01 22:48
+                        end: 2025-05-31 22:48
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: '20'
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores:
+                        - 5077595177C60923
+                        - 47847307C1652044
+                        storeGroups:
+                        - Austria
+                      buyXGetYFree:
+                        quantity: 3
+                        item: '2223640'
+                        itemType: product
+                    discount:
+                      buyXGetYFree:
+                        freeProductSelectionStrategy: cheapest
+                        quantity: 1
+                crossSelling:
+                  summary: Cross-selling promotion
+                  value:
+                    id: 01JW4KGCRX5V5213XT9DXZD6QS
+                    workspaceId: '500'
+                    name: Cross-sell winter hats
+                    status: draft
+                    description: Get 25% off hats when buying jackets.
+                    type: crossSelling
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: true
+                        limit: 0
+                      stackingType: exclusive
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-12-01 22:50
+                        end: 2025-12-06 22:50
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: '10'
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores: []
+                        storeGroups:
+                        - Germany
+                      crossSelling:
+                        productIds: []
+                        categoryIds:
+                        - Apparel & Accessories > Clothing > Jackets
+                    discount:
+                      crossSelling:
+                        categories:
+                        - categoryId: Apparel & Accessories > Clothing > Hats
+                          type: percentage
+                          amount: '25.00'
+                        products: []
+                        itemSelectionStrategy: cheapest
+                freeSample:
+                  summary: Free sample promotion
+                  value:
+                    id: 01JW4KR347PV2MA9943TD38YQS
+                    workspaceId: '500'
+                    name: Free perfume sample
+                    status: active
+                    description: Try a free perfume sample with any order.
+                    type: freeSample
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: false
+                        limit: 0
+                      stackingType: exclusive
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-01-01 22:55
+                        end: 2025-12-31 22:55
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: '100'
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores: []
+                        storeGroups:
+                        - Germany
+                        - Austria
+                      freeSample:
+                        products: []
+                        categories:
+                        - categoryId: Perfumes
+                          quantity: 1
+                        itemMatchingRule: any
+                    discount:
+                      freeSample:
+                        productId: '87654'
+                        quantity: 1
+                        value: '0.00'
+                productSet:
+                  summary: Product set promotion
+                  value:
+                    id: 01JW4KY3F49J3NMDF83Y7R5N7F
+                    workspaceId: '500'
+                    name: Winter coat and scarf set
+                    status: draft
+                    description: Buy coat & scarf set, get 12% off.
+                    type: productSet
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: false
+                        limit: 0
+                      stackingType: selectiveStackable
+                      excludedPromotionIds:
+                      - 01JW4KGCRX5V5213XT9DXZD6QS
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-11-01 22:57
+                        end: 2025-12-31 22:57
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: ''
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores:
+                        - 47847307C1652044
+                        storeGroups:
+                        - Austria
+                      productSet:
+                        products: []
+                        categories:
+                        - categoryId: Apparel & Accessories > Clothing > Coats
+                          quantity: 1
+                        - categoryId: Apparel & Accessories > Clothing > Scarfs
+                          quantity: 1
+                    discount:
+                      productSet:
+                        type: percentage
+                        amount: '12.00'
+                        itemSelectionStrategy: cheapest
+                promotionalPricing:
+                  summary: Promotional pricing promotion
+                  value:
+                    id: 01JW4M2FS0CX9DQETDV142JB4M
+                    workspaceId: '500'
+                    name: Sneakers promotional price
+                    status: active
+                    description: Sneakers at €70 during promotion.
+                    type: promotionalPricing
+                    imageURL: https://antavo.com
+                    priority: 1
+                    currency: EUR
+                    stackingConfiguration:
+                      selfStackingConfiguration:
+                        isAllowed: false
+                        limit: 0
+                      stackingType: stackable
+                      excludedPromotionIds: null
+                    applicationsResetSchedule: null
+                    restriction:
+                      timeRestriction:
+                        start: 2025-07-01 23:01
+                        end: 2025-07-31 23:01
+                        recurringSchedule: null
+                      applicationsCountLimit: 0
+                      minTotalBeforeTax: ''
+                      maxTotalBeforeTax: ''
+                      storeRestriction:
+                        stores: []
+                        storeGroups:
+                        - Austria
+                      promotionalPricing:
+                        productIds: []
+                        categoryIds:
+                        - Apparel & Accessories > Clothing > Shoes > Sneakers
+                    discount:
+                      promotionalPricing:
+                        unitPriceBeforeTax: '70.00'
+        '403':
+          $ref: '#/components/responses/TokenValidationError'
+        '404':
+          $ref: '#/components/responses/ModelNotFoundError'
+  /v1/promotions:
+    get:
+      tags:
+      - Promotion
+      summary: Retrieve the list of promotions
+      description: 'Fetches all promotions [configured](https://docs.antavo.com/docs/configuring-promotions) in your workspace. The response includes the full promotion objects with all settings as configured in the UI. Useful for listing, syncing, or debugging active campaign setups.
+
+        No request parameters are required.
+
+        '
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: A success response returns all configured promotions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Indicates the success of the request. Always `success` here.
+                    example: success
+                  metadata:
+                    type: object
+                    description: Reserved for pagination or additional metadata.
+                  payload:
+                    type: array
+                    description: List of promotion objects.
+                    items:
+                      $ref: '#/components/schemas/promotionModel'
+              examples:
+                allPromotionTypes:
+                  summary: Example with all promotion types
+                  value:
+                    status: success
+                    metadata: []
+                    payload:
+                    - id: 01JVYEHFT9559EHVCMF3WPNNER
+                      workspaceId: '500'
+                      name: Denim 3+1
+                      status: archived
+                      description: Denim 3+1
+                      type: bonusProducts
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: true
+                          limit: 2
+                        stackingType: exclusive
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-05-01 13:29
+                          end: 2025-05-10 13:29
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: '10'
+                        maxTotalBeforeTax: '14'
+                        storeRestriction:
+                          stores:
+                          - 5077595177C60923
+                          storeGroups:
+                          - Germany
+                          - Austria
+                        bonusProducts:
+                          products: []
+                          categories:
+                          - categoryId: Apparel & Accessories > Clothing > Pants
+                            quantity: 3
+                          itemMatchingRule: any
+                      discount:
+                        bonusProducts:
+                          products:
+                          - productId: '2235462'
+                            quantity: 1
+                          value: '50.00'
+                    - id: 01JW462QYYXJVFTMT91BPXTBBQ
+                      workspaceId: '500'
+                      name: €10 OFF on Skirts
+                      status: active
+                      description: €10 OFF on Skirts
+                      type: priceReduction
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: false
+                          limit: 0
+                        stackingType: selectiveStackable
+                        excludedPromotionIds:
+                        - 01JVYEHFT9559EHVCMF3WPNNER
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-05-18 18:56
+                          end: 2025-05-24 00:00
+                          recurringSchedule: FREQ=DAILY;DTSTART=20250518T185600;DTEND=20250524T185600;INTERVAL=4
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: '10'
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores:
+                          - 5077595177C60923
+                          storeGroups:
+                          - Austria
+                        priceReduction:
+                          productIds: []
+                          categoryIds:
+                          - Apparel & Accessories > Clothing > Skirts
+                      discount:
+                        priceReduction:
+                          type: fixed
+                          amount: '1.00'
+                    - id: 01JW46XJ530J9Z4Y3PKYC3MCST
+                      workspaceId: '500'
+                      name: Spring 15% Promotion
+                      status: active
+                      description: Celebrate the spring season with 15% off on each product.
+                      type: promoCode
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: false
+                          limit: 0
+                        stackingType: stackable
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-03-01 19:10
+                          end: 2025-05-31 22:34
+                          recurringSchedule: FREQ=WEEKLY;DTSTART=20250301T191000;DTEND=20250531T191000;INTERVAL=1
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: '5'
+                        maxTotalBeforeTax: '100'
+                        storeRestriction:
+                          stores: []
+                          storeGroups:
+                          - Austria
+                        promoCode:
+                          promoCode: SPRING15
+                          excludedProducts: []
+                      discount:
+                        promoCode:
+                          type: percentage
+                          amount: '15.00'
+                    - id: 01JW4K0FSPZ3GHKN5TWRKJZ5DV
+                      workspaceId: '500'
+                      name: Summer Skincare Bundle
+                      status: draft
+                      description: Curated skincare products bundle for summer glow and hydration.
+                      type: bundle
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: false
+                          limit: 0
+                        stackingType: exclusive
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-06-01 22:37
+                          end: 2025-08-30 22:37
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: ''
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores:
+                          - 47847307C1652044
+                          storeGroups:
+                          - Austria
+                        bundle:
+                          productIds:
+                          - '32087'
+                          - '89412'
+                          - '16532'
+                          categoryIds:
+                          - Skincare
+                      discount:
+                        bundle:
+                          type: groupPriceBeforeTax
+                          amount: '149.99'
+                    - id: 01JW4K7MJJKJB1C58F1CP3K2ZQ
+                      workspaceId: '500'
+                      name: Buy 4 pens total for €10.
+                      status: active
+                      description: Buy any 4 pens for a total price of €10.
+                      type: buyXForTotalAmount
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: true
+                          limit: 5
+                        stackingType: stackable
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-08-01 22:45
+                          end: 2025-09-30 22:45
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: '10'
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores: []
+                          storeGroups:
+                          - Germany
+                        buyXForTotalAmount:
+                          quantity: 4
+                          item: Stationery
+                          itemType: category
+                      discount:
+                        buyXForTotalAmount:
+                          groupPriceBeforeTax: '10.00'
+                          itemSelectionStrategy: cheapest
+                    - id: 01JW4KAXA32N9ZGEERG7MHMR0X
+                      workspaceId: '500'
+                      name: Buy 3 get 1 free bundle
+                      status: active
+                      description: Buy 3 shirts, get 1 free.
+                      type: buyXGetYFree
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: true
+                          limit: 3
+                        stackingType: exclusive
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-03-01 22:48
+                          end: 2025-05-31 22:48
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: '20'
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores:
+                          - 5077595177C60923
+                          - 47847307C1652044
+                          storeGroups:
+                          - Austria
+                        buyXGetYFree:
+                          quantity: 3
+                          item: '2223640'
+                          itemType: product
+                      discount:
+                        buyXGetYFree:
+                          freeProductSelectionStrategy: cheapest
+                          quantity: 1
+                    - id: 01JW4KGCRX5V5213XT9DXZD6QS
+                      workspaceId: '500'
+                      name: Cross-sell winter hats
+                      status: draft
+                      description: Get 25% off hats when buying jackets.
+                      type: crossSelling
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: true
+                          limit: 0
+                        stackingType: exclusive
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-12-01 22:50
+                          end: 2025-12-06 22:50
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: '10'
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores: []
+                          storeGroups:
+                          - Germany
+                        crossSelling:
+                          productIds: []
+                          categoryIds:
+                          - Apparel & Accessories > Clothing > Jackets
+                      discount:
+                        crossSelling:
+                          categories:
+                          - categoryId: Apparel & Accessories > Clothing > Hats
+                            type: percentage
+                            amount: '25.00'
+                          products: []
+                          itemSelectionStrategy: cheapest
+                    - id: 01JW4KR347PV2MA9943TD38YQS
+                      workspaceId: '500'
+                      name: Free perfume sample
+                      status: active
+                      description: Try a free perfume sample with any order.
+                      type: freeSample
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: false
+                          limit: 0
+                        stackingType: exclusive
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-01-01 22:55
+                          end: 2025-12-31 22:55
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: '100'
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores: []
+                          storeGroups:
+                          - Germany
+                          - Austria
+                        freeSample:
+                          products: []
+                          categories:
+                          - categoryId: Perfumes
+                            quantity: 1
+                          itemMatchingRule: any
+                      discount:
+                        freeSample:
+                          productId: '87654'
+                          quantity: 1
+                          value: '0.00'
+                    - id: 01JW4KY3F49J3NMDF83Y7R5N7F
+                      workspaceId: '500'
+                      name: Winter coat and scarf set
+                      status: draft
+                      description: Buy coat & scarf set, get 12% off.
+                      type: productSet
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: false
+                          limit: 0
+                        stackingType: selectiveStackable
+                        excludedPromotionIds:
+                        - 01JW4KGCRX5V5213XT9DXZD6QS
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-11-01 22:57
+                          end: 2025-12-31 22:57
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: ''
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores:
+                          - 47847307C1652044
+                          storeGroups:
+                          - Austria
+                        productSet:
+                          products: []
+                          categories:
+                          - categoryId: Apparel & Accessories > Clothing > Coats
+                            quantity: 1
+                          - categoryId: Apparel & Accessories > Clothing > Scarfs
+                            quantity: 1
+                      discount:
+                        productSet:
+                          type: percentage
+                          amount: '12.00'
+                          itemSelectionStrategy: cheapest
+                    - id: 01JW4M2FS0CX9DQETDV142JB4M
+                      workspaceId: '500'
+                      name: Sneakers promotional price
+                      status: active
+                      description: Sneakers at €70 during promotion.
+                      type: promotionalPricing
+                      imageURL: https://antavo.com
+                      priority: 1
+                      currency: EUR
+                      stackingConfiguration:
+                        selfStackingConfiguration:
+                          isAllowed: false
+                          limit: 0
+                        stackingType: stackable
+                        excludedPromotionIds: null
+                      applicationsResetSchedule: null
+                      restriction:
+                        timeRestriction:
+                          start: 2025-07-01 23:01
+                          end: 2025-07-31 23:01
+                          recurringSchedule: null
+                        applicationsCountLimit: 0
+                        minTotalBeforeTax: ''
+                        maxTotalBeforeTax: ''
+                        storeRestriction:
+                          stores: []
+                          storeGroups:
+                          - Austria
+                        promotionalPricing:
+                          productIds: []
+                          categoryIds:
+                          - Apparel & Accessories > Clothing > Shoes > Sneakers
+                      discount:
+                        promotionalPricing:
+                          unitPriceBeforeTax: '70.00'
+        '403':
+          $ref: '#/components/responses/AccessDeniedError'
+  /v1/promotion/{promotionId}/status:
+    post:
+      tags:
+      - Promotion
+      summary: Update the status of a promotion
+      description: 'This endpoint allows you to change the status of an existing promotion, enabling you to activate it, return it to draft for further editing, or archive it permanently. Note: once a promotion is archived, it cannot be changed back to any other state.'
+      security:
+      - bearerAuth: []
+      parameters:
+      - in: path
+        name: promotionId
+        schema:
+          type: string
+        description: The ID of the promotion whose status you want to update.
+        example: 01JW4K0FSPZ3GHKN5TWRKJZ5DV
+        required: true
+      requestBody:
+        description: Promotion status request
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - active
+                  - draft
+                  - archived
+                  - completed
+                  example: active
+                  description: 'The desired new status. Allowed values: `active`, `draft`, `archived`, `completed`. Note: archived promotions cannot be reactivated or moved back to draft.'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                    description: Indicates the success of the request. Always `success` here.
+                  metadata:
+                    type: array
+                    description: Reserved for future use; currently returns an empty object.
+                  payload:
+                    type: array
+                    description: Reserved for future use; currently returns an empty object.
+        '403':
+          $ref: '#/components/responses/TokenNotFoundError'
+        '404':
+          $ref: '#/components/responses/ModelNotFoundError'
+        '500':
+          $ref: '#/components/responses/UpdateExceptionError'
+components:
+  responses:
+    UpdateExceptionError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Error category or type identifier.
+                example: MUpdateException
+              message:
+                type: string
+                description: Human-readable message describing the authentication error.
+                example: Promotion status cannot change from archived to active
+              code:
+                type: integer
+                example: 578
+                description: A numeric code representing the specific error.
+    TokenValidationError:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Error category or type identifier.
+                example: AuthorizationException
+              message:
+                type: string
+                description: Human-readable message describing the authentication error.
+                example: Token validation failed.
+              code:
+                type: integer
+                example: 676
+                description: A numeric code representing the specific error.
+    AccessDeniedError:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Error category or type identifier.
+                example: AuthorizationException
+              message:
+                type: string
+                description: Human-readable message describing the authentication error.
+                example: Access denied.
+              code:
+                type: integer
+                example: 677
+                description: A numeric code representing the specific error.
+    TokenNotFoundError:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Error category or type identifier.
+                example: AuthorizationException
+              message:
+                type: string
+                description: Human-readable message describing the authentication error.
+                example: JWT Token is required
+              code:
+                type: integer
+                example: 673
+                description: A numeric code representing the specific error.
+    ModelNotFoundError:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Error category or type identifier.
+                example: ModelNotFoundException
+              message:
+                type: string
+                description: Human-readable message describing the authentication error.
+                example: No result for query.
+              code:
+                type: integer
+                example: 576
+                description: A numeric code representing the specific error.
+  schemas:
+    restrictionPriceReduction:
+      type: object
+      properties:
+        categoryIds:
+          type: array
+          example:
+          - C223233440
+          items:
+            type: string
+          description: List of category IDs; purchasing products from these categories can trigger the price reduction.
+        productIds:
+          type: array
+          example:
+          - 2223640
+          items:
+            type: string
+          description: List of specific product IDs that qualify for price reduction.
+    restrictionBundle:
+      allOf:
+      - $ref: '#/components/schemas/restrictionBase'
+        type: object
+        properties:
+          productIds:
+            type: array
+            description: List of specific product IDs required for the bundle promotion to be valid.
+            example:
+            - 2223640
+            items:
+              type: string
+          categoryIds:
+            type: array
+            description: List of product category IDs; products from these categories qualify for the bundle promotion.
+            example:
+            - C223233440
+            items:
+              type: string
+    discountPromotionalPricing:
+      type: object
+      properties:
+        unitPriceBeforeTax:
+          type: number
+          description: The promotional unit price before tax that replaces the regular price during the promotion.
+          example: 1
+    restrictionBuyXGetYFree:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: The minimum quantity of the specified item that must be purchased to qualify for receiving the free item.
+          example: 1
+        item:
+          type: string
+          example: 2223640
+          description: The unique identifier of the product or category the restriction applies to.
+        itemType:
+          type: string
+          enum:
+          - product
+          - category
+          example: product
+          description: Defines whether the `item` is a specific product or a product category.
+    discountBuyXGetYFree:
+      type: object
+      properties:
+        freeProductSelectionStrategy:
+          type: string
+          enum:
+          - cheapest
+          - mostExpensive
+          example: cheapest
+          description: Determines which item is granted for free based on price.
+        quantity:
+          type: integer
+          example: null
+          description: The number of free items granted by the promotion.
+    restrictionFreeSample:
+      type: object
+      properties:
+        products:
+          type: array
+          description: List of products that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: 2223640
+                description: Unique identifier of the product required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of the product that must be purchased.
+        categories:
+          type: array
+          description: List of product categories that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              categoryId:
+                type: string
+                example: C223233440
+                description: Unique identifier of the category required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of products from the category that must be purchased.
+        itemMatchingRule:
+          type: string
+          enum:
+          - all
+          - any
+          example: any
+          description: Defines whether all conditions ('all') or any one condition ('any') must be met for the restriction.
+    discountBonusProducts:
+      type: object
+      properties:
+        products:
+          type: array
+          description: List of products added as a bonus.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: The unique identifier of the bonus product.
+                example: 2235462
+              quantity:
+                type: integer
+                description: The quantity of the bonus product granted.
+                example: 2
+        value:
+          type: number
+          example: 100
+          description: The price value of the bonus product considered in promotion calculations.
+    restrictionPromotionalPricing:
+      type: object
+      properties:
+        categoryIds:
+          type: array
+          example:
+          - C223233440
+          items:
+            type: string
+          description: List of category IDs; purchasing products from these categories can trigger the promotional price.
+        productIds:
+          type: array
+          example:
+          - 2223640
+          items:
+            type: string
+          description: List of specific product IDs that qualify for promotional price.
+    discountPromoCode:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - percentage
+          - fixed
+          example: fixed
+          description: Type of discount the promo code applies.
+        amount:
+          type: number
+          description: The discount value or percentage applied when using the promo code.
+          example: 1
+    restrictionBonusProducts:
+      allOf:
+      - $ref: '#/components/schemas/restrictionBase'
+        type: object
+        properties:
+          products:
+            type: array
+            description: List of products that must be purchased to activate the promotion.
+            items:
+              type: object
+              properties:
+                productId:
+                  type: string
+                  example: 2223640
+                  description: Unique identifier of the product required for the promotion.
+                quantity:
+                  type: integer
+                  description: Minimum quantity of the product that must be purchased.
+                  example: 2
+          categories:
+            type: array
+            description: List of product categories that must be purchased to trigger the promotion.
+            items:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                  example: C223233440
+                  description: Unique identifier of the category required for the promotion.
+                quantity:
+                  type: integer
+                  description: Minimum quantity of products from the category that must be purchased.
+                  example: 2
+          itemMatchingRule:
+            type: string
+            description: Specifies whether all listed conditions ('all') or any one of them ('any') must be satisfied to qualify for the promotion.
+            enum:
+            - all
+            - any
+            example: any
+          minTotalBeforeTax:
+            type: number
+            description: Minimum total purchase amount before tax required to trigger the promotion.
+            example: 12
+    restrictionProductSet:
+      type: object
+      properties:
+        products:
+          type: array
+          description: List of products that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: 2223640
+                description: Unique identifier of the product required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of the product that must be purchased.
+        categories:
+          type: array
+          description: List of product categories that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              categoryId:
+                type: string
+                example: C223233440
+                description: Unique identifier of the category required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of products from the category that must be purchased.
+    restrictionBase:
+      type: object
+      description: Conditions that must be met for the promotion to apply to the cart. The structure and applicable fields may vary depending on the promotion type.
+      properties:
+        timeRestriction:
+          type: object
+          properties:
+            start:
+              type: string
+              description: Start time of the promotion.
+              example: 2025-05-18 18:56
+            end:
+              type: string
+            recurringSchedule:
+              type: string
+              description: 'Recurrence rule for promotions that are periodically active. Specifies when each recurring promotion period starts and ends.
+
+                If the recurrence has not been enabled, it returns `null` value.
+
+                '
+              example: FREQ=WEEKLY;BYDAY=FR;BYMONTH=1;DTSTART=20250103T200000Z;DTEND=20250105T180000Z
+        applicationsCountLimit:
+          type: integer
+          description: How many times this promotion can be used. `0` means unlimited.
+          example: 0
+        minTotalBeforeTax:
+          type: number
+          description: Minimum cart subtotal required (optional).
+          example: 10
+        maxTotalBeforeTax:
+          type: number
+          description: Maximum cart subtotal required (optional).
+          example: 500
+        storeRestriction:
+          type: object
+          properties:
+            stores:
+              type: array
+              description: IDs of individual stores where the promotion is active.
+              example:
+              - 0012y00000GjtHZAAZ
+              items:
+                type: string
+            storeGroups:
+              type: array
+              description: Store group IDs where the promotion is active.
+              example:
+              - Austria
+              items:
+                type: string
+    restrictionBuyXForTotalAmount:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: The minimum quantity of the specified item (product or category) that must be purchased to trigger the promotion.
+          example: 1
+        item:
+          type: string
+          description: The unique identifier of the product or category the restriction applies to.
+          example: 2223640
+        itemType:
+          type: string
+          enum:
+          - product
+          - category
+          example: product
+          description: Defines whether the `item` is a specific product or a product category.
+    discountCrossSelling:
+      type: object
+      properties:
+        categories:
+          type: array
+          description: List of categories eligible for cross-selling discounts with their respective discount types and amounts.
+          items:
+            type: object
+            properties:
+              categoryId:
+                type: string
+                description: Unique identifier of the product category receiving the discount.
+                example: Apparel & Accessories > Clothing > Hats
+              type:
+                type: string
+                enum:
+                - percentage
+                - fixed
+                - unitPriceBeforeTax
+                description: Type of discount applied to the category.
+                example: fixed
+              amount:
+                type: number
+                description: Value of the discount applied to the category.
+                example: 1
+        products:
+          type: array
+          description: List of individual products eligible for cross-selling discounts with their discount details.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: 2223640
+                description: Unique identifier of the product receiving the discount.
+              type:
+                type: string
+                enum:
+                - percentage
+                - fixed
+                - unitPriceBeforeTax
+                example: fixed
+                description: Type of discount applied to the product.
+              amount:
+                type: number
+                description: Value of the discount applied to the product.
+                example: 1
+        itemSelectionStrategy:
+          type: string
+          enum:
+          - cheapest
+          - mostExpensive
+          example: cheapest
+          description: Strategy to determine which items the discount applies to when multiple eligible items are present.
+    discountPriceReduction:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - fixed
+          - percentage
+          - unitPriceBeforeTax
+          example: fixed
+          description: The kind of price reduction applied.
+        amount:
+          type: number
+          description: The discount amount or percentage, depending on the `type`.
+          example: 1
+        value:
+          type: number
+          description: Discount value interpreted according to the selected discount type.
+          example: 100
+    discountBundle:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - percentage
+          - fixed
+          - groupPriceBeforeTax
+          example: fixed
+          description: Type of discount applied to the bundle.
+        amount:
+          type: number
+          description: The value of the discount, depending on the selected type.
+          example: 20
+    restrictionCrossSelling:
+      type: object
+      properties:
+        categoryIds:
+          type: array
+          example:
+          - C223233440
+          items:
+            type: string
+          description: List of category IDs; purchasing products from these categories can trigger the cross-selling promotion.
+        productIds:
+          type: array
+          example:
+          - 2223640
+          items:
+            type: string
+          description: List of specific product IDs that qualify for the cross-selling promotion.
+    discountBuyXForTotalAmount:
+      type: object
+      properties:
+        groupPriceBeforeTax:
+          type: number
+          description: Fixed total price before tax for the selected group of items under this promotion.
+          example: 20
+        itemSelectionStrategy:
+          type: string
+          description: Determines which items are selected to form the group price.
+          enum:
+          - cheapest
+          - mostExpensive
+          example: cheapest
+    discountProductSet:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - percentage
+          - fixed
+          - groupPriceBeforeTax
+          example: fixed
+          description: Type of discount applied to the product set.
+        amount:
+          type: number
+          description: The discount value or special group price amount depending on the selected type.
+          example: 1
+        itemSelectionStrategy:
+          type: string
+          enum:
+          - cheapest
+          - mostExpensive
+          example: cheapest
+          description: Strategy to select which items the discount applies to within the set.
+    discountFreeSample:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The unique identifier of the product offered as a free sample.
+          example: 2223640
+        quantity:
+          type: integer
+          description: The number of free sample units to be given.
+          example: 1
+    promotionModel:
+      required:
+      - name
+      - description
+      - type
+      - imageURL
+      - stackingConfig
+      - restriction
+      - discount
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the promotion.
+          example: 01JW462QYYXJVFTMT91BPXTBBQ
+        workspaceId:
+          type: string
+          description: ID of the workspace where the promotion was configured.
+          example: 500
+        name:
+          type: string
+          description: Name of the promotion.
+          example: €10 OFF on Skirts
+        status:
+          type: string
+          description: Status of the promotion (draft, archived, active).
+          enum:
+          - draft
+          - archived
+          - active
+          - completed
+          example: active
+        description:
+          type: string
+          example: Get €10 off all skirt purchases with no minimum spend required.
+          description: Optional human-readable description.
+        type:
+          type: string
+          description: Type of promotion.
+          enum:
+          - bonusProducts
+          - bundle
+          - buyXForTotalAmount
+          - buyXGetOneFree
+          - crossSelling
+          - priceReduction
+          - freeSample
+          - productSet
+          - promoCode
+          - promotionalPricing
+          example: priceReduction
+        imageURL:
+          type: string
+          description: URL of the promotion image shown in the UI.
+          example: https://antavo.com/Image
+        priority:
+          type: integer
+          description: Determines promotion application order.
+          example: 1
+        currency:
+          type: string
+          description: Currency code for discount values.
+          example: EUR
+          maxLength: 3
+        stackingConfiguration:
+          type: object
+          properties:
+            selfStackingConfiguration:
+              type: object
+              properties:
+                isAllowed:
+                  type: boolean
+                  description: Indicates whether the same promotion can be applied multiple times in the same cart.
+                  example: true
+                limit:
+                  type: integer
+                  description: Max number of times it can apply (if allowed).
+                  example: 2
+            stackingType:
+              type: string
+              description: Defines how this promotion may stack with other promotions.
+              example: selectiveStackable
+              enum:
+              - exclusive
+              - stackable
+              - selectiveStackable
+            excludedPromotionIds:
+              type: array
+              description: IDs of promotions it cannot be combined with (for `selectiveStackable` promotions only). If there's no excluded promotion, `null` is returned.
+              example:
+              - 01JVYEHFT9559EHVCMF3WPNNER
+              items:
+                type: string
+        applicationsResetSchedule:
+          type: string
+          description: 'Defines the recurrence rule for resetting the usage counter of the promotion if recurrence has been enabled during configuration.
+
+            If the recurrence has not been enabled, it returns `null` value.
+
+            '
+          example: FREQ=WEEKLY;BYDAY=FR;BYMONTH=1;DTSTART=20250103T200000Z;DTEND=20250105T180000Z
+        restriction:
+          description: Restriction object, includes common and type-specific properties.
+          allOf:
+          - $ref: '#/components/schemas/restrictionBase'
+          - oneOf:
+            - $ref: '#/components/schemas/restrictionPromoCode'
+            - $ref: '#/components/schemas/restrictionBundle'
+            - $ref: '#/components/schemas/restrictionBonusProducts'
+            - $ref: '#/components/schemas/restrictionBuyXForTotalAmount'
+            - $ref: '#/components/schemas/restrictionBuyXGetYFree'
+            - $ref: '#/components/schemas/restrictionCrossSelling'
+            - $ref: '#/components/schemas/restrictionPriceReduction'
+            - $ref: '#/components/schemas/restrictionFreeSample'
+            - $ref: '#/components/schemas/restrictionProductSet'
+            - $ref: '#/components/schemas/restrictionPromotionalPricing'
+        discount:
+          description: Discount object, includes common and type-specific properties.
+          oneOf:
+          - $ref: '#/components/schemas/discountPromoCode'
+          - $ref: '#/components/schemas/discountBundle'
+          - $ref: '#/components/schemas/discountBonusProducts'
+          - $ref: '#/components/schemas/discountBuyXForTotalAmount'
+          - $ref: '#/components/schemas/discountBuyXGetYFree'
+          - $ref: '#/components/schemas/discountCrossSelling'
+          - $ref: '#/components/schemas/discountPriceReduction'
+          - $ref: '#/components/schemas/discountFreeSample'
+          - $ref: '#/components/schemas/discountProductSet'
+          - $ref: '#/components/schemas/discountPromotionalPricing'
+    restrictionPromoCode:
+      type: object
+      properties:
+        promoCode:
+          type: string
+          example: PROMO1
+          description: The promo code that must be applied to activate the promotion.
+        excludedProducts:
+          type: array
+          description: List of product IDs that are excluded from the promotion even when the promo code is used.
+          example:
+          - 2223640
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

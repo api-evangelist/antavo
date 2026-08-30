@@ -1,0 +1,128 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Treasure hunt API
+  version: 1.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Treasure hunt
+paths:
+  /customers/{customer_id}/activities/treasure-hunt:
+    get:
+      tags:
+      - Treasure hunt
+      summary: List all available treasure hunts
+      description: This endpoint returns the list of all available online treasure hunts for a specific customer.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      responses:
+        '200':
+          description: Available treasure hunts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TreasureHuntResponse'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Customer not found
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not Found
+components:
+  schemas:
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    TreasureHuntResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the activity. This endpoint always returns `treasure`.
+          example: treasure
+        status:
+          type: string
+          description: Current status of the treasure hunt.
+          example: active
+        title:
+          type: string
+          description: Title of the treasure hunt.
+          example: Fashion Quest Adventure
+        description:
+          type: string
+          description: Description of the treasure hunt.
+          example: 'Ready for an adventure? Join our online treasure hunt! Your mission: Find the hidden fashion product page on our website. If you succeed, you''ll earn 50 points towards your next stylish purchase! Let the hunt begin!'
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Points to earn.
+          example: 200
+        success_message:
+          type: string
+          description: Text displayed when the customer finds the hidden treasure.
+          example: Congratulations, Fashion Explorer! You've successfully completed the Fashion Quest Adventure and discovered the hidden treasure! Claim your reward of 50 points now and continue your stylish journey with us!
+        url:
+          type: string
+          description: The URL of the page where the treasure is hidden.
+          example: https://antavofashion.com/SS246549621
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

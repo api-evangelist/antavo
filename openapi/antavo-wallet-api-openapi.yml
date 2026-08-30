@@ -1,0 +1,178 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Wallet API
+  version: 1.0.0
+  description: Endpoints provided by the _Wallet_ module
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Wallet
+  description: Endpoints provided by the _Wallet_ module
+paths:
+  /customers/{customer_id}/wallet:
+    get:
+      tags:
+      - Wallet
+      summary: Retrieve download URLs for assigned wallet passes
+      description: This endpoint returns all wallet passes for a specific customer. A new access token is generated every time the endpoint is called.
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - assigned
+          - archived
+        description: 'Filters available passes based on status. Accepted values: `assigned` and `archived`'
+      responses:
+        '200':
+          description: Customer's wallet passes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pass'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Customer not found
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not Found
+components:
+  schemas:
+    Pass:
+      type: object
+      description: A pass assigned to a customer
+      properties:
+        template:
+          type: object
+          description: Information about the pass template associated with the pass.
+          properties:
+            id:
+              type: string
+              description: ID of the pass template.
+              example: 651561bd669da55ee6145a4f
+            status:
+              type: string
+              description: Status of the pass templete.
+              enum:
+              - assigned
+              - active
+              - expired
+              - revoked
+        name:
+          type: string
+          description: Name of the pass.
+          example: Membership pass
+        id:
+          type: string
+          description: ID of the pass.
+          example: 66797c25cc092e625c0afcc7
+        created_at:
+          type: string
+          format: date-time
+          description: Assignment date-time of the pass
+        status:
+          type: string
+          description: Status of the pass.
+          enum:
+          - assigned
+          - active
+          - expired
+          - revoked
+          example: active
+        type:
+          type: string
+          description: Type of the pass template associated with the pass.
+          enum:
+          - coupon
+          - membership
+          - event
+          example: membership
+        expires_at:
+          type: string
+          format: date-time
+          description: Pass expiration time. Available for `event` and `coupon` passes only.
+          example: 20213-11-02T00:00:00+00:00
+        coupon:
+          type: string
+          description: Coupon code associated with the pass. Available for `event` and `coupon` passes only.
+          example: TC22341
+        _actions:
+          type: object
+          description: Endpoints to download passes.
+          properties:
+            download_apple:
+              type: object
+              description: Download endpoint for Apple Wallet.
+              required:
+              - method
+              - url
+              properties:
+                method:
+                  type: string
+                  example: GET
+                url:
+                  type: string
+                  example: /v2/customers/280e674c-c4ea-4a30-987a-d9267d1a5018/wallet/apple/6512a12d59b88b611b5cdfd6/download?token=ODcyYzE1MGE2NzcwZDJkMGVkOTY2NzMxYzhlNDNlMmQxMTI3YmE3Yw.eyJicmFuZCI6IjE1NjciLCJjdXN0b21lciI6IjAwMSIsImV4cGlyZXNfYXQiOjE2OTgzMTE4MDV9
+            download_google:
+              type: object
+              description: Download endpoint for Google Wallet.
+              required:
+              - method
+              - url
+              properties:
+                method:
+                  type: string
+                  example: GET
+                url:
+                  type: string
+                  example: /v2/customers/280e674c-c4ea-4a30-987a-d9267d1a5018/google/6512a12d59b88b611b5cdfd6/download?token=ODcyYzE1MGE2NzcwZDJkMGVkOTY2NzMxYzhlNDNlMmQxMTI3YmE3Yw.eyJicmFuZCI6IjE1NjciLCJjdXN0b21lciI6IjAwMSIsImV4cGlyZXNfYXQiOjE2OTgzMTE4MDV9
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

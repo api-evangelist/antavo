@@ -1,0 +1,242 @@
+openapi: 3.2.0
+info:
+  contact: {}
+  title: Antavo Display Contests API
+  version: 1.0.0
+  description: Endpoints provided by the _Contests Lite_ module
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- api_key: []
+tags:
+- name: Contests
+  description: Endpoints provided by the _Contests Lite_ module
+paths:
+  /customers/{customer_id}/activities/contests:
+    get:
+      tags:
+      - Contests
+      summary: List all available contests for a customer
+      description: This endpoint returns all contests that are available for a specific customer to enter.
+      parameters:
+      - in: path
+        name: customer_id
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: fields
+        in: query
+        description: Comma separated list of custom attributes to include in the response.
+        schema:
+          type: string
+          example: cf_prize_cost
+      responses:
+        '200':
+          description: List of available contests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ContestActivity'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+  /customers/{customer_id}/activities/contests/{contest_id}/enter:
+    post:
+      tags:
+      - Contests
+      summary: Submit a contest entry
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Unique customer ID. This can be \n\n* The Antavo customer ID\n* An external ID (requires [configuration](/docs/customers#external-identifiers)): ``{external_field:external_id_value}``\n"
+        required: true
+        schema:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+      - name: contest_id
+        in: path
+        description: A unique identifier of the contest.
+        required: true
+        schema:
+          type: string
+          example: 6644e797d959c7036f18762a
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                count:
+                  type: integer
+                  example: 1
+                  description: The number of times a customer should be entered into a contest with a single API request.
+      responses:
+        '200':
+          description: Customer successfully entered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The configured completion text.
+                    example: You've successfully entered this contest!
+        '404':
+          description: Customer or contest not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Customer not found:
+                  value:
+                    type: NotFoundException
+                    code: 160212
+                    message: Customer not found
+                Contest not found:
+                  value:
+                    type: NotFoundException
+                    code: 0
+                    message: Contest not found
+components:
+  schemas:
+    ContestActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the contest.
+          example: 5ea6b6bc127abc45008b456f
+        title:
+          type: string
+          description: Title of the contest.
+          example: Win 2x VIP Tickets for the New York Fashion Week!
+        description:
+          type: string
+          description: Description of the contest.
+          example: Enter our sweepstakes for a chance to win 2x VIP tickets to one of the most exclusive events in the industry.
+        end_date:
+          type: string
+          example: '2024-12-31T14:29:00.000Z'
+          description: End date of the contest.
+        start_date:
+          type: string
+          example: '2024-06-29T15:11:00.000Z'
+          description: Start date of the contest.
+        display_until:
+          type: string
+          example: '2025-01-31T14:29:00.000Z'
+          description: Date until the contest should be visible for customers.
+        completion_text:
+          type: string
+          example: The contest has ended. Winners will be announced soon.
+          description: Text that appears after a content has ended.
+        status:
+          type: string
+          enum:
+          - active
+          - scheduled
+          - expired
+          - completed
+          - restricted
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          example: 500
+          description: Points price of a contest entry.
+        terms:
+          type: string
+          description: Terms & Conditions.
+          example: To enter the sweepstakes, participants must redeem 500 loyalty points for each entry. Participants may enter the sweepstakes up to a maximum of 3 times.
+        progress:
+          description: Information about the customer' activity.
+          type: object
+          properties:
+            max:
+              type: integer
+              description: Maximum number of times a customer can enter the contest.
+              example: 3
+            current:
+              type: integer
+              description: Number of times the customer has already entered.
+              example: 2
+            is_completed:
+              type: boolean
+              description: Indicates if the customer has already reached the entry limit.
+              example: false
+        _action:
+          type: object
+          properties:
+            complete:
+              type: object
+              properties:
+                method:
+                  type: string
+                  example: POST
+                  description: Type of request to be submitted.
+                answer:
+                  type: string
+                  format: uri
+                  description: Endpoint to submit a contest entry.
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/contests/6644e797d959c7036f18762a/enter
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      description: Provides API Key access to the endpoint
+      in: query

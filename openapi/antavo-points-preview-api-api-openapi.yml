@@ -1,0 +1,231 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: support@antavo.com
+  title: Antavo Points Preview Points Preview API
+  version: 1.0.0.0
+servers:
+- url: https://api.staging.antavo.com
+  description: The Antavo staging environment
+security:
+- ApiKeyAuth: []
+tags:
+- name: Points Preview API
+paths:
+  /extensions/automation/campaign-bonus:
+    post:
+      tags:
+      - Points Preview API
+      summary: Preview loyalty points based on submitted transaction data
+      description: 'The Points Preview API enables querying before purchase to retrieve points awarded for purchases. The returned response includes the number of bonus points to be awarded by <a href= "https://docs.antavo.com/actions#campaign-bonus">Campaign bonus</a> campaign workflow nodes.
+
+
+        This endpoint works with standard and multi-account configurations.
+
+        '
+      responses:
+        '200':
+          description: A successful points probe submission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/campaigns'
+              examples:
+                success:
+                  summary: Successful standard submission
+                  value:
+                    data:
+                      campaigns:
+                      - automation: 5b9bd24f90a963a4088b456c
+                        points: 400
+                        campaign:
+                          id: 63ac25de017f8306f5782e8c
+                          name: Double points campaign
+                          issued_points: 462320
+                          customer_points: 0
+                      purchase:
+                        base: 724
+                        bonus: 400
+                        points: 1124
+                success2:
+                  summary: Multi-account response
+                  value:
+                    data:
+                      campaigns:
+                      - automation: 5b9bd24f90a963a4088b456c
+                        points: 400
+                        campaign:
+                          id: 63ac25de017f8306f5782e8c
+                          name: Double points campaign
+                          issued_points: 462320
+                          customer_points: 0
+                      purchase:
+                        base: 724
+                        bonus: 400
+                        points: 1124
+                      accounts:
+                      - id: main_account
+                        name: Main account
+                        campaigns:
+                        - automation: 5b9bd24f90a963a4088b456c
+                          points: 400
+                          campaign:
+                            id: 63ac25de017f8306f5782e8c
+                            name: Double points campaign
+                            issued_points: 462320
+                            customer_points: 0
+                        purchase:
+                          base: 724
+                          bonus: 400
+                          points: 1124
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fail:
+                  summary: Error - A required field is missing
+                  value:
+                    code: 0
+                    error: Property <attribute> cannot be empty
+                    type: BadRequestException
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - customer
+              - action
+              - data
+              properties:
+                customer:
+                  type: string
+                  description: Unique customer identifier.
+                  example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                action:
+                  type: string
+                  description: Event to be rewarded - must be `checkout`.
+                  example: checkout
+                data:
+                  $ref: '#/components/schemas/data'
+            examples:
+              Standard:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: checkout
+                  data:
+                    transaction_id: TR37882412
+                    total: 23
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 12.23
+                      discount: 1.23
+                      quantity: 3
+                      subtotal: 33
+              Multi-accounts:
+                value:
+                  customer: 280e674c-c4ea-4a30-987a-d9267d1a5018
+                  action: checkout
+                  account: main_account
+                  data:
+                    transaction_id: TR37882412
+                    total: 23
+                    items:
+                    - product_id: prd_987654
+                      product_name: Vintage Leather Jacket
+                      product_url: https://example.com/products/vintage-leather-jacket
+                      price: 12.23
+                      discount: 1.23
+                      quantity: 3
+                      subtotal: 33
+components:
+  schemas:
+    campaigns:
+      type: array
+      items:
+        $ref: '#/components/schemas/campaign'
+    campaign:
+      type: object
+      properties:
+        automation:
+          type: string
+          description: The unique MongoID of the workflow campaign that awards the bonus points.
+          example: 5b9bd24f90a963a4088b456c
+        points:
+          type: integer
+          description: These points are not awarded to the customer at this stage and are intended for display purposes only.
+          example: checkout
+    item:
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: The unique ID of the purchased item.
+          example: prd_987654
+        product_name:
+          type: string
+          description: The name of the purchased item.
+          example: Vintage Leather Jacket
+        product_url:
+          type: string
+          description: The URL of the purchased item.
+          example: https://example.com/products/vintage-leather-jacket
+        price:
+          type: number
+          description: The price of one item.
+          example: 12.23
+        discount:
+          type: number
+          description: The discount applied on the item.
+          example: 1.23
+        quantity:
+          type: integer
+          description: The number of items purchased.
+          example: 3
+        subtotal:
+          type: number
+          description: The amount paid by the customer.
+          example: 33
+    items:
+      type: array
+      items:
+        $ref: '#/components/schemas/item'
+    data:
+      type: object
+      required:
+      - transaction_id
+      - total
+      properties:
+        transaction_id:
+          type: string
+          description: Must be unique for every transaction.
+          example: TR37882412
+        total:
+          type: number
+          description: The total amount paid.
+          example: 23
+        items:
+          $ref: '#/components/schemas/items'
+    ErrorResponse:
+      type: object
+      description: occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+            message:
+              type: string
+              description: Human-readable error message.
