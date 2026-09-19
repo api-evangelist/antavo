@@ -456,6 +456,8 @@ apis:
   humanURL: https://developers.antavo.com/docs/antavo-apis
   baseURL: https://api.antavo.com
   tags:
+  - Leaderboards
+  tags_raw:
   - Leaderboard
   properties:
   - type: OpenAPI
