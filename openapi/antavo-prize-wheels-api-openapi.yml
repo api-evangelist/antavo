@@ -19,10 +19,7 @@ paths:
       description: 'This endpoint provides all information regarding each individual slice of the prize wheel.
 
 
-
-        Configured rewards can be used in a slice, and the full reward information can be returned with the slice information using the `fields` query.
-
-        '
+        Configured rewards can be used in a slice, and the full reward information can be returned with the slice information using the `fields` query.'
       parameters:
       - name: customer_id
         in: path
@@ -71,6 +68,8 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not Found
+      operationId: getCustomersByCustomerIdPrizeWheelsByPwId
+      x-operation-id-source: derived
     post:
       tags:
       - Prize wheels
@@ -175,6 +174,8 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not Found
+      operationId: postCustomersByCustomerIdPrizeWheelsByPwId
+      x-operation-id-source: derived
   /customers/{customer_id}/prize-wheels:
     get:
       tags:
@@ -225,8 +226,30 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not Found
+      operationId: getCustomersByCustomerIdPrizeWheels
+      x-operation-id-source: derived
 components:
   schemas:
+    PrizeWheelsOptions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the prize wheel.
+                example: 63fdccaca88ac11c347af899
+              status:
+                type: string
+                description: Status of the prize wheel.
+                example: active
+        total:
+          type: number
+          description: The number of prize wheel available to the customer.
+          example: 1
     PrizeWheelsOptions_ind:
       type: object
       properties:
@@ -279,26 +302,6 @@ components:
           - reward
           - points
           - empty
-    PrizeWheelsOptions:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID of the prize wheel.
-                example: 63fdccaca88ac11c347af899
-              status:
-                type: string
-                description: Status of the prize wheel.
-                example: active
-        total:
-          type: number
-          description: The number of prize wheel available to the customer.
-          example: 1
     PrizeWheelOption:
       type: object
       properties:

@@ -29,6 +29,8 @@ paths:
                     active: 24120
       security:
       - ApiKeyAuth: []
+      operationId: getCustomersCount
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -37,7 +39,7 @@ paths:
       tags:
       - Customers
       summary: Returns detailed customer data using the Antavo unique ID
-      description: "This endpoint returns detailed information for a specific customer. \n"
+      description: This endpoint returns detailed information for a specific customer.
       parameters:
       - name: customer_id
         in: path
@@ -92,6 +94,8 @@ paths:
                     type: NotFoundException
       security:
       - ApiKeyAuth: []
+      operationId: getCustomersByCustomerId
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -102,9 +106,7 @@ paths:
       summary: Search Antavo database using customer filters
       description: 'This endpoint allows you to search the Antavo database for customers based on specific criteria and returns the Antavo Customer ID. Note that the filtering is case-sensitive and does not support partial matches.
 
-        The filtering query requires that the filter parameter has been tagged as [searchable](https://docs.antavo.com/customers#add-a-new-field) in the Antavo Management UI.
-
-        '
+        The filtering query requires that the filter parameter has been tagged as searchable in the Antavo Management UI.'
       parameters:
       - in: query
         name: Filtering
@@ -197,6 +199,8 @@ paths:
                     type: BadRequestException
       security:
       - ApiKeyAuth: []
+      operationId: getCustomers
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -257,6 +261,8 @@ paths:
       deprecated: false
       security:
       - ApiKeyAuth: []
+      operationId: postCustomersByCustomerIdMerge
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -274,9 +280,7 @@ paths:
         The verification process occurs using a token.
 
 
-        This requires the Custom login module with the verification option enabled (disabled by default).
-
-        '
+        This requires the Custom login module with the verification option enabled (disabled by default).'
       parameters:
       - name: token
         in: query
@@ -331,6 +335,8 @@ paths:
       deprecated: false
       security:
       - api_key: []
+      operationId: getCustomersVerify
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -339,7 +345,10 @@ paths:
       tags:
       - Customers
       summary: Create a new customer with log-in credentials
-      description: "This endpoint creates customer within Antavo according to the specified opt-in parameters stated in the body. \n\nThis interface is primarily used as a customer-driven registration process which also generates login credentials, enabling the new customer to log into Antavo systems. This endpoint complements the [opt-in](https://developers.antavo.com/docs/api-events#opt_in) event.\n"
+      description: 'This endpoint creates customer within Antavo according to the specified opt-in parameters stated in the body.
+
+
+        This interface is primarily used as a customer-driven registration process which also generates login credentials, enabling the new customer to log into Antavo systems. This endpoint complements the opt-in event.'
       parameters:
       - name: customer_id
         in: path
@@ -385,6 +394,8 @@ paths:
       deprecated: false
       security:
       - api_key: []
+      operationId: postCustomersByCustomerIdOptIn
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -406,9 +417,7 @@ paths:
         This event will only be written once to the customer''s event stream per calendar day.
 
 
-        This requires the Custom login module to be enabled.
-
-        '
+        This requires the Custom login module to be enabled.'
       requestBody:
         description: Login request parameters
         content:
@@ -439,6 +448,8 @@ paths:
       deprecated: false
       security:
       - api_key: []
+      operationId: postCustomersLogin
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -451,9 +462,7 @@ paths:
 
         The username can be set in the Customer login module in the Management UI and can be any customer profile attribute.
 
-        The `url` string is a URL which can be extended with the reset token.
-
-        '
+        The `url` string is a URL which can be extended with the reset token.'
       requestBody:
         description: Password reset request parameters
         content:
@@ -484,6 +493,8 @@ paths:
       deprecated: false
       security:
       - api_key: []
+      operationId: postCustomersPasswordRequest
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -553,6 +564,8 @@ paths:
       deprecated: false
       security:
       - api_key: []
+      operationId: postCustomersPasswordReset
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -603,9 +616,7 @@ paths:
       summary: Retrieve the list of customers
       description: 'Returns a paginated list of customers, including standard customer fields and any custom customer attributes configured in the workspace.
 
-        Results can be filtered and sorted by `created_at` and `status` customer attribute values.
-
-        '
+        Results can be filtered and sorted by `created_at` and `status` customer attribute values.'
       tags:
       - Customers
       parameters:
@@ -674,26 +685,28 @@ paths:
     - url: https://read-api.<environment>.antavo.com
 components:
   schemas:
-    Customers:
+    ErrorResponse:
       type: object
-      description: Returns Customer unique id which match the search criteria
+      description: occurred
+      required:
+      - error
       properties:
-        id:
-          type: string
-          description: The unique customer identifier.
-          example: 55e5d4dc2cf1901e688b45d3
-    TierStructure:
-      type: object
-      description: The overall structure in which the current tier is located.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the current tier structure.
-          example: standard_tiers
-        name:
-          type: string
-          description: The tier structure label.
-          example: Standard tiers
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            code:
+              type: number
+              description: Error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            type:
+              type: string
+              description: Type of the error.
     Customer:
       type: object
       description: Detailed customer information for a given Customer unique id.
@@ -949,21 +962,6 @@ components:
                 type: string
                 description: The external ID of the user group, if any.
                 example: AG331
-    Count:
-      type: object
-      description: Number of customers
-      properties:
-        active:
-          type: number
-          description: The number of active customers.
-          example: 123456
-    Properties:
-      type: object
-      description: Custom attributes you track about the customer. Data returned in this object depends on profiling questions or custom data recorded by custom events (may require additional modules enabled).
-      properties:
-        city:
-          type: string
-          example: London
     TierNext:
       type: object
       description: Information about the next available loyalty tier.
@@ -980,72 +978,48 @@ components:
           type: string
           description: Number of points to collect to reach the next tier.
           example: 900
-    ErrorResponse:
+    Customers:
       type: object
-      description: occurred
-      required:
-      - error
+      description: Returns Customer unique id which match the search criteria
       properties:
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            code:
-              type: number
-              description: Error code.
-            message:
-              type: string
-              description: Human-readable error message.
-            type:
-              type: string
-              description: Type of the error.
-    Gender:
-      title: Gender
-      enum:
-      - female
-      - male
-      - other
-      type: string
-      description: Gender of the customer.
-    PasswordRequest:
-      title: PasswordRequest
+        id:
+          type: string
+          description: The unique customer identifier.
+          example: 55e5d4dc2cf1901e688b45d3
+    TierStructure:
       type: object
+      description: The overall structure in which the current tier is located.
       properties:
-        username:
+        id:
           type: string
-          description: Customer's username.
-          example: john.doe
-        url:
+          description: The unique identifier of the current tier structure.
+          example: standard_tiers
+        name:
           type: string
-          description: URL which will be extended with password reset token.
-          example: https://loyalty.{environment}.antavo.com/{workspace_id}/customers/280e674c-c4ea-4a30-987a-d9267d1a5018
-    PasswordReset:
-      title: PasswordReset
+          description: The tier structure label.
+          example: Standard tiers
+    Count:
+      type: object
+      description: Number of customers
+      properties:
+        active:
+          type: number
+          description: The number of active customers.
+          example: 123456
+    Properties:
+      type: object
+      description: Custom attributes you track about the customer. Data returned in this object depends on profiling questions or custom data recorded by custom events (may require additional modules enabled).
+      properties:
+        city:
+          type: string
+          example: London
+    PasswordResponse:
+      title: PasswordResponse
       type: object
       properties:
         token:
-          type: string
-          description: Password reset token obtained from [password request](https://developers.antavo.com/reference/post_customers-password-request).
-          example: null
-        password:
-          type: string
-          description: Password
-        confirm_password:
-          type: string
-          description: Confirm password - should be same as Password above.
-    Status9:
-      title: Status9
-      enum:
-      - active
-      - inactive
-      - opted_out
-      - banned
-      - suspended
-      type: string
-      description: Status of the customer.
+          $ref: '#/components/schemas/token'
+      description: This describes the structure returned if an error occurred.
     token:
       title: token
       type: string
@@ -1100,13 +1074,33 @@ components:
           description: Customer's publicly displayed handler (nickname).
           example: john.doe
       description: Customer opt-in properties
-    PasswordResponse:
-      title: PasswordResponse
+    Gender:
+      title: Gender
+      enum:
+      - female
+      - male
+      - other
+      type: string
+      description: Gender of the customer.
+    ErrorResponse_2:
       type: object
+      description: This describes the structure returned if an error occurred
       properties:
-        token:
-          $ref: '#/components/schemas/token'
-      description: This describes the structure returned if an error occurred.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
     Customer_2:
       title: Customer
       type: object
@@ -1204,105 +1198,50 @@ components:
         password:
           type: string
           description: Customer's password.
-    ErrorResponse_2:
+    PasswordRequest:
+      title: PasswordRequest
       type: object
-      description: This describes the structure returned if an error occurred
       properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
-    NextCustomerTier:
+        username:
+          type: string
+          description: Customer's username.
+          example: john.doe
+        url:
+          type: string
+          description: URL which will be extended with password reset token.
+          example: https://loyalty.{environment}.antavo.com/{workspace_id}/customers/280e674c-c4ea-4a30-987a-d9267d1a5018
+    PasswordReset:
+      title: PasswordReset
       type: object
-      description: Information about the next tier available to the customer. The object is empty when no higher tier is available.
       properties:
-        id:
+        token:
           type: string
-          description: The ID of the next tier.
-          example: Fashion_Royalty
-        name:
+          description: Password reset token obtained from [password request](https://developers.antavo.com/reference/post_customers-password-request).
+          example: null
+        password:
           type: string
-          description: The customer-facing name of the next tier.
-          example: Fashion Royalty
-        points:
-          type: number
-          description: The number of additional points required to reach the next tier.
-          example: 900
-    PaginationLinks:
+          description: Password
+        confirm_password:
+          type: string
+          description: Confirm password - should be same as Password above.
+    Status9:
+      title: Status9
+      enum:
+      - active
+      - inactive
+      - opted_out
+      - banned
+      - suspended
+      type: string
+      description: Status of the customer.
+    CollectionMetadata:
       type: object
       required:
-      - next
-      - previous
+      - pagination
       properties:
-        next:
-          type:
-          - string
-          - 'null'
-          description: URL of the next page, or null if this is the last page.
-        previous:
-          type:
-          - string
-          - 'null'
-          description: URL of the previous page, or null if this is the first page.
-    CustomersFilter:
-      type: object
-      description: 'Filter object for `GET /v1/customers`. URL form:
-
-        `?filter[<field>][<op>]=<value>`. Multiple operators on the
-
-        same field are allowed.
-
-        '
-      properties:
-        created_at:
-          description: 'Filters customers by the date and time when the customer profile was created.
-
-
-            The following formats are accepted:
-
-            - `YYYY-MM-DD` (interpreted as midnight UTC)
-
-            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
-
-            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
-
-            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
-
-
-            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
-
-            '
-          $ref: '#/components/schemas/DateTimeFilter'
-        status:
-          type: object
-          description: 'Filters customers by their current loyalty program status.
-
-            Customers with an `opted_out` status are not returned by the API.
-
-            '
-          properties:
-            eq:
-              type: string
-              description: Equals.
-              enum:
-              - active
-              - inactive
-              - banned
-              - merged
-              - suspended
-              - pending
-              example: active
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
     DateTimeFilter:
       type: object
       description: 'Filters a date or date-time field. The following formats are accepted:
@@ -1340,14 +1279,38 @@ components:
           type: string
           pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
           description: Greater than or equal to.
-    CollectionMetadata:
+    PaginationLinks:
       type: object
       required:
-      - pagination
+      - next
+      - previous
       properties:
-        pagination:
-          description: Links to the next and previous pages of the result set.
-          $ref: '#/components/schemas/PaginationLinks'
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    NextCustomerTier:
+      type: object
+      description: Information about the next tier available to the customer. The object is empty when no higher tier is available.
+      properties:
+        id:
+          type: string
+          description: The ID of the next tier.
+          example: Fashion_Royalty
+        name:
+          type: string
+          description: The customer-facing name of the next tier.
+          example: Fashion Royalty
+        points:
+          type: number
+          description: The number of additional points required to reach the next tier.
+          example: 900
     CustomerEntity:
       type: object
       description: 'Customer entity. The fields and values returned may differ based on workspace configuration.
@@ -1828,7 +1791,65 @@ components:
       enum:
       - asc
       - desc
+    CustomersFilter:
+      type: object
+      description: 'Filter object for `GET /v1/customers`. URL form:
+
+        `?filter[<field>][<op>]=<value>`. Multiple operators on the
+
+        same field are allowed.
+
+        '
+      properties:
+        created_at:
+          description: 'Filters customers by the date and time when the customer profile was created.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        status:
+          type: object
+          description: 'Filters customers by their current loyalty program status.
+
+            Customers with an `opted_out` status are not returned by the API.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+              enum:
+              - active
+              - inactive
+              - banned
+              - merged
+              - suspended
+              - pending
+              example: active
   parameters:
+    OffsetParam:
+      name: offset
+      in: query
+      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
+
+        '
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
     LimitParam:
       name: limit
       in: query
@@ -1840,16 +1861,6 @@ components:
         minimum: 1
         maximum: 1000
         default: 20
-    OffsetParam:
-      name: offset
-      in: query
-      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
-
-        '
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
     CustomerIdParam:
       name: customer_id
       in: path
@@ -1858,8 +1869,8 @@ components:
       schema:
         type: string
   responses:
-    Unauthorized:
-      description: Error - Escher signature missing or invalid.
+    ValidationError:
+      description: Error - Request validation failed.
       content:
         application/json:
           schema:
@@ -1870,8 +1881,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-    ValidationError:
-      description: Error - Request validation failed.
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
       content:
         application/json:
           schema:

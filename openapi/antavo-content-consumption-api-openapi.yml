@@ -49,27 +49,10 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not found
+      operationId: getCustomersByCustomerIdActivitiesContentConsumption
+      x-operation-id-source: derived
 components:
   schemas:
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
     ContentConsumptionActivityEndpoint:
       type: object
       properties:
@@ -100,6 +83,25 @@ components:
           type: string
           description: URL of the content to visit.
           example: https://example.com/summer-campaign
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
   securitySchemes:
     api_key:
       type: apiKey

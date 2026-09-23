@@ -83,6 +83,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundErrorResponse'
+      operationId: getV1BulkOperationCustomerListByBatchIdStatusErrors
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -146,6 +148,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListBatchNotFound'
+      operationId: getV1BulkOperationCustomerListByBatchIdStatus
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -159,9 +163,7 @@ paths:
         It accepts a single customer list ID and an array of customer IDs as input.
 
 
-        This API endpoint operates asynchronously, so customer list updates are processed separately.
-
-        '
+        This API endpoint operates asynchronously, so customer list updates are processed separately.'
       parameters:
       - in: path
         name: customer_list_id
@@ -194,6 +196,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CustomerList'
+      operationId: postV1BulkOperationCustomerListAddByCustomerListId
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -237,6 +241,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CustomerListRemove'
+      operationId: postV1BulkOperationCustomerListRemoveByCustomerListId
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -269,6 +275,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SegmentError'
+      operationId: deleteEntitiesCoreCustomerListByEntityId
+      x-operation-id-source: derived
     get:
       tags:
       - Customer lists
@@ -296,6 +304,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/SegmentErrorResponse'
       deprecated: false
+      operationId: getEntitiesCoreCustomerListByEntityId
+      x-operation-id-source: derived
     post:
       tags:
       - Customer lists
@@ -337,6 +347,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/SegmentErrorResponse'
       deprecated: false
+      operationId: postEntitiesCoreCustomerListByEntityId
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -353,6 +365,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SegmentResponse'
+      operationId: getEntitiesCoreCustomerList
+      x-operation-id-source: derived
     put:
       tags:
       - Customer lists
@@ -377,6 +391,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/PUTlistresponse'
       deprecated: false
+      operationId: putEntitiesCoreCustomerList
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -405,6 +421,39 @@ components:
               type: string
               example: The 'payload' field is not found or empty
               description: Human-readable error message.
+    ListStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: The current status of the bulk process.
+        metadata:
+          type: object
+          description: Metadata related to the bulk operation.
+          properties:
+            bulk_operation_error:
+              type: object
+              description: Errors occurred.
+              properties:
+                number_of_errors:
+                  description: The number of errors encountered during the process.
+                  type: number
+                url:
+                  type: string
+                  description: URL to retrieve detailed error information.
+            pagination:
+              type: object
+              properties:
+                total:
+                  type: number
+                  description: Total number of entries.
+                next:
+                  type: string
+                  description: Link to access the next series of entries.
+                previous:
+                  type: string
+                  description: Link to access the previous series of entries.
     ListNotFoundResponseAdd:
       type: object
       properties:
@@ -428,55 +477,7 @@ components:
               type: string
               description: Human-readable error message.
               example: Customer List not found
-    CustomerList:
-      type: object
-      required:
-      - customers
-      properties:
-        customers:
-          type: array
-          description: An array of strings representing unique customer IDs. Antavo will add customers associated with these IDs to the customer list.
-          items:
-            type: string
-            example:
-            - 280e674c-c4ea-4a30-987a-d9267d1a5018
-            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
-    NotFoundErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-          description: Status of the request.
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of the error.
-            code:
-              type: string
-              example: 330531
-              description: Error code.
-            message:
-              type: string
-              example: Batch ID is not found
-              description: Human-readable error message.
-    CustomerListRemove:
-      type: object
-      required:
-      - customers
-      properties:
-        customers:
-          type: array
-          description: List of customers to be removed.
-          items:
-            type: string
-            example:
-            - 280e674c-c4ea-4a30-987a-d9267d1a5018
-            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
-    ListNotFoundResponseRemove:
+    ListBatchNotFound:
       type: object
       properties:
         status:
@@ -493,12 +494,46 @@ components:
               description: Type of the error.
             code:
               type: number
-              example: 330511
+              example: 330521
               description: Error code.
             message:
               type: string
-              example: Customer List not found
+              example: Batch ID is not found
               description: Human-readable error message.
+    metadatalist:
+      type: object
+      properties:
+        external_batch_id:
+          type: string
+          example: batch001
+        payload:
+          type: object
+    CustomerListRemove:
+      type: object
+      required:
+      - customers
+      properties:
+        customers:
+          type: array
+          description: List of customers to be removed.
+          items:
+            type: string
+            example:
+            - 280e674c-c4ea-4a30-987a-d9267d1a5018
+            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
+    CustomerList:
+      type: object
+      required:
+      - customers
+      properties:
+        customers:
+          type: array
+          description: An array of strings representing unique customer IDs. Antavo will add customers associated with these IDs to the customer list.
+          items:
+            type: string
+            example:
+            - 280e674c-c4ea-4a30-987a-d9267d1a5018
+            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
     ListErrorResponse:
       type: object
       properties:
@@ -546,14 +581,6 @@ components:
                     error_code:
                       type: number
                       example: null
-    metadatalist:
-      type: object
-      properties:
-        external_batch_id:
-          type: string
-          example: batch001
-        payload:
-          type: object
     SuccesfulResponse:
       type: object
       properties:
@@ -567,40 +594,29 @@ components:
         payload:
           type: object
           description: Details of the bulk operation.
-    ListStatusResponse:
+    NotFoundErrorResponse:
       type: object
       properties:
         status:
           type: string
-          example: success
-          description: The current status of the bulk process.
-        metadata:
+          example: error
+          description: Status of the request.
+        error:
           type: object
-          description: Metadata related to the bulk operation.
           properties:
-            bulk_operation_error:
-              type: object
-              description: Errors occurred.
-              properties:
-                number_of_errors:
-                  description: The number of errors encountered during the process.
-                  type: number
-                url:
-                  type: string
-                  description: URL to retrieve detailed error information.
-            pagination:
-              type: object
-              properties:
-                total:
-                  type: number
-                  description: Total number of entries.
-                next:
-                  type: string
-                  description: Link to access the next series of entries.
-                previous:
-                  type: string
-                  description: Link to access the previous series of entries.
-    ListBatchNotFound:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of the error.
+            code:
+              type: string
+              example: 330531
+              description: Error code.
+            message:
+              type: string
+              example: Batch ID is not found
+              description: Human-readable error message.
+    ListNotFoundResponseRemove:
       type: object
       properties:
         status:
@@ -617,11 +633,11 @@ components:
               description: Type of the error.
             code:
               type: number
-              example: 330521
+              example: 330511
               description: Error code.
             message:
               type: string
-              example: Batch ID is not found
+              example: Customer List not found
               description: Human-readable error message.
     SegmentError:
       title: Error
@@ -639,24 +655,6 @@ components:
           type: string
           description: Human readable error message.
           example: Customer List not found
-    PUTlistresponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the list.
-          example: draft
-        id:
-          type: string
-          example: 63f2cc942d6ef241c0167e6c
-          description: ID of the list.
-    SegmentErrorResponse:
-      title: SegmentErrorResponse
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/SegmentError'
-      description: This describes the generic structure returned if an error occurred - A reward entity has been used as an example.
     SegmentResponse:
       type: object
       properties:
@@ -672,6 +670,24 @@ components:
           type: string
           example: active
           description: Status of the list.
+    SegmentErrorResponse:
+      title: SegmentErrorResponse
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/SegmentError'
+      description: This describes the generic structure returned if an error occurred - A reward entity has been used as an example.
+    PUTlistresponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the list.
+          example: draft
+        id:
+          type: string
+          example: 63f2cc942d6ef241c0167e6c
+          description: ID of the list.
   securitySchemes:
     api_key:
       type: apiKey

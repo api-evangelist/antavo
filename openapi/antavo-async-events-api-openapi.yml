@@ -19,9 +19,7 @@ paths:
       summary: Query the status of async event processing
       description: 'Use this endpoint to query the processing status of an event sent through the `v1/async/events` endpoint.
 
-        Once the event has been processed, the response includes the customer information and the detailed event data.
-
-        '
+        Once the event has been processed, the response includes the customer information and the detailed event data.'
       parameters:
       - in: path
         name: correlation_id
@@ -113,12 +111,60 @@ paths:
                       message:
                         type: string
                         example: Correlation ID not found.
+      operationId: getV1AsyncEventsByCorrelationId
+      x-operation-id-source: derived
   /v1/async/events:
     post:
       tags:
       - Async Events
       summary: Submit an async event
-      description: "Use this endpoint to submit a single event for a specified customer asyncronously. The event is accepted immediately and processed in the background.\nThis endpoint is compatible with the following event actions:\n  - `point_add`\n  - `checkout`\n  - `checkout_item`\n  - `checkout_update`\n  - `checkout_update_item`\n  - `checkout_accept`\n  - `checkout_accept_item`\n  - `checkout_reject`\n  - `partial_refund`\n  - `refund_item`\n  - `refund`\n  - `opt_in`\n  - `opt_out`\n  - `profile`\n\nThe attributes provided in the `data` object are examples of `point_add` and `checkout` events. Refer to the [complete list of events](/docs/api-events) for all the attributes of the mentioned actions.\n\nExamples of event submission:\n\n- **Standard event submission**: Submit an event for the customer without any additional identifiers.\n- **Event submission with an external ID**: Include the `external_id` attribute to link the event with an external identifier of the customer from another system or database.\n- **Event submission with multiple accounts**: Specify multiple accounts by including their IDs in the 'account' attribute. This requires the Points economy module to be enabled.<br>\n*Note*: if no account is specified, the event will be assigned to the default account.\n"
+      description: 'Use this endpoint to submit a single event for a specified customer asyncronously. The event is accepted immediately and processed in the background.
+
+        This endpoint is compatible with the following event actions:
+
+        - `point_add`
+
+        - `checkout`
+
+        - `checkout_item`
+
+        - `checkout_update`
+
+        - `checkout_update_item`
+
+        - `checkout_accept`
+
+        - `checkout_accept_item`
+
+        - `checkout_reject`
+
+        - `partial_refund`
+
+        - `refund_item`
+
+        - `refund`
+
+        - `opt_in`
+
+        - `opt_out`
+
+        - `profile`
+
+
+        The attributes provided in the `data` object are examples of `point_add` and `checkout` events. Refer to the complete list of events for all the attributes of the mentioned actions.
+
+
+        Examples of event submission:
+
+
+        - **Standard event submission**: Submit an event for the customer without any additional identifiers.
+
+        - **Event submission with an external ID**: Include the `external_id` attribute to link the event with an external identifier of the customer from another system or database.
+
+        - **Event submission with multiple accounts**: Specify multiple accounts by including their IDs in the ''account'' attribute. This requires the Points economy module to be enabled.
+
+
+        *Note*: if no account is specified, the event will be assigned to the default account.'
       parameters: []
       requestBody:
         content:
@@ -263,151 +309,10 @@ paths:
                       message:
                         type: string
                         example: Bearer token authentication failed
+      operationId: postV1AsyncEvents
+      x-operation-id-source: derived
 components:
   schemas:
-    PointAddRequestBody:
-      title: Point add event request
-      required:
-      - customer
-      - action
-      - data
-      type: object
-      properties:
-        callback_url:
-          type: string
-          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
-          example: https://antavo.com
-        customer:
-          type: string
-          description: The unique ID of the customer.
-        external_id:
-          type: string
-          description: The external ID of the customer. This is only required for external ID lookup.
-          example: ext_001
-        action:
-          type: string
-          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
-          enum:
-          - point_add
-          example: point_add
-        account:
-          type: string
-          description: The unique ID of the account. This is only required for multi-accounts.
-          example: main_account
-        data:
-          $ref: '#/components/schemas/PointAddData'
-    CorrelationIDResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the successful submission of the request. Always `success` here.
-          example: success
-        metadata:
-          type: array
-          description: Reserved for future use, currently returns an empty object.
-          items:
-            type: object
-        payload:
-          $ref: '#/components/schemas/CorrelationIDResponsePayload'
-      required:
-      - status
-      - payload
-    Account:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-    CorrelationIDResponsePayload:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Processing status of the asynchronous event.
-          enum:
-          - processed
-          - error
-          - exported
-          - failed
-          - retried
-          example: processed
-        response:
-          oneOf:
-          - $ref: '#/components/schemas/ProcessingSuccess'
-          - $ref: '#/components/schemas/ProcessingError'
-      required:
-      - status
-      - response
-    CheckoutRequestBody:
-      title: Checkout event request
-      required:
-      - customer
-      - action
-      - data
-      type: object
-      properties:
-        callback_url:
-          type: string
-          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
-          example: https://antavo.com
-        customer:
-          type: string
-          description: The unique ID of the customer.
-        external_id:
-          type: string
-          description: The external ID of the customer. This is only required for external ID lookup.
-          example: ext_001
-        action:
-          type: string
-          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
-          enum:
-          - checkout
-          example: checkout
-        account:
-          type: string
-          description: The unique ID of the account. This is only required for multi-accounts.
-          example: main_account
-        data:
-          $ref: '#/components/schemas/CheckoutData'
-    ProcessingError:
-      type: object
-      required:
-      - success
-      - error
-      properties:
-        success:
-          type: array
-          description: Empty when the event processing resulted in an error.
-          maxItems: 0
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              example: RuntimeException
-            code:
-              type: integer
-              example: 112101
-            message:
-              type: string
-              example: Customer has already been opted-in.
-    ProcessingSuccess:
-      type: object
-      properties:
-        success:
-          $ref: '#/components/schemas/CorrelationIDResponseCustomer'
-        error:
-          type: array
-          description: Empty when the event was processed successfully.
-      required:
-      - success
-      - error
     CorrelationIDResponseCustomer:
       type: object
       properties:
@@ -465,26 +370,105 @@ components:
           description: Events generated as a result of processing.
           items:
             $ref: '#/components/schemas/SubmittedLoyaltyEvent'
-    Event_response:
+    PointAddRequestBody:
+      title: Point add event request
+      required:
+      - customer
+      - action
+      - data
       type: object
-      description: Successful event submission
+      properties:
+        callback_url:
+          type: string
+          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
+          example: https://antavo.com
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+          enum:
+          - point_add
+          example: point_add
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/PointAddData'
+    CorrelationIDResponsePayload:
+      type: object
       properties:
         status:
           type: string
-          example: success
-        metadata:
-          type: object
-          description: Reserved for future use, currently returns an empty object.
-        payload:
-          properties:
-            correlation_id:
-              type: string
-              example: 62cc313988befe60e3413e75
-              description: Correlation ID provided in the request or if empty automatically generated by the system. Use for query status through the `v1/async/events/correlation_id` endpoint.
-            status:
-              type: string
-              example: queued
-              description: Indicates that the event request is successfully queued for processing.
+          description: Processing status of the asynchronous event.
+          enum:
+          - processed
+          - error
+          - exported
+          - failed
+          - retried
+          example: processed
+        response:
+          oneOf:
+          - $ref: '#/components/schemas/ProcessingSuccess'
+          - $ref: '#/components/schemas/ProcessingError'
+      required:
+      - status
+      - response
+    SubmittedLoyaltyEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+          description: Action type.
+        points:
+          type: integer
+        expdate:
+          type: string
+          format: date
+          description: Expiration date of the event.
+        account:
+          $ref: '#/components/schemas/Account'
+          description: Included for Multi-account loyalty program setups.
+    CheckoutRequestBody:
+      title: Checkout event request
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        callback_url:
+          type: string
+          description: The endpoint configured under the Trusted sites module where the system sends the result of asynchronous event processing.
+          example: https://antavo.com
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+          enum:
+          - checkout
+          example: checkout
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/CheckoutData'
     CheckoutData:
       title: data
       required:
@@ -541,23 +525,87 @@ components:
               example: 50
             points_rewarded:
               type: number
-    SubmittedLoyaltyEvent:
+    Account:
       type: object
       properties:
         id:
           type: string
-        action:
+        name:
           type: string
-          description: Action type.
-        points:
-          type: integer
-        expdate:
+    ProcessingSuccess:
+      type: object
+      properties:
+        success:
+          $ref: '#/components/schemas/CorrelationIDResponseCustomer'
+        error:
+          type: array
+          description: Empty when the event was processed successfully.
+      required:
+      - success
+      - error
+    CorrelationIDResponse:
+      type: object
+      properties:
+        status:
           type: string
-          format: date
-          description: Expiration date of the event.
-        account:
-          $ref: '#/components/schemas/Account'
-          description: Included for Multi-account loyalty program setups.
+          description: Indicates the successful submission of the request. Always `success` here.
+          example: success
+        metadata:
+          type: array
+          description: Reserved for future use, currently returns an empty object.
+          items:
+            type: object
+        payload:
+          $ref: '#/components/schemas/CorrelationIDResponsePayload'
+      required:
+      - status
+      - payload
+    Event_response:
+      type: object
+      description: Successful event submission
+      properties:
+        status:
+          type: string
+          example: success
+        metadata:
+          type: object
+          description: Reserved for future use, currently returns an empty object.
+        payload:
+          properties:
+            correlation_id:
+              type: string
+              example: 62cc313988befe60e3413e75
+              description: Correlation ID provided in the request or if empty automatically generated by the system. Use for query status through the `v1/async/events/correlation_id` endpoint.
+            status:
+              type: string
+              example: queued
+              description: Indicates that the event request is successfully queued for processing.
+    ProcessingError:
+      type: object
+      required:
+      - success
+      - error
+      properties:
+        success:
+          type: array
+          description: Empty when the event processing resulted in an error.
+          maxItems: 0
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              example: RuntimeException
+            code:
+              type: integer
+              example: 112101
+            message:
+              type: string
+              example: Customer has already been opted-in.
     PointAddData:
       title: data
       required:

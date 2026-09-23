@@ -23,9 +23,7 @@ paths:
         The event history/log/stream can be pre-filtered by specific event actions and paginated by limiting and offsetting the number of returned events. The response also includes event expiration dates, if set.
 
 
-        This endpoint was historically known as `/customers/{customer_id}/history`. This endpoint is still valid and all options listed below are also applicable.
-
-        '
+        This endpoint was historically known as `/customers/{customer_id}/history`. This endpoint is still valid and all options listed below are also applicable.'
       parameters:
       - name: customer_id
         in: path
@@ -116,12 +114,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomernotfoundErrorResponse'
+      operationId: getCustomersByCustomerIdEvents
+      x-operation-id-source: derived
   /customers/-/events:
     get:
       tags:
       - History
       summary: Retrieve a time-filtered list of every event for all customers
-      description: "This endpoint returns all events for all customers that match the specified datetime timestamp query.\nThe returned object contains the total number of matching events and an array of every matching event.\t\n\nThe datetime filter accepts the following operators and can be combined to generate a time window:\n\n* `gt` - greater than\n\n* `lt` - less than \n\n* `gte` - greater than or equal\n\n * `lte` - less than or equal\n\n The timestamp filter must be in ISODate format. Example: ``timestamp.gt=2023-01-05``,``timestamp.gt=2023-01-05T13:28:55`` or ``timestamp.gt=2023-01-05T13:28:55.233+0000``.\n\n **Note**: The timezone offset optional parameter (e.g., +0000) must be URL-encoded.        \n"
+      description: 'This endpoint returns all events for all customers that match the specified datetime timestamp query.
+
+        The returned object contains the total number of matching events and an array of every matching event.
+
+
+        The datetime filter accepts the following operators and can be combined to generate a time window:
+
+
+        * `gt` - greater than
+
+
+        * `lt` - less than
+
+
+        * `gte` - greater than or equal
+
+
+        * `lte` - less than or equal
+
+
+        The timestamp filter must be in ISODate format. Example: ``timestamp.gt=2023-01-05``,``timestamp.gt=2023-01-05T13:28:55`` or ``timestamp.gt=2023-01-05T13:28:55.233+0000``.
+
+
+        **Note**: The timezone offset optional parameter (e.g., +0000) must be URL-encoded.'
       parameters:
       - in: query
         name: timestamp.gt
@@ -228,42 +251,10 @@ paths:
                           pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
                           description: The point expiry date stored as a YYYY-MM-DD string.
                           example: '2023-12-25'
+      operationId: getCustomersEvents
+      x-operation-id-source: derived
 components:
   schemas:
-    EventProperty2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Attribute name used internally.
-          example: points
-        label:
-          type: string
-          description: Display name of the attribute.
-          example: Points
-        value:
-          type: number
-          description: Attribute value.
-          example: 100
-    CustomernotfoundErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: NotFoundException
-            code:
-              type: number
-              description: A 6-digit number to uniquely identify the place the error. occurred
-              example: 160212
-            message:
-              type: string
-              description: Human readable error message.
-              example: Customer not found
     Event:
       type: object
       properties:
@@ -325,6 +316,40 @@ components:
           type: string
           description: Attribute value.
           example: john.smith@example.com
+    CustomernotfoundErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: NotFoundException
+            code:
+              type: number
+              description: A 6-digit number to uniquely identify the place the error. occurred
+              example: 160212
+            message:
+              type: string
+              description: Human readable error message.
+              example: Customer not found
+    EventProperty2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Attribute name used internally.
+          example: points
+        label:
+          type: string
+          description: Display name of the attribute.
+          example: Points
+        value:
+          type: number
+          description: Attribute value.
+          example: 100
   securitySchemes:
     api_key:
       type: apiKey

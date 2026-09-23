@@ -50,6 +50,8 @@ paths:
                     message: Customer not found
       security:
       - api_key: []
+      operationId: getCustomersByCustomerIdActivitiesOffers
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -122,6 +124,8 @@ paths:
                     message: Offer not found
       security:
       - api_key: []
+      operationId: postCustomersByCustomerIdActivitiesOffersByOfferIdClaim
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
@@ -141,9 +145,7 @@ paths:
 
         - `store`: The Antavo ID of the store. This may result in store-specific offers if configured.
 
-        - `eligible_only`: Restricts the returned offers to those available to the customer.
-
-        '
+        - `eligible_only`: Restricts the returned offers to those available to the customer.'
       responses:
         '200':
           description: Successful cart submission
@@ -244,11 +246,72 @@ paths:
               $ref: '#/components/schemas/OfferListRequest'
       security:
       - ApiKeyAuth: []
+      operationId: postOffers
+      x-operation-id-source: derived
     servers:
     - url: https://api.staging.antavo.com
       description: The Antavo staging environment
 components:
   schemas:
+    OfferActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the offer.
+          example: 5c17c37f71f86e7f798b4576
+        title:
+          type: string
+          description: Title of the offer.
+          example: Bundle & Save 20%
+        starts_at:
+          type: string
+          format: date-time
+          description: Start date of the offer, if defined.
+          example: '2024-07-01T04:22:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: End date of the offer, if defined.
+          example: '2024-07-31T11:59:00.000Z'
+        description:
+          type: string
+          description: Description of the offer.
+          example: Get 20% off when you add two or more items from our featured collection to your cart.
+        status:
+          type: string
+          enum:
+          - scheduled
+          - active
+          description: ''
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: As points cannot be spent or earned for offers, this property is always set to zero.
+          example: 0
+        card_title:
+          type: string
+          description: Title of the offer configured for the loyalty card to display.
+          example: Bundle & Save 20%!
+        card_description:
+          type: string
+          description: Description of the offer configured for the loyalty card to display.
+          example: Shop now and save on your favorite styles!
+        stores:
+          type: array
+          description: Stores where the offer is claimable, if defined.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the store
+                example: '004'
+              name:
+                type: string
+                description: Name of the store.
+                example: 004 Dublin
     CouponClaim:
       type: object
       properties:
@@ -315,65 +378,6 @@ components:
           type: string
           format: uri
           example: https://example.com/1715791767-nH7Mf.jpeg
-    OfferActivity:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID of the offer.
-          example: 5c17c37f71f86e7f798b4576
-        title:
-          type: string
-          description: Title of the offer.
-          example: Bundle & Save 20%
-        starts_at:
-          type: string
-          format: date-time
-          description: Start date of the offer, if defined.
-          example: '2024-07-01T04:22:00.000Z'
-        ends_at:
-          type: string
-          format: date-time
-          description: End date of the offer, if defined.
-          example: '2024-07-31T11:59:00.000Z'
-        description:
-          type: string
-          description: Description of the offer.
-          example: Get 20% off when you add two or more items from our featured collection to your cart.
-        status:
-          type: string
-          enum:
-          - scheduled
-          - active
-          description: ''
-        image:
-          $ref: '#/components/schemas/Image'
-        points:
-          type: integer
-          description: As points cannot be spent or earned for offers, this property is always set to zero.
-          example: 0
-        card_title:
-          type: string
-          description: Title of the offer configured for the loyalty card to display.
-          example: Bundle & Save 20%!
-        card_description:
-          type: string
-          description: Description of the offer configured for the loyalty card to display.
-          example: Shop now and save on your favorite styles!
-        stores:
-          type: array
-          description: Stores where the offer is claimable, if defined.
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID of the store
-                example: '004'
-              name:
-                type: string
-                description: Name of the store.
-                example: 004 Dublin
     ErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred
@@ -393,6 +397,32 @@ components:
               type: string
               description: Human readable error message.
               example: Missing required parameter 'parameter_name'
+    Cart:
+      type: object
+      description: Cart content to check against available offers.
+      required:
+      - total
+      - items
+      properties:
+        total:
+          type: number
+          description: The total value of the customer's cart including all items.
+          example: 22.22
+        items:
+          $ref: '#/components/schemas/CartItems'
+        discount:
+          type: number
+          description: Cart discount, already subtracted from total.
+          example: 2.22
+        shipping:
+          type: number
+          description: Shipping fee, already subtracted from total.
+          example: 4.44
+    data:
+      type: array
+      description: An array of Offer objects
+      items:
+        $ref: '#/components/schemas/offer'
     Item:
       type: object
       properties:
@@ -419,32 +449,27 @@ components:
       required:
       - type
       - id
-    data:
-      type: array
-      description: An array of Offer objects
-      items:
-        $ref: '#/components/schemas/offer'
-    Cart:
+    OfferListRequest:
       type: object
-      description: Cart content to check against available offers.
       required:
-      - total
-      - items
+      - cart
+      - customer
       properties:
-        total:
-          type: number
-          description: The total value of the customer's cart including all items.
-          example: 22.22
-        items:
-          $ref: '#/components/schemas/CartItems'
-        discount:
-          type: number
-          description: Cart discount, already subtracted from total.
-          example: 2.22
-        shipping:
-          type: number
-          description: Shipping fee, already subtracted from total.
-          example: 4.44
+        cart:
+          $ref: '#/components/schemas/Cart'
+        customer:
+          type: string
+          example: 9f3c82d6-288e-4361-aec0-039eb066a334
+          description: An Antavo-recognized unique customer identifier. This is used to determine customer eligibility. Providing a valid attribute will result in the return of possible loyalty and non-loyalty offers.
+        store:
+          type: string
+          example: '3044'
+          description: An Antavo identifier of the store where the purchase is made. Used to determine if there are any applicable offers.
+        eligible_only:
+          type: boolean
+          default: true
+          example: true
+          description: Filters out non-eligible offers based on the current context (cart, customer, date, etc.)
     response:
       type: object
       properties:
@@ -474,12 +499,6 @@ components:
               example: 22.22
             items:
               $ref: '#/components/schemas/CartItems'
-    CartItems:
-      type: array
-      description: Cart content to check against available offers.
-      items:
-        description: Cart content to check against available offers.
-        $ref: '#/components/schemas/CartItem'
     CartItem:
       type: object
       description: Cart content to check against available offers.
@@ -585,27 +604,12 @@ components:
           type: string
           description: The description of the offer.
           example: Get 10% off on your purchase.
-    OfferListRequest:
-      type: object
-      required:
-      - cart
-      - customer
-      properties:
-        cart:
-          $ref: '#/components/schemas/Cart'
-        customer:
-          type: string
-          example: 9f3c82d6-288e-4361-aec0-039eb066a334
-          description: An Antavo-recognized unique customer identifier. This is used to determine customer eligibility. Providing a valid attribute will result in the return of possible loyalty and non-loyalty offers.
-        store:
-          type: string
-          example: '3044'
-          description: An Antavo identifier of the store where the purchase is made. Used to determine if there are any applicable offers.
-        eligible_only:
-          type: boolean
-          default: true
-          example: true
-          description: Filters out non-eligible offers based on the current context (cart, customer, date, etc.)
+    CartItems:
+      type: array
+      description: Cart content to check against available offers.
+      items:
+        description: Cart content to check against available offers.
+        $ref: '#/components/schemas/CartItem'
     ErrorResponse_2:
       type: object
       description: occurred

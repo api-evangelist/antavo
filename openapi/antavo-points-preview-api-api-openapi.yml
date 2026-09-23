@@ -17,12 +17,10 @@ paths:
       tags:
       - Points Preview API
       summary: Preview loyalty points based on submitted transaction data
-      description: 'The Points Preview API enables querying before purchase to retrieve points awarded for purchases. The returned response includes the number of bonus points to be awarded by <a href= "https://docs.antavo.com/actions#campaign-bonus">Campaign bonus</a> campaign workflow nodes.
+      description: 'The Points Preview API enables querying before purchase to retrieve points awarded for purchases. The returned response includes the number of bonus points to be awarded by Campaign bonus campaign workflow nodes.
 
 
-        This endpoint works with standard and multi-account configurations.
-
-        '
+        This endpoint works with standard and multi-account configurations.'
       responses:
         '200':
           description: A successful points probe submission
@@ -144,23 +142,47 @@ paths:
                       discount: 1.23
                       quantity: 3
                       subtotal: 33
+      operationId: postExtensionsAutomationCampaignBonus
+      x-operation-id-source: derived
 components:
   schemas:
+    data:
+      type: object
+      required:
+      - transaction_id
+      - total
+      properties:
+        transaction_id:
+          type: string
+          description: Must be unique for every transaction.
+          example: TR37882412
+        total:
+          type: number
+          description: The total amount paid.
+          example: 23
+        items:
+          $ref: '#/components/schemas/items'
     campaigns:
       type: array
       items:
         $ref: '#/components/schemas/campaign'
-    campaign:
+    ErrorResponse:
       type: object
+      description: occurred
       properties:
-        automation:
-          type: string
-          description: The unique MongoID of the workflow campaign that awards the bonus points.
-          example: 5b9bd24f90a963a4088b456c
-        points:
-          type: integer
-          description: These points are not awarded to the customer at this stage and are intended for display purposes only.
-          example: checkout
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+            message:
+              type: string
+              description: Human-readable error message.
     item:
       type: object
       properties:
@@ -196,36 +218,14 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/item'
-    data:
+    campaign:
       type: object
-      required:
-      - transaction_id
-      - total
       properties:
-        transaction_id:
+        automation:
           type: string
-          description: Must be unique for every transaction.
-          example: TR37882412
-        total:
-          type: number
-          description: The total amount paid.
-          example: 23
-        items:
-          $ref: '#/components/schemas/items'
-    ErrorResponse:
-      type: object
-      description: occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-            message:
-              type: string
-              description: Human-readable error message.
+          description: The unique MongoID of the workflow campaign that awards the bonus points.
+          example: 5b9bd24f90a963a4088b456c
+        points:
+          type: integer
+          description: These points are not awarded to the customer at this stage and are intended for display purposes only.
+          example: checkout

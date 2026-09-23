@@ -153,6 +153,8 @@ paths:
                       message:
                         type: string
                         example: Client authentication failed
+      operationId: postV1AuthToken
+      x-operation-id-source: derived
 components:
   securitySchemes:
     basicAuth:

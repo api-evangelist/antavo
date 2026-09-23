@@ -19,7 +19,7 @@ paths:
       description: 'Submit a cart to apply final promotion calculations and complete the checkout process.
 
 
-        Similar to [/cart](https://developers.antavo.com/reference/post_v1-cart), the engine will:
+        Similar to /cart, the engine will:
 
         - Calculate applicable promotions
 
@@ -35,9 +35,7 @@ paths:
         - The cart cannot be resubmitted with the same `cartId`
 
 
-        This endpoint can be used directly without first calling the `/cart` endpoint if you don''t require prior simulation.
-
-        '
+        This endpoint can be used directly without first calling the `/cart` endpoint if you don''t require prior simulation.'
       security:
       - bearerAuth: []
       requestBody:
@@ -235,6 +233,8 @@ paths:
           $ref: '#/components/responses/BadRequestError'
         '403':
           $ref: '#/components/responses/AuthorizationError'
+      operationId: postV1CartFinalize
+      x-operation-id-source: derived
   /v1/cart:
     post:
       tags:
@@ -261,11 +261,9 @@ paths:
         The same `cartId` can be submitted multiple times to recalculate promotions when the cart changes.
 
 
-        If any promotions have [application limits](https://docs.antavo.com/docs/configuring-promotions#application-limit-and-reset) and [locking periods](https://docs.antavo.com/docs/promotion-general-settings#locking-period), a reservation is made when the promotion is found applicable.
+        If any promotions have application limits and locking periods, a reservation is made when the promotion is found applicable.
 
-        If the cart is not checked out via the [/cart/finalize](https://developers.antavo.com/reference/post_v1-cart-finalize) endpoint before the lock expires, the reservation is released automatically.
-
-        '
+        If the cart is not checked out via the /cart/finalize endpoint before the lock expires, the reservation is released automatically.'
       security:
       - bearerAuth: []
       requestBody:
@@ -463,7 +461,62 @@ paths:
           $ref: '#/components/responses/BadRequestError'
         '403':
           $ref: '#/components/responses/AuthorizationError'
+      operationId: postV1Cart
+      x-operation-id-source: derived
 components:
+  responses:
+    AuthorizationError:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: Indicates the result of the request. Always `error` for failed requests.
+                example: error
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: The category or class of the error.
+                    example: AuthorizationException
+                  code:
+                    type: integer
+                    description: A numeric code representing the specific error.
+                    example: 674
+                  message:
+                    type: string
+                    description: Human-readable message describing the reason for the denial.
+                    example: Token has expired.
+    BadRequestError:
+      description: Bad Request error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: Indicates the result of the request. Always `error` for failed requests.
+                example: error
+              error:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: The category or class of the error.
+                    example: Validation error
+                  code:
+                    type: integer
+                    example: 577
+                    description: A numeric code representing the specific error.
+                  message:
+                    type: string
+                    description: Human-readable message describing the reason for the denial.
+                    example: The cart id field is required.
   schemas:
     cartResponse:
       type: object
@@ -684,6 +737,29 @@ components:
                 type: string
                 description: Amount of tax saved due to the promotion. Applicable to `itemDiscount`and `groupDiscont` type discount.
                 example: '26.00'
+    cartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: 8675645322
+          description: Unique identifier of the product.
+        productCategoryId:
+          type: string
+          example: Apparel & Accessories > Clothing > Shoes > Sneakers
+          description: Category ID the product belongs to, used for category-based promotions.
+        quantity:
+          type: number
+          example: 1
+          description: Number of units of the product in the cart.
+        unitPriceBeforeTax:
+          type: number
+          description: Price per unit of the product before taxes are applied.
+          example: 200
+        tax:
+          type: number
+          example: 40
+          description: Tax amount applicable per unit.
     cartModel:
       required:
       - cartId
@@ -757,82 +833,6 @@ components:
               description: List of items currently in the cart to be evaluated for promotions.
               items:
                 $ref: '#/components/schemas/cartItem'
-    cartItem:
-      type: object
-      properties:
-        productId:
-          type: string
-          example: 8675645322
-          description: Unique identifier of the product.
-        productCategoryId:
-          type: string
-          example: Apparel & Accessories > Clothing > Shoes > Sneakers
-          description: Category ID the product belongs to, used for category-based promotions.
-        quantity:
-          type: number
-          example: 1
-          description: Number of units of the product in the cart.
-        unitPriceBeforeTax:
-          type: number
-          description: Price per unit of the product before taxes are applied.
-          example: 200
-        tax:
-          type: number
-          example: 40
-          description: Tax amount applicable per unit.
-  responses:
-    BadRequestError:
-      description: Bad Request error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                description: Indicates the result of the request. Always `error` for failed requests.
-                example: error
-              error:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: The category or class of the error.
-                    example: Validation error
-                  code:
-                    type: integer
-                    example: 577
-                    description: A numeric code representing the specific error.
-                  message:
-                    type: string
-                    description: Human-readable message describing the reason for the denial.
-                    example: The cart id field is required.
-    AuthorizationError:
-      description: Authorization error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                description: Indicates the result of the request. Always `error` for failed requests.
-                example: error
-              error:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    description: The category or class of the error.
-                    example: AuthorizationException
-                  code:
-                    type: integer
-                    description: A numeric code representing the specific error.
-                    example: 674
-                  message:
-                    type: string
-                    description: Human-readable message describing the reason for the denial.
-                    example: Token has expired.
   securitySchemes:
     bearerAuth:
       type: http

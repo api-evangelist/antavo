@@ -10,13 +10,13 @@ servers:
 security:
 - api_key: []
 tags:
-- name: Data extensions
+- name: Data Extensions
   description: Endpoints for probing data extensions
 paths:
   /customers/{customer_id}/data/{data_extension}:
     get:
       tags:
-      - Data extensions
+      - Data Extensions
       summary: Retrieve Antavo data extensions
       description: This endpoint allows for accesssing data of a specific customer stored in extensions.
       parameters:
@@ -64,6 +64,8 @@ paths:
                   type: NotFoundException
                   message: Customer not found
                   code: 160212
+      operationId: getCustomersByCustomerIdDataByDataExtension
+      x-operation-id-source: derived
 components:
   schemas:
     ProfilingExtension:

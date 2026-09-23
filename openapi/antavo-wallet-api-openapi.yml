@@ -61,6 +61,8 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not Found
+      operationId: getCustomersByCustomerIdWallet
+      x-operation-id-source: derived
 components:
   schemas:
     Pass:

@@ -52,28 +52,10 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Error'
+      operationId: getCustomersLeaderboard
+      x-operation-id-source: derived
 components:
   schemas:
-    Error:
-      description: UnauthorizedException
-      type: object
-      required:
-      - type
-      - code
-      - message
-      properties:
-        type:
-          type: string
-          description: Type of the error.
-          example: UnauthorizedException
-        code:
-          type: number
-          description: Error code.
-          example: 0
-        message:
-          type: string
-          description: Human-readable error message.
-          example: No api_key provided
     SuccessResponse:
       type: object
       description: Array of reward entries.
@@ -94,6 +76,26 @@ components:
           type: number
           description: The points earned by the customer in the given interval.
           example: 1500
+    Error:
+      description: UnauthorizedException
+      type: object
+      required:
+      - type
+      - code
+      - message
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: UnauthorizedException
+        code:
+          type: number
+          description: Error code.
+          example: 0
+        message:
+          type: string
+          description: Human-readable error message.
+          example: No api_key provided
   securitySchemes:
     api_key:
       type: apiKey

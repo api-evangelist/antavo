@@ -57,6 +57,8 @@ paths:
                     code: 160212
                     message: Customer not Found
       deprecated: false
+      operationId: getCustomersByCustomerIdActivitiesQuizzesByQuizId
+      x-operation-id-source: derived
   /customers/{customer_id}/activities/quizzes:
     get:
       tags:
@@ -104,6 +106,8 @@ paths:
                     code: 160212
                     message: Customer not Found
       deprecated: false
+      operationId: getCustomersByCustomerIdActivitiesQuizzes
+      x-operation-id-source: derived
   /customers/{customer_id}/activities/quizzes/{quiz_id}/earn:
     post:
       tags:
@@ -180,98 +184,10 @@ paths:
                     message: Not found
                     code: 0
       deprecated: false
+      operationId: postCustomersByCustomerIdActivitiesQuizzesByQuizIdEarn
+      x-operation-id-source: derived
 components:
   schemas:
-    QuizActivity:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              image:
-                $ref: '#/components/schemas/Image'
-              description:
-                type: string
-                description: Description associated with the question.
-                example: Select the correct answer.
-              quiz_url:
-                type: string
-                format: uri
-                description: Endpoint to retrieve quiz details.
-                example: /customers/testcustomer/activities/quizzes/6689b5735aa0eb191451a2f5
-              id:
-                type: string
-                description: ID of the quiz question
-                example: 6689b5735aa0eb191451a2f5
-              title:
-                type: string
-                description: Name of the quiz.
-                example: Fashion quiz
-              status:
-                type: string
-                description: Status of the quiz question.
-                enum:
-                - active
-                - inactive
-                example: active
-              points:
-                type: integer
-                description: Points awarded upon completion of the quiz.
-                example: 100
-        total:
-          type: integer
-          description: Number of available quiz questions.
-          example: 1
-    Image:
-      type: object
-      description: Object contains different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-    AnsweringaQuizResponse:
-      title: Successful answer
-      type: object
-      properties:
-        correct_answer:
-          type: boolean
-          description: A boolean value indicating whether the submitted answer was correct or not.
-          example: true
-        message:
-          type: string
-          description: Success message if the submitted answer is correct, or an error message if the submitted answer is incorrect.
-          example: Well done! You've just earned 100 points!
-    AnsweringaQuizResponseError:
-      title: Error in answer
-      type: object
-      description: This describes the structure returned if an error occurred at the challenges endpoint.
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: The type of error that occurred.
-              example: RuntimeException
-            code:
-              type: integer
-              description: Numeric code representing the error.
-              example: 0
-            message:
-              type: string
-              description: Detailed message about the error.
-              example: This quiz is already answered by the customer.
     QuizDetailsResponse:
       title: QuizDetailsResponse
       type: object
@@ -317,6 +233,26 @@ components:
           type: string
           description: The correct answer.
           example: Coco Chanel
+    AnsweringaQuizResponseError:
+      title: Error in answer
+      type: object
+      description: This describes the structure returned if an error occurred at the challenges endpoint.
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: The type of error that occurred.
+              example: RuntimeException
+            code:
+              type: integer
+              description: Numeric code representing the error.
+              example: 0
+            message:
+              type: string
+              description: Detailed message about the error.
+              example: This quiz is already answered by the customer.
     ErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred
@@ -336,6 +272,76 @@ components:
               type: string
               description: Human readable error message.
               example: Missing required parameter 'parameter_name'
+    QuizActivity:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              image:
+                $ref: '#/components/schemas/Image'
+              description:
+                type: string
+                description: Description associated with the question.
+                example: Select the correct answer.
+              quiz_url:
+                type: string
+                format: uri
+                description: Endpoint to retrieve quiz details.
+                example: /customers/testcustomer/activities/quizzes/6689b5735aa0eb191451a2f5
+              id:
+                type: string
+                description: ID of the quiz question
+                example: 6689b5735aa0eb191451a2f5
+              title:
+                type: string
+                description: Name of the quiz.
+                example: Fashion quiz
+              status:
+                type: string
+                description: Status of the quiz question.
+                enum:
+                - active
+                - inactive
+                example: active
+              points:
+                type: integer
+                description: Points awarded upon completion of the quiz.
+                example: 100
+        total:
+          type: integer
+          description: Number of available quiz questions.
+          example: 1
+    AnsweringaQuizResponse:
+      title: Successful answer
+      type: object
+      properties:
+        correct_answer:
+          type: boolean
+          description: A boolean value indicating whether the submitted answer was correct or not.
+          example: true
+        message:
+          type: string
+          description: Success message if the submitted answer is correct, or an error message if the submitted answer is incorrect.
+          example: Well done! You've just earned 100 points!
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
   securitySchemes:
     api_key:
       type: apiKey

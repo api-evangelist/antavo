@@ -1,0 +1,26 @@
+# Front Door AI Index — antavo — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: antavo
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: antavo.com
+  final_host: antavo.com
+  ownership: own
+  owner: antavo
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 11
+  host_score: 11
+  density: 9.05
+  words: 1215
+  tiers:
+    agentic: 0
+    core: 11
+    model: 0
+  ambiguous: 4
+  top_terms:
+    AI: 11
+    automation: 4

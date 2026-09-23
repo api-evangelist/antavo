@@ -49,8 +49,25 @@ paths:
                     type: NotFoundException
                     code: 0
                     message: Not Found
+      operationId: getFaq
+      x-operation-id-source: derived
 components:
   schemas:
+    FAQSuccess:
+      title: FAQ
+      required:
+      - title
+      - description
+      type: object
+      properties:
+        title:
+          type: string
+          description: The FAQ question.
+          example: How to use points?
+        description:
+          type: string
+          description: Answer to the FAQ question.
+          example: Points can be used to redeem rewards.
     FAQError:
       title: FAQ
       required:
@@ -80,21 +97,6 @@ components:
           items:
             $ref: '#/components/schemas/FAQSuccess'
           description: ''
-    FAQSuccess:
-      title: FAQ
-      required:
-      - title
-      - description
-      type: object
-      properties:
-        title:
-          type: string
-          description: The FAQ question.
-          example: How to use points?
-        description:
-          type: string
-          description: Answer to the FAQ question.
-          example: Points can be used to redeem rewards.
   securitySchemes:
     api_key:
       type: apiKey

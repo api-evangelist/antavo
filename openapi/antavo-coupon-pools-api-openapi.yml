@@ -325,6 +325,8 @@ paths:
                       type: NotFoundException
                       code: 202001
                       message: Coupon Pool not found
+      operationId: postV1CouponPoolsByCouponPoolIdUpdate
+      x-operation-id-source: derived
   /v1/coupon-pools:
     post:
       tags:
@@ -610,73 +612,92 @@ paths:
                       type: BadRequestException
                       code: 202041
                       message: The currency is not allowed for this type of pool
+      operationId: postV1CouponPools
+      x-operation-id-source: derived
 components:
   schemas:
-    UpdateCouponPoolRequest:
+    CreateCouponPoolResponse:
       type: object
-      required:
-      - update_method
       properties:
-        update_method:
+        status:
           type: string
-          description: 'The update method, which can be:
-
-            - `update_all`: Update all coupons. - `update_none`: Do not update coupons. - `update_not_redeemed`: Update only the coupons which have not been redeemed. - `update_unassigned`: Update only the unassigned coupons.'
-        external_id:
+          description: Status of the request.
+          example: success
+        metadata:
+          type: object
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Identifier of the coupon pool.
+              example: 146cb226c3d47e4d6a28176b
+            external_id:
+              type: string
+              description: External identifier of the coupon pool.
+              example: uniqueExternalId
+            name:
+              type: string
+              description: The name of the coupon pool.
+              example: New coupon pool
+            source:
+              type: string
+              description: The source of the coupon pool.
+              example: uploaded
+            type:
+              type: string
+              description: The type of the coupon pool.
+              example: amount
+            value:
+              type: number
+              format: float
+              description: The value of the coupon pool.
+              example: 12.1
+            purchase_minimum:
+              type: number
+              description: The minimum basket value required to use coupons in this coupon pool.
+              example: 2
+            expiration_time:
+              type: string
+              description: The expiration time of coupons from this coupon pool.
+              example: 2 months
+            aggregated:
+              type: boolean
+              description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
+              example: false
+            products:
+              type: array
+              description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
+              items:
+                type: string
+              example:
+              - product1
+              - product2
+            stores:
+              type: array
+              items:
+                type: string
+              description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled)
+              example:
+              - store1
+    ErrorResponse:
+      type: object
+      properties:
+        status:
           type: string
-          minLength: 6
-          maxLength: 24
-          description: An optional unique identifier used for mapping the coupon pool to an external system.
-        name:
-          type: string
-          description: The name of the coupon pool.
-        source:
-          type: string
-          description: The source of the coupon pool, which must be `uploaded`.
-        type:
-          type: string
-          description: The type of the coupon pool, which can be `amount`, `percentage`, `free_shipping` or `gift_card`.
-        value:
-          type: number
-          format: float
-          description: The value of the coupon pool.
-          minimum: 0.01
-        minimum_value:
-          type: number
-          description: The minimum value below which gift card coupons are invalidated (only applicable if the value of the `type` attribute is set to `gift_card`).
-          minimum: 1
-        minimum_redemption_value:
-          type: number
-          description: The minimum redemption value for gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
-          minimum: 1
-        currency:
-          type: string
-          description: The currency of the gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
-        purchase_minimum:
-          type: number
-          description: The minimum basket value required to use coupons from this coupon pool.
-          minimum: 1
-        expiration_time:
-          type: string
-          description: The expiration time of coupons from this coupon pool (e.g., 2 months).
-        aggregated:
-          type: boolean
-          default: false
-          description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
-        products:
-          type: array
-          description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
-          items:
-            type: string
-        stores:
-          type: array
-          description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled).
-          items:
-            type: string
-        update_matching:
-          type: boolean
-          description: Only update coupons with matching original value.
-          default: false
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+            code:
+              type: integer
+              example: 202004
+            message:
+              type: string
+              example: Given id parameter is invalid
     CreateCouponPoolRequest:
       type: object
       required:
@@ -777,88 +798,71 @@ components:
               type: array
               items:
                 type: string
-    CreateCouponPoolResponse:
+    UpdateCouponPoolRequest:
       type: object
+      required:
+      - update_method
       properties:
-        status:
+        update_method:
           type: string
-          description: Status of the request.
-          example: success
-        metadata:
-          type: object
-        payload:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Identifier of the coupon pool.
-              example: 146cb226c3d47e4d6a28176b
-            external_id:
-              type: string
-              description: External identifier of the coupon pool.
-              example: uniqueExternalId
-            name:
-              type: string
-              description: The name of the coupon pool.
-              example: New coupon pool
-            source:
-              type: string
-              description: The source of the coupon pool.
-              example: uploaded
-            type:
-              type: string
-              description: The type of the coupon pool.
-              example: amount
-            value:
-              type: number
-              format: float
-              description: The value of the coupon pool.
-              example: 12.1
-            purchase_minimum:
-              type: number
-              description: The minimum basket value required to use coupons in this coupon pool.
-              example: 2
-            expiration_time:
-              type: string
-              description: The expiration time of coupons from this coupon pool.
-              example: 2 months
-            aggregated:
-              type: boolean
-              description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
-              example: false
-            products:
-              type: array
-              description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
-              items:
-                type: string
-              example:
-              - product1
-              - product2
-            stores:
-              type: array
-              items:
-                type: string
-              description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled)
-              example:
-              - store1
-    ErrorResponse:
-      type: object
-      properties:
-        status:
+          description: 'The update method, which can be:
+
+            - `update_all`: Update all coupons. - `update_none`: Do not update coupons. - `update_not_redeemed`: Update only the coupons which have not been redeemed. - `update_unassigned`: Update only the unassigned coupons.'
+        external_id:
           type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-            code:
-              type: integer
-              example: 202004
-            message:
-              type: string
-              example: Given id parameter is invalid
+          minLength: 6
+          maxLength: 24
+          description: An optional unique identifier used for mapping the coupon pool to an external system.
+        name:
+          type: string
+          description: The name of the coupon pool.
+        source:
+          type: string
+          description: The source of the coupon pool, which must be `uploaded`.
+        type:
+          type: string
+          description: The type of the coupon pool, which can be `amount`, `percentage`, `free_shipping` or `gift_card`.
+        value:
+          type: number
+          format: float
+          description: The value of the coupon pool.
+          minimum: 0.01
+        minimum_value:
+          type: number
+          description: The minimum value below which gift card coupons are invalidated (only applicable if the value of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        minimum_redemption_value:
+          type: number
+          description: The minimum redemption value for gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        currency:
+          type: string
+          description: The currency of the gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
+        purchase_minimum:
+          type: number
+          description: The minimum basket value required to use coupons from this coupon pool.
+          minimum: 1
+        expiration_time:
+          type: string
+          description: The expiration time of coupons from this coupon pool (e.g., 2 months).
+        aggregated:
+          type: boolean
+          default: false
+          description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
+        products:
+          type: array
+          description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
+          items:
+            type: string
+        stores:
+          type: array
+          description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled).
+          items:
+            type: string
+        update_matching:
+          type: boolean
+          description: Only update coupons with matching original value.
+          default: false
   securitySchemes:
     api_key:
       type: apiKey

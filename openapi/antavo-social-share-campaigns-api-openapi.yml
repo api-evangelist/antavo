@@ -17,11 +17,9 @@ paths:
       tags:
       - Social Share Campaigns
       summary: Submit a share intent
-      description: 'This API endpoint registers a customer’s intent to share content for an active campaign configured in the [Social Share Campaigns module](https://docs.antavo.com/docs/social-share-campaigns). Triggers the `share_intent_success` [event](https://developers.antavo.com/docs/internal-events#/share_intent_success) when a campaign match occurs.
+      description: 'This API endpoint registers a customer’s intent to share content for an active campaign configured in the Social Share Campaigns module. Triggers the `share_intent_success` event when a campaign match occurs.
 
-        Call this endpoint when a customer clicks a share button on a content page. Include the customer ID, target platform, and URL to be shared.
-
-        '
+        Call this endpoint when a customer clicks a share button on a content page. Include the customer ID, target platform, and URL to be shared.'
       requestBody:
         required: true
         content:
@@ -54,27 +52,10 @@ paths:
             application/json:
               schema:
                 type: object
+      operationId: postV1SocialShareCampaignsShareIntent
+      x-operation-id-source: derived
 components:
   schemas:
-    ShareIntentRequest:
-      type: object
-      required:
-      - customer_id
-      - url
-      - platform
-      properties:
-        customer_id:
-          type: string
-          example: 9f3c82d6-288e-4361-aec0-039eb066a334
-          description: The unique identifier of the loyalty member whose share intent is being submitted.
-        url:
-          type: string
-          example: https://brand.com
-          description: The URL of the page that the customer shares. This will be validated against the URLs defined in the campaign criteria.
-        platform:
-          type: string
-          example: Facebook
-          description: The social media platform where the customer shared the content. This will be validated against the platforms defined in the campaign criteria.
     ErrorResponse:
       type: object
       description: occurred
@@ -100,6 +81,25 @@ components:
               type: string
               description: Human-readable error message.
               example: cart.total should be numeric
+    ShareIntentRequest:
+      type: object
+      required:
+      - customer_id
+      - url
+      - platform
+      properties:
+        customer_id:
+          type: string
+          example: 9f3c82d6-288e-4361-aec0-039eb066a334
+          description: The unique identifier of the loyalty member whose share intent is being submitted.
+        url:
+          type: string
+          example: https://brand.com
+          description: The URL of the page that the customer shares. This will be validated against the URLs defined in the campaign criteria.
+        platform:
+          type: string
+          example: Facebook
+          description: The social media platform where the customer shared the content. This will be validated against the platforms defined in the campaign criteria.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

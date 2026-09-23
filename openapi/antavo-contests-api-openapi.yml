@@ -57,6 +57,8 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not found
+      operationId: getCustomersByCustomerIdActivitiesContests
+      x-operation-id-source: derived
   /customers/{customer_id}/activities/contests/{contest_id}/enter:
     post:
       tags:
@@ -117,6 +119,8 @@ paths:
                     type: NotFoundException
                     code: 0
                     message: Contest not found
+      operationId: postCustomersByCustomerIdActivitiesContestsByContestIdEnter
+      x-operation-id-source: derived
 components:
   schemas:
     ContestActivity:

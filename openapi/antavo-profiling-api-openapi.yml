@@ -82,6 +82,8 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not found
+      operationId: getCustomersByCustomerIdActivitiesProfilingByFlowIdNext
+      x-operation-id-source: derived
   /customers/{customer_id}/activities/profiling:
     get:
       tags:
@@ -120,6 +122,8 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not found
+      operationId: getCustomersByCustomerIdActivitiesProfiling
+      x-operation-id-source: derived
   /customers/{customer_id}/activities/profiling/{flow_id}/questions/{question_id}:
     post:
       tags:
@@ -132,9 +136,7 @@ paths:
         * A `profiling_flow` event is recorded once all answers in a flow have been successfully submitted in separate requests. This event indicates that the entire profiling sequence has been completed.
 
 
-        Learn more about these events under the list of [Internal events](/docs/internal-events#profiling_answer).
-
-        '
+        Learn more about these events under the list of Internal events.'
       parameters:
       - name: customer_id
         in: path
@@ -220,24 +222,10 @@ paths:
                     type: string
                     description: Human readable error message.
                     example: Customer not found
+      operationId: postCustomersByCustomerIdActivitiesProfilingByFlowIdQuestionsByQuestionId
+      x-operation-id-source: derived
 components:
   schemas:
-    Image:
-      type: object
-      description: Object contains different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
     Activity:
       type: object
       properties:
@@ -289,6 +277,22 @@ components:
                   type: string
                   format: uri
                   example: /customers/c987654/activities/profiling/6331b62a60265969697786/next
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
     ProfilingQuestionOptions:
       type: object
       description: The profiling question to be answered.

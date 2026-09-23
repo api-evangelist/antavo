@@ -18,7 +18,7 @@ paths:
       tags:
       - Challenges
       summary: List all available challenges for a customer
-      description: This endpoint returns all active challenges that are available for the customer to complete. To access a filtered result, please use the [v2 endpoint](/reference/get_v2-customers-customer-id-activities-challenges).
+      description: This endpoint returns all active challenges that are available for the customer to complete. To access a filtered result, please use the v2 endpoint.
       parameters:
       - name: customer_id
         in: path
@@ -51,12 +51,14 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not found
+      operationId: getCustomersByCustomerIdActivitiesChallenges
+      x-operation-id-source: derived
   /customers/{customer_id}/challenges:
     get:
       tags:
       - Challenges
       summary: List a customer's completed challenges
-      description: This endpoint returns a customer's challenge completion history. Use the [v2 endpoint](/reference/get_v2-customers-customer-id-challenges) to get a more complete and filterable view.
+      description: This endpoint returns a customer's challenge completion history. Use the v2 endpoint to get a more complete and filterable view.
       parameters:
       - name: customer_id
         in: path
@@ -90,12 +92,14 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not found
+      operationId: getCustomersByCustomerIdChallenges
+      x-operation-id-source: derived
   /v2/customers/{customer_id}/activities/challenges:
     get:
       tags:
       - Challenges
       summary: V2 List all available challenges for a customer
-      description: This endpoint returns all active challenges that are available for the customer to complete. Results can be [filtered](/docs/pagination-filtering-and-ordering#filtering) with query parameters listed below.
+      description: This endpoint returns all active challenges that are available for the customer to complete. Results can be filtered with query parameters listed below.
       parameters:
       - name: customer_id
         in: path
@@ -171,12 +175,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ChallengesErrorResponse'
       deprecated: false
+      operationId: getV2CustomersByCustomerIdActivitiesChallenges
+      x-operation-id-source: derived
   /v2/customers/{customer_id}/challenges:
     get:
       tags:
       - Challenges
       summary: V2 List a customer's completed challenges
-      description: This endpoint returns a customer's challenge completion history. Results can be [filtered](/docs/pagination-filtering-and-ordering#filtering) with query parameters listed below.
+      description: This endpoint returns a customer's challenge completion history. Results can be filtered with query parameters listed below.
       parameters:
       - name: customer_id
         in: path
@@ -317,117 +323,54 @@ paths:
                     type: NotFoundException
                     code: 160212
                     message: Customer not found
+      operationId: getV2CustomersByCustomerIdChallenges
+      x-operation-id-source: derived
 components:
   schemas:
-    V2ChallengeCompletionProgress:
-      type: object
-      description: Tracks overall progress and individual criteria. Returned for active challenges only.
-      properties:
-        overall:
-          type: integer
-          description: Overall progress percentage of the challenge.
-          example: 100
-        criteria:
-          type: array
-          description: Array of individual completion criteria.
-          items:
-            $ref: '#/components/schemas/V2ChallengeCompletionCriteria'
-    V2ChallengeCompletionCriteria:
-      type: object
-      description: Defines the completion criteria for a challenge.
-      properties:
-        action:
-          type: string
-          description: The action that counts toward the challenge completion.
-          example: checkout_item
-        message:
-          type: string
-          description: A user-friendly message describing the criteria.
-          example: Buy summer sale items.
-        threshold:
-          type: integer
-          description: Number required to complete this criterion.
-          example: 5
-        current:
-          type: integer
-          description: Current progress toward this criterion.
-          example: 5
-        is_completed:
-          type: boolean
-          description: Indicates whether this criterion has been completed.
-          example: true
-    V2ChallengeItem:
+    V2ChallengeActivity:
       type: object
       properties:
-        image:
-          $ref: '#/components/schemas/Image'
-        id:
-          type: string
-          description: The unique ID of the challenge.
-          example: 63eaabe8b0fe6815c91425b6
-        category:
-          type: string
-          description: Category of the challenge.
-          example: Stay stylish!
         status:
           type: string
-          description: Current status of the challenge.
-          enum:
-          - active
-          - restricted
-        starts_at:
-          type: string
-          format: date-time
-          description: Start date of the challenge, if defined.
-          example: '2024-02-29T14:30:00.000Z'
-        ends_at:
-          type: string
-          format: date-time
-          description: End date of the challenge, if defined.
-          example: '2024-08-31T14:29:00.000Z'
-        completions:
-          type: integer
-          description: Number of times the customer has completed the challenge.
-          example: 0
-        description:
-          type: string
-          description: Description of the challenge.
-          example: Embrace the season with our exclusive Summer Style Challenge! Purchase a full set from our vibrant summer clothing line and showcase your fashion-forward look. Complete the challenge to earn special rewards and make this summer your most stylish one yet.
-        title:
-          type: string
-          description: Title of the challenge.
-          example: Summer Style Challenge
-        message:
-          type: string
-          description: Restriction message. It is only returned if the customer is currently not in the segment that has been selected in the reward configuration.
-          example: Apologies, but this challenge is currently unavailable for you. Keep an eye out for future opportunities or discover other exciting challenges to engage with!
-        url:
-          type: string
-          format: uri
-          description: URL of the page that opens after the customer clicks the CTA button.
-          example: https://antavo.com/summer-items
-        points:
-          type: integer
-          description: The number of points rewarded when the customer completes the challenge.
-          example: 100
-        tags:
+          description: Status of the query.
+          example: success
+        metadata:
+          type: object
+          properties:
+            pagination:
+              type: object
+              properties:
+                total:
+                  type: integer
+                  description: The number of challenge items the endpoint returns.
+                  example: 1
+                next:
+                  type: string
+                  description: Links to the next page of the challenge items. The attribute is only populated if the next page exists.
+                  example: https://example.com/challenges-63eaabe8b0fe6815c91425b6?page=2
+                previous:
+                  type: string
+                  description: Links to the previous page of the challenge items. The attribute is only populated if the previous page exists.
+                  example: https://example.com/challenges-63eaabe8b0fe6815c91425b6?page=1
+        payload:
           type: array
           items:
-            type: string
-          example:
-          - summer-line
-          - '2024'
-          - 100 points
-        cta_label:
+            $ref: '#/components/schemas/V2ChallengeItem'
+    V2ChallengeCompletionResponse:
+      type: object
+      description: Response object for the list of challenge completions.
+      properties:
+        status:
           type: string
-          description: Call-to-action button label.
-          example: Join the Challenge
-        max_completions:
-          type: integer
-          description: Number of times a customer can complete the challenge.
-          example: 6
-        progress:
-          $ref: '#/components/schemas/V2ChallengeProgress'
+          description: Status of the API response.
+          example: success
+        metadata:
+          $ref: '#/components/schemas/V2ChallengeCompletionMetadata'
+        payload:
+          type: array
+          description: Array of challenge completion objects.
+          items:
+            $ref: '#/components/schemas/V2ChallengeCompletion'
     V2ChallengeCompletion:
       type: object
       description: Represents a challenge and its completion status.
@@ -514,6 +457,342 @@ components:
           example: Stay stylish!
         progress:
           $ref: '#/components/schemas/V2ChallengeCompletionProgress'
+    ChallengeActivity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique ID of the challenge.
+          example: 63eaabe8b0fe6815c91425b6
+        title:
+          type: string
+          description: Title of the challenge.
+          example: Summer Style Challenge
+        description:
+          type: string
+          description: Description of the challenge.
+          example: Embrace the season with our exclusive Summer Style Challenge! Purchase a full set from our vibrant summer clothing line and showcase your fashion-forward look. Complete the challenge to earn special rewards and make this summer your most stylish one yet.
+        status:
+          type: string
+          description: Current status of the challenge.
+          enum:
+          - active
+          - restricted
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: The number of points rewarded when the customer completes the challenge.
+          example: 100
+        progress:
+          type: object
+          description: Returned for active challenges only.
+          properties:
+            last_completed_at:
+              type: string
+              format: date-type
+              description: The last time time a customer completed the challenge. This is not necessarily the current customer.
+              example: '2024-04-02T16:13:35.000Z'
+            overall:
+              type: number
+              description: Calculated overall progress as percentage (sum of capped `current` values per sum of `threshold` values).
+              example: 20
+            criteria:
+              type: array
+              description: Detailed information of the customer's progress with each criteria of challenge completion.
+              items:
+                type: object
+                properties:
+                  action:
+                    type: string
+                    description: The action to perform to complete the challenge.
+                    example: checkout_item
+                  current:
+                    type: integer
+                    description: Current progess of the customer on the challenge completion.
+                    example: 1
+                  threshold:
+                    type: integer
+                    description: The number of times the action should be performed.
+                    example: 5
+                  message:
+                    type: string
+                    description: The description of the criterium.
+                    example: Complete your look by purchasing 5 items from our summer clothing line and unlock 100 loyalty points as a reward!
+                  is_completed:
+                    type: boolean
+                    description: Indicates whether the customer has completed the challenge.
+                    example: true
+        cta_label:
+          type: string
+          description: Call-to-action button label.
+          example: Join the Challenge
+        url:
+          type: string
+          format: uri
+          description: URL of the page that opens after the customer clicks the CTA button.
+          example: https://antavo.com/summer-items
+        starts_at:
+          type: string
+          format: date-time
+          description: Start date of the challenge, if defined.
+          example: '2024-02-29T14:30:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: End date of the challenge, if defined.
+          example: '2024-08-31T14:29:00.000Z'
+        completions:
+          type: integer
+          description: Number of times the customer has completed the challenge.
+          example: 0
+        max_completions:
+          type: integer
+          description: Number of times a customer can complete the challenge.
+          example: 6
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the challenge.
+          example:
+          - summer-line
+          - '2024'
+          - 100 points
+        category:
+          type: string
+          description: Category of the challenge.
+          example: Stay stylish!
+    ChallengesErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred at the challenges endpoint.
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: NotFoundException
+            code:
+              type: number
+              description: A 6-digit number to uniquely identify the error occurred.
+              example: 160212
+            message:
+              type: string
+              description: Human readable error message
+              example: Customer not found
+        status:
+          type: string
+          description: Indicates that an error occurred when querying the list of challenges.
+          example: error
+    V2ChallengeItem:
+      type: object
+      properties:
+        image:
+          $ref: '#/components/schemas/Image'
+        id:
+          type: string
+          description: The unique ID of the challenge.
+          example: 63eaabe8b0fe6815c91425b6
+        category:
+          type: string
+          description: Category of the challenge.
+          example: Stay stylish!
+        status:
+          type: string
+          description: Current status of the challenge.
+          enum:
+          - active
+          - restricted
+        starts_at:
+          type: string
+          format: date-time
+          description: Start date of the challenge, if defined.
+          example: '2024-02-29T14:30:00.000Z'
+        ends_at:
+          type: string
+          format: date-time
+          description: End date of the challenge, if defined.
+          example: '2024-08-31T14:29:00.000Z'
+        completions:
+          type: integer
+          description: Number of times the customer has completed the challenge.
+          example: 0
+        description:
+          type: string
+          description: Description of the challenge.
+          example: Embrace the season with our exclusive Summer Style Challenge! Purchase a full set from our vibrant summer clothing line and showcase your fashion-forward look. Complete the challenge to earn special rewards and make this summer your most stylish one yet.
+        title:
+          type: string
+          description: Title of the challenge.
+          example: Summer Style Challenge
+        message:
+          type: string
+          description: Restriction message. It is only returned if the customer is currently not in the segment that has been selected in the reward configuration.
+          example: Apologies, but this challenge is currently unavailable for you. Keep an eye out for future opportunities or discover other exciting challenges to engage with!
+        url:
+          type: string
+          format: uri
+          description: URL of the page that opens after the customer clicks the CTA button.
+          example: https://antavo.com/summer-items
+        points:
+          type: integer
+          description: The number of points rewarded when the customer completes the challenge.
+          example: 100
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+          - summer-line
+          - '2024'
+          - 100 points
+        cta_label:
+          type: string
+          description: Call-to-action button label.
+          example: Join the Challenge
+        max_completions:
+          type: integer
+          description: Number of times a customer can complete the challenge.
+          example: 6
+        progress:
+          $ref: '#/components/schemas/V2ChallengeProgress'
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    V2ChallengeCompletionProgress:
+      type: object
+      description: Tracks overall progress and individual criteria. Returned for active challenges only.
+      properties:
+        overall:
+          type: integer
+          description: Overall progress percentage of the challenge.
+          example: 100
+        criteria:
+          type: array
+          description: Array of individual completion criteria.
+          items:
+            $ref: '#/components/schemas/V2ChallengeCompletionCriteria'
+    V2ChallengeCompletionImage:
+      type: object
+      description: Object containing different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          description: URL to the small version of the challenge image.
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          description: URL to the medium version of the challenge image.
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          description: URL to the large version of the challenge image.
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    V2ChallengeCompletionMetadata:
+      type: object
+      description: Metadata for the challenge completion response.
+      properties:
+        pagination:
+          $ref: '#/components/schemas/V2ChallengeCompletionPagination'
+    V2ChallengeProgress:
+      type: object
+      properties:
+        last_completed_at:
+          type: string
+          format: date-type
+          description: The last time time a customer completed the challenge. This is not necessarily the current customer.
+          example: '2024-04-02T16:13:35.000Z'
+        overall:
+          type: number
+          description: Calculated overall progress as percentage (sum of capped `current` values per sum of `threshold` values).
+          example: 20
+        criteria:
+          type: array
+          description: Detailed information of the customer's progress with each criteria of challenge completion.
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                description: The action to perform to complete the challenge.
+                example: checkout_item
+              current:
+                type: integer
+                description: Current progess of the customer on the challenge completion.
+                example: 1
+              threshold:
+                type: integer
+                description: The number of times the action should be performed.
+                example: 5
+              message:
+                type: string
+                description: The description of the criterium.
+                example: Complete your look by purchasing 5 items from our summer clothing line and unlock 100 loyalty points as a reward!
+              is_completed:
+                type: boolean
+                description: Indicates whether the customer has completed the challenge.
+                example: true
+    V2ChallengeCompletionCriteria:
+      type: object
+      description: Defines the completion criteria for a challenge.
+      properties:
+        action:
+          type: string
+          description: The action that counts toward the challenge completion.
+          example: checkout_item
+        message:
+          type: string
+          description: A user-friendly message describing the criteria.
+          example: Buy summer sale items.
+        threshold:
+          type: integer
+          description: Number required to complete this criterion.
+          example: 5
+        current:
+          type: integer
+          description: Current progress toward this criterion.
+          example: 5
+        is_completed:
+          type: boolean
+          description: Indicates whether this criterion has been completed.
+          example: true
+    V2ChallengeCompletionPagination:
+      type: object
+      description: Pagination information for challenge completion list.
+      properties:
+        total:
+          type: integer
+          description: Total number of challenges.
+          example: 315
+        next:
+          type: string
+          description: URL to the next page of results.
+          example: /v2/customers/5335e5ff4905de517c946998f/challenges?offset=20&limit=20
+        previous:
+          type: string
+          description: URL to the previous page of results.
+          example: /v2/customers/5335e5ff4905de517c946998f/challenges?offset=40&limit=20
     ChallengeCompletion:
       type: object
       properties:
@@ -626,29 +905,6 @@ components:
           enum:
           - active
           - restricted
-    ChallengesErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred at the challenges endpoint.
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: NotFoundException
-            code:
-              type: number
-              description: A 6-digit number to uniquely identify the error occurred.
-              example: 160212
-            message:
-              type: string
-              description: Human readable error message
-              example: Customer not found
-        status:
-          type: string
-          description: Indicates that an error occurred when querying the list of challenges.
-          example: error
     Image:
       type: object
       description: Object contains different sizes of the image asset.
@@ -665,254 +921,6 @@ components:
           type: string
           format: uri
           example: https://example.com/1715791767-nH7Mf.jpeg
-    V2ChallengeProgress:
-      type: object
-      properties:
-        last_completed_at:
-          type: string
-          format: date-type
-          description: The last time time a customer completed the challenge. This is not necessarily the current customer.
-          example: '2024-04-02T16:13:35.000Z'
-        overall:
-          type: number
-          description: Calculated overall progress as percentage (sum of capped `current` values per sum of `threshold` values).
-          example: 20
-        criteria:
-          type: array
-          description: Detailed information of the customer's progress with each criteria of challenge completion.
-          items:
-            type: object
-            properties:
-              action:
-                type: string
-                description: The action to perform to complete the challenge.
-                example: checkout_item
-              current:
-                type: integer
-                description: Current progess of the customer on the challenge completion.
-                example: 1
-              threshold:
-                type: integer
-                description: The number of times the action should be performed.
-                example: 5
-              message:
-                type: string
-                description: The description of the criterium.
-                example: Complete your look by purchasing 5 items from our summer clothing line and unlock 100 loyalty points as a reward!
-              is_completed:
-                type: boolean
-                description: Indicates whether the customer has completed the challenge.
-                example: true
-    ChallengeActivity:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique ID of the challenge.
-          example: 63eaabe8b0fe6815c91425b6
-        title:
-          type: string
-          description: Title of the challenge.
-          example: Summer Style Challenge
-        description:
-          type: string
-          description: Description of the challenge.
-          example: Embrace the season with our exclusive Summer Style Challenge! Purchase a full set from our vibrant summer clothing line and showcase your fashion-forward look. Complete the challenge to earn special rewards and make this summer your most stylish one yet.
-        status:
-          type: string
-          description: Current status of the challenge.
-          enum:
-          - active
-          - restricted
-        image:
-          $ref: '#/components/schemas/Image'
-        points:
-          type: integer
-          description: The number of points rewarded when the customer completes the challenge.
-          example: 100
-        progress:
-          type: object
-          description: Returned for active challenges only.
-          properties:
-            last_completed_at:
-              type: string
-              format: date-type
-              description: The last time time a customer completed the challenge. This is not necessarily the current customer.
-              example: '2024-04-02T16:13:35.000Z'
-            overall:
-              type: number
-              description: Calculated overall progress as percentage (sum of capped `current` values per sum of `threshold` values).
-              example: 20
-            criteria:
-              type: array
-              description: Detailed information of the customer's progress with each criteria of challenge completion.
-              items:
-                type: object
-                properties:
-                  action:
-                    type: string
-                    description: The action to perform to complete the challenge.
-                    example: checkout_item
-                  current:
-                    type: integer
-                    description: Current progess of the customer on the challenge completion.
-                    example: 1
-                  threshold:
-                    type: integer
-                    description: The number of times the action should be performed.
-                    example: 5
-                  message:
-                    type: string
-                    description: The description of the criterium.
-                    example: Complete your look by purchasing 5 items from our summer clothing line and unlock 100 loyalty points as a reward!
-                  is_completed:
-                    type: boolean
-                    description: Indicates whether the customer has completed the challenge.
-                    example: true
-        cta_label:
-          type: string
-          description: Call-to-action button label.
-          example: Join the Challenge
-        url:
-          type: string
-          format: uri
-          description: URL of the page that opens after the customer clicks the CTA button.
-          example: https://antavo.com/summer-items
-        starts_at:
-          type: string
-          format: date-time
-          description: Start date of the challenge, if defined.
-          example: '2024-02-29T14:30:00.000Z'
-        ends_at:
-          type: string
-          format: date-time
-          description: End date of the challenge, if defined.
-          example: '2024-08-31T14:29:00.000Z'
-        completions:
-          type: integer
-          description: Number of times the customer has completed the challenge.
-          example: 0
-        max_completions:
-          type: integer
-          description: Number of times a customer can complete the challenge.
-          example: 6
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags associated with the challenge.
-          example:
-          - summer-line
-          - '2024'
-          - 100 points
-        category:
-          type: string
-          description: Category of the challenge.
-          example: Stay stylish!
-    V2ChallengeCompletionPagination:
-      type: object
-      description: Pagination information for challenge completion list.
-      properties:
-        total:
-          type: integer
-          description: Total number of challenges.
-          example: 315
-        next:
-          type: string
-          description: URL to the next page of results.
-          example: /v2/customers/5335e5ff4905de517c946998f/challenges?offset=20&limit=20
-        previous:
-          type: string
-          description: URL to the previous page of results.
-          example: /v2/customers/5335e5ff4905de517c946998f/challenges?offset=40&limit=20
-    V2ChallengeCompletionResponse:
-      type: object
-      description: Response object for the list of challenge completions.
-      properties:
-        status:
-          type: string
-          description: Status of the API response.
-          example: success
-        metadata:
-          $ref: '#/components/schemas/V2ChallengeCompletionMetadata'
-        payload:
-          type: array
-          description: Array of challenge completion objects.
-          items:
-            $ref: '#/components/schemas/V2ChallengeCompletion'
-    V2ChallengeActivity:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the query.
-          example: success
-        metadata:
-          type: object
-          properties:
-            pagination:
-              type: object
-              properties:
-                total:
-                  type: integer
-                  description: The number of challenge items the endpoint returns.
-                  example: 1
-                next:
-                  type: string
-                  description: Links to the next page of the challenge items. The attribute is only populated if the next page exists.
-                  example: https://example.com/challenges-63eaabe8b0fe6815c91425b6?page=2
-                previous:
-                  type: string
-                  description: Links to the previous page of the challenge items. The attribute is only populated if the previous page exists.
-                  example: https://example.com/challenges-63eaabe8b0fe6815c91425b6?page=1
-        payload:
-          type: array
-          items:
-            $ref: '#/components/schemas/V2ChallengeItem'
-    V2ChallengeCompletionMetadata:
-      type: object
-      description: Metadata for the challenge completion response.
-      properties:
-        pagination:
-          $ref: '#/components/schemas/V2ChallengeCompletionPagination'
-    V2ChallengeCompletionImage:
-      type: object
-      description: Object containing different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          description: URL to the small version of the challenge image.
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          description: URL to the medium version of the challenge image.
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          description: URL to the large version of the challenge image.
-          example: https://example.com/1715791767-nH7Mf.jpeg
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
   securitySchemes:
     api_key:
       type: apiKey
