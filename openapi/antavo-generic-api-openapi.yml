@@ -501,17 +501,31 @@ components:
           description: An array of all associated errors with API submission.
           items:
             $ref: '#/components/schemas/Bulkentitytwoitems'
-    RedeemInstructions:
-      title: RedeemInstructions
+    Name:
+      title: Name
       type: object
-      description: Instructions on how to redeem the reward.
+      description: The name of the reward.
       properties:
         en:
           type: string
-          example: Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.
+          example: 20% Off on Winter Collection
         de:
           type: string
-          example: Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.
+          example: 20% Rabatt auf die Winterkollektion
+    Segment:
+      title: Segment
+      type: object
+      description: Segments associated with the reward.
+      properties:
+        id:
+          type: string
+          example: 5ef1ad79a44b5e15008b456e
+        name:
+          type: string
+          example: Returning Customers
+        status:
+          type: string
+          example: active
     Terms:
       title: Terms
       type: object
@@ -523,6 +537,22 @@ components:
         de:
           type: string
           example: Nicht mit anderen Angeboten kombinierbar.
+    PUTError:
+      title: Error
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the error.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+          example: 0
+        message:
+          type: string
+          description: Human-readable error message.
+          example: '''<attribute>'' property is required'
     GetRewardResponse:
       title: RewardResponse
       type: object
@@ -609,20 +639,6 @@ components:
           type: string
           example: 5b22a37f71f92e7f798q4186
           description: ID of the coupon pool associated (coupon-type rewards only).
-    Segment:
-      title: Segment
-      type: object
-      description: Segments associated with the reward.
-      properties:
-        id:
-          type: string
-          example: 5ef1ad79a44b5e15008b456e
-        name:
-          type: string
-          example: Returning Customers
-        status:
-          type: string
-          example: active
     Description:
       title: Description
       type: object
@@ -634,65 +650,42 @@ components:
         de:
           type: string
           example: Sichern Sie sich 20% Rabatt auf Artikel aus unserer Winterkollektion.
-    RewardPut:
-      title: RewardPut
+    Bulkentityone:
       type: object
+      description: An API response for an error-free defined bulk entity call.
       properties:
-        id:
+        method:
           type: string
-          example: 6479d9e55a48f71fca4cda22
-          description: The unique identifier of the reward.
-        status:
-          type: string
-          example: inactive
-          description: The status of the reward.
+          description: API call type.
+          example: PUT
         type:
           type: string
-          example: coupon
-          description: The type of the reward.
-        name:
+          description: Entity type.
+          example: custom/demo_entity
+        id:
           type: string
-          example: 20% Off on Winter Collection
-          description: The name of the reward.
-        description:
-          type: string
-          example: Enjoy a 20% discount on our Winter Collection items.
-          description: Description of the reward.
-        claim_button_label:
-          type: string
-          example: Get Discount
-          description: Label of the claim button.
-        price:
-          type: string
-          example: 100
-          description: Point price of the reward.
-        hide_restricted:
-          type: string
-          example: false
-          description: Indicates whether the reward is hidden from restricted users.
-        notifications:
-          type: string
-          example: false
-          description: Indicates whether a reward claim notification to the customer is sent by Antavo.
-        user_notification:
-          type: string
-          example: false
-          description: Indicates whether a reward claim notification to the workspace admin is sent by Antavo.
-        transferable:
-          type: string
-          example: false
-          description: Indicates whether the reward can be transferred to another customer.
-    Name:
-      title: Name
+          description: Entity ID.
+          example: 63eaabe8b0fe6815c91425b6
+    GetRewardsResponse:
+      title: GetRewardsResponse
       type: object
-      description: The name of the reward.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetRewardResponse'
+          description: ''
+    ClaimButtonLabel:
+      title: ClaimButtonLabel
+      type: object
+      description: Label of the claim button.
       properties:
         en:
           type: string
-          example: 20% Off on Winter Collection
+          example: Get Discount
         de:
           type: string
-          example: 20% Rabatt auf die Winterkollektion
+          example: Rabatt Sichern
     Account:
       title: account
       type: object
@@ -704,42 +697,6 @@ components:
         name:
           type: string
           example: main_account
-    ErrorResponse:
-      title: Error
-      type: object
-      properties:
-        type:
-          description: Type of the error occurred.
-          example: BadRequestException
-        code:
-          type: number
-          description: Error code.
-        message:
-          type: string
-          description: Human readable error message.
-    Entity:
-      title: Entity
-      type: object
-      description: A specified API call for a defined entity
-      properties:
-        method:
-          type: string
-          description: Type of the API call
-          example: PUT
-        type:
-          type: string
-          description: Entity type
-          example: custom/demo_entity
-        id:
-          type: string
-          description: Entity ID
-          example: 63eaabe8b0fe6815c91425b6
-        data:
-          type: array
-          description: Array containing all data to be processed by request
-          items:
-            type: object
-          example: []
     RewardResponse:
       title: RewardResponse
       type: object
@@ -821,6 +778,73 @@ components:
           example: inactive
         price:
           $ref: '#/components/schemas/Price'
+    RedeemInstructions:
+      title: RedeemInstructions
+      type: object
+      description: Instructions on how to redeem the reward.
+      properties:
+        en:
+          type: string
+          example: Present this coupon at checkout to apply the discount. Valid on Winter Collection items only.
+        de:
+          type: string
+          example: Zeigen Sie diesen Gutschein an der Kasse vor, um den Rabatt zu erhalten. Gültig nur für Artikel aus der Winterkollektion.
+    RewardPut:
+      title: RewardPut
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6479d9e55a48f71fca4cda22
+          description: The unique identifier of the reward.
+        status:
+          type: string
+          example: inactive
+          description: The status of the reward.
+        type:
+          type: string
+          example: coupon
+          description: The type of the reward.
+        name:
+          type: string
+          example: 20% Off on Winter Collection
+          description: The name of the reward.
+        description:
+          type: string
+          example: Enjoy a 20% discount on our Winter Collection items.
+          description: Description of the reward.
+        claim_button_label:
+          type: string
+          example: Get Discount
+          description: Label of the claim button.
+        price:
+          type: string
+          example: 100
+          description: Point price of the reward.
+        hide_restricted:
+          type: string
+          example: false
+          description: Indicates whether the reward is hidden from restricted users.
+        notifications:
+          type: string
+          example: false
+          description: Indicates whether a reward claim notification to the customer is sent by Antavo.
+        user_notification:
+          type: string
+          example: false
+          description: Indicates whether a reward claim notification to the workspace admin is sent by Antavo.
+        transferable:
+          type: string
+          example: false
+          description: Indicates whether the reward can be transferred to another customer.
+    Category:
+      title: Category
+      type: object
+      description: Reward category associated with the reward.
+      properties:
+        id:
+          type: string
+          example: 5ef1ad79a44b5e15008b456e
     RestrictedMessage:
       title: RestrictedMessage
       type: object
@@ -832,6 +856,19 @@ components:
         de:
           type: string
           example: Dieses Angebot ist derzeit nicht verfügbar. Bitte besuchen Sie uns später erneut.
+    ErrorResponse:
+      title: Error
+      type: object
+      properties:
+        type:
+          description: Type of the error occurred.
+          example: BadRequestException
+        code:
+          type: number
+          description: Error code.
+        message:
+          type: string
+          description: Human readable error message.
     Price:
       title: Price
       type: object
@@ -845,57 +882,29 @@ components:
           type: integer
           format: int32
           example: 500
-    Category:
-      title: Category
+    Entity:
+      title: Entity
       type: object
-      description: Reward category associated with the reward.
-      properties:
-        id:
-          type: string
-          example: 5ef1ad79a44b5e15008b456e
-    Bulkentityone:
-      type: object
-      description: An API response for an error-free defined bulk entity call.
+      description: A specified API call for a defined entity
       properties:
         method:
           type: string
-          description: API call type.
+          description: Type of the API call
           example: PUT
         type:
           type: string
-          description: Entity type.
+          description: Entity type
           example: custom/demo_entity
         id:
           type: string
-          description: Entity ID.
+          description: Entity ID
           example: 63eaabe8b0fe6815c91425b6
-    ClaimButtonLabel:
-      title: ClaimButtonLabel
-      type: object
-      description: Label of the claim button.
-      properties:
-        en:
-          type: string
-          example: Get Discount
-        de:
-          type: string
-          example: Rabatt Sichern
-    PUTError:
-      title: Error
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of the error.
-          example: BadRequestException
-        code:
-          type: number
-          description: Error code.
-          example: 0
-        message:
-          type: string
-          description: Human-readable error message.
-          example: '''<attribute>'' property is required'
+        data:
+          type: array
+          description: Array containing all data to be processed by request
+          items:
+            type: object
+          example: []
     Bulkentitytwoitems:
       type: object
       properties:
@@ -911,15 +920,6 @@ components:
           type: string
           description: The user-friendly error description.
           example: Entity not found
-    GetRewardsResponse:
-      title: GetRewardsResponse
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/GetRewardResponse'
-          description: ''
   securitySchemes:
     api_key:
       type: apiKey

@@ -398,7 +398,7 @@ paths:
       description: The Antavo staging environment
 components:
   schemas:
-    BadRequestResponse:
+    NotFoundErrorResponse:
       type: object
       properties:
         status:
@@ -407,19 +407,18 @@ components:
           description: Status of the request.
         error:
           type: object
-          description: Error details.
           properties:
             type:
               type: string
-              example: BadRequestException
+              example: NotFoundException
               description: Type of the error.
             code:
-              type: number
-              example: 330502
+              type: string
+              example: 330531
               description: Error code.
             message:
               type: string
-              example: The 'payload' field is not found or empty
+              example: Batch ID is not found
               description: Human-readable error message.
     ListStatusResponse:
       type: object
@@ -477,7 +476,7 @@ components:
               type: string
               description: Human-readable error message.
               example: Customer List not found
-    ListBatchNotFound:
+    ListNotFoundResponseRemove:
       type: object
       properties:
         status:
@@ -494,33 +493,12 @@ components:
               description: Type of the error.
             code:
               type: number
-              example: 330521
+              example: 330511
               description: Error code.
             message:
               type: string
-              example: Batch ID is not found
+              example: Customer List not found
               description: Human-readable error message.
-    metadatalist:
-      type: object
-      properties:
-        external_batch_id:
-          type: string
-          example: batch001
-        payload:
-          type: object
-    CustomerListRemove:
-      type: object
-      required:
-      - customers
-      properties:
-        customers:
-          type: array
-          description: List of customers to be removed.
-          items:
-            type: string
-            example:
-            - 280e674c-c4ea-4a30-987a-d9267d1a5018
-            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
     CustomerList:
       type: object
       required:
@@ -594,29 +572,20 @@ components:
         payload:
           type: object
           description: Details of the bulk operation.
-    NotFoundErrorResponse:
+    CustomerListRemove:
       type: object
+      required:
+      - customers
       properties:
-        status:
-          type: string
-          example: error
-          description: Status of the request.
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of the error.
-            code:
-              type: string
-              example: 330531
-              description: Error code.
-            message:
-              type: string
-              example: Batch ID is not found
-              description: Human-readable error message.
-    ListNotFoundResponseRemove:
+        customers:
+          type: array
+          description: List of customers to be removed.
+          items:
+            type: string
+            example:
+            - 280e674c-c4ea-4a30-987a-d9267d1a5018
+            - afa53d5e-72e8-443b-8ac2-eab0cbaa181a
+    ListBatchNotFound:
       type: object
       properties:
         status:
@@ -633,28 +602,54 @@ components:
               description: Type of the error.
             code:
               type: number
-              example: 330511
+              example: 330521
               description: Error code.
             message:
               type: string
-              example: Customer List not found
+              example: Batch ID is not found
               description: Human-readable error message.
-    SegmentError:
-      title: Error
+    BadRequestResponse:
       type: object
       properties:
-        type:
+        status:
           type: string
-          description: Type of the error occurred.
-          example: BadRequestException
-        code:
-          type: number
-          description: A 6-digit number to uniquely identify the place the error occurred.
-          example: 300400
-        message:
+          example: error
+          description: Status of the request.
+        error:
+          type: object
+          description: Error details.
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of the error.
+            code:
+              type: number
+              example: 330502
+              description: Error code.
+            message:
+              type: string
+              example: The 'payload' field is not found or empty
+              description: Human-readable error message.
+    metadatalist:
+      type: object
+      properties:
+        external_batch_id:
           type: string
-          description: Human readable error message.
-          example: Customer List not found
+          example: batch001
+        payload:
+          type: object
+    PUTlistresponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the list.
+          example: draft
+        id:
+          type: string
+          example: 63f2cc942d6ef241c0167e6c
+          description: ID of the list.
     SegmentResponse:
       type: object
       properties:
@@ -677,17 +672,22 @@ components:
         error:
           $ref: '#/components/schemas/SegmentError'
       description: This describes the generic structure returned if an error occurred - A reward entity has been used as an example.
-    PUTlistresponse:
+    SegmentError:
+      title: Error
       type: object
       properties:
-        status:
+        type:
           type: string
-          description: Status of the list.
-          example: draft
-        id:
+          description: Type of the error occurred.
+          example: BadRequestException
+        code:
+          type: number
+          description: A 6-digit number to uniquely identify the place the error occurred.
+          example: 300400
+        message:
           type: string
-          example: 63f2cc942d6ef241c0167e6c
-          description: ID of the list.
+          description: Human readable error message.
+          example: Customer List not found
   securitySchemes:
     api_key:
       type: apiKey

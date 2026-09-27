@@ -146,43 +146,10 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    data:
-      type: object
-      required:
-      - transaction_id
-      - total
-      properties:
-        transaction_id:
-          type: string
-          description: Must be unique for every transaction.
-          example: TR37882412
-        total:
-          type: number
-          description: The total amount paid.
-          example: 23
-        items:
-          $ref: '#/components/schemas/items'
     campaigns:
       type: array
       items:
         $ref: '#/components/schemas/campaign'
-    ErrorResponse:
-      type: object
-      description: occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-            message:
-              type: string
-              description: Human-readable error message.
     item:
       type: object
       properties:
@@ -214,10 +181,23 @@ components:
           type: number
           description: The amount paid by the customer.
           example: 33
-    items:
-      type: array
-      items:
-        $ref: '#/components/schemas/item'
+    ErrorResponse:
+      type: object
+      description: occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+            message:
+              type: string
+              description: Human-readable error message.
     campaign:
       type: object
       properties:
@@ -229,3 +209,23 @@ components:
           type: integer
           description: These points are not awarded to the customer at this stage and are intended for display purposes only.
           example: checkout
+    data:
+      type: object
+      required:
+      - transaction_id
+      - total
+      properties:
+        transaction_id:
+          type: string
+          description: Must be unique for every transaction.
+          example: TR37882412
+        total:
+          type: number
+          description: The total amount paid.
+          example: 23
+        items:
+          $ref: '#/components/schemas/items'
+    items:
+      type: array
+      items:
+        $ref: '#/components/schemas/item'

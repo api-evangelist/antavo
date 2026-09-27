@@ -230,26 +230,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PrizeWheelsOptions:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID of the prize wheel.
-                example: 63fdccaca88ac11c347af899
-              status:
-                type: string
-                description: Status of the prize wheel.
-                example: active
-        total:
-          type: number
-          description: The number of prize wheel available to the customer.
-          example: 1
     PrizeWheelsOptions_ind:
       type: object
       properties:
@@ -302,6 +282,26 @@ components:
           - reward
           - points
           - empty
+    PrizeWheelsOptions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the prize wheel.
+                example: 63fdccaca88ac11c347af899
+              status:
+                type: string
+                description: Status of the prize wheel.
+                example: active
+        total:
+          type: number
+          description: The number of prize wheel available to the customer.
+          example: 1
     PrizeWheelOption:
       type: object
       properties:

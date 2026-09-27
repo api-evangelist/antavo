@@ -56,26 +56,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SuccessResponse:
-      type: object
-      description: Array of reward entries.
-      properties:
-        id:
-          type: string
-          description: The unique customer identifier.
-          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
-        handler:
-          type: string
-          description: The customer's handler (nickname). If not set, this will return the customer's first name or null.
-          example: john_doe
-        image_url:
-          type: string
-          description: The avatar of the customer. Returns null if not set.
-          example: https://example.com/avatar.jpg
-        score:
-          type: number
-          description: The points earned by the customer in the given interval.
-          example: 1500
     Error:
       description: UnauthorizedException
       type: object
@@ -96,6 +76,26 @@ components:
           type: string
           description: Human-readable error message.
           example: No api_key provided
+    SuccessResponse:
+      type: object
+      description: Array of reward entries.
+      properties:
+        id:
+          type: string
+          description: The unique customer identifier.
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+        handler:
+          type: string
+          description: The customer's handler (nickname). If not set, this will return the customer's first name or null.
+          example: john_doe
+        image_url:
+          type: string
+          description: The avatar of the customer. Returns null if not set.
+          example: https://example.com/avatar.jpg
+        score:
+          type: number
+          description: The points earned by the customer in the given interval.
+          example: 1500
   securitySchemes:
     api_key:
       type: apiKey

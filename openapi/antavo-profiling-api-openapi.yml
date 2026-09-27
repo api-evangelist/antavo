@@ -226,73 +226,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Activity:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier of the profiling flow to complete.
-          example: 6331b62a60265969697786
-        title:
-          type: string
-          description: Title of the profiling flow.
-          example: Earn points by sharing your product preferences.
-        description:
-          type: string
-          description: Detailed description of the activity.
-          example: Click Start and answer all the questions related to xour product preferences.
-        status:
-          type: string
-          description: Status of the profiling flow.
-          enum:
-          - active
-          - scheduled
-          - expired
-          - restricted
-        image:
-          $ref: '#/components/schemas/Image'
-        points:
-          type: integer
-          description: Number of points to earn.
-          example: 100
-        activity_type:
-          type: string
-          description: Type of the activity.
-          example: profiling
-        questions:
-          type: integer
-          description: Number of questions within the profiling flow.
-          example: 5
-        _actions:
-          type: object
-          properties:
-            next:
-              type: object
-              description: Endpoint to retrieve the next question in the flow to answer.
-              properties:
-                method:
-                  type: string
-                  example: GET
-                url:
-                  type: string
-                  format: uri
-                  example: /customers/c987654/activities/profiling/6331b62a60265969697786/next
-    Image:
-      type: object
-      description: Object contains different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
     ProfilingQuestionOptions:
       type: object
       description: The profiling question to be answered.
@@ -362,6 +295,73 @@ components:
                   type: string
                   format: uri
                   example: /customers/c987654/activities/profiling/63d8d8cc17572c6ec15e688c/questions/6644deb1d959c7036f1875fd
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    Activity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the profiling flow to complete.
+          example: 6331b62a60265969697786
+        title:
+          type: string
+          description: Title of the profiling flow.
+          example: Earn points by sharing your product preferences.
+        description:
+          type: string
+          description: Detailed description of the activity.
+          example: Click Start and answer all the questions related to xour product preferences.
+        status:
+          type: string
+          description: Status of the profiling flow.
+          enum:
+          - active
+          - scheduled
+          - expired
+          - restricted
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Number of points to earn.
+          example: 100
+        activity_type:
+          type: string
+          description: Type of the activity.
+          example: profiling
+        questions:
+          type: integer
+          description: Number of questions within the profiling flow.
+          example: 5
+        _actions:
+          type: object
+          properties:
+            next:
+              type: object
+              description: Endpoint to retrieve the next question in the flow to answer.
+              properties:
+                method:
+                  type: string
+                  example: GET
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/c987654/activities/profiling/6331b62a60265969697786/next
     ErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred

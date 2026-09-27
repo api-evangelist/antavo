@@ -255,6 +255,55 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    EventProperty:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Attribute name used internally.
+          example: email
+        label:
+          type: string
+          description: Display name of the attribute.
+          example: Email address
+        value:
+          type: string
+          description: Attribute value.
+          example: john.smith@example.com
+    EventProperty2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Attribute name used internally.
+          example: points
+        label:
+          type: string
+          description: Display name of the attribute.
+          example: Points
+        value:
+          type: number
+          description: Attribute value.
+          example: 100
+    CustomernotfoundErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: NotFoundException
+            code:
+              type: number
+              description: A 6-digit number to uniquely identify the place the error. occurred
+              example: 160212
+            message:
+              type: string
+              description: Human readable error message.
+              example: Customer not found
     Event:
       type: object
       properties:
@@ -301,55 +350,6 @@ components:
               type: string
               description: Label of the account.
               example: Main account
-    EventProperty:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Attribute name used internally.
-          example: email
-        label:
-          type: string
-          description: Display name of the attribute.
-          example: Email address
-        value:
-          type: string
-          description: Attribute value.
-          example: john.smith@example.com
-    CustomernotfoundErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: NotFoundException
-            code:
-              type: number
-              description: A 6-digit number to uniquely identify the place the error. occurred
-              example: 160212
-            message:
-              type: string
-              description: Human readable error message.
-              example: Customer not found
-    EventProperty2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Attribute name used internally.
-          example: points
-        label:
-          type: string
-          description: Display name of the attribute.
-          example: Points
-        value:
-          type: number
-          description: Attribute value.
-          example: 100
   securitySchemes:
     api_key:
       type: apiKey

@@ -616,88 +616,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateCouponPoolResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the request.
-          example: success
-        metadata:
-          type: object
-        payload:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Identifier of the coupon pool.
-              example: 146cb226c3d47e4d6a28176b
-            external_id:
-              type: string
-              description: External identifier of the coupon pool.
-              example: uniqueExternalId
-            name:
-              type: string
-              description: The name of the coupon pool.
-              example: New coupon pool
-            source:
-              type: string
-              description: The source of the coupon pool.
-              example: uploaded
-            type:
-              type: string
-              description: The type of the coupon pool.
-              example: amount
-            value:
-              type: number
-              format: float
-              description: The value of the coupon pool.
-              example: 12.1
-            purchase_minimum:
-              type: number
-              description: The minimum basket value required to use coupons in this coupon pool.
-              example: 2
-            expiration_time:
-              type: string
-              description: The expiration time of coupons from this coupon pool.
-              example: 2 months
-            aggregated:
-              type: boolean
-              description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
-              example: false
-            products:
-              type: array
-              description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
-              items:
-                type: string
-              example:
-              - product1
-              - product2
-            stores:
-              type: array
-              items:
-                type: string
-              description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled)
-              example:
-              - store1
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-            code:
-              type: integer
-              example: 202004
-            message:
-              type: string
-              example: Given id parameter is invalid
     CreateCouponPoolRequest:
       type: object
       required:
@@ -798,6 +716,24 @@ components:
               type: array
               items:
                 type: string
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+            code:
+              type: integer
+              example: 202004
+            message:
+              type: string
+              example: Given id parameter is invalid
     UpdateCouponPoolRequest:
       type: object
       required:
@@ -863,6 +799,70 @@ components:
           type: boolean
           description: Only update coupons with matching original value.
           default: false
+    CreateCouponPoolResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the request.
+          example: success
+        metadata:
+          type: object
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Identifier of the coupon pool.
+              example: 146cb226c3d47e4d6a28176b
+            external_id:
+              type: string
+              description: External identifier of the coupon pool.
+              example: uniqueExternalId
+            name:
+              type: string
+              description: The name of the coupon pool.
+              example: New coupon pool
+            source:
+              type: string
+              description: The source of the coupon pool.
+              example: uploaded
+            type:
+              type: string
+              description: The type of the coupon pool.
+              example: amount
+            value:
+              type: number
+              format: float
+              description: The value of the coupon pool.
+              example: 12.1
+            purchase_minimum:
+              type: number
+              description: The minimum basket value required to use coupons in this coupon pool.
+              example: 2
+            expiration_time:
+              type: string
+              description: The expiration time of coupons from this coupon pool.
+              example: 2 months
+            aggregated:
+              type: boolean
+              description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
+              example: false
+            products:
+              type: array
+              description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
+              items:
+                type: string
+              example:
+              - product1
+              - product2
+            stores:
+              type: array
+              items:
+                type: string
+              description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled)
+              example:
+              - store1
   securitySchemes:
     api_key:
       type: apiKey

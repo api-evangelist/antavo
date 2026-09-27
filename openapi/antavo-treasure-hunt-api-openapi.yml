@@ -54,6 +54,22 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
     TreasureHuntResponse:
       type: object
       properties:
@@ -87,22 +103,6 @@ components:
           type: string
           description: The URL of the page where the treasure is hidden.
           example: https://antavofashion.com/SS246549621
-    Image:
-      type: object
-      description: Object contains different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
     ErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred
