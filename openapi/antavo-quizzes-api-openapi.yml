@@ -188,18 +188,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AnsweringaQuizResponse:
-      title: Successful answer
-      type: object
-      properties:
-        correct_answer:
-          type: boolean
-          description: A boolean value indicating whether the submitted answer was correct or not.
-          example: true
-        message:
-          type: string
-          description: Success message if the submitted answer is correct, or an error message if the submitted answer is incorrect.
-          example: Well done! You've just earned 100 points!
     AnsweringaQuizResponseError:
       title: Error in answer
       type: object
@@ -220,6 +208,79 @@ components:
               type: string
               description: Detailed message about the error.
               example: This quiz is already answered by the customer.
+    QuizDetailsResponse:
+      title: QuizDetailsResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique quiz ID.
+          example: 5c17c37f71f86e7f798b4579
+        title:
+          type: string
+          description: Name of the quiz.
+          example: Fashion quiz
+        description:
+          type: string
+          description: Description of the quiz question.
+          example: Select the correct answer
+        status:
+          type: string
+          description: Status of the quiz question.
+          example: active
+        image:
+          $ref: '#/components/schemas/Image'
+        points:
+          type: integer
+          description: Points rewarded if the customer provides the correct answer.
+          example: 100
+        quiz_url:
+          type: string
+          format: uri
+          description: Endpoint to submit an answer to the quiz.
+          example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/quizzes/6689b5735aa0eb191451a2f5/earn
+        answers:
+          type: array
+          items:
+            type: string
+          description: List of possible answers.
+          example:
+          - Coco Chanel
+          - Gianni Versace
+          - Ralph Lauren
+          - Christian Dior
+        correct_answer:
+          type: string
+          description: The correct answer.
+          example: Coco Chanel
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+    AnsweringaQuizResponse:
+      title: Successful answer
+      type: object
+      properties:
+        correct_answer:
+          type: boolean
+          description: A boolean value indicating whether the submitted answer was correct or not.
+          example: true
+        message:
+          type: string
+          description: Success message if the submitted answer is correct, or an error message if the submitted answer is incorrect.
+          example: Well done! You've just earned 100 points!
     QuizActivity:
       type: object
       properties:
@@ -281,67 +342,6 @@ components:
               type: string
               description: Human readable error message.
               example: Missing required parameter 'parameter_name'
-    Image:
-      type: object
-      description: Object contains different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-    QuizDetailsResponse:
-      title: QuizDetailsResponse
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique quiz ID.
-          example: 5c17c37f71f86e7f798b4579
-        title:
-          type: string
-          description: Name of the quiz.
-          example: Fashion quiz
-        description:
-          type: string
-          description: Description of the quiz question.
-          example: Select the correct answer
-        status:
-          type: string
-          description: Status of the quiz question.
-          example: active
-        image:
-          $ref: '#/components/schemas/Image'
-        points:
-          type: integer
-          description: Points rewarded if the customer provides the correct answer.
-          example: 100
-        quiz_url:
-          type: string
-          format: uri
-          description: Endpoint to submit an answer to the quiz.
-          example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/quizzes/6689b5735aa0eb191451a2f5/earn
-        answers:
-          type: array
-          items:
-            type: string
-          description: List of possible answers.
-          example:
-          - Coco Chanel
-          - Gianni Versace
-          - Ralph Lauren
-          - Christian Dior
-        correct_answer:
-          type: string
-          description: The correct answer.
-          example: Coco Chanel
   securitySchemes:
     api_key:
       type: apiKey

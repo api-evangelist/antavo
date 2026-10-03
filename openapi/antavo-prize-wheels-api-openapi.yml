@@ -282,26 +282,6 @@ components:
           - reward
           - points
           - empty
-    PrizeWheelsOptions:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID of the prize wheel.
-                example: 63fdccaca88ac11c347af899
-              status:
-                type: string
-                description: Status of the prize wheel.
-                example: active
-        total:
-          type: number
-          description: The number of prize wheel available to the customer.
-          example: 1
     PrizeWheelOption:
       type: object
       properties:
@@ -420,6 +400,26 @@ components:
           type: integer
           example: 100
           description: Number of points required to spin the wheel.
+    PrizeWheelsOptions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the prize wheel.
+                example: 63fdccaca88ac11c347af899
+              status:
+                type: string
+                description: Status of the prize wheel.
+                example: active
+        total:
+          type: number
+          description: The number of prize wheel available to the customer.
+          example: 1
     ErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred

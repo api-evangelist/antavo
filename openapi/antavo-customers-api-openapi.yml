@@ -685,6 +685,21 @@ paths:
     - url: https://read-api.<environment>.antavo.com
 components:
   schemas:
+    Properties:
+      type: object
+      description: Custom attributes you track about the customer. Data returned in this object depends on profiling questions or custom data recorded by custom events (may require additional modules enabled).
+      properties:
+        city:
+          type: string
+          example: London
+    Count:
+      type: object
+      description: Number of customers
+      properties:
+        active:
+          type: number
+          description: The number of active customers.
+          example: 123456
     TierNext:
       type: object
       description: Information about the next available loyalty tier.
@@ -701,6 +716,18 @@ components:
           type: string
           description: Number of points to collect to reach the next tier.
           example: 900
+    TierStructure:
+      type: object
+      description: The overall structure in which the current tier is located.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the current tier structure.
+          example: standard_tiers
+        name:
+          type: string
+          description: The tier structure label.
+          example: Standard tiers
     Customers:
       type: object
       description: Returns Customer unique id which match the search criteria
@@ -709,35 +736,6 @@ components:
           type: string
           description: The unique customer identifier.
           example: 55e5d4dc2cf1901e688b45d3
-    Properties:
-      type: object
-      description: Custom attributes you track about the customer. Data returned in this object depends on profiling questions or custom data recorded by custom events (may require additional modules enabled).
-      properties:
-        city:
-          type: string
-          example: London
-    ErrorResponse:
-      type: object
-      description: occurred
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            code:
-              type: number
-              description: Error code.
-            message:
-              type: string
-              description: Human-readable error message.
-            type:
-              type: string
-              description: Type of the error.
     Customer:
       type: object
       description: Detailed customer information for a given Customer unique id.
@@ -993,38 +991,36 @@ components:
                 type: string
                 description: The external ID of the user group, if any.
                 example: AG331
-    Count:
+    ErrorResponse:
       type: object
-      description: Number of customers
+      description: occurred
+      required:
+      - error
       properties:
-        active:
-          type: number
-          description: The number of active customers.
-          example: 123456
-    TierStructure:
-      type: object
-      description: The overall structure in which the current tier is located.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the current tier structure.
-          example: standard_tiers
-        name:
-          type: string
-          description: The tier structure label.
-          example: Standard tiers
-    PasswordRequest:
-      title: PasswordRequest
-      type: object
-      properties:
-        username:
-          type: string
-          description: Customer's username.
-          example: john.doe
-        url:
-          type: string
-          description: URL which will be extended with password reset token.
-          example: https://loyalty.{environment}.antavo.com/{workspace_id}/customers/280e674c-c4ea-4a30-987a-d9267d1a5018
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            code:
+              type: number
+              description: Error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            type:
+              type: string
+              description: Type of the error.
+    Gender:
+      title: Gender
+      enum:
+      - female
+      - male
+      - other
+      type: string
+      description: Gender of the customer.
     Optin:
       title: Optin
       required:
@@ -1074,6 +1070,20 @@ components:
           description: Customer's publicly displayed handler (nickname).
           example: john.doe
       description: Customer opt-in properties
+    PasswordReset:
+      title: PasswordReset
+      type: object
+      properties:
+        token:
+          type: string
+          description: Password reset token obtained from [password request](https://developers.antavo.com/reference/post_customers-password-request).
+          example: null
+        password:
+          type: string
+          description: Password
+        confirm_password:
+          type: string
+          description: Confirm password - should be same as Password above.
     PasswordResponse:
       title: PasswordResponse
       type: object
@@ -1081,6 +1091,28 @@ components:
         token:
           $ref: '#/components/schemas/token'
       description: This describes the structure returned if an error occurred.
+    Status9:
+      title: Status9
+      enum:
+      - active
+      - inactive
+      - opted_out
+      - banned
+      - suspended
+      type: string
+      description: Status of the customer.
+    PasswordRequest:
+      title: PasswordRequest
+      type: object
+      properties:
+        username:
+          type: string
+          description: Customer's username.
+          example: john.doe
+        url:
+          type: string
+          description: URL which will be extended with password reset token.
+          example: https://loyalty.{environment}.antavo.com/{workspace_id}/customers/280e674c-c4ea-4a30-987a-d9267d1a5018
     Login:
       title: Login
       type: object
@@ -1178,6 +1210,11 @@ components:
           format: date
           example: '2024-01-01T00:00:00.000Z'
       description: Customer object
+    token:
+      title: token
+      type: string
+      description: Token needed for [password reset](https://developers.antavo.com/reference/post_customers-password-reset).
+      example: ZTM4Mjk4YTk5ZTkyZTg5NWE5N2UzNWViNjlhNGYyZDMxZmZkNGU1M2ExOGNmZTNiOWE3Y2YzZmE2ZTMyNjdiOQ.eyJjdXN0b21lciI6Im5vdF9hX3ZhbGlkX2N1c3RvbWVyIiwiZXhwaXJlc19hdCI6ImxvbmdfYWdvIn0
     ErrorResponse_2:
       type: object
       description: This describes the structure returned if an error occurred
@@ -1197,43 +1234,79 @@ components:
               type: string
               description: Human readable error message.
               example: Missing required parameter 'parameter_name'
-    token:
-      title: token
-      type: string
-      description: Token needed for [password reset](https://developers.antavo.com/reference/post_customers-password-reset).
-      example: ZTM4Mjk4YTk5ZTkyZTg5NWE5N2UzNWViNjlhNGYyZDMxZmZkNGU1M2ExOGNmZTNiOWE3Y2YzZmE2ZTMyNjdiOQ.eyJjdXN0b21lciI6Im5vdF9hX3ZhbGlkX2N1c3RvbWVyIiwiZXhwaXJlc19hdCI6ImxvbmdfYWdvIn0
-    Status9:
-      title: Status9
-      enum:
-      - active
-      - inactive
-      - opted_out
-      - banned
-      - suspended
-      type: string
-      description: Status of the customer.
-    PasswordReset:
-      title: PasswordReset
+    ErrorEnvelope:
       type: object
+      required:
+      - error
       properties:
-        token:
-          type: string
-          description: Password reset token obtained from [password request](https://developers.antavo.com/reference/post_customers-password-request).
-          example: null
-        password:
-          type: string
-          description: Password
-        confirm_password:
-          type: string
-          description: Confirm password - should be same as Password above.
-    Gender:
-      title: Gender
-      enum:
-      - female
-      - male
-      - other
-      type: string
-      description: Gender of the customer.
+        error:
+          type: object
+          description: Contains details about the error.
+          required:
+          - message
+          - code
+          - resendable
+          properties:
+            message:
+              type: string
+              description: Human-readable description of the error.
+              example: Unauthorized
+            code:
+              type: integer
+              description: Numeric code identifying the error.
+              example: 2132
+            resendable:
+              type: boolean
+              description: Indicates whether the request can be retried.
+              example: false
+    CustomersFilter:
+      type: object
+      description: 'Filter object for `GET /v1/customers`. URL form:
+
+        `?filter[<field>][<op>]=<value>`. Multiple operators on the
+
+        same field are allowed.
+
+        '
+      properties:
+        created_at:
+          description: 'Filters customers by the date and time when the customer profile was created.
+
+
+            The following formats are accepted:
+
+            - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
+
+            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
+
+
+            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+            '
+          $ref: '#/components/schemas/DateTimeFilter'
+        status:
+          type: object
+          description: 'Filters customers by their current loyalty program status.
+
+            Customers with an `opted_out` status are not returned by the API.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+              enum:
+              - active
+              - inactive
+              - banned
+              - merged
+              - suspended
+              - pending
+              example: active
     CollectionMetadata:
       type: object
       required:
@@ -1242,6 +1315,95 @@ components:
         pagination:
           description: Links to the next and previous pages of the result set.
           $ref: '#/components/schemas/PaginationLinks'
+    DateTimeFilter:
+      type: object
+      description: 'Filters a date or date-time field. The following formats are accepted:
+
+        - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+        - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+        - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
+
+        - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC for comparison)
+
+
+        Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+        '
+      properties:
+        eq:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Equals.
+        lt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than.
+        lte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than or equal to.
+        gt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than.
+        gte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than or equal to.
+    PaginationLinks:
+      type: object
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+    NextCustomerTier:
+      type: object
+      description: Information about the next tier available to the customer. The object is empty when no higher tier is available.
+      properties:
+        id:
+          type: string
+          description: The ID of the next tier.
+          example: Fashion_Royalty
+        name:
+          type: string
+          description: The customer-facing name of the next tier.
+          example: Fashion Royalty
+        points:
+          type: number
+          description: The number of additional points required to reach the next tier.
+          example: 900
+    CustomerSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - created_at
+          - status
+        direction:
+          $ref: '#/components/schemas/SortDirection'
     CustomerEntity:
       type: object
       description: 'Customer entity. The fields and values returned may differ based on workspace configuration.
@@ -1677,195 +1839,7 @@ components:
             type: string
           example:
           - 8a302ca1-337b-4de9-8070-12d6fe669ef3
-    SortDirection:
-      type: string
-      enum:
-      - asc
-      - desc
-    ErrorEnvelope:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          description: Contains details about the error.
-          required:
-          - message
-          - code
-          - resendable
-          properties:
-            message:
-              type: string
-              description: Human-readable description of the error.
-              example: Unauthorized
-            code:
-              type: integer
-              description: Numeric code identifying the error.
-              example: 2132
-            resendable:
-              type: boolean
-              description: Indicates whether the request can be retried.
-              example: false
-    NextCustomerTier:
-      type: object
-      description: Information about the next tier available to the customer. The object is empty when no higher tier is available.
-      properties:
-        id:
-          type: string
-          description: The ID of the next tier.
-          example: Fashion_Royalty
-        name:
-          type: string
-          description: The customer-facing name of the next tier.
-          example: Fashion Royalty
-        points:
-          type: number
-          description: The number of additional points required to reach the next tier.
-          example: 900
-    CustomerSortEntry:
-      type: object
-      description: Defines a single sorting instruction by specifying the field and direction.
-      required:
-      - field
-      - direction
-      properties:
-        field:
-          type: string
-          description: The field used to sort the results.
-          enum:
-          - created_at
-          - status
-        direction:
-          $ref: '#/components/schemas/SortDirection'
-    DateTimeFilter:
-      type: object
-      description: 'Filters a date or date-time field. The following formats are accepted:
-
-        - `YYYY-MM-DD` (interpreted as midnight UTC)
-
-        - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
-
-        - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
-
-        - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC for comparison)
-
-
-        Invalid calendar dates (e.g. `2026-02-31`) are rejected.
-
-        '
-      properties:
-        eq:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Equals.
-        lt:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Less than.
-        lte:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Less than or equal to.
-        gt:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Greater than.
-        gte:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Greater than or equal to.
-    PaginationLinks:
-      type: object
-      required:
-      - next
-      - previous
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-          description: URL of the next page, or null if this is the last page.
-        previous:
-          type:
-          - string
-          - 'null'
-          description: URL of the previous page, or null if this is the first page.
-    CustomersFilter:
-      type: object
-      description: 'Filter object for `GET /v1/customers`. URL form:
-
-        `?filter[<field>][<op>]=<value>`. Multiple operators on the
-
-        same field are allowed.
-
-        '
-      properties:
-        created_at:
-          description: 'Filters customers by the date and time when the customer profile was created.
-
-
-            The following formats are accepted:
-
-            - `YYYY-MM-DD` (interpreted as midnight UTC)
-
-            - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
-
-            - `YYYY-MM-DDTHH:MM:SSZ` (UTC time)
-
-            - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as `+02:00` or `-05:00`; converted to UTC for comparison)
-
-
-            Invalid calendar dates (e.g. `2026-02-31`) are rejected.
-
-            '
-          $ref: '#/components/schemas/DateTimeFilter'
-        status:
-          type: object
-          description: 'Filters customers by their current loyalty program status.
-
-            Customers with an `opted_out` status are not returned by the API.
-
-            '
-          properties:
-            eq:
-              type: string
-              description: Equals.
-              enum:
-              - active
-              - inactive
-              - banned
-              - merged
-              - suspended
-              - pending
-              example: active
-  responses:
-    ValidationError:
-      description: Error - Request validation failed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    Unauthorized:
-      description: Error - Escher signature missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    ServerError:
-      description: Error - Unexpected server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
   parameters:
-    CustomerIdParam:
-      name: customer_id
-      in: path
-      required: true
-      description: Customer identifier. Using an external ID is not supported.
-      schema:
-        type: string
     LimitParam:
       name: limit
       in: query
@@ -1887,6 +1861,32 @@ components:
         type: integer
         minimum: 0
         default: 0
+    CustomerIdParam:
+      name: customer_id
+      in: path
+      required: true
+      description: Customer identifier. Using an external ID is not supported.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

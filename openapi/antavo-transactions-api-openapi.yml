@@ -543,25 +543,34 @@ components:
           items:
             $ref: '#/components/schemas/TransactionEvents'
           description: ''
-    transrequest:
-      title: Transaction Request
+    TransactionPerTransactionResponse:
+      title: TransactionPerTransactionResponse
       type: object
       properties:
-        id:
-          type: string
-          description: The target transaction IDs. The keyword is commonly used with the `in` operator
-          example: null
-        status:
-          type: string
-          description: The status of the target transactions.
-        limit:
-          type: number
-          description: Limits the number of transactions to be returned in one response. Other values are accessible by pagination made accessible via the offset.
-          default: 100
-        offset:
-          type: number
-          description: Offsets the starting number of transactions to return. This is used in pagination in conjunction with the limit query.
-          default: 0
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionPerTransactionContent'
+          description: ''
+    Status8:
+      title: Status8
+      description: 'Transaction status. Can be one of:'
+      enum:
+      - accepted
+      - pending
+      - rejected
+      - refunded
+      - draft
+      type: string
+    TransactionHistoryResponse2:
+      title: TransactionHistoryResponse2
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction2'
+          description: ''
     TransactionHistoryResponse:
       title: TransactionHistoryResponse
       type: object
@@ -571,6 +580,49 @@ components:
           items:
             $ref: '#/components/schemas/Transaction'
           description: ''
+    TransactionEvents:
+      title: Transaction
+      type: object
+      properties:
+        id:
+          type: string
+          description: Event ID.
+          example: 62cbe9a1da5ab02a8176625d
+        action:
+          type: string
+          description: Event action.
+          example: checkout
+        label:
+          type: string
+          description: Event label.
+          example: Checkout
+        timestamp:
+          type: string
+          description: Timestamp of creation of the event.
+          format: date-time
+          example: '2020-04-01T10:41:10.000Z'
+        points:
+          type: number
+          description: Points rewarded for the event.
+          example: 100
+        properties:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: ID of the attribute.
+                example: transaction_id
+              value:
+                type: number
+                description: Attribute value.
+                example: TR37882412
+              label:
+                type: string
+                description: Label of the attribute.
+                example: Transaction ID
+          description: Array of event attributes.
     TransactionPerTransactionContent:
       title: Transaction
       type: object
@@ -629,16 +681,6 @@ components:
           type: boolean
           description: Number of points deducted from the customer's balance due to a refund.
           example: 0
-    Status8:
-      title: Status8
-      description: 'Transaction status. Can be one of:'
-      enum:
-      - accepted
-      - pending
-      - rejected
-      - refunded
-      - draft
-      type: string
     Transaction2:
       title: Transaction
       type: object
@@ -685,25 +727,6 @@ components:
                 description: Amount actually paid for the item(s).
                 example: 99.9
           description: Array of items in the transaction.
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
     Transaction:
       title: Transaction
       type: object
@@ -762,67 +785,290 @@ components:
           type: number
           description: Total number of associated campaign bonus points.
           example: 23
-    TransactionPerTransactionResponse:
-      title: TransactionPerTransactionResponse
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionPerTransactionContent'
-          description: ''
-    TransactionEvents:
-      title: Transaction
+    transrequest:
+      title: Transaction Request
       type: object
       properties:
         id:
           type: string
-          description: Event ID.
-          example: 62cbe9a1da5ab02a8176625d
+          description: The target transaction IDs. The keyword is commonly used with the `in` operator
+          example: null
+        status:
+          type: string
+          description: The status of the target transactions.
+        limit:
+          type: number
+          description: Limits the number of transactions to be returned in one response. Other values are accessible by pagination made accessible via the offset.
+          default: 100
+        offset:
+          type: number
+          description: Offsets the starting number of transactions to return. This is used in pagination in conjunction with the limit query.
+          default: 0
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    CustomerTransactionSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - status
+          - checkout_date
+          - auto_accept
+          - account
+          - points_rewarded
+          - earned
+          - burned
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          description: Contains details about the error.
+          required:
+          - message
+          - code
+          - resendable
+          properties:
+            message:
+              type: string
+              description: Human-readable description of the error.
+              example: Unauthorized
+            code:
+              type: integer
+              description: Numeric code identifying the error.
+              example: 2132
+            resendable:
+              type: boolean
+              description: Indicates whether the request can be retried.
+              example: false
+    CollectionMetadata:
+      type: object
+      required:
+      - pagination
+      properties:
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
+    TransactionItem:
+      type: object
+      description: An item included in the transaction.
+      properties:
+        transaction_id:
+          type: string
+          description: The ID of the transaction containing the item.
+          example: txn_8f3c2a91d7b64e5a
+        total:
+          type: number
+          description: The total monetary value of the item.
+          example: 100
+        product_id:
+          type: string
+          description: The ID of the product.
+          example: prd_987654
+        product_name:
+          type: string
+          description: The name of the product.
+          example: Vintage Leather Jacket
+        product_url:
+          type: string
+          format: uri
+          description: The URL of the product.
+          example: https://example.com/products/vintage-leather-jacket
+        quantity:
+          type: number
+          description: The quantity of the product included in this item.
+          example: 1
+        points_rewarded:
+          type: number
+          description: The number of points assigned to this transaction item.
+          example: 50
+        subtotal:
+          type: number
+          description: The monetary value of the item after applying discounts.
+          example: 50
+        price:
+          type: number
+          description: The unit price of the product.
+          example: 50
+        discount:
+          type: number
+          description: The discount applied to the item.
+          example: 0
+        currency:
+          type: string
+          description: The currency used for the item values.
+          example: EUR
+        total_quantity:
+          type: number
+          description: The total number of purchased products.
+          example: 2
+    PaginationLinks:
+      type: object
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    TransactionEventReference:
+      type: object
+      description: A summary of an event associated with the transaction.
+      properties:
+        _id:
+          type: string
+          description: The unique ID of the event.
+          example: 6734a53c8bd9da0c85066e1b
         action:
           type: string
-          description: Event action.
+          description: The action that identifies the event type.
           example: checkout
-        label:
-          type: string
-          description: Event label.
-          example: Checkout
-        timestamp:
-          type: string
-          description: Timestamp of creation of the event.
-          format: date-time
-          example: '2020-04-01T10:41:10.000Z'
         points:
           type: number
-          description: Points rewarded for the event.
-          example: 100
-        properties:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: ID of the attribute.
-                example: transaction_id
-              value:
-                type: number
-                description: Attribute value.
-                example: TR37882412
-              label:
-                type: string
-                description: Label of the attribute.
-                example: Transaction ID
-          description: Array of event attributes.
-    TransactionHistoryResponse2:
-      title: TransactionHistoryResponse2
+          description: The number of points added or deducted by the event.
+          example: 0
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+    TransactionEntity:
       type: object
+      description: 'A transaction registered for the customer, including its items, associated events, point values, and current processing status.
+
+        The fields returned may vary depending on the data submitted with the transaction, the custom attributes configured for the corresponding events, and the transaction processing applied in the workspace.
+
+        '
       properties:
-        data:
+        _id:
+          type: string
+          description: The unique ID of the transaction.
+          example: txn_8f3c2a91d7b64e5a
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was created.
+          example: '2025-11-13T13:10:19+00:00'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date and time when the transaction was last updated.
+          example: '2025-11-13T13:10:20+00:00'
+        customer:
+          type: string
+          description: The ID of the customer associated with the transaction.
+          example: 55e5d4dc2cf1901e688b45d3
+        status:
+          type: string
+          description: The current status of the transaction.
+          enum:
+          - draft
+          - pending
+          - accepted
+          - rejected
+          - refunded
+          example: accepted
+        event:
+          type: string
+          description: The ID of the checkout event associated with the transaction.
+          example: 6734a53c8bd9da0c85066e1b
+        items:
           type: array
+          description: The items included in the transaction.
           items:
-            $ref: '#/components/schemas/Transaction2'
-          description: ''
+            $ref: '#/components/schemas/TransactionItem'
+        total:
+          type: number
+          description: The total monetary value of the transaction.
+          example: 100
+        earned:
+          type: number
+          description: 'The number of points credited to the customer after transaction
+
+            processing, according to the configured point calculation rules.
+
+            '
+          example: 0
+        burned:
+          type: number
+          description: 'The number of points deducted from the customer''s balance as part of
+
+            the transaction.
+
+            '
+          example: 0
+        events:
+          type: array
+          description: Events associated with the transaction.
+          items:
+            $ref: '#/components/schemas/TransactionEventReference'
+        currency:
+          type: string
+          description: The currency used for the transaction.
+          example: EUR
+        points_rewarded:
+          type: number
+          description: 'The number of points assigned to the transaction. This value may be
+
+            calculated based on the point calculation settings configured in the
+
+            workspace or provided explicitly in the `points_rewarded` property of
+
+            the registered checkout event.
+
+            '
+          example: 100
+        account:
+          type: string
+          description: The ID of the point account associated with the transaction. Point accounts can be defined in the [Multi-accounts module](https://docs.antavo.com/docs/multi-accounts).
+          example: family_account
+        auto_accept:
+          type: string
+          format: date
+          description: 'The date when the transaction is scheduled to be automatically accepted.
+
+            This value is calculated from the pending period configured in the
+
+            [Checkout accept module](https://docs.antavo.com/docs/checkout-accept).
+
+            Omitted if no pending period applies.
+
+            '
+          example: '2025-12-13'
     TransactionsFilter:
       type: object
       description: 'Filter by allowed fields and operators.
@@ -996,272 +1242,17 @@ components:
             gte:
               type: integer
               description: Greater than or equal to.
-    CollectionMetadata:
-      type: object
-      required:
-      - pagination
-      properties:
-        pagination:
-          description: Links to the next and previous pages of the result set.
-          $ref: '#/components/schemas/PaginationLinks'
-    TransactionEventReference:
-      type: object
-      description: A summary of an event associated with the transaction.
-      properties:
-        _id:
-          type: string
-          description: The unique ID of the event.
-          example: 6734a53c8bd9da0c85066e1b
-        action:
-          type: string
-          description: The action that identifies the event type.
-          example: checkout
-        points:
-          type: number
-          description: The number of points added or deducted by the event.
-          example: 0
-    SortDirection:
-      type: string
-      enum:
-      - asc
-      - desc
-    ErrorEnvelope:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          description: Contains details about the error.
-          required:
-          - message
-          - code
-          - resendable
-          properties:
-            message:
-              type: string
-              description: Human-readable description of the error.
-              example: Unauthorized
-            code:
-              type: integer
-              description: Numeric code identifying the error.
-              example: 2132
-            resendable:
-              type: boolean
-              description: Indicates whether the request can be retried.
-              example: false
-    PaginationLinks:
-      type: object
-      required:
-      - next
-      - previous
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-          description: URL of the next page, or null if this is the last page.
-        previous:
-          type:
-          - string
-          - 'null'
-          description: URL of the previous page, or null if this is the first page.
-    TransactionEntity:
-      type: object
-      description: 'A transaction registered for the customer, including its items, associated events, point values, and current processing status.
-
-        The fields returned may vary depending on the data submitted with the transaction, the custom attributes configured for the corresponding events, and the transaction processing applied in the workspace.
+  parameters:
+    OffsetParam:
+      name: offset
+      in: query
+      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
 
         '
-      properties:
-        _id:
-          type: string
-          description: The unique ID of the transaction.
-          example: txn_8f3c2a91d7b64e5a
-        created_at:
-          type: string
-          format: date-time
-          description: The date and time when the transaction was created.
-          example: '2025-11-13T13:10:19+00:00'
-        updated_at:
-          type: string
-          format: date-time
-          description: The date and time when the transaction was last updated.
-          example: '2025-11-13T13:10:20+00:00'
-        customer:
-          type: string
-          description: The ID of the customer associated with the transaction.
-          example: 55e5d4dc2cf1901e688b45d3
-        status:
-          type: string
-          description: The current status of the transaction.
-          enum:
-          - draft
-          - pending
-          - accepted
-          - rejected
-          - refunded
-          example: accepted
-        event:
-          type: string
-          description: The ID of the checkout event associated with the transaction.
-          example: 6734a53c8bd9da0c85066e1b
-        items:
-          type: array
-          description: The items included in the transaction.
-          items:
-            $ref: '#/components/schemas/TransactionItem'
-        total:
-          type: number
-          description: The total monetary value of the transaction.
-          example: 100
-        earned:
-          type: number
-          description: 'The number of points credited to the customer after transaction
-
-            processing, according to the configured point calculation rules.
-
-            '
-          example: 0
-        burned:
-          type: number
-          description: 'The number of points deducted from the customer''s balance as part of
-
-            the transaction.
-
-            '
-          example: 0
-        events:
-          type: array
-          description: Events associated with the transaction.
-          items:
-            $ref: '#/components/schemas/TransactionEventReference'
-        currency:
-          type: string
-          description: The currency used for the transaction.
-          example: EUR
-        points_rewarded:
-          type: number
-          description: 'The number of points assigned to the transaction. This value may be
-
-            calculated based on the point calculation settings configured in the
-
-            workspace or provided explicitly in the `points_rewarded` property of
-
-            the registered checkout event.
-
-            '
-          example: 100
-        account:
-          type: string
-          description: The ID of the point account associated with the transaction. Point accounts can be defined in the [Multi-accounts module](https://docs.antavo.com/docs/multi-accounts).
-          example: family_account
-        auto_accept:
-          type: string
-          format: date
-          description: 'The date when the transaction is scheduled to be automatically accepted.
-
-            This value is calculated from the pending period configured in the
-
-            [Checkout accept module](https://docs.antavo.com/docs/checkout-accept).
-
-            Omitted if no pending period applies.
-
-            '
-          example: '2025-12-13'
-    TransactionItem:
-      type: object
-      description: An item included in the transaction.
-      properties:
-        transaction_id:
-          type: string
-          description: The ID of the transaction containing the item.
-          example: txn_8f3c2a91d7b64e5a
-        total:
-          type: number
-          description: The total monetary value of the item.
-          example: 100
-        product_id:
-          type: string
-          description: The ID of the product.
-          example: prd_987654
-        product_name:
-          type: string
-          description: The name of the product.
-          example: Vintage Leather Jacket
-        product_url:
-          type: string
-          format: uri
-          description: The URL of the product.
-          example: https://example.com/products/vintage-leather-jacket
-        quantity:
-          type: number
-          description: The quantity of the product included in this item.
-          example: 1
-        points_rewarded:
-          type: number
-          description: The number of points assigned to this transaction item.
-          example: 50
-        subtotal:
-          type: number
-          description: The monetary value of the item after applying discounts.
-          example: 50
-        price:
-          type: number
-          description: The unit price of the product.
-          example: 50
-        discount:
-          type: number
-          description: The discount applied to the item.
-          example: 0
-        currency:
-          type: string
-          description: The currency used for the item values.
-          example: EUR
-        total_quantity:
-          type: number
-          description: The total number of purchased products.
-          example: 2
-    CustomerTransactionSortEntry:
-      type: object
-      description: Defines a single sorting instruction by specifying the field and direction.
-      required:
-      - field
-      - direction
-      properties:
-        field:
-          type: string
-          description: The field used to sort the results.
-          enum:
-          - status
-          - checkout_date
-          - auto_accept
-          - account
-          - points_rewarded
-          - earned
-          - burned
-        direction:
-          $ref: '#/components/schemas/SortDirection'
-  responses:
-    ServerError:
-      description: Error - Unexpected server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    ValidationError:
-      description: Error - Request validation failed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    Unauthorized:
-      description: Error - Escher signature missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-  parameters:
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
     LimitParam:
       name: limit
       in: query
@@ -1273,16 +1264,6 @@ components:
         minimum: 1
         maximum: 1000
         default: 20
-    OffsetParam:
-      name: offset
-      in: query
-      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
-
-        '
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
     CustomerIdParam:
       name: customer_id
       in: path
@@ -1290,6 +1271,25 @@ components:
       description: Customer identifier. Using an external ID is not supported.
       schema:
         type: string
+  responses:
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
   securitySchemes:
     api_key:
       type: apiKey

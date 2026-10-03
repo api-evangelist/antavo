@@ -616,124 +616,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateCouponPoolRequest:
-      type: object
-      required:
-      - name
-      - source
-      - type
-      properties:
-        external_id:
-          type: string
-          minLength: 6
-          maxLength: 24
-          description: An optional unique identifier used for mapping the coupon pool to an external system.
-        name:
-          type: string
-          description: The name of the coupon pool.
-        source:
-          type: string
-          description: The source of the coupon pool, which must be `uploaded`.
-        type:
-          type: string
-          description: The type of the coupon pool, which can be `amount`, `percentage`, `free_shipping` or `gift_card`.
-        value:
-          type: number
-          format: float
-          description: The value of the coupon pool.
-          minimum: 0.01
-        minimum_value:
-          type: number
-          description: The minimum value below which gift card coupons are invalidated (only applicable if the value of the `type` attribute is set to `gift_card`).
-          minimum: 1
-        minimum_redemption_value:
-          type: number
-          description: The minimum redemption value for gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
-          minimum: 1
-        currency:
-          type: string
-          description: The currency of the gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
-        purchase_minimum:
-          type: number
-          description: The minimum basket value required to use coupons from this coupon pool.
-          minimum: 1
-        expiration_time:
-          type: string
-          description: The expiration time of coupons from this coupon pool (e.g., 2 months).
-        aggregated:
-          type: boolean
-          default: false
-          description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
-        products:
-          type: array
-          description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
-          items:
-            type: string
-        stores:
-          type: array
-          description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled).
-          items:
-            type: string
-    UpdateCouponPoolResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-        metadata:
-          type: object
-          properties:
-            update_method:
-              type: string
-            update_matching:
-              type: boolean
-        payload:
-          type: object
-          properties:
-            id:
-              type: string
-            external_id:
-              type: string
-            name:
-              type: string
-            source:
-              type: string
-            type:
-              type: string
-            value:
-              type: number
-            purchase_minimum:
-              type: number
-            expiration_time:
-              type: string
-            aggregated:
-              type: boolean
-            stores:
-              type: array
-              items:
-                type: string
-            products:
-              type: array
-              items:
-                type: string
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-            code:
-              type: integer
-              example: 202004
-            message:
-              type: string
-              example: Given id parameter is invalid
     UpdateCouponPoolRequest:
       type: object
       required:
@@ -863,6 +745,124 @@ components:
               description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled)
               example:
               - store1
+    CreateCouponPoolRequest:
+      type: object
+      required:
+      - name
+      - source
+      - type
+      properties:
+        external_id:
+          type: string
+          minLength: 6
+          maxLength: 24
+          description: An optional unique identifier used for mapping the coupon pool to an external system.
+        name:
+          type: string
+          description: The name of the coupon pool.
+        source:
+          type: string
+          description: The source of the coupon pool, which must be `uploaded`.
+        type:
+          type: string
+          description: The type of the coupon pool, which can be `amount`, `percentage`, `free_shipping` or `gift_card`.
+        value:
+          type: number
+          format: float
+          description: The value of the coupon pool.
+          minimum: 0.01
+        minimum_value:
+          type: number
+          description: The minimum value below which gift card coupons are invalidated (only applicable if the value of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        minimum_redemption_value:
+          type: number
+          description: The minimum redemption value for gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
+          minimum: 1
+        currency:
+          type: string
+          description: The currency of the gift card coupons (only applicable if the value of the `type` attribute is set to `gift_card`).
+        purchase_minimum:
+          type: number
+          description: The minimum basket value required to use coupons from this coupon pool.
+          minimum: 1
+        expiration_time:
+          type: string
+          description: The expiration time of coupons from this coupon pool (e.g., 2 months).
+        aggregated:
+          type: boolean
+          default: false
+          description: The value determines whether the same coupon code is assigned each time a coupon from this coupon pool is issued for a specific customer.
+        products:
+          type: array
+          description: List of active product IDs to which the coupon discount can be applied (only applicable if the Product catalog module is enabled).
+          items:
+            type: string
+        stores:
+          type: array
+          description: List of active store IDs for which the coupons of this coupon pool can be validated (only applicable if the Stores module is enabled).
+          items:
+            type: string
+    UpdateCouponPoolResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        metadata:
+          type: object
+          properties:
+            update_method:
+              type: string
+            update_matching:
+              type: boolean
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+            external_id:
+              type: string
+            name:
+              type: string
+            source:
+              type: string
+            type:
+              type: string
+            value:
+              type: number
+            purchase_minimum:
+              type: number
+            expiration_time:
+              type: string
+            aggregated:
+              type: boolean
+            stores:
+              type: array
+              items:
+                type: string
+            products:
+              type: array
+              items:
+                type: string
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+            code:
+              type: integer
+              example: 202004
+            message:
+              type: string
+              example: Given id parameter is invalid
   securitySchemes:
     api_key:
       type: apiKey

@@ -123,22 +123,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Image:
-      type: object
-      description: Object contains different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
     ContestActivity:
       type: object
       properties:
@@ -219,6 +203,22 @@ components:
                   format: uri
                   description: Endpoint to submit a contest entry.
                   example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/activities/contests/6644e797d959c7036f18762a/enter
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
     ErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred

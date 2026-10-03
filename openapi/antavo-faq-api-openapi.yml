@@ -53,6 +53,21 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    FAQSuccess:
+      title: FAQ
+      required:
+      - title
+      - description
+      type: object
+      properties:
+        title:
+          type: string
+          description: The FAQ question.
+          example: How to use points?
+        description:
+          type: string
+          description: Answer to the FAQ question.
+          example: Points can be used to redeem rewards.
     FAQError:
       title: FAQ
       required:
@@ -73,21 +88,6 @@ components:
           type: string
           description: Human-readable error message.
           example: Not Found
-    FAQSuccess:
-      title: FAQ
-      required:
-      - title
-      - description
-      type: object
-      properties:
-        title:
-          type: string
-          description: The FAQ question.
-          example: How to use points?
-        description:
-          type: string
-          description: Answer to the FAQ question.
-          example: Points can be used to redeem rewards.
     FAQSuccessResponse:
       title: FAQResponse
       type: object

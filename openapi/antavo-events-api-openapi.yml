@@ -512,6 +512,41 @@ paths:
     - url: https://read-api.<environment>.antavo.com
 components:
   schemas:
+    Event:
+      title: Event
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        customer:
+          type: string
+          description: The target customer.
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/Data'
+          description: Additional data related to the event.
+    Data:
+      title: data
+      description: Refer to the [complete list of events](/docs/api-events) for the data attributes to be sent with each action.
+      required:
+      - points
+      type: object
+      properties:
+        points:
+          type: integer
+          format: int32
+          description: Number of points to be added or subtracted.
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
     events_bulkrequest:
       title: Bulk request
       required:
@@ -523,6 +558,38 @@ components:
           items:
             $ref: '#/components/schemas/Event'
           description: ''
+    results:
+      type: array
+      description: Array of event processing results.
+      items:
+        type: object
+        properties:
+          error:
+            type: object
+            description: Array of errors occurred while events were processed.
+            properties:
+              type:
+                type: string
+                description: Type of the error.
+              code:
+                type: number
+                description: Error code.
+              message:
+                type: string
+                description: Human-readable error message.
+          events:
+            type: object
+            description: Array of events related to the customer. This section, along with all the attributes listed below, only appears if the event changes the customer’s point balance.
+            properties:
+              id:
+                type: string
+                description: ID of the event.
+              action:
+                type: string
+                description: The event action.
+              points:
+                type: number
+                description: Number of points involved in the event.
     CheckoutRequestBody:
       title: Checkout event request
       required:
@@ -550,6 +617,19 @@ components:
           example: main_account
         data:
           $ref: '#/components/schemas/CheckoutData'
+    PointAddData:
+      title: data
+      required:
+      - points
+      type: object
+      properties:
+        points:
+          type: integer
+          format: int32
+          description: Number of points to be added or subtracted.
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
     PointAddRequestBody:
       title: Point add event request
       required:
@@ -577,77 +657,58 @@ components:
           example: main_account
         data:
           $ref: '#/components/schemas/PointAddData'
-    Bulk_Event_response:
-      type: object
-      properties:
-        results:
-          description: Array of event processing results.
-          $ref: '#/components/schemas/results'
-        total:
-          type: integer
-          description: Number of events submitted.
-          example: 2
-        errors:
-          type: integer
-          description: Number of erroneous entries.
-          example: 0
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message
-              example: Missing required parameter 'parameter_name'
-    PointAddData:
+    CheckoutData:
       title: data
       required:
-      - points
+      - transaction_id
       type: object
       properties:
-        points:
-          type: integer
-          format: int32
-          description: Number of points to be added or subtracted.
+        transaction_id:
+          type: string
+          example: 64b647cd257f93741550d3e4
         effective_timestamp:
           type: number
           description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
-    Event:
-      title: Event
-      required:
-      - customer
-      - action
-      - data
-      type: object
-      properties:
-        customer:
+        total:
+          type: number
+          description: This attribute is required if purchases are rewarded on the transaction level.
+          example: 100
+        total_quantity:
+          type: number
+          example: 1
+        currency:
           type: string
-          description: The target customer.
-        action:
-          type: string
-          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
-        account:
-          type: string
-          description: The unique ID of the account. This is only required for multi-accounts.
-          example: main_account
-        data:
-          $ref: '#/components/schemas/Data'
-          description: Additional data related to the event.
+          example: EUR
+        points_burned:
+          type: number
+          example: 0
+        items:
+          type: array
+          description: This attribute is required if purchases are rewarded on the item level.
+          properties:
+            product_id:
+              type: string
+              example: prd_987654
+            product_name:
+              type: string
+              example: Vintage Leather Jacket
+            product_url:
+              type: string
+              example: https://example.com/products/vintage-leather-jacket
+            price:
+              type: number
+              example: 100
+            quantity:
+              type: number
+              example: 1
+            discount:
+              type: number
+              example: 0
+            subtotal:
+              type: number
+              example: 50
+            points_rewarded:
+              type: number
     Event_response:
       type: object
       description: Submitting an Event
@@ -716,135 +777,43 @@ components:
                   name:
                     description: Name of the account.
                     example: Main Account
-    Data:
-      title: data
-      description: Refer to the [complete list of events](/docs/api-events) for the data attributes to be sent with each action.
-      required:
-      - points
+    Bulk_Event_response:
       type: object
       properties:
-        points:
-          type: integer
-          format: int32
-          description: Number of points to be added or subtracted.
-        effective_timestamp:
-          type: number
-          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
-    CheckoutData:
-      title: data
-      required:
-      - transaction_id
-      type: object
-      properties:
-        transaction_id:
-          type: string
-          example: 64b647cd257f93741550d3e4
-        effective_timestamp:
-          type: number
-          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
+        results:
+          description: Array of event processing results.
+          $ref: '#/components/schemas/results'
         total:
-          type: number
-          description: This attribute is required if purchases are rewarded on the transaction level.
-          example: 100
-        total_quantity:
-          type: number
-          example: 1
-        currency:
-          type: string
-          example: EUR
-        points_burned:
-          type: number
+          type: integer
+          description: Number of events submitted.
+          example: 2
+        errors:
+          type: integer
+          description: Number of erroneous entries.
           example: 0
-        items:
-          type: array
-          description: This attribute is required if purchases are rewarded on the item level.
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
           properties:
-            product_id:
+            type:
               type: string
-              example: prd_987654
-            product_name:
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
               type: string
-              example: Vintage Leather Jacket
-            product_url:
-              type: string
-              example: https://example.com/products/vintage-leather-jacket
-            price:
-              type: number
-              example: 100
-            quantity:
-              type: number
-              example: 1
-            discount:
-              type: number
-              example: 0
-            subtotal:
-              type: number
-              example: 50
-            points_rewarded:
-              type: number
-    results:
-      type: array
-      description: Array of event processing results.
-      items:
-        type: object
-        properties:
-          error:
-            type: object
-            description: Array of errors occurred while events were processed.
-            properties:
-              type:
-                type: string
-                description: Type of the error.
-              code:
-                type: number
-                description: Error code.
-              message:
-                type: string
-                description: Human-readable error message.
-          events:
-            type: object
-            description: Array of events related to the customer. This section, along with all the attributes listed below, only appears if the event changes the customer’s point balance.
-            properties:
-              id:
-                type: string
-                description: ID of the event.
-              action:
-                type: string
-                description: The event action.
-              points:
-                type: number
-                description: Number of points involved in the event.
-    CollectionMetadata:
-      type: object
-      required:
-      - pagination
-      properties:
-        pagination:
-          description: Links to the next and previous pages of the result set.
-          $ref: '#/components/schemas/PaginationLinks'
-    CustomerEventSortEntry:
-      type: object
-      description: Defines a single sorting instruction by specifying the field and direction.
-      required:
-      - field
-      - direction
-      properties:
-        field:
-          type: string
-          description: The field used to sort the results.
-          enum:
-          - action
-          - date
-          - account
-          - points
-          - expdate
-        direction:
-          $ref: '#/components/schemas/SortDirection'
-    SortDirection:
-      type: string
-      enum:
-      - asc
-      - desc
+              description: Human readable error message
+              example: Missing required parameter 'parameter_name'
     ErrorEnvelope:
       type: object
       required:
@@ -870,22 +839,129 @@ components:
               type: boolean
               description: Indicates whether the request can be retried.
               example: false
-    PaginationLinks:
+    CollectionMetadata:
       type: object
       required:
-      - next
-      - previous
+      - pagination
       properties:
-        next:
-          type:
-          - string
-          - 'null'
-          description: URL of the next page, or null if this is the last page.
-        previous:
-          type:
-          - string
-          - 'null'
-          description: URL of the previous page, or null if this is the first page.
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
+    EventsFilter:
+      type: object
+      description: 'Filter by allowed fields and operators.
+
+        '
+      properties:
+        action:
+          type: object
+          description: 'Filters events by the event type recorded in the `action` property. The comparison operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        date:
+          type: object
+          description: 'Filters events by the date when the event occurred, as recorded in the `date` property. The comparison operators compare values alphabetically.
+
+            Typed as string values (as shown in the example response) even though they are date-like in storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        account:
+          type: object
+          description: 'Filters events by the ID of the point account associated with the event. The comparison operators compare values alphabetically.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
+        points:
+          type: object
+          description: 'Filters events by the number of points assigned to the event. Only whole numbers are accepted, decimal values return a `422` error.
+
+            '
+          properties:
+            eq:
+              type: integer
+              description: Equals.
+            lt:
+              type: integer
+              description: Less than.
+            lte:
+              type: integer
+              description: Less than or equal to.
+            gt:
+              type: integer
+              description: Greater than.
+            gte:
+              type: integer
+              description: Greater than or equal to.
+        expdate:
+          type: object
+          description: 'Filters events by the date when the points earned by the event expire, as recorded in the `expdate` property. The comparison operators compare values alphabetically.
+
+            Typed as string values (as shown in the example response) even though they are date-like in storage.
+
+            '
+          properties:
+            eq:
+              type: string
+              description: Equals.
+            lt:
+              type: string
+              description: Less than.
+            lte:
+              type: string
+              description: Less than or equal to.
+            gt:
+              type: string
+              description: Greater than.
+            gte:
+              type: string
+              description: Greater than or equal to.
     EventEntity:
       type: object
       description: 'An event registered for the customer. The fields returned depend on the
@@ -1094,141 +1170,56 @@ components:
 
             '
           example: 6a57a9681d81297bdc042a6f
-    EventsFilter:
+    PaginationLinks:
       type: object
-      description: 'Filter by allowed fields and operators.
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    SortDirection:
+      type: string
+      enum:
+      - asc
+      - desc
+    CustomerEventSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - action
+          - date
+          - account
+          - points
+          - expdate
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+  parameters:
+    OffsetParam:
+      name: offset
+      in: query
+      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
 
         '
-      properties:
-        action:
-          type: object
-          description: 'Filters events by the event type recorded in the `action` property. The comparison operators compare values alphabetically.
-
-            '
-          properties:
-            eq:
-              type: string
-              description: Equals.
-            lt:
-              type: string
-              description: Less than.
-            lte:
-              type: string
-              description: Less than or equal to.
-            gt:
-              type: string
-              description: Greater than.
-            gte:
-              type: string
-              description: Greater than or equal to.
-        date:
-          type: object
-          description: 'Filters events by the date when the event occurred, as recorded in the `date` property. The comparison operators compare values alphabetically.
-
-            Typed as string values (as shown in the example response) even though they are date-like in storage.
-
-            '
-          properties:
-            eq:
-              type: string
-              description: Equals.
-            lt:
-              type: string
-              description: Less than.
-            lte:
-              type: string
-              description: Less than or equal to.
-            gt:
-              type: string
-              description: Greater than.
-            gte:
-              type: string
-              description: Greater than or equal to.
-        account:
-          type: object
-          description: 'Filters events by the ID of the point account associated with the event. The comparison operators compare values alphabetically.
-
-            '
-          properties:
-            eq:
-              type: string
-              description: Equals.
-            lt:
-              type: string
-              description: Less than.
-            lte:
-              type: string
-              description: Less than or equal to.
-            gt:
-              type: string
-              description: Greater than.
-            gte:
-              type: string
-              description: Greater than or equal to.
-        points:
-          type: object
-          description: 'Filters events by the number of points assigned to the event. Only whole numbers are accepted, decimal values return a `422` error.
-
-            '
-          properties:
-            eq:
-              type: integer
-              description: Equals.
-            lt:
-              type: integer
-              description: Less than.
-            lte:
-              type: integer
-              description: Less than or equal to.
-            gt:
-              type: integer
-              description: Greater than.
-            gte:
-              type: integer
-              description: Greater than or equal to.
-        expdate:
-          type: object
-          description: 'Filters events by the date when the points earned by the event expire, as recorded in the `expdate` property. The comparison operators compare values alphabetically.
-
-            Typed as string values (as shown in the example response) even though they are date-like in storage.
-
-            '
-          properties:
-            eq:
-              type: string
-              description: Equals.
-            lt:
-              type: string
-              description: Less than.
-            lte:
-              type: string
-              description: Less than or equal to.
-            gt:
-              type: string
-              description: Greater than.
-            gte:
-              type: string
-              description: Greater than or equal to.
-  responses:
-    ServerError:
-      description: Error - Unexpected server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    ValidationError:
-      description: Error - Request validation failed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    Unauthorized:
-      description: Error - Escher signature missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-  parameters:
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
     LimitParam:
       name: limit
       in: query
@@ -1240,16 +1231,6 @@ components:
         minimum: 1
         maximum: 1000
         default: 20
-    OffsetParam:
-      name: offset
-      in: query
-      description: 'Offsets the starting position in the sorted result set. Used for pagination together with the `limit` query parameter.
-
-        '
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
     CustomerIdParam:
       name: customer_id
       in: path
@@ -1257,6 +1238,25 @@ components:
       description: Customer identifier. Using an external ID is not supported.
       schema:
         type: string
+  responses:
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
   securitySchemes:
     api_key:
       type: apiKey
