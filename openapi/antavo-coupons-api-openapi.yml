@@ -552,33 +552,28 @@ paths:
     - url: https://read-api.<environment>.antavo.com
 components:
   schemas:
-    AddCouponsRequest:
-      type: object
-      properties:
-        coupons:
-          type: array
-          description: Coupon codes to be added to the coupon pool
-          items:
-            type: string
-    CouponsResponse:
+    NotFoundErrorResponse:
       type: object
       properties:
         status:
           type: string
+          example: error
           description: Status of the request.
-          example: success
-        metadata:
+        error:
           type: object
           properties:
-            external_batch_id:
+            type:
               type: string
-              description: The external identifier of the batch.
-        payload:
-          type: object
-          properties:
-            batch_id:
+              example: NotFoundException
+              description: Type of the error.
+            code:
               type: string
-              description: The identifier of the batch.
+              example: 330531
+              description: Error code.
+            message:
+              type: string
+              example: Batch ID is not found
+              description: Human-readable error message.
     AssignCouponsRequest:
       type: object
       required:
@@ -598,6 +593,37 @@ components:
               customer_id:
                 description: If the `customer_id` is provided, the coupon is assigned to the specified customer. If left empty, the coupon is handled as unassigned.
                 type: string
+    CouponsStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Status of the request.
+        metadata:
+          type: object
+          description: Metadata related to the bulk operation.
+          properties:
+            bulk_operation_error:
+              type: object
+              description: Any errors encountered during the bulk operation.
+              properties:
+                number_of_errors:
+                  type: number
+                  description: The number of encountered errors.
+                url:
+                  type: string
+                  description: URL to retrieve detailed error information.
+        payload:
+          type: object
+          description: Details of the bulk operation payload.
+          properties:
+            batch_status:
+              type: string
+              description: The status of the current batch.
+            number_of_coupons:
+              type: number
+              description: The number of processed coupons.
     UnassignCouponsRequest:
       type: object
       required:
@@ -641,37 +667,33 @@ components:
               type: string
               example: Batch ID is not found
               description: Human-readable error message.
-    CouponsStatusResponse:
+    CouponsResponse:
       type: object
       properties:
         status:
           type: string
-          example: success
           description: Status of the request.
+          example: success
         metadata:
           type: object
-          description: Metadata related to the bulk operation.
           properties:
-            bulk_operation_error:
-              type: object
-              description: Any errors encountered during the bulk operation.
-              properties:
-                number_of_errors:
-                  type: number
-                  description: The number of encountered errors.
-                url:
-                  type: string
-                  description: URL to retrieve detailed error information.
+            external_batch_id:
+              type: string
+              description: The external identifier of the batch.
         payload:
           type: object
-          description: Details of the bulk operation payload.
           properties:
-            batch_status:
+            batch_id:
               type: string
-              description: The status of the current batch.
-            number_of_coupons:
-              type: number
-              description: The number of processed coupons.
+              description: The identifier of the batch.
+    AddCouponsRequest:
+      type: object
+      properties:
+        coupons:
+          type: array
+          description: Coupon codes to be added to the coupon pool
+          items:
+            type: string
     BadRequestResponse:
       type: object
       properties:
@@ -695,28 +717,17 @@ components:
               type: string
               example: The 'payload' field is not found or empty
               description: Human-readable error message.
-    NotFoundErrorResponse:
+    Couponlist:
+      title: Couponlist
+      required:
+      - data
       type: object
       properties:
-        status:
-          type: string
-          example: error
-          description: Status of the request.
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of the error.
-            code:
-              type: string
-              example: 330531
-              description: Error code.
-            message:
-              type: string
-              example: Batch ID is not found
-              description: Human-readable error message.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coupon'
+          description: Array of coupons matching the query criteria.
     CouponError:
       title: FAQ
       type: object
@@ -786,17 +797,25 @@ components:
         purchase_threshold:
           type: number
           description: The minimum total purchase value that must be exceeded in order to use the card.
-    Couponlist:
-      title: Couponlist
-      required:
-      - data
+    ErrorResponse:
       type: object
+      description: This describes the structure returned if an error occurred
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coupon'
-          description: Array of coupons matching the query criteria.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
     Coupon_2:
       type: object
       properties:
@@ -854,41 +873,33 @@ components:
           description: The original coupon pool from which the coupon was sourced.
           type: string
           example: 62c7f20687632a561f16499b
-    ErrorResponse:
+    PaginationLinks:
       type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
-    CustomerCouponSortEntry:
-      type: object
-      description: Defines a single sorting instruction by specifying the field and direction.
       required:
-      - field
-      - direction
+      - next
+      - previous
       properties:
-        field:
-          type: string
-          description: The field used to sort the results.
-          enum:
-          - claimed_at
-          - redeemed_at
-          - expiration_date
-        direction:
-          $ref: '#/components/schemas/SortDirection'
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    CouponStatus:
+      type: string
+      enum:
+      - claimed
+      - redeemed
+      - expired
+      - partially_redeemed
+      - invalid
+      description: 'The coupon status to match. The status is determined from the coupon’s claim, redemption, expiration, invalidation, and balance data.
+
+        '
     ErrorEnvelope:
       type: object
       required:
@@ -914,51 +925,6 @@ components:
               type: boolean
               description: Indicates whether the request can be retried.
               example: false
-    CollectionMetadata:
-      type: object
-      required:
-      - pagination
-      properties:
-        pagination:
-          description: Links to the next and previous pages of the result set.
-          $ref: '#/components/schemas/PaginationLinks'
-    DateTimeFilter:
-      type: object
-      description: 'Filters a date or date-time field. The following formats are accepted:
-
-        - `YYYY-MM-DD` (interpreted as midnight UTC)
-
-        - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
-
-        - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
-
-        - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC for comparison)
-
-
-        Invalid calendar dates (e.g. `2026-02-31`) are rejected.
-
-        '
-      properties:
-        eq:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Equals.
-        lt:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Less than.
-        lte:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Less than or equal to.
-        gt:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Greater than.
-        gte:
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
-          description: Greater than or equal to.
     CouponEntity:
       type: object
       description: "Coupon entity. The fields returned depend on the coupon data configured for the workspace. \nIn addition to the standard fields listed below, custom coupon attributes may also be returned as additional properties.\n"
@@ -1140,38 +1106,72 @@ components:
           - product-1001
           - product-1002
       additionalProperties: true
-    PaginationLinks:
+    CollectionMetadata:
       type: object
       required:
-      - next
-      - previous
+      - pagination
       properties:
-        next:
-          type:
-          - string
-          - 'null'
-          description: URL of the next page, or null if this is the last page.
-        previous:
-          type:
-          - string
-          - 'null'
-          description: URL of the previous page, or null if this is the first page.
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
+    DateTimeFilter:
+      type: object
+      description: 'Filters a date or date-time field. The following formats are accepted:
+
+        - `YYYY-MM-DD` (interpreted as midnight UTC)
+
+        - `YYYY-MM-DDTHH:MM:SS` (no time zone offset, interpreted as UTC)
+
+        - `YYYY-MM-DDTHH:MM:SSZ`(UTC time)
+
+        - `YYYY-MM-DDTHH:MM:SS±HH:MM` (includes a UTC offset, such as +02:00 or -05:00; converted to UTC for comparison)
+
+
+        Invalid calendar dates (e.g. `2026-02-31`) are rejected.
+
+        '
+      properties:
+        eq:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Equals.
+        lt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than.
+        lte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Less than or equal to.
+        gt:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than.
+        gte:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?$
+          description: Greater than or equal to.
+    CustomerCouponSortEntry:
+      type: object
+      description: Defines a single sorting instruction by specifying the field and direction.
+      required:
+      - field
+      - direction
+      properties:
+        field:
+          type: string
+          description: The field used to sort the results.
+          enum:
+          - claimed_at
+          - redeemed_at
+          - expiration_date
+        direction:
+          $ref: '#/components/schemas/SortDirection'
     SortDirection:
       type: string
       enum:
       - asc
       - desc
-    CouponStatus:
-      type: string
-      enum:
-      - claimed
-      - redeemed
-      - expired
-      - partially_redeemed
-      - invalid
-      description: 'The coupon status to match. The status is determined from the coupon’s claim, redemption, expiration, invalidation, and balance data.
-
-        '
     CouponsFilter:
       type: object
       description: 'Filter by allowed fields and operators.
@@ -1243,6 +1243,25 @@ components:
 
             '
           $ref: '#/components/schemas/DateTimeFilter'
+  responses:
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
   parameters:
     OffsetParam:
       name: offset
@@ -1272,25 +1291,6 @@ components:
       description: Customer identifier. Using an external ID is not supported.
       schema:
         type: string
-  responses:
-    Unauthorized:
-      description: Error - Escher signature missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    ValidationError:
-      description: Error - Request validation failed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    ServerError:
-      description: Error - Unexpected server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
   securitySchemes:
     api_key:
       type: apiKey

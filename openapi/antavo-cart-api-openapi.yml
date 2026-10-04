@@ -541,79 +541,6 @@ components:
           type: number
           example: 40
           description: Tax amount applicable per unit.
-    cartModel:
-      required:
-      - cartId
-      - storeId
-      - storeGroupId
-      - rounding
-      - precision
-      - currency
-      - cart
-      type: object
-      properties:
-        cartId:
-          type: string
-          example: 66512
-          description: Unique identifier for the cart, used to track and recalculate promotions across multiple requests.
-        storeId:
-          type: string
-          example: 47847307C1652044
-          description: Identifier of the specific store where the cart originates.
-        storeGroupId:
-          type: string
-          example: GreaterLondon
-          description: Identifier for the group of the store where the cart originates.
-        customerId:
-          type: string
-          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
-          description: Optional customer identifier.
-        promotionSelectionStrategy:
-          type: string
-          enum:
-          - biggestDiscount
-          example: biggestDiscount
-          default: biggestDiscount
-          description: Defines how promotions are selected when multiple apply. Currently supports selecting the promotion offering the biggest discount.
-        promotionApplicationMethod:
-          type: string
-          enum:
-          - automatic
-          example: automatic
-          default: automatic
-          description: Method by which promotions are applied. Currently supports 'automatic', meaning that promotions are applied without manual intervention.
-        rounding:
-          type: string
-          enum:
-          - mathematical
-          - floor
-          - ceiling
-          example: mathematical
-          description: 'Specifies the rounding strategy to apply on price calculations: standard mathematical rounding, always down (floor), or always up (ceiling).'
-        precision:
-          type: integer
-          minimum: 0
-          maximum: 10
-          example: 2
-          default: 2
-          description: Number of decimal places to use in price and discount calculations.
-        promoCode:
-          type: string
-          example: PROMO10
-          description: Optional promo code to apply specific promotions tied to codes.
-        currency:
-          type: string
-          example: USD
-          maxLength: 3
-          description: ISO currency code for monetary values in the cart.
-        cart:
-          type: object
-          properties:
-            cartItems:
-              type: array
-              description: List of items currently in the cart to be evaluated for promotions.
-              items:
-                $ref: '#/components/schemas/cartItem'
     cartResponse:
       type: object
       description: The calculated cart object with applied promotions.
@@ -833,6 +760,79 @@ components:
                 type: string
                 description: Amount of tax saved due to the promotion. Applicable to `itemDiscount`and `groupDiscont` type discount.
                 example: '26.00'
+    cartModel:
+      required:
+      - cartId
+      - storeId
+      - storeGroupId
+      - rounding
+      - precision
+      - currency
+      - cart
+      type: object
+      properties:
+        cartId:
+          type: string
+          example: 66512
+          description: Unique identifier for the cart, used to track and recalculate promotions across multiple requests.
+        storeId:
+          type: string
+          example: 47847307C1652044
+          description: Identifier of the specific store where the cart originates.
+        storeGroupId:
+          type: string
+          example: GreaterLondon
+          description: Identifier for the group of the store where the cart originates.
+        customerId:
+          type: string
+          example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+          description: Optional customer identifier.
+        promotionSelectionStrategy:
+          type: string
+          enum:
+          - biggestDiscount
+          example: biggestDiscount
+          default: biggestDiscount
+          description: Defines how promotions are selected when multiple apply. Currently supports selecting the promotion offering the biggest discount.
+        promotionApplicationMethod:
+          type: string
+          enum:
+          - automatic
+          example: automatic
+          default: automatic
+          description: Method by which promotions are applied. Currently supports 'automatic', meaning that promotions are applied without manual intervention.
+        rounding:
+          type: string
+          enum:
+          - mathematical
+          - floor
+          - ceiling
+          example: mathematical
+          description: 'Specifies the rounding strategy to apply on price calculations: standard mathematical rounding, always down (floor), or always up (ceiling).'
+        precision:
+          type: integer
+          minimum: 0
+          maximum: 10
+          example: 2
+          default: 2
+          description: Number of decimal places to use in price and discount calculations.
+        promoCode:
+          type: string
+          example: PROMO10
+          description: Optional promo code to apply specific promotions tied to codes.
+        currency:
+          type: string
+          example: USD
+          maxLength: 3
+          description: ISO currency code for monetary values in the cart.
+        cart:
+          type: object
+          properties:
+            cartItems:
+              type: array
+              description: List of items currently in the cart to be evaluated for promotions.
+              items:
+                $ref: '#/components/schemas/cartItem'
   securitySchemes:
     bearerAuth:
       type: http

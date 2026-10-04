@@ -1933,195 +1933,7 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ClubMembersBadRequestResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: BadRequestException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201010
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Limit must be between 1 and 100
-    PrivateJoinNotFoundResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 300891
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club invitation not found
-    ListTemplatesBadRequestResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - error
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error that occurred.
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-    BanMemberNotFoundResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201054
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club not found
-    PrivateJoinBadRequestResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: BadRequestException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 300390
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Customer is already a member of a club
-    ListExpirySuccessResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: The status of the response.
-          example: success
-        metadata:
-          type: array
-          description: Additional metadata about the response.
-          items:
-            type: object
-        payload:
-          type: object
-          properties:
-            expirations:
-              type: array
-              description: List of expiring point records.
-              items:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    enum:
-                    - expired
-                    - expiring
-                    description: The status of the expiration (expired or expiring soon).
-                    example: expired
-                  date:
-                    type: string
-                    format: date
-                    description: The date when points expired or will expire.
-                    example: '2024-03-15'
-                  amount:
-                    type: integer
-                    description: The number of points that expired or will expire on the given date.
-                    example: 100
-            total:
-              type: integer
-              description: The total number of points that expired or will expire in the given range.
-              example: 300
-    InvitationNotFoundErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201054
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club not found
-    PrivateJoinResponse:
+    RemoveMemberResponse:
       type: object
       properties:
         status:
@@ -2134,68 +1946,10 @@ components:
           example: []
         payload:
           type: object
-          required:
-          - id
-          - club_id
-          - customer_id
-          - role
-          - status
-          - balance
-          properties:
-            id:
-              type: string
-              description: The unique identifier of the membership.
-              example: 22cc313988befe60e3413e76
-            club_id:
-              type: string
-              description: The unique identifier of the club.
-              example: 33cc313988befe60e3413e76
-            customer_id:
-              type: string
-              description: The unique identifier of the customer.
-              example: 44cc313988befe60e3413e76
-            role:
-              type: string
-              description: The role of the member.
-              example: member
-            status:
-              type: string
-              description: The status of the membership.
-              example: applicant
-            balance:
-              type: object
-              required:
-              - contributed
-              - spent
-              properties:
-                contributed:
-                  type: integer
-                  description: Total contributed amount.
-                  example: 0
-                spent:
-                  type: integer
-                  description: Total spent amount.
-                  example: 0
-            spend_limit:
-              type:
-              - object
-              - 'null'
-              description: Optional spend limit details.
-              properties:
-                from:
-                  type: number
-                  description: Starting limit amount.
-                to:
-                  type: number
-                  description: Maximum limit amount.
-                limit:
-                  type: number
-                  description: Overall spend limit.
-                spent:
-                  type: number
-                  description: Total spent against the limit.
-    PointAlignmentBadRequestErrorResponse:
+          description: No additional payload in response to a successful removal.
+    LimitError:
       type: object
+      title: Limit error
       properties:
         status:
           type: string
@@ -2209,165 +1963,322 @@ components:
               description: Type of error.
             code:
               type: integer
-              example: 201094
+              example: 201010
               description: Error code.
             message:
               type: string
-              example: Property 'points' cannot be empty
+              example: Limit must be between 1 and 100
               description: Human-readable error message.
-    ClubMembersSuccessResponse:
+    UnbanMemberBadRequestResponse:
       type: object
       properties:
         status:
           type: string
           description: Indicates the status of the response.
-          example: success
-        metadata:
+          example: error
+        error:
           type: object
+          required:
+          - type
+          - code
+          - message
           properties:
-            total:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
               type: integer
-              description: Total number of members in the club.
-              example: 42
-            pagination:
-              type: object
-              properties:
-                next:
-                  type: string
-                  description: URL for the next page of results, if available.
-                  example: https://api.{stack}.antavo.com/v1/clubs/{clubId}/members?offset=40&limit=20
-                previous:
-                  type: string
-                  description: URL for the previous page of results, if available.
-                  example: https://api.{stack}.antavo.com/v1/clubs/{clubId}/members?offset=0&limit=20
-        payload:
-          type: array
-          items:
-            type: object
-            required:
-            - id
-            - customer_id
-            - club_id
-            - role
-            - status
-            - balance
-            properties:
-              id:
-                type: string
-                description: The unique identifier of the club member.
-                example: 6604074cb8208607742492c7
-              customer_id:
-                type: string
-                description: The unique identifier of the customer who is a member of the club.
-                example: 44cc313988befe60e3413e76
-              club_id:
-                type: string
-                description: The unique identifier of the club.
-                example: 65fc09f6cab4445deb626562
-              role:
-                type: string
-                enum:
-                - owner
-                - member
-                description: The role of the member in the club.
-                example: member
-              status:
-                type: string
-                enum:
-                - applicant
-                - active
-                - kicked
-                - removed
-                - banned
-                description: The current status of the member.
-                example: active
-              balance:
-                type: object
-                required:
-                - contributed
-                - spent
-                properties:
-                  contributed:
-                    type: integer
-                    description: Total amount contributed by the member to the club.
-                    example: 0
-                  spent:
-                    type: integer
-                    description: Total amount spent by the member from their balance.
-                    example: 0
-              donation_intervals:
-                type: array
-                description: List of donation intervals for all account groups of the member.
-                items:
-                  type: object
-                  required:
-                  - accounts
-                  - donation_limit
-                  - used_from_donation_limit
-                  - next_donation_limit_reset_date
-                  properties:
-                    accounts:
-                      type: array
-                      description: List of accounts from which donations are made.
-                      items:
-                        type: string
-                      example:
-                      - rc_balance
-                      - kmd_balance
-                    donation_limit:
-                      type: number
-                      description: Maximum amount that can be donated during the interval.
-                      example: 50
-                    used_from_donation_limit:
-                      type: number
-                      description: Amount already donated in the current interval.
-                      example: 50
-                    next_donation_limit_reset_date:
-                      type: string
-                      format: date-time
-                      description: Date when the donation limit will reset.
-                      example: '2026-01-01T00:00:00+01:00'
-              spend_limit:
-                type: object
-                properties:
-                  from:
-                    type: string
-                    description: Start date of the spend limit period.
-                    example: 2024-01-01T12:00:+0200
-                  to:
-                    type: string
-                    description: End date of the spend limit period.
-                    example: 2024-04-01T12:00:+0100
-                  limit:
-                    type: integer
-                    description: Maximum amount that can be spent by the member.
-                    example: 200
-                  spent:
-                    type: integer
-                    description: Amount already spent by the member within the limit period.
-                    example: 56
-    ClubUpdateBadRequestResponse:
+              description: Numeric code associated with the error.
+              example: 300840
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Property 'actor' cannot be empty
+    RemoveMemberBadRequestResponse:
       type: object
       properties:
         status:
           type: string
-          description: The status of the response.
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201094
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Property 'actor' cannot be empty
+    MemberNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201092
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    OwnerBadRequestResponses:
+      type: object
+      description: Possible error responses when attempting to assign an owner.
+      properties:
+        status:
+          type: string
           example: error
         error:
           type: object
           properties:
             type:
               type: string
-              description: Type of error.
               example: BadRequestException
+              description: Type of error.
             code:
               type: integer
+              example: 201034
               description: Error code.
-              example: 201094
             message:
               type: string
-              description: A human-readable message providing details about the error.
-              example: Property 'name' cannot be empty
+              example: Owners cannot be reassigned
+              description: Human-readable error message.
+    ListTemplatesSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          description: Indicates the status of the response.
+        metadata:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 42
+              description: The total number of templates available in the response.
+            next:
+              type: string
+              example: https://{api_url}/v1/clubs/templates?offset=40&limit=20
+              description: A URL to the next set of templates, if available.
+            previous:
+              type: string
+              example: https://{api_url}/v1/clubs/templates?offset=0&limit=20
+              description: A URL to the previous set of templates, if available.
+        payload:
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 62cc313988befe60e3413e75
+                  description: The ID of the template.
+                name:
+                  type: string
+                  example: Family Club Template
+                  description: The name of the template.
+                type:
+                  type: string
+                  enum:
+                  - private
+                  - public
+                  example: private
+                  description: The visibility type of the template, indicating whether it is private or public.
+                status:
+                  type: string
+                  enum:
+                  - active
+                  - archived
+                  example: active
+                  description: The current status of the template, indicating if it is active or archived.
+                contribution_type:
+                  type: string
+                  enum:
+                  - split_points
+                  - incentive_points
+                  - none
+                  example: incentive_points
+                  description: Type of contribution method used in the template.
+                account_group:
+                  type: array
+                  description: List of account group configuration blocks.
+                  items:
+                    type: object
+                    properties:
+                      account_names:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - default_Account
+                        - family_account
+                        description: List of account names this group applies to.
+                      contribution_percentage:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Percentage of contribution from the specified accounts.
+                      minimum_points_threshold:
+                        type: integer
+                        example: 0
+                        description: Minimum points required for the contribution to be applied.
+                      point_conversion_rate:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Rate at which points are converted.
+                      point_donation:
+                        type: boolean
+                        example: true
+                        description: Indicates whether point donation is enabled.
+                      donation_limit:
+                        type:
+                        - integer
+                        - 'null'
+                        example: 1
+                        description: Maximum number of points that can be donated.
+                      donation_reset_type:
+                        type: string
+                        enum:
+                        - donation_limit_reset_fix_date
+                        - donation_limit_reset_after_donation
+                        - donation_limit_reset_never
+                        example: donation_limit_reset_fix_date
+                        description: Method used to reset the donation limit.
+            - type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 62cc313988befe60e3413e76
+                  description: The ID of the template.
+                name:
+                  type: string
+                  example: Friends Club Template
+                  description: The name of the template.
+                type:
+                  type: string
+                  enum:
+                  - public
+                  - private
+                  example: public
+                  description: The visibility type of the template, indicating whether it is private or public.
+                status:
+                  type: string
+                  enum:
+                  - active
+                  - archived
+                  example: active
+                  description: The current status of the template, indicating if it is active or archived.
+                contribution_type:
+                  type: string
+                  enum:
+                  - split_points
+                  - incentive_points
+                  - none
+                  example: split_points
+                  description: Type of contribution method used in the template.
+                account_group:
+                  type: array
+                  description: List of account group configuration blocks.
+                  items:
+                    type: object
+                    properties:
+                      account_names:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - kmd_balance
+                        description: List of account names this group applies to.
+                      contribution_percentage:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Percentage of contribution from the specified accounts.
+                      minimum_points_threshold:
+                        type: integer
+                        example: 1
+                        description: Minimum points required for the contribution to be applied.
+                      point_conversion_rate:
+                        type: number
+                        format: float
+                        example: 1
+                        description: Rate at which points are converted.
+                      point_donation:
+                        type: boolean
+                        example: false
+                        description: Indicates whether point donation is enabled.
+                      donation_limit:
+                        type:
+                        - integer
+                        - 'null'
+                        example: null
+                        description: Maximum number of points that can be donated.
+                      donation_reset_type:
+                        type: string
+                        enum:
+                        - donation_limit_reset_fix_date
+                        - donation_limit_reset_after_donation
+                        - donation_limit_reset_never
+                        example: donation_limit_reset_fix_date
+                        description: Method used to reset the donation limit.
+    RemoveMemberNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
     InvitationSuccessResponse:
       type: object
       properties:
@@ -2415,6 +2326,404 @@ components:
               format: date-time
               description: Timestamp when the invitation expires.
               example: '2024-07-17T07:51:01+01:00'
+    AccessNotFoundError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    PrivateJoinBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 300390
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Customer is already a member of a club
+    DisbandSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        metadata:
+          type: array
+          items:
+            type: object
+          example: []
+        payload:
+          type: object
+          example: null
+    UnbanMemberResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          required:
+          - id
+          - customer_id
+          - club_id
+          - role
+          - status
+          - balance
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the membership.
+              example: 65dc4568e804ab70d405e678
+            customer_id:
+              type: string
+              description: The unique identifier of the customer.
+              example: 22cc313988befe60e3413e76
+            club_id:
+              type: string
+              description: The unique identifier of the club.
+              example: 65d758e7f9cb852e19212e15
+            role:
+              type: string
+              description: The role of the member.
+              example: member
+            status:
+              type: string
+              description: The status of the membership after unbanning.
+              example: removed
+            balance:
+              type: object
+              required:
+              - contributed
+              - spent
+              properties:
+                contributed:
+                  type: integer
+                  description: Total contributed amount.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total spent amount.
+                  example: 0
+            spend_limit:
+              type:
+              - object
+              - 'null'
+              description: Optional spend limit details.
+              properties:
+                from:
+                  type: number
+                  description: Starting limit amount.
+                to:
+                  type: number
+                  description: Maximum limit amount.
+                limit:
+                  type: number
+                  description: Overall spend limit.
+                spent:
+                  type: number
+                  description: Total spent against the limit.
+    BanBadRequestError:
+      type: object
+      description: Bad Request error responses for banning members.
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    PointAlignmentNotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201099
+              description: Error code.
+            message:
+              type: string
+              example: Club not found or Club member not found
+              description: Human-readable error message.
+    PointDonationSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: success
+        metadata:
+          type: array
+          items: {}
+          description: Contains detailed information about the donation, member, and club.
+        payload:
+          type: object
+          properties:
+            donated_account_points:
+              type: integer
+              example: 20
+              description: The number of account points donated.
+            point_conversion_rate:
+              type: number
+              example: 0.5
+              description: The conversion rate used to calculate club points from donated account points.
+            donated_club_points:
+              type: integer
+              example: 10
+              description: The number of club points received after conversion.
+            reason:
+              type: string
+              example: Contributing points to help unlock the club's summer reward milestone.
+              description: The reason provided for the donation (if any).
+            member:
+              type: object
+              description: Information about the donating club member.
+              properties:
+                id:
+                  type: string
+                  example: f23a1b48-4df6-4b12-b678-c9e768a4e45d
+                  description: The ID of the donating member.
+                donation_limit:
+                  type: integer
+                  example: 100
+                  description: The maximum amount of points the member can donate within the cycle.
+                used_from_donation_limit:
+                  type: integer
+                  example: 50
+                  description: The number of points already donated in the current cycle.
+                next_donation_limit_reset_date:
+                  type: string
+                  format: date
+                  example: '2026-01-05'
+                  description: The date when the donation limit will reset.
+                balance:
+                  type: object
+                  description: Member's club points balance.
+                  properties:
+                    contributed:
+                      type: integer
+                      example: 70
+                      description: Total points the member has contributed.
+                    spent:
+                      type: integer
+                      example: 0
+                      description: Total points the member has spent.
+            club:
+              type: object
+              description: The club's points balance overview.
+              properties:
+                balance:
+                  type: object
+                  description: Current state of the club's points.
+                  properties:
+                    contributed:
+                      type: integer
+                      example: 5600
+                      description: Total points contributed to the club.
+                    spent:
+                      type: integer
+                      example: 1000
+                      description: Total points spent by the club.
+                    expired:
+                      type: integer
+                      example: 0
+                      description: Total club points expired.
+                    spendable:
+                      type: integer
+                      example: 4600
+                      description: Points available for spending by the club.
+    PrivateJoinNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 300891
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club invitation not found
+    BanNotFoundError:
+      type: object
+      description: Not Found error responses for banning members.
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    ListExpiryErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response, typically "error".
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: RuntimeException
+            code:
+              type: integer
+              description: Error code.
+              example: 201121
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Invalid date provided. Please provide a valid date in a supported format.
+    ClubHistoryNotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201099
+              description: Error code.
+            message:
+              type: string
+              example: Club not found
+              description: Human-readable error message.
+    ClubHistoryBadRequestErrorResponse:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/LimitError'
+      - $ref: '#/components/schemas/OffsetError'
+      - $ref: '#/components/schemas/QueryParameterError'
+    ClubUpdateNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Error code.
+              example: 201054
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Club not found
+    CreateClubBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - error
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error that occurred.
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+            message:
+              type: string
+              description: Descriptive message explaining the error.
     ListClubsSuccessResponse:
       type: object
       properties:
@@ -2498,112 +2807,6 @@ components:
                 format: uuid
                 example: 62cc313988befe60e3413e75
                 description: The ID of the club owner.
-    OwnerBadRequestResponses:
-      type: object
-      description: Possible error responses when attempting to assign an owner.
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error.
-            code:
-              type: integer
-              example: 201034
-              description: Error code.
-            message:
-              type: string
-              example: Owners cannot be reassigned
-              description: Human-readable error message.
-    InvitationBadRequestErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: BadRequestException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201060
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Inviter customer not found
-    OwnershipSuccessResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-        metadata:
-          type: array
-          items:
-            type: object
-          example: []
-        payload:
-          type: object
-          example: null
-    ClubDetailsNotFoundResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201054
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club not found
-    QueryParameterError:
-      type: object
-      title: Query Parameter Error
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error.
-            code:
-              type: integer
-              example: 201100
-              description: Error code.
-            message:
-              type: string
-              example: Invalid query string parameter(s)
-              description: Human-readable error message.
     AcceptSuccessResponse:
       type: object
       properties:
@@ -2671,6 +2874,167 @@ components:
                   type: integer
                   example: 0
                   description: The total points already spent by the customer against the spend limit.
+    PointAlignmentBadRequestErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201094
+              description: Error code.
+            message:
+              type: string
+              example: Property 'points' cannot be empty
+              description: Human-readable error message.
+    DisbandNotFoundResponses:
+      type: object
+      description: Possible not found error responses when attempting to disband a club.
+      properties:
+        status:
+          type: string
+          example: error
+          description: Type of error.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Error code.
+            code:
+              type: integer
+              example: 201054
+            message:
+              type: string
+              example: Club not found
+              description: Human-readable error message.
+    ClubDetailsNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    PublicJoinBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201087
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club Member not found
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+          description: Indicates that an error occurred.
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Error code.
+              example: 201094
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Property 'donated_account_points' cannot be empty
+    ClubUpdateBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The status of the response.
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of error.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Error code.
+              example: 201094
+            message:
+              type: string
+              description: A human-readable message providing details about the error.
+              example: Property 'name' cannot be empty
+    BanMemberNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
     ListClubsEmptySuccessResponse:
       type: object
       properties:
@@ -2698,6 +3062,294 @@ components:
           type: array
           items: {}
           description: An empty array indicating that there are no clubs available in the response.
+    AccessBadRequestError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+    BanMemberBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: BadRequestException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201094
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Property 'actor' cannot be empty
+    ListTemplatesBadRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - error
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error that occurred.
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+    RefuseNotFoundError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: NotFoundException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+      required:
+      - status
+      - error
+      example:
+        status: error
+        error:
+          type: NotFoundException
+          code: 201054
+          message: Club not found
+    ClubDetailsSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata about the response.
+          items:
+            type: object
+        payload:
+          type: object
+          required:
+          - id
+          - name
+          - status
+          - member_count
+          - owner_customer_id
+          - balance
+          - spend_limit
+          - group_settings
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the club.
+              example: 66056b8fc0380d23824277b7
+            name:
+              type: object
+              description: The name of the club.
+              properties:
+                en:
+                  type: string
+                  example: Family Moments Club
+            template_id:
+              type: string
+              description: The unique identifier of the template associated with the club.
+              example: 65c9f779eba05c56785d61a3
+            type:
+              type: string
+              description: The type of the club (private or public).
+              example: private
+            status:
+              type: string
+              description: The current status of the club.
+              enum:
+              - active
+              - disbanded
+              - fraudulent
+              example: active
+            balance:
+              type: object
+              properties:
+                contributed:
+                  type: integer
+                  description: Total amount contributed to the club.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total amount spent from the club's balance.
+                  example: 0
+                expired:
+                  type: integer
+                  description: Total amount of funds that have expired.
+                  example: 0
+                spendable:
+                  type: integer
+                  description: Amount currently available to be spent from the club's balance.
+                  example: 0
+            spend_limit:
+              type: object
+              required:
+              - eligibility
+              - reset_type
+              properties:
+                eligibility:
+                  type: string
+                  description: Eligibility criteria for spending limits.
+                  enum:
+                  - active_members
+                  - owner
+                  example: active_members
+                limit:
+                  type: integer
+                  description: Maximum spend limit for the club.
+                  example: 1000
+                reset_type:
+                  type: string
+                  description: How the spend limit resets.
+                  enum:
+                  - none
+                  - fix_date
+                  - first_spending
+                  example: first_spending
+            group_settings:
+              type: array
+              description: Group-specific donation settings.
+              items:
+                type: object
+                required:
+                - account_names
+                - donation_limit
+                - donation_reset_type
+                properties:
+                  account_names:
+                    type: array
+                    description: List of account identifiers for the group.
+                    items:
+                      type: string
+                    example:
+                    - rc_balance
+                    - kmd_balance
+                  donation_limit:
+                    type: number
+                    description: Maximum donation limit for the group.
+                    example: 50
+                  donation_reset_type:
+                    type: string
+                    description: How the donation limit resets.
+                    enum:
+                    - donation_limit_reset_none
+                    - donation_limit_reset_fix_date
+                    - donation_limit_reset_first_donation
+                    example: donation_limit_reset_fix_date
+            member_count:
+              type: integer
+              description: Total number of members currently in the club.
+              example: 1
+            owner_customer_id:
+              type: string
+              description: The unique identifier of the customer who owns the club.
+              example: 123e4567-e89b-12d3-a456-426614174000
+    BanMemberResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          description: No additional payload in response for a successful ban.
+    RefuseBadRequestError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              description: Error code specific to the issue.
+            message:
+              type: string
+              description: Human-readable error message.
+      required:
+      - status
+      - error
+      example:
+        status: error
+        error:
+          type: BadRequestException
+          code: 201094
+          message: Property 'actor' cannot be empty
+    PointDonationRequest:
+      type: object
+      properties:
+        donated_account_points:
+          type: integer
+          minimum: 1
+          description: Number of account points to donate.
+          example: 100
+        account:
+          type: string
+          description: The account from which the points are donated.
+          example: default_account
+        reason:
+          type: string
+          maxLength: 500
+          description: Reason for the donation (optional).
+          example: Contributing points to help unlock the club's summer reward milestone.
+      required:
+      - donated_account_points
     ClubHistoryResponse:
       type: object
       properties:
@@ -2938,507 +3590,12 @@ components:
                 format: date-time
                 example: '2024-04-12T12:15:53+01:00'
                 description: The date and time when the action occurred, in ISO 8601 format.
-    ListTemplatesSuccessResponse:
+    ClubUpdateSuccessResponse:
       type: object
       properties:
         status:
           type: string
-          enum:
-          - success
-          description: Indicates the status of the response.
-        metadata:
-          type: object
-          properties:
-            total:
-              type: integer
-              example: 42
-              description: The total number of templates available in the response.
-            next:
-              type: string
-              example: https://{api_url}/v1/clubs/templates?offset=40&limit=20
-              description: A URL to the next set of templates, if available.
-            previous:
-              type: string
-              example: https://{api_url}/v1/clubs/templates?offset=0&limit=20
-              description: A URL to the previous set of templates, if available.
-        payload:
-          type: array
-          items:
-            oneOf:
-            - type: object
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 62cc313988befe60e3413e75
-                  description: The ID of the template.
-                name:
-                  type: string
-                  example: Family Club Template
-                  description: The name of the template.
-                type:
-                  type: string
-                  enum:
-                  - private
-                  - public
-                  example: private
-                  description: The visibility type of the template, indicating whether it is private or public.
-                status:
-                  type: string
-                  enum:
-                  - active
-                  - archived
-                  example: active
-                  description: The current status of the template, indicating if it is active or archived.
-                contribution_type:
-                  type: string
-                  enum:
-                  - split_points
-                  - incentive_points
-                  - none
-                  example: incentive_points
-                  description: Type of contribution method used in the template.
-                account_group:
-                  type: array
-                  description: List of account group configuration blocks.
-                  items:
-                    type: object
-                    properties:
-                      account_names:
-                        type: array
-                        items:
-                          type: string
-                        example:
-                        - default_Account
-                        - family_account
-                        description: List of account names this group applies to.
-                      contribution_percentage:
-                        type: number
-                        format: float
-                        example: 1
-                        description: Percentage of contribution from the specified accounts.
-                      minimum_points_threshold:
-                        type: integer
-                        example: 0
-                        description: Minimum points required for the contribution to be applied.
-                      point_conversion_rate:
-                        type: number
-                        format: float
-                        example: 1
-                        description: Rate at which points are converted.
-                      point_donation:
-                        type: boolean
-                        example: true
-                        description: Indicates whether point donation is enabled.
-                      donation_limit:
-                        type:
-                        - integer
-                        - 'null'
-                        example: 1
-                        description: Maximum number of points that can be donated.
-                      donation_reset_type:
-                        type: string
-                        enum:
-                        - donation_limit_reset_fix_date
-                        - donation_limit_reset_after_donation
-                        - donation_limit_reset_never
-                        example: donation_limit_reset_fix_date
-                        description: Method used to reset the donation limit.
-            - type: object
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  example: 62cc313988befe60e3413e76
-                  description: The ID of the template.
-                name:
-                  type: string
-                  example: Friends Club Template
-                  description: The name of the template.
-                type:
-                  type: string
-                  enum:
-                  - public
-                  - private
-                  example: public
-                  description: The visibility type of the template, indicating whether it is private or public.
-                status:
-                  type: string
-                  enum:
-                  - active
-                  - archived
-                  example: active
-                  description: The current status of the template, indicating if it is active or archived.
-                contribution_type:
-                  type: string
-                  enum:
-                  - split_points
-                  - incentive_points
-                  - none
-                  example: split_points
-                  description: Type of contribution method used in the template.
-                account_group:
-                  type: array
-                  description: List of account group configuration blocks.
-                  items:
-                    type: object
-                    properties:
-                      account_names:
-                        type: array
-                        items:
-                          type: string
-                        example:
-                        - kmd_balance
-                        description: List of account names this group applies to.
-                      contribution_percentage:
-                        type: number
-                        format: float
-                        example: 1
-                        description: Percentage of contribution from the specified accounts.
-                      minimum_points_threshold:
-                        type: integer
-                        example: 1
-                        description: Minimum points required for the contribution to be applied.
-                      point_conversion_rate:
-                        type: number
-                        format: float
-                        example: 1
-                        description: Rate at which points are converted.
-                      point_donation:
-                        type: boolean
-                        example: false
-                        description: Indicates whether point donation is enabled.
-                      donation_limit:
-                        type:
-                        - integer
-                        - 'null'
-                        example: null
-                        description: Maximum number of points that can be donated.
-                      donation_reset_type:
-                        type: string
-                        enum:
-                        - donation_limit_reset_fix_date
-                        - donation_limit_reset_after_donation
-                        - donation_limit_reset_never
-                        example: donation_limit_reset_fix_date
-                        description: Method used to reset the donation limit.
-    CreateClubBadRequestResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - error
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error that occurred.
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-    BanMemberResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: success
-        metadata:
-          type: array
-          description: Additional metadata, can be empty.
-          example: []
-        payload:
-          type: object
-          description: No additional payload in response for a successful ban.
-    DisbandSuccessResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-        metadata:
-          type: array
-          items:
-            type: object
-          example: []
-        payload:
-          type: object
-          example: null
-    PublicJoinNotFoundResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201054
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club not found
-    ClubHistoryNotFoundErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of error.
-            code:
-              type: integer
-              example: 201099
-              description: Error code.
-            message:
-              type: string
-              example: Club not found
-              description: Human-readable error message.
-    SuccessRefuseResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-          description: Indicates the status of the response.
-        metadata:
-          type: array
-          items:
-            type: object
-          example: []
-        payload:
-          type: object
-          properties:
-            id:
-              type: string
-              example: 65dc4568e804ab70d405e678
-              description: The ID of the refuse record.
-            customer_id:
-              type: string
-              example: 22cc313988befe60e3413e76
-              description: The ID of the customer who has been refused from the club.
-            club_id:
-              type: string
-              example: 65d758e7f9cb852e19212e15
-              description: The ID of the club from which the customer has been refused.
-            role:
-              type: string
-              example: member
-              description: The role assigned to the customer before removal (e.g., member).
-            status:
-              type: string
-              example: removed
-              description: The current status of the customer's membership, indicating they have been refused.
-            balance:
-              type: object
-              properties:
-                contributed:
-                  type: integer
-                  example: 0
-                  description: The total points contributed by the refused customer.
-                spent:
-                  type: integer
-                  example: 0
-                  description: The total points spent by the refused customer.
-            spend_limit:
-              type:
-              - object
-              - 'null'
-              properties:
-                from:
-                  type: number
-                  example: 0
-                  description: The starting limit of points that could be spent by the customer.
-                to:
-                  type: number
-                  example: 100
-                  description: The maximum limit of points that could be spent by the customer.
-                limit:
-                  type: number
-                  example: 50
-                  description: The total spend limit.
-                spent:
-                  type: number
-                  example: 30
-                  description: The total points already spent.
-      required:
-      - status
-      - metadata
-      - payload
-    PointAlignmentResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-          description: Indicates the status of the response.
-        metadata:
-          type: array
-          items: {}
-        payload:
-          type: object
-          properties:
-            member:
-              type: object
-              properties:
-                id:
-                  type: string
-                  example: 6604074cb8208607742492c7
-                customer_id:
-                  type: string
-                  example: 62cc313988befe60e3413e75
-                  description: The ID of the customer associated with the point alignment action.
-                club_id:
-                  type: string
-                  example: 65fc09f6cab4445deb626562
-                  description: The ID of the club.
-                role:
-                  type: string
-                  enum:
-                  - owner
-                  - member
-                  description: The role of the member within the club.
-                status:
-                  type: string
-                  enum:
-                  - applicant
-                  - active
-                  - kicked
-                  - banned
-                  description: The current status of the member in the club.
-                balance:
-                  type: object
-                  properties:
-                    contributed:
-                      type: integer
-                      example: 0
-                      description: The total points contributed by the member to the club.
-                    spent:
-                      type: integer
-                      example: 0
-                      description: The total points spent by the member in the club.
-            club:
-              type: object
-              properties:
-                id:
-                  type: string
-                  example: 62cc313988befe60e3413e75
-                name:
-                  type: string
-                  example: Families & Friends
-                  description: The name of the club.
-                status:
-                  type: string
-                  enum:
-                  - active
-                  description: The current status of the club.
-                balance:
-                  type: object
-                  properties:
-                    spendable:
-                      type: integer
-                      example: 0
-                      description: The total spendable points in the club's balance.
-                    contributed:
-                      type: integer
-                      example: 0
-                      description: The total points contributed to the club.
-                    spent:
-                      type: integer
-                      example: 0
-                      description: The total points spent by the club.
-                    expired:
-                      type: integer
-                      example: 0
-                      description: The total points that have expired in the club.
-                member_count:
-                  type: integer
-                  example: 1
-                  description: The total number of members in the club.
-                owner_customer_id:
-                  type: string
-                  example: 62cc313988befe60e3413e75
-                  description: The ID of the customer who owns the club.
-    RefuseNotFoundError:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of error.
-            code:
-              type: integer
-              description: Error code specific to the issue.
-            message:
-              type: string
-              description: Human-readable error message.
-      required:
-      - status
-      - error
-      example:
-        status: error
-        error:
-          type: NotFoundException
-          code: 201054
-          message: Club not found
-    ListExpiryErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: The status of the response, typically "error".
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of error.
-              example: RuntimeException
-            code:
-              type: integer
-              description: Error code.
-              example: 201121
-            message:
-              type: string
-              description: A human-readable message providing details about the error.
-              example: Invalid date provided. Please provide a valid date in a supported format.
-    ClubDetailsSuccessResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
+          description: The status of the response.
           example: success
         metadata:
           type: array
@@ -3447,45 +3604,25 @@ components:
             type: object
         payload:
           type: object
-          required:
-          - id
-          - name
-          - status
-          - member_count
-          - owner_customer_id
-          - balance
-          - spend_limit
-          - group_settings
+          description: The updated club details.
           properties:
             id:
               type: string
-              description: The unique identifier of the club.
-              example: 66056b8fc0380d23824277b7
+              description: The ID of the club.
+              example: 62cc313988befe60e3413e75
             name:
-              type: object
-              description: The name of the club.
-              properties:
-                en:
-                  type: string
-                  example: Family Moments Club
-            template_id:
               type: string
-              description: The unique identifier of the template associated with the club.
-              example: 65c9f779eba05c56785d61a3
-            type:
-              type: string
-              description: The type of the club (private or public).
-              example: private
+              description: The updated name of the club.
+              example: Club 1
             status:
               type: string
-              description: The current status of the club.
               enum:
               - active
-              - disbanded
-              - fraudulent
+              description: The current status of the club (active, disbanded, or fraudulent).
               example: active
             balance:
               type: object
+              description: The balance details of the club.
               properties:
                 contributed:
                   type: integer
@@ -3503,316 +3640,99 @@ components:
                   type: integer
                   description: Amount currently available to be spent from the club's balance.
                   example: 0
-            spend_limit:
-              type: object
-              required:
-              - eligibility
-              - reset_type
-              properties:
-                eligibility:
-                  type: string
-                  description: Eligibility criteria for spending limits.
-                  enum:
-                  - active_members
-                  - owner
-                  example: active_members
-                limit:
-                  type: integer
-                  description: Maximum spend limit for the club.
-                  example: 1000
-                reset_type:
-                  type: string
-                  description: How the spend limit resets.
-                  enum:
-                  - none
-                  - fix_date
-                  - first_spending
-                  example: first_spending
-            group_settings:
-              type: array
-              description: Group-specific donation settings.
-              items:
-                type: object
-                required:
-                - account_names
-                - donation_limit
-                - donation_reset_type
-                properties:
-                  account_names:
-                    type: array
-                    description: List of account identifiers for the group.
-                    items:
-                      type: string
-                    example:
-                    - rc_balance
-                    - kmd_balance
-                  donation_limit:
-                    type: number
-                    description: Maximum donation limit for the group.
-                    example: 50
-                  donation_reset_type:
-                    type: string
-                    description: How the donation limit resets.
-                    enum:
-                    - donation_limit_reset_none
-                    - donation_limit_reset_fix_date
-                    - donation_limit_reset_first_donation
-                    example: donation_limit_reset_fix_date
             member_count:
               type: integer
               description: Total number of members currently in the club.
               example: 1
             owner_customer_id:
               type: string
-              description: The unique identifier of the customer who owns the club.
-              example: 123e4567-e89b-12d3-a456-426614174000
-    DisbandBadRequestResponses:
-      type: object
-      description: Possible error responses when attempting to disband a club.
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error.
-            code:
-              type: integer
-              example: 201047
-              description: Error code.
-            message:
-              type: string
-              example: Club is not active
-              description: Human-readable error message.
-    BanNotFoundError:
-      type: object
-      description: Not Found error responses for banning members.
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of error.
-            code:
-              type: integer
-              description: Error code specific to the issue.
-            message:
-              type: string
-              description: Human-readable error message.
-    RemoveMemberResponse:
+              description: The ID of the club owner.
+              example: 62cc313988befe60e3413e75
+            name_change_frequency:
+              type: object
+              description: Information about the club name change frequency.
+              properties:
+                remaining:
+                  type: integer
+                  description: Number of allowed name changes remaining.
+                  example: 5
+                next_reset_at:
+                  type:
+                  - string
+                  - 'null'
+                  format: date-time
+                  description: The date-time when the name change limit resets.
+                  example: '2025-12-31T23:59:59Z'
+                last_updated_at:
+                  type:
+                  - string
+                  - 'null'
+                  format: date-time
+                  description: The date-time when the last name change was made.
+                  example: '2025-01-15T14:30:00Z'
+    ListExpirySuccessResponse:
       type: object
       properties:
         status:
           type: string
-          description: Indicates the status of the response.
+          description: The status of the response.
           example: success
         metadata:
           type: array
-          description: Additional metadata, can be empty.
-          example: []
-        payload:
-          type: object
-          description: No additional payload in response to a successful removal.
-    BanBadRequestError:
-      type: object
-      description: Bad Request error responses for banning members.
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error.
-            code:
-              type: integer
-              description: Error code specific to the issue.
-            message:
-              type: string
-              description: Human-readable error message.
-    OwnerNotFoundResponses:
-      type: object
-      description: Not Found error responses for owner assignments.
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of error.
-            code:
-              type: integer
-              description: Error code specific to the issue.
-            message:
-              type: string
-              description: Human-readable error message.
-    RemoveMemberBadRequestResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: BadRequestException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201094
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Property 'actor' cannot be empty
-    MemberNotFoundResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201092
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club not found
-    ClubHistoryBadRequestErrorResponse:
-      type: object
-      oneOf:
-      - $ref: '#/components/schemas/LimitError'
-      - $ref: '#/components/schemas/OffsetError'
-      - $ref: '#/components/schemas/QueryParameterError'
-    DisbandNotFoundResponses:
-      type: object
-      description: Possible not found error responses when attempting to disband a club.
-      properties:
-        status:
-          type: string
-          example: error
-          description: Type of error.
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Error code.
-            code:
-              type: integer
-              example: 201054
-            message:
-              type: string
-              example: Club not found
-              description: Human-readable error message.
-    SuccessBanResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-          description: Indicates the status of the response.
-        metadata:
-          type: array
+          description: Additional metadata about the response.
           items:
             type: object
-          example: []
         payload:
           type: object
           properties:
-            id:
+            expirations:
+              type: array
+              description: List of expiring point records.
+              items:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - expired
+                    - expiring
+                    description: The status of the expiration (expired or expiring soon).
+                    example: expired
+                  date:
+                    type: string
+                    format: date
+                    description: The date when points expired or will expire.
+                    example: '2024-03-15'
+                  amount:
+                    type: integer
+                    description: The number of points that expired or will expire on the given date.
+                    example: 100
+            total:
+              type: integer
+              description: The total number of points that expired or will expire in the given range.
+              example: 300
+    QueryParameterError:
+      type: object
+      title: Query Parameter Error
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
               type: string
-              example: 65dc4568e804ab70d405e678
-              description: The ID of the ban record.
-            customer_id:
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201100
+              description: Error code.
+            message:
               type: string
-              example: 22cc313988befe60e3413e76
-              description: The ID of the customer who has been banned from the club.
-            club_id:
-              type: string
-              example: 65d758e7f9cb852e19212e15
-              description: The ID of the club from which the customer has been banned.
-            role:
-              type: string
-              example: member
-              description: The role assigned to the customer before the ban (e.g., member).
-            status:
-              type: string
-              example: banned
-              description: The current status of the customer's membership, indicating they are banned.
-            balance:
-              type: object
-              properties:
-                contributed:
-                  type: integer
-                  example: 10
-                  description: The total points contributed by the banned customer to the club.
-                spent:
-                  type: integer
-                  example: 5
-                  description: The total points spent by the banned customer in the club.
-            spend_limit:
-              type:
-              - object
-              - 'null'
-              properties:
-                from:
-                  type: number
-                  example: 0
-                  description: The starting limit of points that could be spent by the customer prior to the ban.
-                to:
-                  type: number
-                  example: 100
-                  description: The maximum limit of points that could be spent by the customer prior to the ban.
-                limit:
-                  type: number
-                  example: 50
-                  description: The total spend limit set for the customer before they were banned.
-                spent:
-                  type: number
-                  example: 30
-                  description: The total points already spent by the banned customer against the spend limit before the ban.
-      required:
-      - status
-      - metadata
-      - payload
+              example: Invalid query string parameter(s)
+              description: Human-readable error message.
     UnbanMemberNotFoundResponse:
       type: object
       properties:
@@ -3839,330 +3759,6 @@ components:
               type: string
               description: Descriptive message explaining the error.
               example: Club not found
-    RemoveMemberNotFoundResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: error
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Numeric code associated with the error.
-              example: 201054
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club not found
-    CreateClubSuccessResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          enum:
-          - success
-          description: The status of the response, indicating success or failure.
-        metadata:
-          type: array
-          items: {}
-        payload:
-          type: object
-          properties:
-            id:
-              type: string
-              example: 62cc313988befe60e3413e75
-              description: The ID of the newly created club.
-            name:
-              type: string
-              example: Family Moments Club
-              description: The name of the newly created club.
-            type:
-              type: string
-              enum:
-              - private
-              - public
-              description: The visibility type of the club, indicating whether it is private or public.
-            status:
-              type: string
-              enum:
-              - active
-              description: The current status of the club, indicating that it is active.
-            balance:
-              type: object
-              properties:
-                points_earned:
-                  type: integer
-                  example: 0
-                  description: The total points earned by the club.
-                points_spent:
-                  type: integer
-                  example: 0
-                  description: The total points spent by the club.
-                points_expired:
-                  type: integer
-                  example: 0
-                  description: The total points that have expired.
-                points_spendable:
-                  type: integer
-                  example: 0
-                  description: The total points available for spending by the club.
-            member_count:
-              type: integer
-              example: 1
-              description: The total number of members currently in the club.
-            owner_customer_id:
-              type: string
-              format: uuid
-              example: 62cc313988befe60e3413e75
-              description: The ID of the club owner.
-    LimitError:
-      type: object
-      title: Limit error
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error.
-            code:
-              type: integer
-              example: 201010
-              description: Error code.
-            message:
-              type: string
-              example: Limit must be between 1 and 100
-              description: Human-readable error message.
-    PublicJoinResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: success
-        metadata:
-          type: array
-          description: Additional metadata, can be empty.
-          example: []
-        payload:
-          type: object
-          required:
-          - id
-          - club_id
-          - customer_id
-          - role
-          - status
-          - balance
-          properties:
-            id:
-              type: string
-              description: The unique identifier of the membership.
-              example: 22cc313988befe60e3413e76
-            club_id:
-              type: string
-              description: The unique identifier of the club.
-              example: 33cc313988befe60e3413e76
-            customer_id:
-              type: string
-              description: The unique identifier of the customer.
-              example: 44cc313988befe60e3413e76
-            role:
-              type: string
-              description: The role of the member.
-              example: member
-            status:
-              type: string
-              description: The status of the membership after joining.
-              example: active
-            balance:
-              type: object
-              required:
-              - contributed
-              - spent
-              properties:
-                contributed:
-                  type: integer
-                  description: Total contributed amount.
-                  example: 0
-                spent:
-                  type: integer
-                  description: Total spent amount.
-                  example: 0
-            spend_limit:
-              type:
-              - object
-              - 'null'
-              description: Optional spend limit details.
-              properties:
-                from:
-                  type: number
-                  description: Starting limit amount.
-                to:
-                  type: number
-                  description: Maximum limit amount.
-                limit:
-                  type: number
-                  description: Overall spend limit.
-                spent:
-                  type: number
-                  description: Total spent against the limit.
-    RefuseBadRequestError:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error.
-            code:
-              type: integer
-              description: Error code specific to the issue.
-            message:
-              type: string
-              description: Human-readable error message.
-      required:
-      - status
-      - error
-      example:
-        status: error
-        error:
-          type: BadRequestException
-          code: 201094
-          message: Property 'actor' cannot be empty
-    OffsetError:
-      type: object
-      title: Offset error
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: BadRequestException
-              description: Type of error.
-            code:
-              type: integer
-              example: 201011
-              description: Error code.
-            message:
-              type: string
-              example: Offset cannot be negative
-              description: Human-readable error message.
-    UnbanMemberResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Indicates the status of the response.
-          example: success
-        metadata:
-          type: array
-          description: Additional metadata, can be empty.
-          example: []
-        payload:
-          type: object
-          required:
-          - id
-          - customer_id
-          - club_id
-          - role
-          - status
-          - balance
-          properties:
-            id:
-              type: string
-              description: The unique identifier of the membership.
-              example: 65dc4568e804ab70d405e678
-            customer_id:
-              type: string
-              description: The unique identifier of the customer.
-              example: 22cc313988befe60e3413e76
-            club_id:
-              type: string
-              description: The unique identifier of the club.
-              example: 65d758e7f9cb852e19212e15
-            role:
-              type: string
-              description: The role of the member.
-              example: member
-            status:
-              type: string
-              description: The status of the membership after unbanning.
-              example: removed
-            balance:
-              type: object
-              required:
-              - contributed
-              - spent
-              properties:
-                contributed:
-                  type: integer
-                  description: Total contributed amount.
-                  example: 0
-                spent:
-                  type: integer
-                  description: Total spent amount.
-                  example: 0
-            spend_limit:
-              type:
-              - object
-              - 'null'
-              description: Optional spend limit details.
-              properties:
-                from:
-                  type: number
-                  description: Starting limit amount.
-                to:
-                  type: number
-                  description: Maximum limit amount.
-                limit:
-                  type: number
-                  description: Overall spend limit.
-                spent:
-                  type: number
-                  description: Total spent against the limit.
-    PointDonationRequest:
-      type: object
-      properties:
-        donated_account_points:
-          type: integer
-          minimum: 1
-          description: Number of account points to donate.
-          example: 100
-        account:
-          type: string
-          description: The account from which the points are donated.
-          example: default_account
-        reason:
-          type: string
-          maxLength: 500
-          description: Reason for the donation (optional).
-          example: Contributing points to help unlock the club's summer reward milestone.
-      required:
-      - donated_account_points
     MemberDetailsResponse:
       type: object
       properties:
@@ -4279,7 +3875,33 @@ components:
                   type: integer
                   description: Amount already spent by the member within the limit period.
                   example: 56
-    UnbanMemberBadRequestResponse:
+    InvitationNotFoundErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    InvitationBadRequestErrorResponse:
       type: object
       properties:
         status:
@@ -4300,12 +3922,12 @@ components:
             code:
               type: integer
               description: Numeric code associated with the error.
-              example: 300840
+              example: 201060
             message:
               type: string
               description: Descriptive message explaining the error.
-              example: Property 'actor' cannot be empty
-    BanMemberBadRequestResponse:
+              example: Inviter customer not found
+    ClubMembersBadRequestResponse:
       type: object
       properties:
         status:
@@ -4314,10 +3936,6 @@ components:
           example: error
         error:
           type: object
-          required:
-          - type
-          - code
-          - message
           properties:
             type:
               type: string
@@ -4326,91 +3944,278 @@ components:
             code:
               type: integer
               description: Numeric code associated with the error.
-              example: 201094
+              example: 201010
             message:
               type: string
               description: Descriptive message explaining the error.
-              example: Property 'actor' cannot be empty
-    ClubUpdateSuccessResponse:
+              example: Limit must be between 1 and 100
+    OwnershipSuccessResponse:
       type: object
       properties:
         status:
           type: string
-          description: The status of the response.
           example: success
         metadata:
           type: array
-          description: Additional metadata about the response.
           items:
             type: object
+          example: []
         payload:
           type: object
-          description: The updated club details.
+          example: null
+    CreateClubSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          description: The status of the response, indicating success or failure.
+        metadata:
+          type: array
+          items: {}
+        payload:
+          type: object
           properties:
             id:
               type: string
-              description: The ID of the club.
               example: 62cc313988befe60e3413e75
+              description: The ID of the newly created club.
             name:
               type: string
-              description: The updated name of the club.
-              example: Club 1
+              example: Family Moments Club
+              description: The name of the newly created club.
+            type:
+              type: string
+              enum:
+              - private
+              - public
+              description: The visibility type of the club, indicating whether it is private or public.
             status:
               type: string
               enum:
               - active
-              description: The current status of the club (active, disbanded, or fraudulent).
-              example: active
+              description: The current status of the club, indicating that it is active.
             balance:
               type: object
-              description: The balance details of the club.
+              properties:
+                points_earned:
+                  type: integer
+                  example: 0
+                  description: The total points earned by the club.
+                points_spent:
+                  type: integer
+                  example: 0
+                  description: The total points spent by the club.
+                points_expired:
+                  type: integer
+                  example: 0
+                  description: The total points that have expired.
+                points_spendable:
+                  type: integer
+                  example: 0
+                  description: The total points available for spending by the club.
+            member_count:
+              type: integer
+              example: 1
+              description: The total number of members currently in the club.
+            owner_customer_id:
+              type: string
+              format: uuid
+              example: 62cc313988befe60e3413e75
+              description: The ID of the club owner.
+    SuccessRefuseResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Indicates the status of the response.
+        metadata:
+          type: array
+          items:
+            type: object
+          example: []
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              example: 65dc4568e804ab70d405e678
+              description: The ID of the refuse record.
+            customer_id:
+              type: string
+              example: 22cc313988befe60e3413e76
+              description: The ID of the customer who has been refused from the club.
+            club_id:
+              type: string
+              example: 65d758e7f9cb852e19212e15
+              description: The ID of the club from which the customer has been refused.
+            role:
+              type: string
+              example: member
+              description: The role assigned to the customer before removal (e.g., member).
+            status:
+              type: string
+              example: removed
+              description: The current status of the customer's membership, indicating they have been refused.
+            balance:
+              type: object
               properties:
                 contributed:
                   type: integer
-                  description: Total amount contributed to the club.
+                  example: 0
+                  description: The total points contributed by the refused customer.
+                spent:
+                  type: integer
+                  example: 0
+                  description: The total points spent by the refused customer.
+            spend_limit:
+              type:
+              - object
+              - 'null'
+              properties:
+                from:
+                  type: number
+                  example: 0
+                  description: The starting limit of points that could be spent by the customer.
+                to:
+                  type: number
+                  example: 100
+                  description: The maximum limit of points that could be spent by the customer.
+                limit:
+                  type: number
+                  example: 50
+                  description: The total spend limit.
+                spent:
+                  type: number
+                  example: 30
+                  description: The total points already spent.
+      required:
+      - status
+      - metadata
+      - payload
+    PublicJoinNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: error
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of error that occurred.
+              example: NotFoundException
+            code:
+              type: integer
+              description: Numeric code associated with the error.
+              example: 201054
+            message:
+              type: string
+              description: Descriptive message explaining the error.
+              example: Club not found
+    PublicJoinResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          required:
+          - id
+          - club_id
+          - customer_id
+          - role
+          - status
+          - balance
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the membership.
+              example: 22cc313988befe60e3413e76
+            club_id:
+              type: string
+              description: The unique identifier of the club.
+              example: 33cc313988befe60e3413e76
+            customer_id:
+              type: string
+              description: The unique identifier of the customer.
+              example: 44cc313988befe60e3413e76
+            role:
+              type: string
+              description: The role of the member.
+              example: member
+            status:
+              type: string
+              description: The status of the membership after joining.
+              example: active
+            balance:
+              type: object
+              required:
+              - contributed
+              - spent
+              properties:
+                contributed:
+                  type: integer
+                  description: Total contributed amount.
                   example: 0
                 spent:
                   type: integer
-                  description: Total amount spent from the club's balance.
+                  description: Total spent amount.
                   example: 0
-                expired:
-                  type: integer
-                  description: Total amount of funds that have expired.
-                  example: 0
-                spendable:
-                  type: integer
-                  description: Amount currently available to be spent from the club's balance.
-                  example: 0
-            member_count:
-              type: integer
-              description: Total number of members currently in the club.
-              example: 1
-            owner_customer_id:
-              type: string
-              description: The ID of the club owner.
-              example: 62cc313988befe60e3413e75
-            name_change_frequency:
-              type: object
-              description: Information about the club name change frequency.
+            spend_limit:
+              type:
+              - object
+              - 'null'
+              description: Optional spend limit details.
               properties:
-                remaining:
-                  type: integer
-                  description: Number of allowed name changes remaining.
-                  example: 5
-                next_reset_at:
-                  type:
-                  - string
-                  - 'null'
-                  format: date-time
-                  description: The date-time when the name change limit resets.
-                  example: '2025-12-31T23:59:59Z'
-                last_updated_at:
-                  type:
-                  - string
-                  - 'null'
-                  format: date-time
-                  description: The date-time when the last name change was made.
-                  example: '2025-01-15T14:30:00Z'
+                from:
+                  type: number
+                  description: Starting limit amount.
+                to:
+                  type: number
+                  description: Maximum limit amount.
+                limit:
+                  type: number
+                  description: Overall spend limit.
+                spent:
+                  type: number
+                  description: Total spent against the limit.
+    OffsetError:
+      type: object
+      title: Offset error
+      properties:
+        status:
+          type: string
+          example: error
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              example: BadRequestException
+              description: Type of error.
+            code:
+              type: integer
+              example: 201011
+              description: Error code.
+            message:
+              type: string
+              example: Offset cannot be negative
+              description: Human-readable error message.
     ListClubsBadRequestResponse:
       type: object
       properties:
@@ -4433,8 +4238,103 @@ components:
             message:
               type: string
               description: Descriptive message explaining the error.
-    AccessBadRequestError:
+    PointAlignmentResponse:
       type: object
+      properties:
+        status:
+          type: string
+          example: success
+          description: Indicates the status of the response.
+        metadata:
+          type: array
+          items: {}
+        payload:
+          type: object
+          properties:
+            member:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 6604074cb8208607742492c7
+                customer_id:
+                  type: string
+                  example: 62cc313988befe60e3413e75
+                  description: The ID of the customer associated with the point alignment action.
+                club_id:
+                  type: string
+                  example: 65fc09f6cab4445deb626562
+                  description: The ID of the club.
+                role:
+                  type: string
+                  enum:
+                  - owner
+                  - member
+                  description: The role of the member within the club.
+                status:
+                  type: string
+                  enum:
+                  - applicant
+                  - active
+                  - kicked
+                  - banned
+                  description: The current status of the member in the club.
+                balance:
+                  type: object
+                  properties:
+                    contributed:
+                      type: integer
+                      example: 0
+                      description: The total points contributed by the member to the club.
+                    spent:
+                      type: integer
+                      example: 0
+                      description: The total points spent by the member in the club.
+            club:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 62cc313988befe60e3413e75
+                name:
+                  type: string
+                  example: Families & Friends
+                  description: The name of the club.
+                status:
+                  type: string
+                  enum:
+                  - active
+                  description: The current status of the club.
+                balance:
+                  type: object
+                  properties:
+                    spendable:
+                      type: integer
+                      example: 0
+                      description: The total spendable points in the club's balance.
+                    contributed:
+                      type: integer
+                      example: 0
+                      description: The total points contributed to the club.
+                    spent:
+                      type: integer
+                      example: 0
+                      description: The total points spent by the club.
+                    expired:
+                      type: integer
+                      example: 0
+                      description: The total points that have expired in the club.
+                member_count:
+                  type: integer
+                  example: 1
+                  description: The total number of members in the club.
+                owner_customer_id:
+                  type: string
+                  example: 62cc313988befe60e3413e75
+                  description: The ID of the customer who owns the club.
+    DisbandBadRequestResponses:
+      type: object
+      description: Possible error responses when attempting to disband a club.
       properties:
         status:
           type: string
@@ -4448,207 +4348,307 @@ components:
               description: Type of error.
             code:
               type: integer
-              description: Error code specific to the issue.
+              example: 201047
+              description: Error code.
             message:
               type: string
+              example: Club is not active
               description: Human-readable error message.
-    PointDonationSuccessResponse:
+    SuccessBanResponse:
       type: object
       properties:
         status:
           type: string
-          description: The status of the response.
           example: success
+          description: Indicates the status of the response.
         metadata:
           type: array
-          items: {}
-          description: Contains detailed information about the donation, member, and club.
+          items:
+            type: object
+          example: []
         payload:
           type: object
           properties:
-            donated_account_points:
-              type: integer
-              example: 20
-              description: The number of account points donated.
-            point_conversion_rate:
-              type: number
-              example: 0.5
-              description: The conversion rate used to calculate club points from donated account points.
-            donated_club_points:
-              type: integer
-              example: 10
-              description: The number of club points received after conversion.
-            reason:
+            id:
               type: string
-              example: Contributing points to help unlock the club's summer reward milestone.
-              description: The reason provided for the donation (if any).
-            member:
+              example: 65dc4568e804ab70d405e678
+              description: The ID of the ban record.
+            customer_id:
+              type: string
+              example: 22cc313988befe60e3413e76
+              description: The ID of the customer who has been banned from the club.
+            club_id:
+              type: string
+              example: 65d758e7f9cb852e19212e15
+              description: The ID of the club from which the customer has been banned.
+            role:
+              type: string
+              example: member
+              description: The role assigned to the customer before the ban (e.g., member).
+            status:
+              type: string
+              example: banned
+              description: The current status of the customer's membership, indicating they are banned.
+            balance:
               type: object
-              description: Information about the donating club member.
               properties:
-                id:
-                  type: string
-                  example: f23a1b48-4df6-4b12-b678-c9e768a4e45d
-                  description: The ID of the donating member.
-                donation_limit:
+                contributed:
                   type: integer
+                  example: 10
+                  description: The total points contributed by the banned customer to the club.
+                spent:
+                  type: integer
+                  example: 5
+                  description: The total points spent by the banned customer in the club.
+            spend_limit:
+              type:
+              - object
+              - 'null'
+              properties:
+                from:
+                  type: number
+                  example: 0
+                  description: The starting limit of points that could be spent by the customer prior to the ban.
+                to:
+                  type: number
                   example: 100
-                  description: The maximum amount of points the member can donate within the cycle.
-                used_from_donation_limit:
-                  type: integer
+                  description: The maximum limit of points that could be spent by the customer prior to the ban.
+                limit:
+                  type: number
                   example: 50
-                  description: The number of points already donated in the current cycle.
-                next_donation_limit_reset_date:
-                  type: string
-                  format: date
-                  example: '2026-01-05'
-                  description: The date when the donation limit will reset.
-                balance:
-                  type: object
-                  description: Member's club points balance.
-                  properties:
-                    contributed:
-                      type: integer
-                      example: 70
-                      description: Total points the member has contributed.
-                    spent:
-                      type: integer
-                      example: 0
-                      description: Total points the member has spent.
-            club:
-              type: object
-              description: The club's points balance overview.
-              properties:
-                balance:
-                  type: object
-                  description: Current state of the club's points.
-                  properties:
-                    contributed:
-                      type: integer
-                      example: 5600
-                      description: Total points contributed to the club.
-                    spent:
-                      type: integer
-                      example: 1000
-                      description: Total points spent by the club.
-                    expired:
-                      type: integer
-                      example: 0
-                      description: Total club points expired.
-                    spendable:
-                      type: integer
-                      example: 4600
-                      description: Points available for spending by the club.
-    ClubUpdateNotFoundResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: The status of the response.
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of error.
-              example: NotFoundException
-            code:
-              type: integer
-              description: Error code.
-              example: 201054
-            message:
-              type: string
-              description: A human-readable message providing details about the error.
-              example: Club not found
-    PointAlignmentNotFoundErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of error.
-            code:
-              type: integer
-              example: 201099
-              description: Error code.
-            message:
-              type: string
-              example: Club not found or Club member not found
-              description: Human-readable error message.
-    AccessNotFoundError:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              example: NotFoundException
-              description: Type of error.
-            code:
-              type: integer
-              description: Error code specific to the issue.
-            message:
-              type: string
-              description: Human-readable error message.
-    PublicJoinBadRequestResponse:
+                  description: The total spend limit set for the customer before they were banned.
+                spent:
+                  type: number
+                  example: 30
+                  description: The total points already spent by the banned customer against the spend limit before the ban.
+      required:
+      - status
+      - metadata
+      - payload
+    ClubMembersSuccessResponse:
       type: object
       properties:
         status:
           type: string
           description: Indicates the status of the response.
-          example: error
-        error:
+          example: success
+        metadata:
           type: object
-          required:
-          - type
-          - code
-          - message
           properties:
-            type:
-              type: string
-              description: Type of error that occurred.
-              example: BadRequestException
-            code:
+            total:
               type: integer
-              description: Numeric code associated with the error.
-              example: 201087
-            message:
-              type: string
-              description: Descriptive message explaining the error.
-              example: Club Member not found
-    ErrorResponse:
+              description: Total number of members in the club.
+              example: 42
+            pagination:
+              type: object
+              properties:
+                next:
+                  type: string
+                  description: URL for the next page of results, if available.
+                  example: https://api.{stack}.antavo.com/v1/clubs/{clubId}/members?offset=40&limit=20
+                previous:
+                  type: string
+                  description: URL for the previous page of results, if available.
+                  example: https://api.{stack}.antavo.com/v1/clubs/{clubId}/members?offset=0&limit=20
+        payload:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - customer_id
+            - club_id
+            - role
+            - status
+            - balance
+            properties:
+              id:
+                type: string
+                description: The unique identifier of the club member.
+                example: 6604074cb8208607742492c7
+              customer_id:
+                type: string
+                description: The unique identifier of the customer who is a member of the club.
+                example: 44cc313988befe60e3413e76
+              club_id:
+                type: string
+                description: The unique identifier of the club.
+                example: 65fc09f6cab4445deb626562
+              role:
+                type: string
+                enum:
+                - owner
+                - member
+                description: The role of the member in the club.
+                example: member
+              status:
+                type: string
+                enum:
+                - applicant
+                - active
+                - kicked
+                - removed
+                - banned
+                description: The current status of the member.
+                example: active
+              balance:
+                type: object
+                required:
+                - contributed
+                - spent
+                properties:
+                  contributed:
+                    type: integer
+                    description: Total amount contributed by the member to the club.
+                    example: 0
+                  spent:
+                    type: integer
+                    description: Total amount spent by the member from their balance.
+                    example: 0
+              donation_intervals:
+                type: array
+                description: List of donation intervals for all account groups of the member.
+                items:
+                  type: object
+                  required:
+                  - accounts
+                  - donation_limit
+                  - used_from_donation_limit
+                  - next_donation_limit_reset_date
+                  properties:
+                    accounts:
+                      type: array
+                      description: List of accounts from which donations are made.
+                      items:
+                        type: string
+                      example:
+                      - rc_balance
+                      - kmd_balance
+                    donation_limit:
+                      type: number
+                      description: Maximum amount that can be donated during the interval.
+                      example: 50
+                    used_from_donation_limit:
+                      type: number
+                      description: Amount already donated in the current interval.
+                      example: 50
+                    next_donation_limit_reset_date:
+                      type: string
+                      format: date-time
+                      description: Date when the donation limit will reset.
+                      example: '2026-01-01T00:00:00+01:00'
+              spend_limit:
+                type: object
+                properties:
+                  from:
+                    type: string
+                    description: Start date of the spend limit period.
+                    example: 2024-01-01T12:00:+0200
+                  to:
+                    type: string
+                    description: End date of the spend limit period.
+                    example: 2024-04-01T12:00:+0100
+                  limit:
+                    type: integer
+                    description: Maximum amount that can be spent by the member.
+                    example: 200
+                  spent:
+                    type: integer
+                    description: Amount already spent by the member within the limit period.
+                    example: 56
+    PrivateJoinResponse:
       type: object
       properties:
         status:
           type: string
+          description: Indicates the status of the response.
+          example: success
+        metadata:
+          type: array
+          description: Additional metadata, can be empty.
+          example: []
+        payload:
+          type: object
+          required:
+          - id
+          - club_id
+          - customer_id
+          - role
+          - status
+          - balance
+          properties:
+            id:
+              type: string
+              description: The unique identifier of the membership.
+              example: 22cc313988befe60e3413e76
+            club_id:
+              type: string
+              description: The unique identifier of the club.
+              example: 33cc313988befe60e3413e76
+            customer_id:
+              type: string
+              description: The unique identifier of the customer.
+              example: 44cc313988befe60e3413e76
+            role:
+              type: string
+              description: The role of the member.
+              example: member
+            status:
+              type: string
+              description: The status of the membership.
+              example: applicant
+            balance:
+              type: object
+              required:
+              - contributed
+              - spent
+              properties:
+                contributed:
+                  type: integer
+                  description: Total contributed amount.
+                  example: 0
+                spent:
+                  type: integer
+                  description: Total spent amount.
+                  example: 0
+            spend_limit:
+              type:
+              - object
+              - 'null'
+              description: Optional spend limit details.
+              properties:
+                from:
+                  type: number
+                  description: Starting limit amount.
+                to:
+                  type: number
+                  description: Maximum limit amount.
+                limit:
+                  type: number
+                  description: Overall spend limit.
+                spent:
+                  type: number
+                  description: Total spent against the limit.
+    OwnerNotFoundResponses:
+      type: object
+      description: Not Found error responses for owner assignments.
+      properties:
+        status:
+          type: string
           example: error
-          description: Indicates that an error occurred.
         error:
           type: object
           properties:
             type:
               type: string
+              example: NotFoundException
               description: Type of error.
-              example: BadRequestException
             code:
               type: integer
-              description: Error code.
-              example: 201094
+              description: Error code specific to the issue.
             message:
               type: string
-              description: A human-readable message providing details about the error.
-              example: Property 'donated_account_points' cannot be empty
+              description: Human-readable error message.
   securitySchemes:
     api_key:
       type: apiKey

@@ -188,26 +188,18 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AnsweringaQuizResponseError:
-      title: Error in answer
+    AnsweringaQuizResponse:
+      title: Successful answer
       type: object
-      description: This describes the structure returned if an error occurred at the challenges endpoint.
       properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: The type of error that occurred.
-              example: RuntimeException
-            code:
-              type: integer
-              description: Numeric code representing the error.
-              example: 0
-            message:
-              type: string
-              description: Detailed message about the error.
-              example: This quiz is already answered by the customer.
+        correct_answer:
+          type: boolean
+          description: A boolean value indicating whether the submitted answer was correct or not.
+          example: true
+        message:
+          type: string
+          description: Success message if the submitted answer is correct, or an error message if the submitted answer is incorrect.
+          example: Well done! You've just earned 100 points!
     QuizDetailsResponse:
       title: QuizDetailsResponse
       type: object
@@ -253,6 +245,25 @@ components:
           type: string
           description: The correct answer.
           example: Coco Chanel
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
     Image:
       type: object
       description: Object contains different sizes of the image asset.
@@ -269,18 +280,6 @@ components:
           type: string
           format: uri
           example: https://example.com/1715791767-nH7Mf.jpeg
-    AnsweringaQuizResponse:
-      title: Successful answer
-      type: object
-      properties:
-        correct_answer:
-          type: boolean
-          description: A boolean value indicating whether the submitted answer was correct or not.
-          example: true
-        message:
-          type: string
-          description: Success message if the submitted answer is correct, or an error message if the submitted answer is incorrect.
-          example: Well done! You've just earned 100 points!
     QuizActivity:
       type: object
       properties:
@@ -323,25 +322,26 @@ components:
           type: integer
           description: Number of available quiz questions.
           example: 1
-    ErrorResponse:
+    AnsweringaQuizResponseError:
+      title: Error in answer
       type: object
-      description: This describes the structure returned if an error occurred
+      description: This describes the structure returned if an error occurred at the challenges endpoint.
       properties:
         error:
           type: object
           properties:
             type:
               type: string
-              description: Type of the error occurred.
-              example: BadRequestException
+              description: The type of error that occurred.
+              example: RuntimeException
             code:
-              type: number
-              description: Error code.
-              example: 113401
+              type: integer
+              description: Numeric code representing the error.
+              example: 0
             message:
               type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
+              description: Detailed message about the error.
+              example: This quiz is already answered by the customer.
   securitySchemes:
     api_key:
       type: apiKey

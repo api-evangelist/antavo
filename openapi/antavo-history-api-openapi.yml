@@ -316,21 +316,6 @@ components:
               type: string
               description: Label of the account.
               example: Main account
-    EventProperty:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Attribute name used internally.
-          example: email
-        label:
-          type: string
-          description: Display name of the attribute.
-          example: Email address
-        value:
-          type: string
-          description: Attribute value.
-          example: john.smith@example.com
     CustomernotfoundErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred
@@ -350,6 +335,21 @@ components:
               type: string
               description: Human readable error message.
               example: Customer not found
+    EventProperty:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Attribute name used internally.
+          example: email
+        label:
+          type: string
+          description: Display name of the attribute.
+          example: Email address
+        value:
+          type: string
+          description: Attribute value.
+          example: john.smith@example.com
   securitySchemes:
     api_key:
       type: apiKey

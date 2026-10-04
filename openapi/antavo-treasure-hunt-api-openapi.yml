@@ -54,6 +54,41 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    Image:
+      type: object
+      description: Object contains different sizes of the image asset.
+      properties:
+        small:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
+          type: string
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
     TreasureHuntResponse:
       type: object
       properties:
@@ -87,41 +122,6 @@ components:
           type: string
           description: The URL of the page where the treasure is hidden.
           example: https://antavofashion.com/SS246549621
-    Image:
-      type: object
-      description: Object contains different sizes of the image asset.
-      properties:
-        small:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
-          type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
   securitySchemes:
     api_key:
       type: apiKey

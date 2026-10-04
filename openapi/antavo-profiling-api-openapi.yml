@@ -293,6 +293,25 @@ components:
                   type: string
                   format: uri
                   example: /customers/c987654/activities/profiling/6331b62a60265969697786/next
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
     ProfilingQuestionOptions:
       type: object
       description: The profiling question to be answered.
@@ -362,25 +381,6 @@ components:
                   type: string
                   format: uri
                   example: /customers/c987654/activities/profiling/63d8d8cc17572c6ec15e688c/questions/6644deb1d959c7036f1875fd
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
   securitySchemes:
     api_key:
       type: apiKey

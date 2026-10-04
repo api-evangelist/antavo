@@ -230,58 +230,45 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PrizeWheelsOptions_ind:
+    PrizeWheelsOptions:
       type: object
       properties:
-        _actions:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the prize wheel.
+                example: 63fdccaca88ac11c347af899
+              status:
+                type: string
+                description: Status of the prize wheel.
+                example: active
+        total:
+          type: number
+          description: The number of prize wheel available to the customer.
+          example: 1
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
           type: object
           properties:
-            claim:
-              type: object
-              description: Endpoint to claim the associated reward.
-              required:
-              - method
-              - url
-              properties:
-                method:
-                  type: string
-                  example: POST
-                url:
-                  type: string
-                  format: uri
-                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/rewards/63dcb791eb80ef351838fdfb/claim
-            enter:
-              type: object
-              description: Endpoint to spin the wheel again.
-              required:
-              - method
-              - url
-              properties:
-                method:
-                  type: string
-                  example: POST
-                url:
-                  type: string
-                  format: uri
-                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/prize-wheels/63fdccaca88ac11c347af899
-        win_text:
-          type: string
-          description: Text to display after the customer has landed on this slice.
-        weight:
-          type: number
-          description: Percentage chance to land on this slice.
-        id:
-          type: string
-          description: ID of the slice.
-        label:
-          type: string
-          description: Name of the slice.
-        type:
-          type: string
-          enum:
-          - reward
-          - points
-          - empty
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
     PrizeWheelOption:
       type: object
       properties:
@@ -400,45 +387,58 @@ components:
           type: integer
           example: 100
           description: Number of points required to spin the wheel.
-    PrizeWheelsOptions:
+    PrizeWheelsOptions_ind:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID of the prize wheel.
-                example: 63fdccaca88ac11c347af899
-              status:
-                type: string
-                description: Status of the prize wheel.
-                example: active
-        total:
-          type: number
-          description: The number of prize wheel available to the customer.
-          example: 1
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
+        _actions:
           type: object
           properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
+            claim:
+              type: object
+              description: Endpoint to claim the associated reward.
+              required:
+              - method
+              - url
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/rewards/63dcb791eb80ef351838fdfb/claim
+            enter:
+              type: object
+              description: Endpoint to spin the wheel again.
+              required:
+              - method
+              - url
+              properties:
+                method:
+                  type: string
+                  example: POST
+                url:
+                  type: string
+                  format: uri
+                  example: /customers/280e674c-c4ea-4a30-987a-d9267d1a5018/prize-wheels/63fdccaca88ac11c347af899
+        win_text:
+          type: string
+          description: Text to display after the customer has landed on this slice.
+        weight:
+          type: number
+          description: Percentage chance to land on this slice.
+        id:
+          type: string
+          description: ID of the slice.
+        label:
+          type: string
+          description: Name of the slice.
+        type:
+          type: string
+          enum:
+          - reward
+          - points
+          - empty
   securitySchemes:
     api_key:
       type: apiKey

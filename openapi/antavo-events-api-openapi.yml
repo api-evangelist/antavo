@@ -512,151 +512,6 @@ paths:
     - url: https://read-api.<environment>.antavo.com
 components:
   schemas:
-    Event:
-      title: Event
-      required:
-      - customer
-      - action
-      - data
-      type: object
-      properties:
-        customer:
-          type: string
-          description: The target customer.
-        action:
-          type: string
-          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
-        account:
-          type: string
-          description: The unique ID of the account. This is only required for multi-accounts.
-          example: main_account
-        data:
-          $ref: '#/components/schemas/Data'
-          description: Additional data related to the event.
-    Data:
-      title: data
-      description: Refer to the [complete list of events](/docs/api-events) for the data attributes to be sent with each action.
-      required:
-      - points
-      type: object
-      properties:
-        points:
-          type: integer
-          format: int32
-          description: Number of points to be added or subtracted.
-        effective_timestamp:
-          type: number
-          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
-    events_bulkrequest:
-      title: Bulk request
-      required:
-      - events
-      type: object
-      properties:
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-          description: ''
-    results:
-      type: array
-      description: Array of event processing results.
-      items:
-        type: object
-        properties:
-          error:
-            type: object
-            description: Array of errors occurred while events were processed.
-            properties:
-              type:
-                type: string
-                description: Type of the error.
-              code:
-                type: number
-                description: Error code.
-              message:
-                type: string
-                description: Human-readable error message.
-          events:
-            type: object
-            description: Array of events related to the customer. This section, along with all the attributes listed below, only appears if the event changes the customer’s point balance.
-            properties:
-              id:
-                type: string
-                description: ID of the event.
-              action:
-                type: string
-                description: The event action.
-              points:
-                type: number
-                description: Number of points involved in the event.
-    CheckoutRequestBody:
-      title: Checkout event request
-      required:
-      - customer
-      - action
-      - data
-      type: object
-      properties:
-        customer:
-          type: string
-          description: The unique ID of the customer.
-        external_id:
-          type: string
-          description: The external ID of the customer. This is only required for external ID lookup.
-          example: ext_001
-        action:
-          type: string
-          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
-          enum:
-          - checkout
-          example: checkout
-        account:
-          type: string
-          description: The unique ID of the account. This is only required for multi-accounts.
-          example: main_account
-        data:
-          $ref: '#/components/schemas/CheckoutData'
-    PointAddData:
-      title: data
-      required:
-      - points
-      type: object
-      properties:
-        points:
-          type: integer
-          format: int32
-          description: Number of points to be added or subtracted.
-        effective_timestamp:
-          type: number
-          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
-    PointAddRequestBody:
-      title: Point add event request
-      required:
-      - customer
-      - action
-      - data
-      type: object
-      properties:
-        customer:
-          type: string
-          description: The unique ID of the customer.
-        external_id:
-          type: string
-          description: The external ID of the customer. This is only required for external ID lookup.
-          example: ext_001
-        action:
-          type: string
-          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
-          enum:
-          - point_add
-          example: point_add
-        account:
-          type: string
-          description: The unique ID of the account. This is only required for multi-accounts.
-          example: main_account
-        data:
-          $ref: '#/components/schemas/PointAddData'
     CheckoutData:
       title: data
       required:
@@ -709,6 +564,63 @@ components:
               example: 50
             points_rewarded:
               type: number
+    events_bulkrequest:
+      title: Bulk request
+      required:
+      - events
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+          description: ''
+    results:
+      type: array
+      description: Array of event processing results.
+      items:
+        type: object
+        properties:
+          error:
+            type: object
+            description: Array of errors occurred while events were processed.
+            properties:
+              type:
+                type: string
+                description: Type of the error.
+              code:
+                type: number
+                description: Error code.
+              message:
+                type: string
+                description: Human-readable error message.
+          events:
+            type: object
+            description: Array of events related to the customer. This section, along with all the attributes listed below, only appears if the event changes the customer’s point balance.
+            properties:
+              id:
+                type: string
+                description: ID of the event.
+              action:
+                type: string
+                description: The event action.
+              points:
+                type: number
+                description: Number of points involved in the event.
+    Data:
+      title: data
+      description: Refer to the [complete list of events](/docs/api-events) for the data attributes to be sent with each action.
+      required:
+      - points
+      type: object
+      properties:
+        points:
+          type: integer
+          format: int32
+          description: Number of points to be added or subtracted.
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
     Event_response:
       type: object
       description: Submitting an Event
@@ -777,6 +689,33 @@ components:
                   name:
                     description: Name of the account.
                     example: Main Account
+    CheckoutRequestBody:
+      title: Checkout event request
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+          enum:
+          - checkout
+          example: checkout
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/CheckoutData'
     Bulk_Event_response:
       type: object
       properties:
@@ -814,39 +753,67 @@ components:
               type: string
               description: Human readable error message
               example: Missing required parameter 'parameter_name'
-    ErrorEnvelope:
-      type: object
+    Event:
+      title: Event
       required:
-      - error
-      properties:
-        error:
-          type: object
-          description: Contains details about the error.
-          required:
-          - message
-          - code
-          - resendable
-          properties:
-            message:
-              type: string
-              description: Human-readable description of the error.
-              example: Unauthorized
-            code:
-              type: integer
-              description: Numeric code identifying the error.
-              example: 2132
-            resendable:
-              type: boolean
-              description: Indicates whether the request can be retried.
-              example: false
-    CollectionMetadata:
+      - customer
+      - action
+      - data
       type: object
-      required:
-      - pagination
       properties:
-        pagination:
-          description: Links to the next and previous pages of the result set.
-          $ref: '#/components/schemas/PaginationLinks'
+        customer:
+          type: string
+          description: The target customer.
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/Data'
+          description: Additional data related to the event.
+    PointAddRequestBody:
+      title: Point add event request
+      required:
+      - customer
+      - action
+      - data
+      type: object
+      properties:
+        customer:
+          type: string
+          description: The unique ID of the customer.
+        external_id:
+          type: string
+          description: The external ID of the customer. This is only required for external ID lookup.
+          example: ext_001
+        action:
+          type: string
+          description: The corresponding event action. For a complete list of available actions, please visit full list of events.
+          enum:
+          - point_add
+          example: point_add
+        account:
+          type: string
+          description: The unique ID of the account. This is only required for multi-accounts.
+          example: main_account
+        data:
+          $ref: '#/components/schemas/PointAddData'
+    PointAddData:
+      title: data
+      required:
+      - points
+      type: object
+      properties:
+        points:
+          type: integer
+          format: int32
+          description: Number of points to be added or subtracted.
+        effective_timestamp:
+          type: number
+          description: Unix timestamp representing the original occurrence time of the event, allowing it to be recorded as [backdated](/docs/actions-and-events#/backdated-event-registration).
     EventsFilter:
       type: object
       description: 'Filter by allowed fields and operators.
@@ -962,6 +929,55 @@ components:
             gte:
               type: string
               description: Greater than or equal to.
+    PaginationLinks:
+      type: object
+      required:
+      - next
+      - previous
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          description: URL of the next page, or null if this is the last page.
+        previous:
+          type:
+          - string
+          - 'null'
+          description: URL of the previous page, or null if this is the first page.
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          description: Contains details about the error.
+          required:
+          - message
+          - code
+          - resendable
+          properties:
+            message:
+              type: string
+              description: Human-readable description of the error.
+              example: Unauthorized
+            code:
+              type: integer
+              description: Numeric code identifying the error.
+              example: 2132
+            resendable:
+              type: boolean
+              description: Indicates whether the request can be retried.
+              example: false
+    CollectionMetadata:
+      type: object
+      required:
+      - pagination
+      properties:
+        pagination:
+          description: Links to the next and previous pages of the result set.
+          $ref: '#/components/schemas/PaginationLinks'
     EventEntity:
       type: object
       description: 'An event registered for the customer. The fields returned depend on the
@@ -1170,22 +1186,6 @@ components:
 
             '
           example: 6a57a9681d81297bdc042a6f
-    PaginationLinks:
-      type: object
-      required:
-      - next
-      - previous
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-          description: URL of the next page, or null if this is the last page.
-        previous:
-          type:
-          - string
-          - 'null'
-          description: URL of the previous page, or null if this is the first page.
     SortDirection:
       type: string
       enum:
@@ -1209,6 +1209,25 @@ components:
           - expdate
         direction:
           $ref: '#/components/schemas/SortDirection'
+  responses:
+    ValidationError:
+      description: Error - Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ServerError:
+      description: Error - Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    Unauthorized:
+      description: Error - Escher signature missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
   parameters:
     OffsetParam:
       name: offset
@@ -1238,25 +1257,6 @@ components:
       description: Customer identifier. Using an external ID is not supported.
       schema:
         type: string
-  responses:
-    Unauthorized:
-      description: Error - Escher signature missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    ValidationError:
-      description: Error - Request validation failed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    ServerError:
-      description: Error - Unexpected server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
   securitySchemes:
     api_key:
       type: apiKey

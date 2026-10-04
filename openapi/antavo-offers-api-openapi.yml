@@ -253,22 +253,56 @@ paths:
       description: The Antavo staging environment
 components:
   schemas:
-    Image:
+    CouponClaim:
       type: object
-      description: Object contains different sizes of the image asset.
       properties:
-        small:
+        code:
+          description: The coupon code.
           type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        medium:
+          example: TC22341
+        status:
+          description: The status of the coupon, whether it was only claimed by the customer or redeemed (used at checkout).
           type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
-        large:
+          enum:
+          - claimed
+          - redeemed
+        type:
+          description: Type of the coupon.
           type: string
-          format: uri
-          example: https://example.com/1715791767-nH7Mf.jpeg
+          enum:
+          - percentage
+          - amount
+          - free_shipping
+          - gift_card
+        value:
+          description: Arbitrary number as coupon value for amount type coupons, or a percentage number (0-100).
+          type: number
+          example: 10
+        created_at:
+          description: The date of coupon creation.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        claimed_at:
+          description: The date of coupon assignment.
+          type: string
+          format: date-time
+          example: '2021-11-23T08:34:59.000Z'
+        name:
+          description: Name of the coupon, which is inherited from the coupon pool.
+          type: string
+          example: 10% coupon codes
+        pool:
+          description: The original coupon pool from which the coupon was sourced.
+          type: string
+          example: 62c7f20687632a561f16499b
+        customer:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The ID of the customer who is assigned to the coupon.
+              example: 280e674c-c4ea-4a30-987a-d9267d1a5018
     OfferActivity:
       type: object
       properties:
@@ -328,56 +362,22 @@ components:
                 type: string
                 description: Name of the store.
                 example: 004 Dublin
-    CouponClaim:
+    Image:
       type: object
+      description: Object contains different sizes of the image asset.
       properties:
-        code:
-          description: The coupon code.
+        small:
           type: string
-          example: TC22341
-        status:
-          description: The status of the coupon, whether it was only claimed by the customer or redeemed (used at checkout).
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        medium:
           type: string
-          enum:
-          - claimed
-          - redeemed
-        type:
-          description: Type of the coupon.
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
+        large:
           type: string
-          enum:
-          - percentage
-          - amount
-          - free_shipping
-          - gift_card
-        value:
-          description: Arbitrary number as coupon value for amount type coupons, or a percentage number (0-100).
-          type: number
-          example: 10
-        created_at:
-          description: The date of coupon creation.
-          type: string
-          format: date-time
-          example: '2021-11-23T08:34:59.000Z'
-        claimed_at:
-          description: The date of coupon assignment.
-          type: string
-          format: date-time
-          example: '2021-11-23T08:34:59.000Z'
-        name:
-          description: Name of the coupon, which is inherited from the coupon pool.
-          type: string
-          example: 10% coupon codes
-        pool:
-          description: The original coupon pool from which the coupon was sourced.
-          type: string
-          example: 62c7f20687632a561f16499b
-        customer:
-          type: object
-          properties:
-            id:
-              type: string
-              description: The ID of the customer who is assigned to the coupon.
-              example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+          format: uri
+          example: https://example.com/1715791767-nH7Mf.jpeg
     ErrorResponse:
       type: object
       description: This describes the structure returned if an error occurred
@@ -397,27 +397,11 @@ components:
               type: string
               description: Human readable error message.
               example: Missing required parameter 'parameter_name'
-    Cart:
-      type: object
-      description: Cart content to check against available offers.
-      required:
-      - total
-      - items
-      properties:
-        total:
-          type: number
-          description: The total value of the customer's cart including all items.
-          example: 22.22
-        items:
-          $ref: '#/components/schemas/CartItems'
-        discount:
-          type: number
-          description: Cart discount, already subtracted from total.
-          example: 2.22
-        shipping:
-          type: number
-          description: Shipping fee, already subtracted from total.
-          example: 4.44
+    data:
+      type: array
+      description: An array of Offer objects
+      items:
+        $ref: '#/components/schemas/offer'
     response:
       type: object
       properties:
@@ -447,6 +431,38 @@ components:
               example: 22.22
             items:
               $ref: '#/components/schemas/CartItems'
+    Item:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - product
+          - category
+          - list
+          description: "Type of item:\n - `product`\n - `category`\n - `list`\n"
+          example: product
+        id:
+          type: string
+          description: Category ID or Product SKU. An array of Product IDs or SKUs can also be returned.
+          example: prd_987654
+        name:
+          type: string
+          description: Name of the category or product.
+          example: Classic Denim Jeans
+        min_quantity:
+          type: number
+          description: Minimum quantity required to qualify for the offer. Defaults to 1 if not specified.
+          example: 1
+      required:
+      - type
+      - id
+    CartItems:
+      type: array
+      description: Cart content to check against available offers.
+      items:
+        description: Cart content to check against available offers.
+        $ref: '#/components/schemas/CartItem'
     OfferListRequest:
       type: object
       required:
@@ -468,11 +484,6 @@ components:
           default: true
           example: true
           description: Filters out non-eligible offers based on the current context (cart, customer, date, etc.)
-    data:
-      type: array
-      description: An array of Offer objects
-      items:
-        $ref: '#/components/schemas/offer'
     CartItem:
       type: object
       description: Cart content to check against available offers.
@@ -500,32 +511,52 @@ components:
           type: number
           description: 'Product subtotal: price × quantity - discount'
           example: 18
-    Item:
+    ErrorResponse_2:
       type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - product
-          - category
-          - list
-          description: "Type of item:\n - `product`\n - `category`\n - `list`\n"
-          example: product
-        id:
-          type: string
-          description: Category ID or Product SKU. An array of Product IDs or SKUs can also be returned.
-          example: prd_987654
-        name:
-          type: string
-          description: Name of the category or product.
-          example: Classic Denim Jeans
-        min_quantity:
-          type: number
-          description: Minimum quantity required to qualify for the offer. Defaults to 1 if not specified.
-          example: 1
+      description: occurred
       required:
-      - type
-      - id
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of the message.
+              example: BadRequestException
+            code:
+              type: number
+              description: "Error code.\t"
+              example: 404
+            message:
+              type: string
+              description: Human-readable error message.
+              example: cart.total should be numeric
+    Cart:
+      type: object
+      description: Cart content to check against available offers.
+      required:
+      - total
+      - items
+      properties:
+        total:
+          type: number
+          description: The total value of the customer's cart including all items.
+          example: 22.22
+        items:
+          $ref: '#/components/schemas/CartItems'
+        discount:
+          type: number
+          description: Cart discount, already subtracted from total.
+          example: 2.22
+        shipping:
+          type: number
+          description: Shipping fee, already subtracted from total.
+          example: 4.44
     offer:
       type: object
       properties:
@@ -604,37 +635,6 @@ components:
           type: string
           description: The description of the offer.
           example: Get 10% off on your purchase.
-    CartItems:
-      type: array
-      description: Cart content to check against available offers.
-      items:
-        description: Cart content to check against available offers.
-        $ref: '#/components/schemas/CartItem'
-    ErrorResponse_2:
-      type: object
-      description: occurred
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of the message.
-              example: BadRequestException
-            code:
-              type: number
-              description: "Error code.\t"
-              example: 404
-            message:
-              type: string
-              description: Human-readable error message.
-              example: cart.total should be numeric
   securitySchemes:
     api_key:
       type: apiKey

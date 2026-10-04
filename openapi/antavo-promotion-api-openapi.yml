@@ -955,6 +955,182 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    discountPromotionalPricing:
+      type: object
+      properties:
+        unitPriceBeforeTax:
+          type: number
+          description: The promotional unit price before tax that replaces the regular price during the promotion.
+          example: 1
+    restrictionBuyXForTotalAmount:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: The minimum quantity of the specified item (product or category) that must be purchased to trigger the promotion.
+          example: 1
+        item:
+          type: string
+          description: The unique identifier of the product or category the restriction applies to.
+          example: 2223640
+        itemType:
+          type: string
+          enum:
+          - product
+          - category
+          example: product
+          description: Defines whether the `item` is a specific product or a product category.
+    restrictionBonusProducts:
+      allOf:
+      - $ref: '#/components/schemas/restrictionBase'
+        type: object
+        properties:
+          products:
+            type: array
+            description: List of products that must be purchased to activate the promotion.
+            items:
+              type: object
+              properties:
+                productId:
+                  type: string
+                  example: 2223640
+                  description: Unique identifier of the product required for the promotion.
+                quantity:
+                  type: integer
+                  description: Minimum quantity of the product that must be purchased.
+                  example: 2
+          categories:
+            type: array
+            description: List of product categories that must be purchased to trigger the promotion.
+            items:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                  example: C223233440
+                  description: Unique identifier of the category required for the promotion.
+                quantity:
+                  type: integer
+                  description: Minimum quantity of products from the category that must be purchased.
+                  example: 2
+          itemMatchingRule:
+            type: string
+            description: Specifies whether all listed conditions ('all') or any one of them ('any') must be satisfied to qualify for the promotion.
+            enum:
+            - all
+            - any
+            example: any
+          minTotalBeforeTax:
+            type: number
+            description: Minimum total purchase amount before tax required to trigger the promotion.
+            example: 12
+    restrictionBuyXGetYFree:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: The minimum quantity of the specified item that must be purchased to qualify for receiving the free item.
+          example: 1
+        item:
+          type: string
+          example: 2223640
+          description: The unique identifier of the product or category the restriction applies to.
+        itemType:
+          type: string
+          enum:
+          - product
+          - category
+          example: product
+          description: Defines whether the `item` is a specific product or a product category.
+    discountBonusProducts:
+      type: object
+      properties:
+        products:
+          type: array
+          description: List of products added as a bonus.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: The unique identifier of the bonus product.
+                example: 2235462
+              quantity:
+                type: integer
+                description: The quantity of the bonus product granted.
+                example: 2
+        value:
+          type: number
+          example: 100
+          description: The price value of the bonus product considered in promotion calculations.
+    discountFreeSample:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The unique identifier of the product offered as a free sample.
+          example: 2223640
+        quantity:
+          type: integer
+          description: The number of free sample units to be given.
+          example: 1
+    discountPriceReduction:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - fixed
+          - percentage
+          - unitPriceBeforeTax
+          example: fixed
+          description: The kind of price reduction applied.
+        amount:
+          type: number
+          description: The discount amount or percentage, depending on the `type`.
+          example: 1
+        value:
+          type: number
+          description: Discount value interpreted according to the selected discount type.
+          example: 100
+    restrictionFreeSample:
+      type: object
+      properties:
+        products:
+          type: array
+          description: List of products that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: 2223640
+                description: Unique identifier of the product required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of the product that must be purchased.
+        categories:
+          type: array
+          description: List of product categories that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              categoryId:
+                type: string
+                example: C223233440
+                description: Unique identifier of the category required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of products from the category that must be purchased.
+        itemMatchingRule:
+          type: string
+          enum:
+          - all
+          - any
+          example: any
+          description: Defines whether all conditions ('all') or any one condition ('any') must be met for the restriction.
     discountCrossSelling:
       type: object
       properties:
@@ -1009,109 +1185,7 @@ components:
           - mostExpensive
           example: cheapest
           description: Strategy to determine which items the discount applies to when multiple eligible items are present.
-    restrictionProductSet:
-      type: object
-      properties:
-        products:
-          type: array
-          description: List of products that must be purchased to qualify for the promotion.
-          items:
-            type: object
-            properties:
-              productId:
-                type: string
-                example: 2223640
-                description: Unique identifier of the product required for the promotion.
-              quantity:
-                type: integer
-                example: 2
-                description: Minimum quantity of the product that must be purchased.
-        categories:
-          type: array
-          description: List of product categories that must be purchased to qualify for the promotion.
-          items:
-            type: object
-            properties:
-              categoryId:
-                type: string
-                example: C223233440
-                description: Unique identifier of the category required for the promotion.
-              quantity:
-                type: integer
-                example: 2
-                description: Minimum quantity of products from the category that must be purchased.
-    restrictionFreeSample:
-      type: object
-      properties:
-        products:
-          type: array
-          description: List of products that must be purchased to qualify for the promotion.
-          items:
-            type: object
-            properties:
-              productId:
-                type: string
-                example: 2223640
-                description: Unique identifier of the product required for the promotion.
-              quantity:
-                type: integer
-                example: 2
-                description: Minimum quantity of the product that must be purchased.
-        categories:
-          type: array
-          description: List of product categories that must be purchased to qualify for the promotion.
-          items:
-            type: object
-            properties:
-              categoryId:
-                type: string
-                example: C223233440
-                description: Unique identifier of the category required for the promotion.
-              quantity:
-                type: integer
-                example: 2
-                description: Minimum quantity of products from the category that must be purchased.
-        itemMatchingRule:
-          type: string
-          enum:
-          - all
-          - any
-          example: any
-          description: Defines whether all conditions ('all') or any one condition ('any') must be met for the restriction.
-    discountBundle:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - percentage
-          - fixed
-          - groupPriceBeforeTax
-          example: fixed
-          description: Type of discount applied to the bundle.
-        amount:
-          type: number
-          description: The value of the discount, depending on the selected type.
-          example: 20
-    restrictionBuyXGetYFree:
-      type: object
-      properties:
-        quantity:
-          type: integer
-          description: The minimum quantity of the specified item that must be purchased to qualify for receiving the free item.
-          example: 1
-        item:
-          type: string
-          example: 2223640
-          description: The unique identifier of the product or category the restriction applies to.
-        itemType:
-          type: string
-          enum:
-          - product
-          - category
-          example: product
-          description: Defines whether the `item` is a specific product or a product category.
-    restrictionCrossSelling:
+    restrictionPriceReduction:
       type: object
       properties:
         categoryIds:
@@ -1120,139 +1194,28 @@ components:
           - C223233440
           items:
             type: string
-          description: List of category IDs; purchasing products from these categories can trigger the cross-selling promotion.
+          description: List of category IDs; purchasing products from these categories can trigger the price reduction.
         productIds:
           type: array
           example:
           - 2223640
           items:
             type: string
-          description: List of specific product IDs that qualify for the cross-selling promotion.
-    restrictionBonusProducts:
-      allOf:
-      - $ref: '#/components/schemas/restrictionBase'
-        type: object
-        properties:
-          products:
-            type: array
-            description: List of products that must be purchased to activate the promotion.
-            items:
-              type: object
-              properties:
-                productId:
-                  type: string
-                  example: 2223640
-                  description: Unique identifier of the product required for the promotion.
-                quantity:
-                  type: integer
-                  description: Minimum quantity of the product that must be purchased.
-                  example: 2
-          categories:
-            type: array
-            description: List of product categories that must be purchased to trigger the promotion.
-            items:
-              type: object
-              properties:
-                categoryId:
-                  type: string
-                  example: C223233440
-                  description: Unique identifier of the category required for the promotion.
-                quantity:
-                  type: integer
-                  description: Minimum quantity of products from the category that must be purchased.
-                  example: 2
-          itemMatchingRule:
-            type: string
-            description: Specifies whether all listed conditions ('all') or any one of them ('any') must be satisfied to qualify for the promotion.
-            enum:
-            - all
-            - any
-            example: any
-          minTotalBeforeTax:
-            type: number
-            description: Minimum total purchase amount before tax required to trigger the promotion.
-            example: 12
-    discountPriceReduction:
+          description: List of specific product IDs that qualify for price reduction.
+    discountBuyXGetYFree:
       type: object
       properties:
-        type:
-          type: string
-          enum:
-          - fixed
-          - percentage
-          - unitPriceBeforeTax
-          example: fixed
-          description: The kind of price reduction applied.
-        amount:
-          type: number
-          description: The discount amount or percentage, depending on the `type`.
-          example: 1
-        value:
-          type: number
-          description: Discount value interpreted according to the selected discount type.
-          example: 100
-    discountBonusProducts:
-      type: object
-      properties:
-        products:
-          type: array
-          description: List of products added as a bonus.
-          items:
-            type: object
-            properties:
-              productId:
-                type: string
-                description: The unique identifier of the bonus product.
-                example: 2235462
-              quantity:
-                type: integer
-                description: The quantity of the bonus product granted.
-                example: 2
-        value:
-          type: number
-          example: 100
-          description: The price value of the bonus product considered in promotion calculations.
-    restrictionBundle:
-      allOf:
-      - $ref: '#/components/schemas/restrictionBase'
-        type: object
-        properties:
-          productIds:
-            type: array
-            description: List of specific product IDs required for the bundle promotion to be valid.
-            example:
-            - 2223640
-            items:
-              type: string
-          categoryIds:
-            type: array
-            description: List of product category IDs; products from these categories qualify for the bundle promotion.
-            example:
-            - C223233440
-            items:
-              type: string
-    discountProductSet:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - percentage
-          - fixed
-          - groupPriceBeforeTax
-          example: fixed
-          description: Type of discount applied to the product set.
-        amount:
-          type: number
-          description: The discount value or special group price amount depending on the selected type.
-          example: 1
-        itemSelectionStrategy:
+        freeProductSelectionStrategy:
           type: string
           enum:
           - cheapest
           - mostExpensive
           example: cheapest
-          description: Strategy to select which items the discount applies to within the set.
+          description: Determines which item is granted for free based on price.
+        quantity:
+          type: integer
+          example: null
+          description: The number of free items granted by the promotion.
     restrictionBase:
       type: object
       description: Conditions that must be met for the promotion to apply to the cart. The structure and applicable fields may vary depending on the promotion type.
@@ -1303,13 +1266,97 @@ components:
               - Austria
               items:
                 type: string
-    discountPromotionalPricing:
+    restrictionPromoCode:
       type: object
       properties:
-        unitPriceBeforeTax:
+        promoCode:
+          type: string
+          example: PROMO1
+          description: The promo code that must be applied to activate the promotion.
+        excludedProducts:
+          type: array
+          description: List of product IDs that are excluded from the promotion even when the promo code is used.
+          example:
+          - 2223640
+          items:
+            type: string
+    discountBuyXForTotalAmount:
+      type: object
+      properties:
+        groupPriceBeforeTax:
           type: number
-          description: The promotional unit price before tax that replaces the regular price during the promotion.
-          example: 1
+          description: Fixed total price before tax for the selected group of items under this promotion.
+          example: 20
+        itemSelectionStrategy:
+          type: string
+          description: Determines which items are selected to form the group price.
+          enum:
+          - cheapest
+          - mostExpensive
+          example: cheapest
+    restrictionProductSet:
+      type: object
+      properties:
+        products:
+          type: array
+          description: List of products that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: 2223640
+                description: Unique identifier of the product required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of the product that must be purchased.
+        categories:
+          type: array
+          description: List of product categories that must be purchased to qualify for the promotion.
+          items:
+            type: object
+            properties:
+              categoryId:
+                type: string
+                example: C223233440
+                description: Unique identifier of the category required for the promotion.
+              quantity:
+                type: integer
+                example: 2
+                description: Minimum quantity of products from the category that must be purchased.
+    restrictionCrossSelling:
+      type: object
+      properties:
+        categoryIds:
+          type: array
+          example:
+          - C223233440
+          items:
+            type: string
+          description: List of category IDs; purchasing products from these categories can trigger the cross-selling promotion.
+        productIds:
+          type: array
+          example:
+          - 2223640
+          items:
+            type: string
+          description: List of specific product IDs that qualify for the cross-selling promotion.
+    discountBundle:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - percentage
+          - fixed
+          - groupPriceBeforeTax
+          example: fixed
+          description: Type of discount applied to the bundle.
+        amount:
+          type: number
+          description: The value of the discount, depending on the selected type.
+          example: 20
     restrictionPromotionalPricing:
       type: object
       properties:
@@ -1327,31 +1374,25 @@ components:
           items:
             type: string
           description: List of specific product IDs that qualify for promotional price.
-    discountBuyXForTotalAmount:
-      type: object
-      properties:
-        groupPriceBeforeTax:
-          type: number
-          description: Fixed total price before tax for the selected group of items under this promotion.
-          example: 20
-        itemSelectionStrategy:
-          type: string
-          description: Determines which items are selected to form the group price.
-          enum:
-          - cheapest
-          - mostExpensive
-          example: cheapest
-    discountFreeSample:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: The unique identifier of the product offered as a free sample.
-          example: 2223640
-        quantity:
-          type: integer
-          description: The number of free sample units to be given.
-          example: 1
+    restrictionBundle:
+      allOf:
+      - $ref: '#/components/schemas/restrictionBase'
+        type: object
+        properties:
+          productIds:
+            type: array
+            description: List of specific product IDs required for the bundle promotion to be valid.
+            example:
+            - 2223640
+            items:
+              type: string
+          categoryIds:
+            type: array
+            description: List of product category IDs; products from these categories qualify for the bundle promotion.
+            example:
+            - C223233440
+            items:
+              type: string
     promotionModel:
       required:
       - name
@@ -1495,72 +1536,31 @@ components:
           type: number
           description: The discount value or percentage applied when using the promo code.
           example: 1
-    restrictionPromoCode:
+    discountProductSet:
       type: object
       properties:
-        promoCode:
-          type: string
-          example: PROMO1
-          description: The promo code that must be applied to activate the promotion.
-        excludedProducts:
-          type: array
-          description: List of product IDs that are excluded from the promotion even when the promo code is used.
-          example:
-          - 2223640
-          items:
-            type: string
-    restrictionBuyXForTotalAmount:
-      type: object
-      properties:
-        quantity:
-          type: integer
-          description: The minimum quantity of the specified item (product or category) that must be purchased to trigger the promotion.
-          example: 1
-        item:
-          type: string
-          description: The unique identifier of the product or category the restriction applies to.
-          example: 2223640
-        itemType:
+        type:
           type: string
           enum:
-          - product
-          - category
-          example: product
-          description: Defines whether the `item` is a specific product or a product category.
-    restrictionPriceReduction:
-      type: object
-      properties:
-        categoryIds:
-          type: array
-          example:
-          - C223233440
-          items:
-            type: string
-          description: List of category IDs; purchasing products from these categories can trigger the price reduction.
-        productIds:
-          type: array
-          example:
-          - 2223640
-          items:
-            type: string
-          description: List of specific product IDs that qualify for price reduction.
-    discountBuyXGetYFree:
-      type: object
-      properties:
-        freeProductSelectionStrategy:
+          - percentage
+          - fixed
+          - groupPriceBeforeTax
+          example: fixed
+          description: Type of discount applied to the product set.
+        amount:
+          type: number
+          description: The discount value or special group price amount depending on the selected type.
+          example: 1
+        itemSelectionStrategy:
           type: string
           enum:
           - cheapest
           - mostExpensive
           example: cheapest
-          description: Determines which item is granted for free based on price.
-        quantity:
-          type: integer
-          example: null
-          description: The number of free items granted by the promotion.
+          description: Strategy to select which items the discount applies to within the set.
   responses:
-    AccessDeniedError:
-      description: Authorization error
+    ModelNotFoundError:
+      description: Not found
       content:
         application/json:
           schema:
@@ -1569,52 +1569,14 @@ components:
               type:
                 type: string
                 description: Error category or type identifier.
-                example: AuthorizationException
+                example: ModelNotFoundException
               message:
                 type: string
                 description: Human-readable message describing the authentication error.
-                example: Access denied.
+                example: No result for query.
               code:
                 type: integer
-                example: 677
-                description: A numeric code representing the specific error.
-    TokenValidationError:
-      description: Authorization error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              type:
-                type: string
-                description: Error category or type identifier.
-                example: AuthorizationException
-              message:
-                type: string
-                description: Human-readable message describing the authentication error.
-                example: Token validation failed.
-              code:
-                type: integer
-                example: 676
-                description: A numeric code representing the specific error.
-    TokenNotFoundError:
-      description: Authorization error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              type:
-                type: string
-                description: Error category or type identifier.
-                example: AuthorizationException
-              message:
-                type: string
-                description: Human-readable message describing the authentication error.
-                example: JWT Token is required
-              code:
-                type: integer
-                example: 673
+                example: 576
                 description: A numeric code representing the specific error.
     UpdateExceptionError:
       description: Server error
@@ -1635,8 +1597,8 @@ components:
                 type: integer
                 example: 578
                 description: A numeric code representing the specific error.
-    ModelNotFoundError:
-      description: Not found
+    AccessDeniedError:
+      description: Authorization error
       content:
         application/json:
           schema:
@@ -1645,14 +1607,52 @@ components:
               type:
                 type: string
                 description: Error category or type identifier.
-                example: ModelNotFoundException
+                example: AuthorizationException
               message:
                 type: string
                 description: Human-readable message describing the authentication error.
-                example: No result for query.
+                example: Access denied.
               code:
                 type: integer
-                example: 576
+                example: 677
+                description: A numeric code representing the specific error.
+    TokenNotFoundError:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Error category or type identifier.
+                example: AuthorizationException
+              message:
+                type: string
+                description: Human-readable message describing the authentication error.
+                example: JWT Token is required
+              code:
+                type: integer
+                example: 673
+                description: A numeric code representing the specific error.
+    TokenValidationError:
+      description: Authorization error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Error category or type identifier.
+                example: AuthorizationException
+              message:
+                type: string
+                description: Human-readable message describing the authentication error.
+                example: Token validation failed.
+              code:
+                type: integer
+                example: 676
                 description: A numeric code representing the specific error.
   securitySchemes:
     bearerAuth:
