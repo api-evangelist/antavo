@@ -1,5 +1,5 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/antavo/integrations
 - https://n8n.io/integrations/antavo/
@@ -7,10 +7,93 @@ source:
 - https://monid.ai/tools/antavo
 checked:
 - https://composio.dev/toolkits/antavo
+- https://docs.mparticle.com/integrations/antavo/feed/
+- https://fivetran.com/docs/activations/destinations/available-destinations/antavo
+- https://hightouch.com/docs/destinations/antavo
 - https://monid.ai/tools/antavo
 - https://n8n.io/integrations/antavo/
+- https://www.twilio.com/docs/segment/connections/sources/catalog/cloud-apps/antavo
 - https://zapier.com/apps/antavo/integrations
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: Twilio Segment
+  partner: segment
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://www.twilio.com/docs/segment/connections/sources/catalog/cloud-apps/antavo
+  coverage_role:
+  - source
+  cdp_signals:
+    source:
+      catalog_entries:
+      - antavo
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+- partner_name: mParticle
+  partner: mparticle
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://docs.mparticle.com/integrations/antavo/feed/
+  coverage_role:
+  - source
+  cdp_signals:
+    source:
+      catalog_entries:
+      - antavo
+      integration_types:
+      - feed
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+- partner_name: Hightouch
+  partner: hightouch
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://hightouch.com/docs/destinations/antavo
+  coverage_role:
+  - destination
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - antavo
+      status: released
+      sync_types:
+      - Customer Lists
+      - Events
+      sync_modes:
+      - add
+      - remove
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+- partner_name: Census
+  partner: getcensus
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://fivetran.com/docs/activations/destinations/available-destinations/antavo
+  coverage_role:
+  - destination
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - antavo
+      sync_behaviours:
+      - update only
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
 templates: []
