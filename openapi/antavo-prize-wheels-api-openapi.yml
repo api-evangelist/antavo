@@ -230,45 +230,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PrizeWheelsOptions:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: ID of the prize wheel.
-                example: 63fdccaca88ac11c347af899
-              status:
-                type: string
-                description: Status of the prize wheel.
-                example: active
-        total:
-          type: number
-          description: The number of prize wheel available to the customer.
-          example: 1
-    ErrorResponse:
-      type: object
-      description: This describes the structure returned if an error occurred
-      properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
     PrizeWheelOption:
       type: object
       properties:
@@ -439,6 +400,45 @@ components:
           - reward
           - points
           - empty
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
+    PrizeWheelsOptions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the prize wheel.
+                example: 63fdccaca88ac11c347af899
+              status:
+                type: string
+                description: Status of the prize wheel.
+                example: active
+        total:
+          type: number
+          description: The number of prize wheel available to the customer.
+          example: 1
   securitySchemes:
     api_key:
       type: apiKey

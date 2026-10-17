@@ -303,6 +303,25 @@ components:
               type: string
               description: The ID of the customer who is assigned to the coupon.
               example: 280e674c-c4ea-4a30-987a-d9267d1a5018
+    ErrorResponse:
+      type: object
+      description: This describes the structure returned if an error occurred
+      properties:
+        error:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the error occurred.
+              example: BadRequestException
+            code:
+              type: number
+              description: Error code.
+              example: 113401
+            message:
+              type: string
+              description: Human readable error message.
+              example: Missing required parameter 'parameter_name'
     OfferActivity:
       type: object
       properties:
@@ -378,30 +397,111 @@ components:
           type: string
           format: uri
           example: https://example.com/1715791767-nH7Mf.jpeg
-    ErrorResponse:
+    CartItems:
+      type: array
+      description: Cart content to check against available offers.
+      items:
+        description: Cart content to check against available offers.
+        $ref: '#/components/schemas/CartItem'
+    CartItem:
       type: object
-      description: This describes the structure returned if an error occurred
+      description: Cart content to check against available offers.
+      required:
+      - product_id
+      - quantity
       properties:
-        error:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the error occurred.
-              example: BadRequestException
-            code:
-              type: number
-              description: Error code.
-              example: 113401
-            message:
-              type: string
-              description: Human readable error message.
-              example: Missing required parameter 'parameter_name'
+        product_id:
+          type: string
+          description: Product ID or SKU.
+          example: prd_987654
+        quantity:
+          type: number
+          description: Number of items purchased.
+          example: 2
+        price:
+          type: number
+          description: Unit price of the product.
+          example: 10
+        discount:
+          type: number
+          description: Product discount value for given quantity.
+          example: 1
+        subtotal:
+          type: number
+          description: 'Product subtotal: price × quantity - discount'
+          example: 18
     data:
       type: array
       description: An array of Offer objects
       items:
         $ref: '#/components/schemas/offer'
+    Cart:
+      type: object
+      description: Cart content to check against available offers.
+      required:
+      - total
+      - items
+      properties:
+        total:
+          type: number
+          description: The total value of the customer's cart including all items.
+          example: 22.22
+        items:
+          $ref: '#/components/schemas/CartItems'
+        discount:
+          type: number
+          description: Cart discount, already subtracted from total.
+          example: 2.22
+        shipping:
+          type: number
+          description: Shipping fee, already subtracted from total.
+          example: 4.44
+    ErrorResponse_2:
+      type: object
+      description: occurred
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - type
+          - code
+          - message
+          properties:
+            type:
+              type: string
+              description: Type of the message.
+              example: BadRequestException
+            code:
+              type: number
+              description: "Error code.\t"
+              example: 404
+            message:
+              type: string
+              description: Human-readable error message.
+              example: cart.total should be numeric
+    OfferListRequest:
+      type: object
+      required:
+      - cart
+      - customer
+      properties:
+        cart:
+          $ref: '#/components/schemas/Cart'
+        customer:
+          type: string
+          example: 9f3c82d6-288e-4361-aec0-039eb066a334
+          description: An Antavo-recognized unique customer identifier. This is used to determine customer eligibility. Providing a valid attribute will result in the return of possible loyalty and non-loyalty offers.
+        store:
+          type: string
+          example: '3044'
+          description: An Antavo identifier of the store where the purchase is made. Used to determine if there are any applicable offers.
+        eligible_only:
+          type: boolean
+          default: true
+          example: true
+          description: Filters out non-eligible offers based on the current context (cart, customer, date, etc.)
     response:
       type: object
       properties:
@@ -457,106 +557,6 @@ components:
       required:
       - type
       - id
-    CartItems:
-      type: array
-      description: Cart content to check against available offers.
-      items:
-        description: Cart content to check against available offers.
-        $ref: '#/components/schemas/CartItem'
-    OfferListRequest:
-      type: object
-      required:
-      - cart
-      - customer
-      properties:
-        cart:
-          $ref: '#/components/schemas/Cart'
-        customer:
-          type: string
-          example: 9f3c82d6-288e-4361-aec0-039eb066a334
-          description: An Antavo-recognized unique customer identifier. This is used to determine customer eligibility. Providing a valid attribute will result in the return of possible loyalty and non-loyalty offers.
-        store:
-          type: string
-          example: '3044'
-          description: An Antavo identifier of the store where the purchase is made. Used to determine if there are any applicable offers.
-        eligible_only:
-          type: boolean
-          default: true
-          example: true
-          description: Filters out non-eligible offers based on the current context (cart, customer, date, etc.)
-    CartItem:
-      type: object
-      description: Cart content to check against available offers.
-      required:
-      - product_id
-      - quantity
-      properties:
-        product_id:
-          type: string
-          description: Product ID or SKU.
-          example: prd_987654
-        quantity:
-          type: number
-          description: Number of items purchased.
-          example: 2
-        price:
-          type: number
-          description: Unit price of the product.
-          example: 10
-        discount:
-          type: number
-          description: Product discount value for given quantity.
-          example: 1
-        subtotal:
-          type: number
-          description: 'Product subtotal: price × quantity - discount'
-          example: 18
-    ErrorResponse_2:
-      type: object
-      description: occurred
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - type
-          - code
-          - message
-          properties:
-            type:
-              type: string
-              description: Type of the message.
-              example: BadRequestException
-            code:
-              type: number
-              description: "Error code.\t"
-              example: 404
-            message:
-              type: string
-              description: Human-readable error message.
-              example: cart.total should be numeric
-    Cart:
-      type: object
-      description: Cart content to check against available offers.
-      required:
-      - total
-      - items
-      properties:
-        total:
-          type: number
-          description: The total value of the customer's cart including all items.
-          example: 22.22
-        items:
-          $ref: '#/components/schemas/CartItems'
-        discount:
-          type: number
-          description: Cart discount, already subtracted from total.
-          example: 2.22
-        shipping:
-          type: number
-          description: Shipping fee, already subtracted from total.
-          example: 4.44
     offer:
       type: object
       properties:
