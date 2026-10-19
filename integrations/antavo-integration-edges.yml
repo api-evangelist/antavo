@@ -6,12 +6,19 @@ source:
 - https://composio.dev/toolkits/antavo
 - https://monid.ai/tools/antavo
 checked:
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/antavo
+- https://crates.io/api/v1
 - https://docs.mparticle.com/integrations/antavo/feed/
 - https://fivetran.com/docs/activations/destinations/available-destinations/antavo
 - https://hightouch.com/docs/destinations/antavo
 - https://monid.ai/tools/antavo
 - https://n8n.io/integrations/antavo/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://www.twilio.com/docs/segment/connections/sources/catalog/cloud-apps/antavo
 - https://zapier.com/apps/antavo/integrations
 summary: null
@@ -96,4 +103,34 @@ edges:
       - update only
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@antavo/api-async-client-node
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@antavo/api-async-client-node'
+      version: 1.0.1
+      released: '2022-04-04'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/@antavo/api-async-client-node
+      repo_leg: github-org:antavo
+      publisher_leg: email:antavo.com
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 templates: []
