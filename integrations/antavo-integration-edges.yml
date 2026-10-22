@@ -24,6 +24,36 @@ checked:
 summary: null
 marketplace_apps: []
 edges:
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@antavo/api-async-client-node
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@antavo/api-async-client-node'
+      version: 1.0.1
+      released: '2022-04-04'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/@antavo/api-async-client-node
+      repo_leg: github-org:antavo
+      publisher_leg: email:antavo.com
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 - partner_name: Twilio Segment
   partner: segment
   partner_match: aggregator
@@ -103,34 +133,4 @@ edges:
       - update only
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
-- partner_name: npm registry
-  partner: npm
-  partner_match: register
-  type: register
-  direction: provider-built
-  category: official SDK (JavaScript/TypeScript)
-  evidence: https://www.npmjs.com/package/@antavo/api-async-client-node
-  channel: package-registry
-  relationship: distribution-channel
-  contract_reference:
-    register: npm registry (public registry JSON)
-    spec_file: null
-    language: JavaScript/TypeScript
-    packages:
-    - name: '@antavo/api-async-client-node'
-      version: 1.0.1
-      released: '2022-04-04'
-      released_field: modified
-      lapsed: true
-      page: https://www.npmjs.com/package/@antavo/api-async-client-node
-      repo_leg: github-org:antavo
-      publisher_leg: email:antavo.com
-      matched_by: domain
-    current: false
-    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
-      24 months'
-    detected_by: sweep-official-sdks.py
-    detected: '2026-10-18'
-  detected_by: sweep-official-sdks.py
-  first_seen: '2026-10-18'
 templates: []
