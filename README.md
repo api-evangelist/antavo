@@ -1,4 +1,4 @@
-# Antavo (antavo)
+# Antavo
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,90 +64,215 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Antavo is an enterprise loyalty management platform - the **Antavo AI Loyalty Cloud** - that lets brands build and run omnichannel, multi-brand, multi-country loyalty programs. Its API-first, headless Loyalty Engine exposes a comprehensive REST API over HTTPS covering customer events, customer profiles, the headless Display surface for member-facing loyalty experiences, configurable entities (rewards, challenges, stores, products, transactions), coupons, offers, leaderboards, clubs, promotions, and bulk operations. Requests use standard HTTP verbs (GET, POST, PUT, DELETE) with URL-encoded or JSON bodies and JSON responses, secured by an API key and secret with optional request signing (HMAC), IP filtering, and token-based authentication.
+Antavo is an enterprise loyalty management platform - the Antavo AI Loyalty Cloud - that lets brands build and run omnichannel, multi-brand, multi-country loyalty programs. Its API-first, headless Loyalty Engine exposes a comprehensive REST API covering customer events, customer profiles, the headless Display surface for loyalty experiences, configurable entities (rewards, challenges, stores, products, transactions), coupons, offers, leaderboards, clubs, promotions, and bulk operations. Requests use standard HTTP verbs with JSON, secured by API key/secret with optional request signing, IP filtering, and token-based auth. API access is provisioned per Antavo environment for enterprise customers, while the developer documentation is fully public.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/antavo/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/antavo/refs/heads/main/apis.yml)
+**Areas:** Loyalty · Customer Loyalty · Rewards · Enterprise · Headless · Retail · Marketing · Engagement · Promotions · Gamification · Event · E-Commerce
 
-## Access Model
+## Antavo on APIs.io
 
-Antavo's developer documentation (developers.antavo.com, apidocs.antavo.com, docs.antavo.com) is fully public and openly browsable. Live API access, however, is **provisioned per Antavo environment for enterprise customers** - an API key and secret are generated in the platform's API settings (the secret is shown only once), and the API host is environment-specific, of the form `https://api.<environment>.antavo.com`. Antavo is an enterprise-only product with custom, contact-sales pricing; there is no self-service public sandbox. The endpoints documented in this entry are therefore drawn from Antavo's public reference and honestly modeled rather than exercised live against a provisioned account.
+Everything profiled for Antavo is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/antavo/](https://apis.io/providers/antavo/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (29)
 
-- Loyalty
-- Customer Loyalty
-- Rewards
-- Enterprise
-- Headless
-- Retail
-- Marketing
-- Engagement
+- [Antavo Activities API](https://apis.io/apis/antavo/antavo-activities-api/) — This endpoint collects and aggregates all activities, provided by all modules
+- [Antavo Async Events API](https://apis.io/apis/antavo/antavo-async-events-api/) — The Async Events API from Antavo — 2 operation(s) for async events.
+- [Antavo Authentication API](https://apis.io/apis/antavo/antavo-authentication-api-api/) — The Authentication API API from Antavo — 1 operation(s) for authentication api.
+- [Antavo Cart API](https://apis.io/apis/antavo/antavo-cart-api/) — Cart endpoints collection
+- [Antavo Challenges API](https://apis.io/apis/antavo/antavo-challenges-api/) — Endpoints provided by the _Challenges_ module
+- [Antavo Clubs API](https://apis.io/apis/antavo/antavo-clubs-api/) — The Clubs API from Antavo — 21 operation(s) for clubs.
+- [Antavo Content consumption API](https://apis.io/apis/antavo/antavo-content-consumption-api/) — The Content consumption API from Antavo — 1 operation(s) for content consumption.
+- [Antavo Contests API](https://apis.io/apis/antavo/antavo-contests-api/) — Endpoints provided by the _Contests Lite_ module
+- [Antavo Coupon pools API](https://apis.io/apis/antavo/antavo-coupon-pools-api/) — The Coupon pools API from Antavo — 2 operation(s) for coupon pools.
+- [Antavo Coupons API](https://apis.io/apis/antavo/antavo-coupons-api/) — Bulk Coupons API endpoints
+- [Antavo Customer lists API](https://apis.io/apis/antavo/antavo-customer-lists-api/) — Bulk Customer List API endpoints
+- [Antavo Customers API](https://apis.io/apis/antavo/antavo-customers-api/) — The Customers API from Antavo — 11 operation(s) for customers.
+- [Antavo Data extensions API](https://apis.io/apis/antavo/antavo-data-extensions-api/) — Endpoints for probing data extensions
+- [Antavo Events API](https://apis.io/apis/antavo/antavo-events-api/) — The Events API from Antavo — 3 operation(s) for events.
+- [Antavo FAQ API](https://apis.io/apis/antavo/antavo-faq-api/) — The FAQ API from Antavo — 1 operation(s) for faq.
+- [Antavo Generic API](https://apis.io/apis/antavo/antavo-generic-api/) — A general method for creating, accessing and modifying an Antavo entity.
+- [Antavo History API](https://apis.io/apis/antavo/antavo-history-api/) — Endpoints providing information regarding the customers interactions with the loyalty cloud
+- [Antavo Leaderboard API](https://apis.io/apis/antavo/antavo-leaderboard-api/) — The Leaderboard API from Antavo — 1 operation(s) for leaderboard.
+- [Antavo Offers API](https://apis.io/apis/antavo/antavo-offers-api/) — Endpoints provided by the _Offers_ module
+- [Antavo Points Preview API](https://apis.io/apis/antavo/antavo-points-preview-api-api/) — The Points Preview API API from Antavo — 1 operation(s) for points preview api.
+- [Antavo Prize wheels API](https://apis.io/apis/antavo/antavo-prize-wheels-api/) — The Prize wheels API from Antavo — 2 operation(s) for prize wheels.
+- [Antavo Profiling API](https://apis.io/apis/antavo/antavo-profiling-api/) — Endpoints provided by the _Gamified Profiling_ module
+- [Antavo Promotion API](https://apis.io/apis/antavo/antavo-promotion-api/) — Promotion endpoints collection
+- [Antavo Quizzes API](https://apis.io/apis/antavo/antavo-quizzes-api/) — Endpoints provided by the _Quizzes_ module
+- [Antavo Rewards API](https://apis.io/apis/antavo/antavo-rewards-api/) — Bulk Reward Claim API endpoints
+- [Antavo Social Share Campaigns API](https://apis.io/apis/antavo/antavo-social-share-campaigns-api/) — The Social Share Campaigns API from Antavo — 1 operation(s) for social share campaigns.
+- [Antavo Transactions API](https://apis.io/apis/antavo/antavo-transactions-api/) — Endpoints providing customer information regarding specified transaction ids.
+- [Antavo Treasure hunt API](https://apis.io/apis/antavo/antavo-treasure-hunt-api/) — The Treasure hunt API from Antavo — 1 operation(s) for treasure hunt.
+- [Antavo Wallet API](https://apis.io/apis/antavo/antavo-wallet-api/) — Endpoints provided by the _Wallet_ module
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-07-10
-- **Modified:** 2026-07-10
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### AsyncAPI (1)
 
-### Antavo Events API
-Records customer interactions from e-commerce, POS, websites, and mobile apps as loyalty events (for example `point_add`, `checkout_accept`), driving the rules and workflows of the loyalty program. Supports single and bulk event submission and reading a customer's event history.
+Event-driven and webhook contracts.
 
-### Antavo Async Events API
-Queues events for reliable background processing during high-traffic periods, returning a correlation id that can be polled for status. Uses token-based authentication via the `/v1/auth/token` endpoint.
+- [Antavo Webhooks](https://apis.io/asyncapis/antavo/antavo-webhooks/)
 
-### Antavo Customer API
-Search, retrieve, and manage loyalty member profiles - including login, opt-in registration, password reset, verification, account merging, and active-customer counts - while maintaining member privacy.
+#### MCP servers (1)
 
-### Antavo Display API
-The primary headless API for building the member-facing loyalty experience - listing earn and spend activities, challenges, rewards, offers, coupons, transactions, wallet passes, quizzes, contests, prize wheels, and profiling flows, plus claiming and revoking rewards.
+Model Context Protocol servers that expose the API to agents.
 
-### Antavo Entities API
-Generic CRUD surface for the foundational building blocks of a program - rewards, challenges, stores, products, transactions, and customer lists - addressed as entities under a module namespace, with list, create, retrieve, update, archive, and bulk submission.
+- [antavo](https://apis.io/servers/antavo/antavo/)
 
-### Antavo Rewards API
-Manage the reward catalog and redemptions - create, list, retrieve, update, and archive rewards via the entities surface, and claim rewards. Legacy `/rewards` claim endpoints are superseded by the Display API.
+#### Collections (17)
 
-### Antavo Coupons and Coupon Pools API
-Query coupon usage independent of a customer and create or manage coupon pools - configuring value, expiration, and code patterns - with bulk import of codes and status/error reporting on the batch operations.
+Postman and Open Collection request collections.
 
-### Antavo Offers API
-Submit a cart and retrieve applicable pre-purchase offers used for customer acquisition and engagement, and list a member's available offers through the Display surface.
+- [Antavo Async Events API](https://apis.io/collections/antavo/open-antavo-async-events/)
+- [Antavo Authentication API](https://apis.io/collections/antavo/open-antavo-authentication/)
+- [Antavo Bulk Operations API](https://apis.io/collections/antavo/open-antavo-bulk-operations/)
+- [Antavo Clubs API](https://apis.io/collections/antavo/open-antavo-clubs/)
+- [Antavo Coupon Pools API](https://apis.io/collections/antavo/open-antavo-coupon-pools/)
+- [Antavo Coupons API](https://apis.io/collections/antavo/open-antavo-coupons/)
+- [Antavo Customers API](https://apis.io/collections/antavo/open-antavo-customer/)
+- [Antavo Display API](https://apis.io/collections/antavo/open-antavo-display/)
+- [Antavo Entities API](https://apis.io/collections/antavo/open-antavo-entities/)
+- [Antavo Events API](https://apis.io/collections/antavo/open-antavo-events/)
+- [Antavo FAQ API](https://apis.io/collections/antavo/open-antavo-faq/)
+- [Antavo Leaderboard API](https://apis.io/collections/antavo/open-antavo-leaderboard/)
+- [Antavo Loyalty Read API](https://apis.io/collections/antavo/open-antavo-loyalty-read/)
+- [Antavo Offers API](https://apis.io/collections/antavo/open-antavo-offers/)
+- [Antavo Promotion Engine API](https://apis.io/collections/antavo/open-antavo-promotion-engine/)
+- [Antavo Rewards API](https://apis.io/collections/antavo/open-antavo-rewards/)
+- [Antavo Socal Share Campaigns API](https://apis.io/collections/antavo/open-antavo-social-share-campaigns/)
 
-### Antavo Points Preview API
-Preview the loyalty points a transaction would earn, including bonus points assigned by the Workflows module, before the transaction is committed.
+#### Overlays (47)
 
-### Antavo Leaderboard API
-Retrieve ranked lists of top customers with their scores for display in mobile apps, websites, and CRMs.
+OpenAPI overlays, including conversational phrasing for each operation.
 
-### Antavo Bulk Operations API
-Batch processing for reward claims across many customers and for adding or removing customers from lists, each returning a batch id with status and error reporting endpoints.
+- [Antavo Activities Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-activities-api-phrasing-overlay/)
+- [Antavo Async Events Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-async-events-api-phrasing-overlay/)
+- [Antavo Async Events Overlay](https://apis.io/overlays/antavo/antavo-async-events-overlay/)
+- [Antavo Authentication Api Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-authentication-api-api-phrasing-overlay/)
+- [Antavo Authentication Overlay](https://apis.io/overlays/antavo/antavo-authentication-overlay/)
+- [Antavo Bulk Operations Overlay](https://apis.io/overlays/antavo/antavo-bulk-operations-overlay/)
+- [Antavo Cart Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-cart-api-phrasing-overlay/)
+- [Antavo Challenges Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-challenges-api-phrasing-overlay/)
+- [Antavo Clubs Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-clubs-api-phrasing-overlay/)
+- [Antavo Clubs Overlay](https://apis.io/overlays/antavo/antavo-clubs-overlay/)
+- [Antavo Content Consumption Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-content-consumption-api-phrasing-overlay/)
+- [Antavo Contests Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-contests-api-phrasing-overlay/)
+- [Antavo Coupon Pools Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-coupon-pools-api-phrasing-overlay/)
+- [Antavo Coupon Pools Overlay](https://apis.io/overlays/antavo/antavo-coupon-pools-overlay/)
+- [Antavo Coupons Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-coupons-api-phrasing-overlay/)
+- [Antavo Coupons Overlay](https://apis.io/overlays/antavo/antavo-coupons-overlay/)
+- [Antavo Customer Lists Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-customer-lists-api-phrasing-overlay/)
+- [Antavo Customer Overlay](https://apis.io/overlays/antavo/antavo-customer-overlay/)
+- [Antavo Customers Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-customers-api-phrasing-overlay/)
+- [Antavo Data Extensions Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-data-extensions-api-phrasing-overlay/)
+- [Antavo Display Overlay](https://apis.io/overlays/antavo/antavo-display-overlay/)
+- [Antavo Entities Overlay](https://apis.io/overlays/antavo/antavo-entities-overlay/)
+- [Antavo Events Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-events-api-phrasing-overlay/)
+- [Antavo Events Overlay](https://apis.io/overlays/antavo/antavo-events-overlay/)
+- [Antavo Faq Api Phrasing Overlay](https://apis.io/overlays/antavo/antavo-faq-api-phrasing-overlay/)
+- …and 22 more published on APIs.io
 
-### Antavo Clubs API
-Create and administer member clubs and communities - templates, membership, invitations, applicants, bans, ownership, point adjustments and donations, history, and disbanding.
+#### Security (4)
 
-### Antavo Promotion Engine API
-List and manage promotions and apply them at checkout - submit a cart to retrieve applicable promotions and finalize the checkout with the resulting discounts.
+Authentication, trust centre, and vulnerability disclosure.
 
-### Antavo Authentication API
-Generate short-lived access tokens for credential clients configured in the Authentication Manager, used for token-based authentication such as the Async Events API.
+- [Antavo Authentication](https://apis.io/security/antavo/antavo-authentication/)
+- [Antavo Domain Security](https://apis.io/security/antavo/antavo-domain-security/)
+- [Antavo Trust Center](https://apis.io/security/antavo/antavo-trust-center/)
+- [Antavo Vulnerability Disclosure](https://apis.io/security/antavo/antavo-vulnerability-disclosure/)
 
-## WebSocket Review
+#### OAuth scopes (1)
 
-Antavo does **not** expose a documented public WebSocket API. Its own public interface is request/response REST over HTTPS. Event-driven behavior is delivered through incoming webhooks (external systems POST customer data that is registered as loyalty events), outbound Actions/webhooks (Antavo POSTs to a configured HTTP endpoint), and the poll-based Async Events API - none of which are a server-push WebSocket or SSE transport. See [review.yml](review.yml).
+The permissions the API asks for.
 
-## Common Properties
+- [Antavo Scopes](https://apis.io/scopes/antavo/antavo-scopes/)
 
-- [GitHub Organization](https://github.com/antavo)
-- [LinkedIn](https://www.linkedin.com/company/antavo)
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Antavo Plans Pricing](https://apis.io/plans/antavo/antavo-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Antavo Rate Limits](https://apis.io/rate-limits/antavo/antavo-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Antavo Finops](https://apis.io/finops/antavo/antavo-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://antavo.com)
 - [Documentation](https://developers.antavo.com/docs/antavo-apis)
-- [Plans](plans/antavo-plans-pricing.yml)
-- [Rate Limits](rate-limits/antavo-rate-limits.yml)
-- [Fin Ops](finops/antavo-finops.yml)
+- [Getting started](https://developers.antavo.com/docs/getting-started)
+- [API reference](https://developers.antavo.com/reference)
+- [Pricing](https://antavo.com/pricing/)
+- [Support](https://antavo.atlassian.net/servicedesk/customer/portals)
 - [Blog](https://antavo.com/blog/)
+- [Compliance](https://antavo.com/product/loyalty-engine/technology/security/)
+- [Privacy policy](https://antavo.com/legals/privacy/)
+- [GitHub](https://github.com/antavo)
+- [Status](https://antavo.com/status/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 66.8** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 78.6 |
+| Contract quality | 57.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 88.2 |
+| Developer ergonomics | 67.3 |
+| Access clarity | 57.9 |
+
+**Agent readiness 34.2** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 41.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/antavo/](https://apis.io/providers/antavo/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Antavo: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/antavo/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
